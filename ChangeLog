@@ -1,3 +1,13 @@
+08-09-05 Franz Holzinger  <contact@fholzinger.com>
+	* fix bug in loadTcaAdditions_fh001: the $i variable could have been overwritten by an included file
+
+08-08-21 Franz Holzinger  <contact@fholzinger.com>
+	* dummy class tx_div2007_cobj which extends tslib_cObj.
+	  Now you can use "$local_cObj = &t3lib_div::getUserObj('&tx_div2007_cobj');" to save time and memory.
+
+08-06-20 Franz Holzinger  <contact@fholzinger.com>
+	* store the $conf for the language_base object to allow _LOCAL_LANG language override in setup
+
 08-06-13 Franz Holzinger  <contact@fholzinger.com>
 	* also allow page type 5 for flexform to CODE field display hook
 
@@ -24,7 +34,7 @@
 
 	* fix bugs in displayHelpPage_fh001
 
-30-11-05 Elmar Hinz  <elmar.hinz@team-red.net>
+07-11-30 Elmar Hinz  <elmar.hinz@team-red.net>
 
 	* Setting it to version 0.1.0 in sync with 0.1.0 of lib.
 

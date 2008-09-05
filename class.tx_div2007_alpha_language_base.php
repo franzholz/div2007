@@ -60,7 +60,7 @@ class tx_div2007_alpha_language_base	{
 	 */
 	public $conf = Array();
 
-	public function init(&$cObj, $extKey, $scriptRelPath)	{
+	public function init(&$cObj, $extKey, $conf, $scriptRelPath)	{
 		global $TSFE;
 
 		if ($TSFE->config['config']['language'])	{
@@ -72,6 +72,7 @@ class tx_div2007_alpha_language_base	{
 
 		$this->cObj = &$cObj;
 		$this->extKey = $extKey;
+		$this->conf = $conf;
 		$this->scriptRelPath = $scriptRelPath;
 	}
 }

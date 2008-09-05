@@ -165,11 +165,12 @@ class tx_div2007_alpha {
 
 		//Merge all ext_keys
 		if (is_array($ext_keys)) {
-			for($i = 0; $i < sizeof($ext_keys); $i++)	{
-				if (t3lib_extMgm::isLoaded($ext_keys[$i]))	{
+
+			foreach ($ext_keys as $_EXTKEY)	{
+
+				if (t3lib_extMgm::isLoaded($_EXTKEY))	{
 					//Include the ext_table
-					$_EXTKEY = $ext_keys[$i];
-					include(t3lib_extMgm::extPath($ext_keys[$i]).'ext_tables.php');
+					include(t3lib_extMgm::extPath($_EXTKEY).'ext_tables.php');
 				}
 			}
 		}
@@ -750,6 +751,49 @@ class tx_div2007_alpha {
 		return $sTables;
 	}
 
+	/**
+	 * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
+	 * Usage: 3
+	 *
+	 * @param	array		Configuration array for the field, taken from $TCA
+	 * @param	string		Field name
+	 * @param	array		TSconfig array from which to get further configuration settings for the field name
+	 * @param	string		Prefix string for the key "*foreign_table_where" from $fieldValue array
+	 * @return	string		resulting where string with accomplished marker substitution
+	 * @internal
+	 * @see t3lib_transferData::renderRecord(), t3lib_TCEforms::foreignTable()
+	 */
+	public static function foreign_table_where_query($fieldValue, $field = '', $TSconfig = array(), $prefix = '') {
+		global $TCA;
+
+		$foreign_table = $fieldValue['config'][$prefix.'foreign_table'];
+		t3lib_div::loadTCA($foreign_table);
+		$rootLevel = $TCA[$foreign_table]['ctrl']['rootLevel'];
+
+		$fTWHERE = $fieldValue['config'][$prefix.'foreign_table_where'];
+		if (strstr($fTWHERE, '###REC_FIELD_')) {
+			$fTWHERE_parts = explode('###REC_FIELD_', $fTWHERE);
+			while(list($kk, $vv) = each($fTWHERE_parts)) {
+				if ($kk) {
+					$fTWHERE_subpart = explode('###', $vv, 2);
+					$fTWHERE_parts[$kk] = $TSconfig['_THIS_ROW'][$fTWHERE_subpart[0]].$fTWHERE_subpart[1];
+				}
+			}
+			$fTWHERE = implode('', $fTWHERE_parts);
+		}
+
+		$fTWHERE = str_replace('###CURRENT_PID###', intval($TSconfig['_CURRENT_PID']), $fTWHERE);
+		$fTWHERE = str_replace('###THIS_UID###', intval($TSconfig['_THIS_UID']), $fTWHERE);
+		$fTWHERE = str_replace('###THIS_CID###', intval($TSconfig['_THIS_CID']), $fTWHERE);
+		$fTWHERE = str_replace('###STORAGE_PID###', intval($TSconfig['_STORAGE_PID']), $fTWHERE);
+		$fTWHERE = str_replace('###SITEROOT###', intval($TSconfig['_SITEROOT']), $fTWHERE);
+		$fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', intval($TSconfig[$field]['PAGE_TSCONFIG_ID']), $fTWHERE);
+		$fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', $GLOBALS['TYPO3_DB']->cleanIntList($TSconfig[$field]['PAGE_TSCONFIG_IDLIST']), $fTWHERE);
+
+		$fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', $GLOBALS['TYPO3_DB']->quoteStr($TSconfig[$field]['PAGE_TSCONFIG_STR'], $foreign_table), $fTWHERE);
+
+		return $fTWHERE;
+	}
 }
 
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_alpha.php']) {
