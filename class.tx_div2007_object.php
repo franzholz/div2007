@@ -1,9 +1,34 @@
 <?php
+/***************************************************************
+*  Copyright notice
+*
+*  (c) 2011 Elmar Hinz (elmar.hinz@team)
+*  All rights reserved
+*
+*  This script is part of the TYPO3 project. The TYPO3 project is
+*  free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License or
+*  (at your option) any later version.
+*
+*  The GNU General Public License can be found at
+*  http://www.gnu.org/copyleft/gpl.html.
+*  A copy is found in the textfile GPL.txt and important notices to the license
+*  from the author is found in LICENSE.txt distributed with these scripts.
+*
+*
+*  This script is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  This copyright notice MUST APPEAR in all copies of the script!
+***************************************************************/
 
 /**
  * The pluripotent stem cell of div2007
  *
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007 Elmar Hinz
  *
@@ -33,7 +58,7 @@
  */
 
 
-require_once(t3lib_extMgm::extPath('div2007') . 'class.tx_div2007_selfAwareness.php');
+require_once(PATH_BE_div2007 . 'class.tx_div2007_selfAwareness.php');
 
 /**
  * Parent class for tx_div2007_object
@@ -67,8 +92,8 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness  {
 	 * @return	void
 	 */
 	function tx_div2007_objectBase ($parameter1 = null, $parameter2 = null) {
-		t3lib_div::requireOnce(t3lib_extMgm::extPath('div2007') . 'spl/class.tx_div2007_spl_arrayObject.php');
-		t3lib_div::requireOnce(t3lib_extMgm::extPath('div2007') . 'spl/class.tx_div2007_spl_arrayIterator.php');
+		t3lib_div::requireOnce(PATH_BE_div2007 . 'spl/class.tx_div2007_spl_arrayObject.php');
+		t3lib_div::requireOnce(PATH_BE_div2007 . 'spl/class.tx_div2007_spl_arrayIterator.php');
 
 		$this->_iterator = new tx_div2007_spl_arrayIterator();
 		if(method_exists($this, 'preset')) {
