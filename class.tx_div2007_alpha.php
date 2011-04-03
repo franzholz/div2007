@@ -4,7 +4,7 @@
  *
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2008 Elmar Hinz
+ * Copyright (c) 2006-2009 Kasper Skårhøj <kasperYYYY@typo3.com>
  *
  * LICENSE:
  *
@@ -24,15 +24,16 @@
  *
  * @package    TYPO3
  * @subpackage div2007
- * @copyright  2006-2008 Elmar Hinz
+ * @author     Kasper Skårhøj <kasperYYYY@typo3.com>
  * @author     Elmar Hinz <elmar.hinz@team-red.net>
+ * @author     Franz Holzinger <franz@ttproducts.de>
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version    SVN: $Id: class.tx_div_alpha.php 6790 2007-10-05 18:52:14Z franzholz $
+ * @version    SVN: $Id$
  * @since      0.1
  */
 
 /**
- * Collection of static functions contributed by different people 
+ * Collection of static functions contributed by different people
  *
  * This class contains diverse staticfunctions in "alphpa" status.
  * It is a kind of quarantine for newly suggested functions.
@@ -43,7 +44,7 @@
  *
  * @package    TYPO3
  * @subpackage div2007
- * @author     different Members of Extension Coordination Team
+ * @author     different Members of the Extension Coordination Team
  */
 
 class tx_div2007_alpha {
@@ -54,36 +55,42 @@ class tx_div2007_alpha {
 	 *
 	 * @param	string		name of the table
 	 * @param	string		field of the table
-	 * 				
+	 *
 	 * @return	array		infos about the table and foreign table:
 					table         ... name of the table
 					foreign_table ... name of the foreign table
-					mmtable       ... name of the mm table 
+					mmtable       ... name of the mm table
 					foreign_field ... name of the field in the mm table which joins with
 					                  the foreign table
 	 * @access	public
-	 * 
+	 *
 	 */
-	function getForeignTableInfo_fh001 ($functablename,$fieldname)	{
-		global $TCA;
+	function getForeignTableInfo_fh002 ($tablename,$fieldname)	{
+		global $TCA, $TYPO3_DB;
 
-		$cnf = &t3lib_div::getUserObj('&tx_ttproducts_config');
-		$tablename = $cnf->getTableName ($functablename);
-		$tableConf = $TCA[$tablename]['columns'][$fieldname]['config'];
-
-		if ($tableConf['type'] == 'inline') 	{
-			$mmTablename = $tableConf['foreign_table'];
-			$foreignFieldname = $tableConf['foreign_selector'];
-		} else if ($tableConf['type'] == 'select') 	{
-			$mmTablename = $tableConf['MM'];
-			$foreignFieldname = 'uid_foreign';
-		}
-		$mmTableConf = $TCA[$mmTablename]['columns'][$foreignFieldname]['config'];
 		$rc = array();
-		$rc['table'] = $tablename;
-		$rc['foreign_table'] = $mmTableConf['foreign_table'];
-		$rc['mmtable'] = $mmTablename;
-		$rc['foreign_field'] = $foreignFieldname;
+		if ($fieldname != '')	{
+			$tableConf = $TCA[$tablename]['columns'][$fieldname]['config'];
+
+			if ($tableConf['type'] == 'inline') 	{
+				$mmTablename = $tableConf['foreign_table'];
+				$foreignFieldname = $tableConf['foreign_selector'];
+			} else if ($tableConf['type'] == 'select' && isset($tableConf['MM'])) 	{
+				$mmTablename = $tableConf['MM'];
+				$foreignFieldname = 'uid_foreign';
+			}
+			$mmTableConf = $TCA[$mmTablename]['columns'][$foreignFieldname]['config'];
+			if ($tableConf['type'] == 'inline') 	{
+				$foreignTable = $mmTableConf['foreign_table'];
+			} else if ($tableConf['type'] == 'select') 	{
+				$foreignTable = $tableConf['foreign_table'];
+			}
+
+			$rc['table'] = $tablename;
+			$rc['foreign_table'] = $foreignTable;
+			$rc['mmtable'] = $mmTablename;
+			$rc['foreign_field'] = $foreignFieldname;
+		}
 		return $rc;
 	}
 
@@ -99,10 +106,10 @@ class tx_div2007_alpha {
 	 * @param	string		reference to the foreign selector
 	 * @param	string		field of the table
 	 * @param	string		field of the table
-	 * 				
+	 *
 	 * @return	void
 	 * @access	public
-	 * 
+	 *
 	 */
 	function getTablenames_fh001 ($theTable, $field, &$foreignMMtable, &$foreignField, &$foreignSelector, &$foreignTable, $bIsMMRelation=TRUE) {
 		global $TCA;
@@ -119,21 +126,100 @@ class tx_div2007_alpha {
 
 
 	/**
+	 * Returns the field which forms the relation between the local table and the foreign table
+	 * Only the first field will be returned even if there is more than one field.
+	 *
+	 * @param	string		name of the local table
+	 * @param	string		name of the foreign table
+	 *
+	 * @return	string		field of the table
+	 * @access	public
+	 *
+	 */
+	function getLocalTableField_fh001 ($theTable, $foreignTable)	{
+		global $TCA;
+
+		$rc = '';
+		if (!isset($TCA[$theTable]['columns']))	{
+			t3lib_div::loadTCA($theTable);
+			t3lib_div::loadTCA($foreignTable);
+		}
+
+		if (isset($TCA[$theTable]['columns']) && is_array($TCA[$theTable]['columns']))	{
+
+			foreach ($TCA[$theTable]['columns'] as $field => $ConfigArray)	{
+
+				if ($TCA[$theTable]['columns'][$field]['config']['foreign_table'] == $foreignTable)	{
+					$rc = $field;
+					break;
+				}
+			}
+		}
+		return $rc;
+	}
+
+
+	/**
+	 * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
+	 * Usage: 3
+	 *
+	 * @param	array		Configuration array for the field, taken from $TCA
+	 * @param	string		Field name
+	 * @param	array		TSconfig array from which to get further configuration settings for the field name
+	 * @param	string		Prefix string for the key "*foreign_table_where" from $fieldValue array
+	 * @return	string		resulting where string with accomplished marker substitution
+	 * @internal
+	 * @see t3lib_transferData::renderRecord(), t3lib_TCEforms::foreignTable()
+	 */
+	function foreign_table_where_query ($fieldValue, $field = '', $TSconfig = array(), $prefix = '') {
+		global $TCA;
+
+		$foreign_table = $fieldValue['config'][$prefix.'foreign_table'];
+		t3lib_div::loadTCA($foreign_table);
+		$rootLevel = $TCA[$foreign_table]['ctrl']['rootLevel'];
+
+		$fTWHERE = $fieldValue['config'][$prefix.'foreign_table_where'];
+		if (strstr($fTWHERE, '###REC_FIELD_')) {
+			$fTWHERE_parts = explode('###REC_FIELD_', $fTWHERE);
+			while(list($kk, $vv) = each($fTWHERE_parts)) {
+				if ($kk) {
+					$fTWHERE_subpart = explode('###', $vv, 2);
+					$fTWHERE_parts[$kk] = $TSconfig['_THIS_ROW'][$fTWHERE_subpart[0]].$fTWHERE_subpart[1];
+				}
+			}
+			$fTWHERE = implode('', $fTWHERE_parts);
+		}
+
+		$fTWHERE = str_replace('###CURRENT_PID###', intval($TSconfig['_CURRENT_PID']), $fTWHERE);
+		$fTWHERE = str_replace('###THIS_UID###', intval($TSconfig['_THIS_UID']), $fTWHERE);
+		$fTWHERE = str_replace('###THIS_CID###', intval($TSconfig['_THIS_CID']), $fTWHERE);
+		$fTWHERE = str_replace('###STORAGE_PID###', intval($TSconfig['_STORAGE_PID']), $fTWHERE);
+		$fTWHERE = str_replace('###SITEROOT###', intval($TSconfig['_SITEROOT']), $fTWHERE);
+		$fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', intval($TSconfig[$field]['PAGE_TSCONFIG_ID']), $fTWHERE);
+		$fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', $GLOBALS['TYPO3_DB']->cleanIntList($TSconfig[$field]['PAGE_TSCONFIG_IDLIST']), $fTWHERE);
+
+		$fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', $GLOBALS['TYPO3_DB']->quoteStr($TSconfig[$field]['PAGE_TSCONFIG_STR'], $foreign_table), $fTWHERE);
+
+		return $fTWHERE;
+	}
+
+
+	/**
 	 * Returns the help page with a mini guide how to setup the extension
-	 * 
+	 *
 	 * example:
 	 * 	$content .= tx_fhlibrary_view::displayHelpPage($this->cObj->fileResource('EXT:'.TT_PRODUCTS_EXTkey.'/template/products_help.tmpl'));
 	 * 	unset($this->errorMessage);
 	 *
-	 * @param	object		tx_div2007_alpha_language_base object
+	 * @param	object		tx_div2007_alpha_language_base
 	 * @param	string		path and filename of the template file
-	 * 				
+	 *
 	 * @return	string		HTML to display the help page
 	 * @access	public
-	 * 
+	 * deprecated, use displayHelpPage_fh002 instead
 	 * @see fhlibrary_pibase::pi_displayHelpPage
 	 */
-	function displayHelpPage_fh001(&$langObj, $helpTemplate, $extKey, $errorMessage='', $theCode='') {
+	function displayHelpPage_fh001 (&$langObj, $helpTemplate, $extKey, $errorMessage='', $theCode='') {
 			// Get language version
 		$helpTemplate_lang='';
 		if ($langObj->LLkey)	{
@@ -150,6 +236,43 @@ class tx_div2007_alpha {
 	}
 
 
+	/**
+	 * Returns the help page with a mini guide how to setup the extension
+	 *
+	 * example:
+	 * 	$content .= tx_fhlibrary_view::displayHelpPage($this->cObj->fileResource('EXT:'.TT_PRODUCTS_EXTkey.'/template/products_help.tmpl'));
+	 * 	unset($this->errorMessage);
+	 *
+	 * @param	object		tx_div2007_alpha_language_base
+	 * @param	object		cObj
+	 * @param	string		HTML template content
+	 * @param	string		extension key
+	 * @param	string		error message for the marker ###ERROR_MESSAGE###
+	 * @param	string		CODE of plugin
+	 *
+	 * @return	string		HTML to display the help page
+	 * @access	public
+	 *
+	 * @see fhlibrary_pibase::pi_displayHelpPage
+	 */
+	function displayHelpPage_fh002 (&$langObj, &$cObj, $helpTemplate, $extKey, $errorMessage='', $theCode='') {
+			// Get language version
+		$helpTemplate_lang='';
+		if ($langObj->LLkey)	{
+			$helpTemplate_lang = $cObj->getSubpart($helpTemplate,'###TEMPLATE_'.$langObj->LLkey.'###');
+		}
+
+		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
+			// Markers and substitution:
+
+		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
+		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>'.$errorMessage.'</b><br/>' : '');
+		$markerArray['###CODE###'] = $theCode;
+		$rc = $cObj->substituteMarkerArray($helpTemplate,$markerArray);
+		return $rc;
+	}
+
+
 	/* loadTcaAdditions($ext_keys)
 	*
 	* Your extension may depend on fields that are added by other
@@ -160,7 +283,7 @@ class tx_div2007_alpha {
 	*
 	* @param array     extension keys which have TCA additions to load
 	*/
-	function loadTcaAdditions_fh001($ext_keys){
+	function loadTcaAdditions_fh001 ($ext_keys){
 		global $_EXTKEY, $TCA;
 
 		//Merge all ext_keys
@@ -174,6 +297,11 @@ class tx_div2007_alpha {
 				}
 			}
 		}
+
+			// ext-script
+		if (TYPO3_extTableDef_script)	{
+			include (PATH_typo3conf.TYPO3_extTableDef_script);
+		}
 	}
 
 
@@ -183,7 +311,7 @@ class tx_div2007_alpha {
 	 * @param	string		Extension key
 	 * @return	array		Information array (unless an error occured)
 	 */
-	function getExtensionInfo_fh001($extKey)	{
+	function getExtensionInfo_fh001 ($extKey)	{
 		$rc = '';
 
 		if (t3lib_extMgm::isLoaded($extKey))	{
@@ -233,18 +361,59 @@ class tx_div2007_alpha {
 	 * @param	boolean		If true, the output label is passed through htmlspecialchars()
 	 * @return	string		The value from LOCAL_LANG.
 	 */
-	function getLL(&$langObj,$key,$alt='',$hsc=FALSE)	{
+	function getLL (&$langObj,$key,$alt='',$hsc=FALSE)	{
+
+		if (is_object($langObj))	{
+			if (isset($langObj->LOCAL_LANG[$langObj->LLkey][$key]))	{
+				$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$langObj->LLkey][$key], $langObj->LOCAL_LANG_charset[$langObj->LLkey][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
+			} elseif ($langObj->altLLkey && isset($langObj->LOCAL_LANG[$langObj->altLLkey][$key]))	{
+				$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$langObj->altLLkey][$key], $langObj->LOCAL_LANG_charset[$langObj->altLLkey][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
+			} elseif (isset($langObj->LOCAL_LANG['default'][$key]))	{
+				$word = $langObj->LOCAL_LANG['default'][$key];	// No charset conversion because default is english and thereby ASCII
+			} else {
+				$word = $langObj->LLtestPrefixAlt.$alt;
+			}
+			$output = $langObj->LLtestPrefix.$word;
+			if ($hsc)	$output = htmlspecialchars($output);
+		} else {
+			$output = 'error in call of tx_div2007_alpha::getLL: parameter $langObj is not an object';
+			debug ($output, '$output', __LINE__, __FILE__);
+		}
+
+		return $output;
+	}
+
+
+	/**
+	 * This is a variant of the original pi_getLL from tslib_pibase
+	 * Returns the localized label of the LOCAL_LANG key, $key
+	 * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->LLtestPrefixAlt and ->LLtestPrefix
+	 *
+	 * @param	object		tx_div2007_alpha_language_base object
+	 * @param	string		output: the used language
+	 * @param	string		The key from the LOCAL_LANG array for which to return the value.
+	 * @param	string		Alternative string to return IF no value is found set for the key, neither for the local language nor the default.
+	 * @param	boolean		If true, the output label is passed through htmlspecialchars()
+	 * @return	string		The value from LOCAL_LANG.
+	 */
+	function getLL_fh001 (&$langObj,&$usedLang,$key,$alt='',$hsc=FALSE)	{
+
 		if (isset($langObj->LOCAL_LANG[$langObj->LLkey][$key]))	{
-			$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$langObj->LLkey][$key], $langObj->LOCAL_LANG_charset[$langObj->LLkey][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
+			$usedLang = $langObj->LLkey;
+			$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$usedLang][$key], $langObj->LOCAL_LANG_charset[$usedLang][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
 		} elseif ($langObj->altLLkey && isset($langObj->LOCAL_LANG[$langObj->altLLkey][$key]))	{
-			$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$langObj->altLLkey][$key], $langObj->LOCAL_LANG_charset[$langObj->altLLkey][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
+			$usedLang = $langObj->altLLkey;
+			$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$usedLang][$key], $langObj->LOCAL_LANG_charset[$usedLang][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
 		} elseif (isset($langObj->LOCAL_LANG['default'][$key]))	{
-			$word = $langObj->LOCAL_LANG['default'][$key];	// No charset conversion because default is english and thereby ASCII
+			$usedLang = 'default';
+			$word = $langObj->LOCAL_LANG[$usedLang][$key];	// No charset conversion because default is English and thereby ASCII
 		} else {
 			$word = $langObj->LLtestPrefixAlt.$alt;
 		}
 		$output = $langObj->LLtestPrefix.$word;
-		if ($hsc)	$output = htmlspecialchars($output);
+		if ($hsc)	{
+			$output = htmlspecialchars($output);
+		}
 
 		return $output;
 	}
@@ -258,22 +427,24 @@ class tx_div2007_alpha {
 	 * @param	object		tx_div2007_alpha_language_base object
 	 * @param	string		relative path and filename of the language file
 	 * @param	boolean		overwrite ... if current settings should be overwritten
-	 * 
+	 *
 	 * @return	void
 	 */
-	function loadLL_fh001(&$langObj,$langFileParam,$overwrite=TRUE)	{
-		$langFile = ($langFileParam ? $langFile = $langFileParam : 'locallang.php');
+	function loadLL_fh001 (&$langObj,$langFileParam,$overwrite=TRUE)	{
+		global $TSFE;
 
-		if ($langObj->scriptRelPath)	{
-			if (substr($langFile,0,4)==='EXT:')	{
+		if (is_object($langObj))	{
+			$langFile = ($langFileParam ? $langFileParam : 'locallang.php');
+
+			if (substr($langFile,0,4)==='EXT:' || substr($langFile,0,5)==='typo3' || substr($langFile,0,9)==='fileadmin')	{
 				$basePath = $langFile;
 			} else {
-				$basePath = t3lib_extMgm::extPath($langObj->extKey).dirname($langObj->scriptRelPath).'/'.$langFile;
+				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
-
 				// php or xml as source: In any case the charset will be that of the system language.
 				// However, this function guarantees only return output for default language plus the specified language (which is different from how 3.7.0 dealt with it)
-			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$langObj->LLkey);
+			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$langObj->LLkey,$TSFE->renderCharset);
+
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG))	{
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray)	{
 					if (is_array($tempLOCAL_LANG[$langKey]))	{
@@ -285,10 +456,10 @@ class tx_div2007_alpha {
 					}
 				}
 			} else {
-				$langObj->LOCAL_LANG = $tempLOCAL_LANG; 
+				$langObj->LOCAL_LANG = $tempLOCAL_LANG;
 			}
 			if ($langObj->altLLkey)	{
-				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$langObj->altLLkey);
+				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$langObj->altLLkey,$TSFE->renderCharset);
 
 				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG))	{
 					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray)	{
@@ -298,18 +469,17 @@ class tx_div2007_alpha {
 							} else {
 								$langObj->LOCAL_LANG[$langKey] = array_merge($tempLOCAL_LANG[$langKey],$langObj->LOCAL_LANG[$langKey]);
 							}
-						} 
+						}
 					}
 				} else {
-					$langObj->LOCAL_LANG = $tempLOCAL_LANG; 
+					$langObj->LOCAL_LANG = $tempLOCAL_LANG;
 				}
 			}
 
 				// Overlaying labels from TypoScript (including fictious language keys for non-system languages!):
 			if (is_array($langObj->conf['_LOCAL_LANG.']))	{
-				reset($langObj->conf['_LOCAL_LANG.']);
 
-				while(list($k,$lA)=each($langObj->conf['_LOCAL_LANG.']))	{
+				foreach($langObj->conf['_LOCAL_LANG.'] as $k => $lA)	{
 					if (is_array($lA))	{
 						$k = substr($k,0,-1);
 						foreach($lA as $llK => $llV)	{
@@ -319,13 +489,13 @@ class tx_div2007_alpha {
 										foreach ($llV2 as $llk3 => $llV3) {
 											if (is_array($llV3))	{
 												foreach ($llV3 as $llk4 => $llV4) {
-													 if (is_array($llV4))	{
-													 } else {
+														if (is_array($llV4))	{
+														} else {
 														$langObj->LOCAL_LANG[$k][$llK.$llk2.$llk3.$llk4] = $llV4;
 														if ($k != 'default')	{
 															$langObj->LOCAL_LANG_charset[$k][$llK.$llk2.$llk3.$llk4] = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];	// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
 														}
-													 }
+														}
 												}
 											} else {
 												$langObj->LOCAL_LANG[$k][$llK.$llk2.$llk3] = $llV3;
@@ -351,6 +521,9 @@ class tx_div2007_alpha {
 					}
 				}
 			}
+		} else {
+			$output = 'error in call of tx_div2007_alpha::loadLL_fh001: parameter $langObj is not an object';
+			debug ($output, '$output', __LINE__, __FILE__);
 		}
 	}
 
@@ -361,7 +534,7 @@ class tx_div2007_alpha {
 	 * @param	string		Key string. Accepts the "LLL:" prefix.
 	 * @return	string		Label value, if any.
 	 */
-	function sL_fh001($input)	{
+	function sL_fh001 ($input)	{
 		$restStr = trim(substr($input,4));
 		$extPrfx='';
 		if (!strcmp(substr($restStr,0,4),'EXT:'))	{
@@ -378,16 +551,16 @@ class tx_div2007_alpha {
 	 * The default value will be used if no return value would be available.
 	 * This can be used fine to get the CODE values or the display mode dependant if flexforms are used or not.
 	 * And all others fields of the flexforms can be read.
-	 * 
+	 *
 	 * example:
 	 * 	$config['code'] = tx_fhlibrary_flexform::getSetupOrFFvalue(
-	 * 					$this->conf['code'], 
-	 * 					$this->conf['code.'], 
-	 * 					$this->conf['defaultCode'], 
+	 * 					$this->conf['code'],
+	 * 					$this->conf['code.'],
+	 * 					$this->conf['defaultCode'],
 	 * 					$this->cObj->data['pi_flexform'],
 	 * 					'display_mode',
 	 * 					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][TT_PRODUCTS_EXTkey]['useFlexforms']);
-	 * 
+	 *
 	 * You have to call $this->pi_initPIflexForm(); before you call this method!
 	 * @param	object		tx_div2007_alpha_language_base object
 	 * @param	string		TypoScript configuration
@@ -402,20 +575,155 @@ class tx_div2007_alpha {
 	 * @see fhlibrary_pibase::pi_getSetupOrFFvalue
 	 */
 
-	function getSetupOrFFvalue_fh001(&$langObj, $code, $codeExt, $defaultCode, $T3FlexForm_array, $fieldName='display_mode', $useFlexforms=1, $sheet='sDEF',$lang='lDEF',$value='vDEF') {
+	function getSetupOrFFvalue_fh001 (&$langObj, $code, $codeExt, $defaultCode, $T3FlexForm_array, $fieldName='display_mode', $useFlexforms=1, $sheet='sDEF',$lang='lDEF',$value='vDEF') {
 		$rc = '';
-		if (empty($code)) {
-			if ($useFlexforms) {
-				// Converting flexform data into array:
-				$rc = $langObj->pi_getFFvalue($T3FlexForm_array, $fieldName, $sheet, $lang, $value);
+		if (is_object($langObj))	{
+			if (empty($code)) {
+				if ($useFlexforms) {
+					// Converting flexform data into array:
+					$rc = $langObj->pi_getFFvalue($T3FlexForm_array, $fieldName, $sheet, $lang, $value);
+				} else {
+					$rc = strtoupper(trim($langObj->cObj->stdWrap($code, $codeExt)));
+				}
+				if (empty($rc)) {
+					$rc = strtoupper($defaultCode);
+				}
 			} else {
-				$rc = strtoupper(trim($langObj->cObj->stdWrap($code, $codeExt)));
-			}
-			if (empty($rc)) {
-				$rc = strtoupper($defaultCode);
+				$rc = $code;
 			}
 		} else {
-			$rc = $code;
+			$rc = 'error in call of tx_div2007_alpha::getSetupOrFFvalue_fh001: parameter $langObj is not an object';
+			debug ($rc, '$rc', __LINE__, __FILE__);
+		}
+		return $rc;
+	}
+
+
+	/**
+	 * Returns the values from the setup field or the field of the flexform converted into the value
+	 * The default value will be used if no return value would be available.
+	 * This can be used fine to get the CODE values or the display mode dependant if flexforms are used or not.
+	 * And all others fields of the flexforms can be read.
+	 *
+	 * example:
+	 * 	$config['code'] = tx_div2007_alpha::getSetupOrFFvalue_fh002(
+	 *					$langObj,
+	 * 					$this->conf['code'],
+	 * 					$this->conf['code.'],
+	 * 					$this->conf['defaultCode'],
+	 * 					$this->cObj->data['pi_flexform'],
+	 * 					'display_mode',
+	 * 					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][TT_PRODUCTS_EXTkey]['useFlexforms']);
+	 *
+	 * You have to call $this->pi_initPIflexForm(); before you call this method!
+	 * @param	object		tx_div2007_alpha_language_base object
+	 * @param	string		TypoScript configuration
+	 * @param	string		extended TypoScript configuration
+	 * @param	string		default value to use if the result would be empty
+	 * @param	boolean		if flexforms are used or not
+	 * @param	string		name of the flexform which has been used in ext_tables.php
+	 * 						$TCA['tt_content']['types']['list']['subtypes_addlist']['5']='pi_flexform';
+	 * @return	string		name of the field to look for in the flexform
+	 * @access	public
+	 *
+	 */
+	function getSetupOrFFvalue_fh002 (
+		&$langObj,
+		$code,
+		$codeExt,
+		$defaultCode,
+		$T3FlexForm_array,
+		$fieldName='display_mode',
+		$bUseFlexforms=TRUE,
+		$sheet='sDEF',
+		$lang='lDEF',
+		$value='vDEF'
+	) {
+		$rc = '';
+		if (is_object($langObj))	{
+			if (empty($code)) {
+				if ($bUseFlexforms) {
+					include_once(PATH_BE_div2007 . 'class.tx_div2007_ff.php');
+
+					// Converting flexform data into array:
+					$rc = tx_div2007_ff::get($T3FlexForm_array, $fieldName, $sheet, $lang, $value);
+				} else {
+					$rc = strtoupper(trim($langObj->cObj->stdWrap($code, $codeExt)));
+				}
+				if (empty($rc)) {
+					$rc = strtoupper($defaultCode);
+				}
+			} else {
+				$rc = $code;
+			}
+		} else {
+			$rc = 'error in call of tx_div2007_alpha::getSetupOrFFvalue_fh002: parameter $langObj is not an object';
+			debug ($rc, '$rc', __LINE__, __FILE__);
+		}
+		return $rc;
+	}
+
+
+	/**
+	 * Returns the values from the setup field or the field of the flexform converted into the value
+	 * The default value will be used if no return value would be available.
+	 * This can be used fine to get the CODE values or the display mode dependant if flexforms are used or not.
+	 * And all others fields of the flexforms can be read.
+	 *
+	 * example:
+	 * 	$config['code'] = tx_div2007_alpha::getSetupOrFFvalue_fh003(
+	 *					$cObj,
+	 * 					$this->conf['code'],
+	 * 					$this->conf['code.'],
+	 * 					$this->conf['defaultCode'],
+	 * 					$this->cObj->data['pi_flexform'],
+	 * 					'display_mode',
+	 * 					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][TT_PRODUCTS_EXTkey]['useFlexforms']);
+	 *
+	 * You have to call $this->pi_initPIflexForm(); before you call this method!
+	 * @param	object		tx_div2007_alpha_language_base object
+	 * @param	string		TypoScript configuration
+	 * @param	string		extended TypoScript configuration
+	 * @param	string		default value to use if the result would be empty
+	 * @param	boolean		if flexforms are used or not
+	 * @param	string		name of the flexform which has been used in ext_tables.php
+	 * 						$TCA['tt_content']['types']['list']['subtypes_addlist']['5']='pi_flexform';
+	 * @return	string		name of the field to look for in the flexform
+	 * @access	public
+	 *
+	 */
+	function getSetupOrFFvalue_fh003 (
+		&$cObj,
+		$code,
+		$codeExt,
+		$defaultCode,
+		$T3FlexForm_array,
+		$fieldName='display_mode',
+		$bUseFlexforms=TRUE,
+		$sheet='sDEF',
+		$lang='lDEF',
+		$value='vDEF'
+	) {
+		$rc = '';
+		if (is_object($cObj))	{
+			if (empty($code)) {
+				if ($bUseFlexforms) {
+					include_once(PATH_BE_div2007 . 'class.tx_div2007_ff.php');
+
+					// Converting flexform data into array:
+					$rc = tx_div2007_ff::get($T3FlexForm_array, $fieldName, $sheet, $lang, $value);
+				} else {
+					$rc = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
+				}
+				if (empty($rc)) {
+					$rc = strtoupper($defaultCode);
+				}
+			} else {
+				$rc = $code;
+			}
+		} else {
+			$rc = 'error in call of tx_div2007_alpha::getSetupOrFFvalue_fh003: parameter $cObj is not an object';
+			debug ($rc, '$rc', __LINE__, __FILE__);
 		}
 		return $rc;
 	}
@@ -436,21 +744,69 @@ class tx_div2007_alpha {
  	 * @return	string		The wrapped $label-text string
 	 * @see getTypoLink_URL()
 	 */
-	function getTypoLink_fh001(&$langObj, $label,$params,$urlParameters=array(),$target='',$conf=array())	{
-		$conf['parameter'] = $params;
-		if ($target)	{
-			$conf['target']=$target;
-			$conf['extTarget']=$target;
+	function getTypoLink_fh001 (&$langObj,$label,$params,$urlParameters=array(),$target='',$conf=array())	{
+
+		if (is_object($langObj))	{
+			$conf['parameter'] = $params;
+			if ($target)	{
+				$conf['target']=$target;
+				$conf['extTarget']=$target;
+			}
+			if (is_array($urlParameters))	{
+				if (count($urlParameters))	{
+					$conf['additionalParams'].= t3lib_div::implodeArrayForUrl('',$urlParameters);
+				}
+			} else {
+				$conf['additionalParams'].=$urlParameters;
+			}
+			$out = $langObj->cObj->typolink($label,$conf);
+		} else {
+			$out = 'error in call of tx_div2007_alpha::getTypoLink_fh001: parameter $langObj is not an object';
+			debug ($out, '$out', __LINE__, __FILE__);
 		}
-		if (is_array($urlParameters))	{
-			if (count($urlParameters))	{
-				$conf['additionalParams'].= t3lib_div::implodeArrayForUrl('',$urlParameters);
+		return $out;
+	}
+
+
+	/**
+	 * Returns a linked string made from typoLink parameters.
+	 *
+	 * This function takes $label as a string, wraps it in a link-tag based on the $params string, which should contain data like that you would normally pass to the popular <LINK>-tag in the TSFE.
+	 * Optionally you can supply $urlParameters which is an array with key/value pairs that are rawurlencoded and appended to the resulting url.
+	 *
+	 * @param	object		cObject
+	 * @param	string		Text string being wrapped by the link.
+	 * @param	string		Link parameter; eg. "123" for page id, "kasperYYYY@typo3.com" for email address, "http://...." for URL, "fileadmin/blabla.txt" for file.
+	 * @param	array		An array with key/value pairs representing URL parameters to set. Values NOT URL-encoded yet.
+	 * @param	string		Specific target set, if any. (Default is using the current)
+	 * @param	array		Configuration
+ 	 * @return	string		The wrapped $label-text string
+	 * @see getTypoLink_URL()
+	 */
+	function getTypoLink_fh002 (&$cObj,$label,$params,$urlParameters=array(),$target='',$conf=array())	{
+
+		if (is_object($cObj))	{
+			$rc = FALSE;
+			$conf['parameter'] = $params;
+			if ($target)	{
+				$conf['target']=$target;
+				$conf['extTarget']=$target;
+			}
+			if (is_array($urlParameters))	{
+				if (count($urlParameters))	{
+					$conf['additionalParams'].= t3lib_div::implodeArrayForUrl('',$urlParameters);
+				}
+			} else {
+				$conf['additionalParams'].=$urlParameters;
+			}
+			if (is_object($cObj))	{
+				$rc = $cObj->typolink($label,$conf);
 			}
 		} else {
-			$conf['additionalParams'].=$urlParameters;
+			$out = 'error in call of tx_div2007_alpha::getTypoLink_fh002: parameter $cObj is not an object';
+			debug ($out, '$out', __LINE__, __FILE__);
 		}
-		$out = $langObj->cObj->typolink($label,$conf);
-		return $out;
+		return $rc;
 	}
 
 
@@ -465,11 +821,33 @@ class tx_div2007_alpha {
 	 * @return	string		The URL
 	 * @see getTypoLink()
 	 */
-	function getTypoLink_URL_fh001(&$langObj, $params,$urlParameters=array(),$target='',$conf=array())	{
-		self::getTypoLink_fh001($langObj,'',$params,$urlParameters,$target,$conf);
+	function getTypoLink_URL_fh001 (&$langObj, $params,$urlParameters=array(),$target='',$conf=array())	{
+		tx_div2007_alpha::getTypoLink_fh001($langObj,'',$params,$urlParameters,$target,$conf);
 		$rc = $langObj->cObj->lastTypoLinkUrl;
 		return $rc;
 	}
+
+
+	/**
+	 * Returns the URL of a "typolink" create from the input parameter string, url-parameters and target
+	 *
+	 * @param	object		cObject
+	 * @param	string		Link parameter; eg. "123" for page id, "kasperYYYY@typo3.com" for email address, "http://...." for URL, "fileadmin/blabla.txt" for file.
+	 * @param	array		An array with key/value pairs representing URL parameters to set. Values NOT URL-encoded yet.
+	 * @param	string		Specific target set, if any. (Default is using the current)
+	 * @param	array		Configuration
+	 * @return	string		The URL
+	 * @see getTypoLink()
+	 */
+	function getTypoLink_URL_fh002 (&$cObj, $params,$urlParameters=array(),$target='',$conf=array())	{
+		$rc = FALSE;
+		if (is_object($cObj))	{
+			$out = tx_div2007_alpha::getTypoLink_fh002($cObj,'',$params,$urlParameters,$target,$conf);
+			$rc = $cObj->lastTypoLinkUrl;
+		}
+		return $rc;
+	}
+
 
 	/***************************
 	 *
@@ -492,9 +870,132 @@ class tx_div2007_alpha {
 	 * @return	string		The resulting URL
 	 * @see pi_linkToPage()
 	 */
-	function getPageLink_fh001(&$langObj, $id,$target='',$urlParameters=array(),$conf=array())	{
-		$rc = self::getTypoLink_URL_fh001($langObj,$id,$urlParameters,$target, $conf);
+	function getPageLink_fh001 (&$langObj,$id,$target='',$urlParameters=array(),$conf=array())	{
+		$rc = tx_div2007_alpha::getTypoLink_URL_fh001($langObj,$id,$urlParameters,$target,$conf);
 		return $rc;
+	}
+
+
+	/**
+	 * Get URL to some page.
+	 * Returns the URL to page $id with $target and an array of additional url-parameters, $urlParameters
+	 * Simple example: $this->pi_getPageLink(123) to get the URL for page-id 123.
+	 *
+	 * The function basically calls $this->cObj->getTypoLink_URL()
+	 *
+	 * @param	object		cObject
+	 * @param	integer		Page id
+	 * @param	string		Target value to use. Affects the &type-value of the URL, defaults to current.
+	 * @param	array		Additional URL parameters to set (key/value pairs)
+	 * @param	array		Configuration
+	 * @return	string		The resulting URL
+	 * @see pi_linkToPage()
+	 */
+	function getPageLink_fh002 (&$cObj,$id,$target='',$urlParameters=array(),$conf=array())	{
+		$rc = tx_div2007_alpha::getTypoLink_URL_fh002($cObj,$id,$urlParameters,$target,$conf);
+		return $rc;
+	}
+
+
+	/**
+	 * Wrap content with the plugin code
+	 * wraps the content of the plugin before the final output
+	 *
+	 * @param	string		content
+	 * @param	string		CODE of plugin
+	 * @param	string		prefix id of the plugin
+	 * @param	string		template suffix of the used template subpart marker
+	 * @return	string		The resulting content
+	 * @see pi_linkToPage()
+	 */
+	function wrapContentCode_fh001 (&$content,$theCode,$prefixId,$templateSuffix)	{
+		$rc = '';
+
+		$idNumber = str_replace('_','-',$prefixId.'-'.strtolower($theCode));
+		if ($templateSuffix)	{
+			$idNumber .= strtolower(str_replace('_','-',$templateSuffix));
+		}
+		$rc ='<!-- START: '.$idNumber.' --><div id="'.$idNumber.'">'.($content!='' ? $content : '').'</div><!-- END: '.$idNumber.' -->';
+		return $rc;
+	}
+
+
+	/**
+	 * Wrap content with the plugin code
+	 * wraps the content of the plugin before the final output
+	 *
+	 * @param	string		content
+	 * @param	string		CODE of plugin
+	 * @param	string		prefix id of the plugin
+	 * @param	string		content uid
+	 * @return	string		The resulting content
+	 * @see pi_linkToPage()
+	 */
+	function wrapContentCode_fh002 (&$content,$theCode,$prefixId,$uid)	{
+		$rc = '';
+
+		$idNumber = str_replace('_','-',$prefixId.'-'.strtolower($theCode));
+		$idNumber .= '-'.$uid;
+		$rc ='<!-- START: '.$idNumber.' --><div id="'.$idNumber.'">'.($content!='' ? $content : '').'</div><!-- END: '.$idNumber.' -->';
+		return $rc;
+	}
+
+
+	/**
+	 * Wrap content with the plugin code
+	 * wraps the content of the plugin before the final output
+	 *
+	 * @param	string		content
+	 * @param	string		CODE of plugin
+	 * @param	string		prefix id of the plugin
+	 * @param	string		content uid
+	 * @return	string		The resulting content
+	 * @see pi_linkToPage()
+	 */
+	function wrapContentCode_fh003 (&$content,$theCode,$prefixId,$uid)	{
+		$rc = '';
+
+		$idNumber = str_replace('_','-',$prefixId . '-' . strtolower($theCode));
+		if ($uid != '')	{
+			$idNumber .= '-' . $uid;
+		}
+		$rc ='<!-- START: ' . $idNumber . ' --><div id="' . $idNumber . '">' .
+			($content != '' ? $content : '') . '</div><!-- END: ' . $idNumber . ' -->';
+		return $rc;
+	}
+
+
+	/**
+	 * Wraps the input string in a <div> tag with the class attribute set to the prefixId.
+	 * All content returned from your plugins should be returned through this function so all content from your plugin is encapsulated in a <div>-tag nicely identifying the content of your plugin.
+	 *
+	 * @param	string		HTML content to wrap in the div-tags with the "main class" of the plugin
+	 * @return	string		HTML content wrapped, ready to return to the parent object.
+	 * @see pi_wrapInBaseClass()
+	 */
+	function wrapInBaseClass_fh001 ($str, $prefixId, $extKey)	{
+
+		$content = '<div class="' . str_replace('_','-',$prefixId) . '">
+		' . $str . '
+	</div>
+	';
+
+		if(!$GLOBALS['TSFE']->config['config']['disablePrefixComment'])	{
+			$content = '
+
+
+	<!--
+
+		BEGIN: Content of extension "' . $extKey . '", plugin "' . $prefixId . '"
+
+	-->
+	' . $content . '
+	<!-- END: Content of extension "' . $extKey . '", plugin "' . $prefixId . '" -->
+
+	';
+		}
+
+		return $content;
 	}
 
 
@@ -503,11 +1004,32 @@ class tx_div2007_alpha {
 	 * @param	object		tx_div2007_alpha_language_base object
 	 * @param	string		Configuration Key
 	 */
-	function getExternalCObject_fh001(&$langObj, $mConfKey)	{
-		if ($langObj->conf[$mConfKey] && $langObj->conf[$mConfKey.'.'])	{
-			$langObj->cObj->regObj = &$langObj;
-			return $langObj->cObj->cObjGetSingle($langObj->conf[$mConfKey],$langObj->conf[$mConfKey.'.'],'/'.$mConfKey.'/').'';
+	function getExternalCObject_fh001 (&$pOb, $mConfKey)	{
+		if ($pOb->conf[$mConfKey] && $pOb->conf[$mConfKey.'.'])	{
+			$pOb->cObj->regObj = &$pOb;
+			return $pOb->cObj->cObjGetSingle($pOb->conf[$mConfKey],$pOb->conf[$mConfKey.'.'],'/'.$mConfKey.'/').'';
 		}
+	}
+
+
+	/**
+	 * Get External CObjects
+	 * @param	object		tx_div2007_alpha_language_base object
+	 * @param	string		Configuration Key
+	 */
+	function getExternalCObject_fh002 ($pOb, $mConfKey) {
+		$result = '';
+
+		if ($pOb->conf[$mConfKey] && $pOb->conf[$mConfKey.'.'])	{
+			$pOb->cObj->regObj = $pOb;
+			$result = $pOb->cObj->cObjGetSingle(
+				$pOb->conf[$mConfKey],
+				$pOb->conf[$mConfKey . '.'],
+				'/' . $mConfKey . '/'
+			)
+				. '';
+		}
+		return $result;
 	}
 
 
@@ -515,18 +1037,17 @@ class tx_div2007_alpha {
 	 * run function from external cObject
 	 * @param	object		tx_div2007_alpha_language_base object
 	 */
-	function load_noLinkExtCobj_fh001(&$langObj)	{
+	function load_noLinkExtCobj_fh001 (&$langObj)	{
 		if ($langObj->conf['externalProcessing_final'] || is_array($langObj->conf['externalProcessing_final.']))	{	// If there is given another cObject for the final order confirmation template!
-			$langObj->externalCObject = self::getExternalCObject_fh001($langObj, 'externalProcessing_final');
+			$langObj->externalCObject = tx_div2007_alpha::getExternalCObject_fh001($langObj, 'externalProcessing_final');
 		}
 	} // load_noLinkExtCobj
-
 
 
 	/**
 	 * Calls user function
 	 */
-	function userProcess_fh001(&$pObject, &$conf, $mConfKey, $passVar)	{
+	function userProcess_fh001 (&$pObject, &$conf, $mConfKey, $passVar)	{
 		global $TSFE;
 
 		if (isset($conf) && is_array($conf) && $conf[$mConfKey])	{
@@ -536,7 +1057,6 @@ class tx_div2007_alpha {
 		}
 		return $passVar;
 	} // userProcess
-
 
 
 	/**
@@ -550,7 +1070,7 @@ class tx_div2007_alpha {
 	 * @return	string		The processed string
 	 * @see tslib_cObj::parseFunc()
 	 */
-	function RTEcssText(&$cObj, $str)	{
+	function RTEcssText (&$cObj, $str)	{
 		global $TSFE;
 
 		$parseFunc = $TSFE->tmpl->setup['lib.']['parseFunc_RTE.'];
@@ -558,6 +1078,18 @@ class tx_div2007_alpha {
 			$str = $cObj->parseFunc($str, $parseFunc);
 		}
 		return $str;
+	}
+
+
+	/**
+	 * Returns a class-name prefixed with $prefixId and with all underscores substituted to dashes (-)
+	 *
+	 * @param	string		The class name (or the END of it since it will be prefixed by $prefixId.'-')
+	 * @param	string		$prefixId
+	 * @return	string		The combined class name (with the correct prefix)
+	 */
+	function getClassName ($class, $prefixId='')	{
+		return str_replace('_','-',$prefixId).($prefixId?'-':'').$class;
 	}
 
 
@@ -585,7 +1117,7 @@ class tx_div2007_alpha {
 	 * @param	boolean		enable htmlspecialchars() for the pi_getLL function (set this to FALSE if you want f.e use images instead of text for links like 'previous' and 'next').
 	 * @return	string		Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
 	 */
-	function list_browseresults_fh001(&$pObject, $showResultCount=1,$tableParams='',$wrapArr=array(), $pointerName = 'pointer', $hscText = TRUE)	{
+	function list_browseresults_fh001 (&$pObject, $showResultCount=1,$tableParams='',$wrapArr=array(), $pointerName = 'pointer', $hscText = TRUE)	{
 
 			// Initializing variables:
 		$pointer = intval($pObject->piVars[$pointerName]);
@@ -625,10 +1157,10 @@ class tx_div2007_alpha {
 		$wrapper['browseLinksWrap'] = trim('<table '.$tableParams).'><tr>|</tr></table>';
 
 		if ($pObject->internal['imagePath'])	{
-			$onMouseOver = ($pObject->internal['imageOnMouseOver'] ? 'onmouseover="'.$pObject->internal['imageOnMouseOver'].'" ': ''); 		
-			$onMouseOut = ($pObject->internal['imageOnMouseOut'] ? 'onmouseout="'.$pObject->internal['imageOnMouseOut'].'" ': ''); 		
-			$onMouseOverActive = ($pObject->internal['imageActiveOnMouseOver'] ? 'onmouseover="'.$pObject->internal['imageActiveOnMouseOver'].'" ': ''); 		
-			$onMouseOutActive = ($pObject->internal['imageActiveOnMouseOut'] ? 'onmouseout="'.$pObject->internal['imageActiveOnMouseOut'].'" ': ''); 		
+			$onMouseOver = ($pObject->internal['imageOnMouseOver'] ? 'onmouseover="'.$pObject->internal['imageOnMouseOver'].'" ': '');
+			$onMouseOut = ($pObject->internal['imageOnMouseOut'] ? 'onmouseout="'.$pObject->internal['imageOnMouseOut'].'" ': '');
+			$onMouseOverActive = ($pObject->internal['imageActiveOnMouseOver'] ? 'onmouseover="'.$pObject->internal['imageActiveOnMouseOver'].'" ': '');
+			$onMouseOutActive = ($pObject->internal['imageActiveOnMouseOut'] ? 'onmouseout="'.$pObject->internal['imageActiveOnMouseOut'].'" ': '');
 			$wrapper['browseTextWrap'] = '<img src="'.$pObject->internal['imagePath'].$pObject->internal['imageFilemask'].'" '.$onMouseOver.$onMouseOut.'>';
 			$wrapper['activeBrowseTextWrap'] = '<img src="'.$pObject->internal['imagePath'].$pObject->internal['imageActiveFilemask'].'" '.$onMouseOverActive.$onMouseOutActive.'>';
 		}
@@ -747,56 +1279,262 @@ class tx_div2007_alpha {
 		}
 
 		$sTables = $pObject->cObj->wrap($resultCountMsg.$theLinks,$wrapper['browseBoxWrap']);
-
 		return $sTables;
 	}
 
-	/**
-	 * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
-	 * Usage: 3
-	 *
-	 * @param	array		Configuration array for the field, taken from $TCA
-	 * @param	string		Field name
-	 * @param	array		TSconfig array from which to get further configuration settings for the field name
-	 * @param	string		Prefix string for the key "*foreign_table_where" from $fieldValue array
-	 * @return	string		resulting where string with accomplished marker substitution
-	 * @internal
-	 * @see t3lib_transferData::renderRecord(), t3lib_TCEforms::foreignTable()
-	 */
-	public static function foreign_table_where_query($fieldValue, $field = '', $TSconfig = array(), $prefix = '') {
-		global $TCA;
 
-		$foreign_table = $fieldValue['config'][$prefix.'foreign_table'];
-		t3lib_div::loadTCA($foreign_table);
-		$rootLevel = $TCA[$foreign_table]['ctrl']['rootLevel'];
+	function initFE () {
+		global $TT, $TSFE;
 
-		$fTWHERE = $fieldValue['config'][$prefix.'foreign_table_where'];
-		if (strstr($fTWHERE, '###REC_FIELD_')) {
-			$fTWHERE_parts = explode('###REC_FIELD_', $fTWHERE);
-			while(list($kk, $vv) = each($fTWHERE_parts)) {
-				if ($kk) {
-					$fTWHERE_subpart = explode('###', $vv, 2);
-					$fTWHERE_parts[$kk] = $TSconfig['_THIS_ROW'][$fTWHERE_subpart[0]].$fTWHERE_subpart[1];
-				}
-			}
-			$fTWHERE = implode('', $fTWHERE_parts);
+		// *********************
+		// Libraries included
+		// *********************
+		$TT->push('Include Frontend libraries','');
+		require_once(PATH_tslib.'class.tslib_fe.php');
+		require_once(PATH_t3lib.'class.t3lib_page.php');
+		require_once(PATH_t3lib.'class.t3lib_userauth.php');
+		require_once(PATH_tslib.'class.tslib_feuserauth.php');
+		require_once(PATH_t3lib.'class.t3lib_tstemplate.php');
+		require_once(PATH_t3lib.'class.t3lib_cs.php');
+		$TT->pull();
+
+		// ***********************************
+		// Create $TSFE object (TSFE = TypoScript Front End)
+		// Connecting to database
+		// ***********************************
+		$temp_TSFEclassName=t3lib_div::makeInstanceClassName('tslib_fe');
+		$TSFE = new $temp_TSFEclassName(
+			$GLOBALS['TYPO3_CONF_VARS'],
+			t3lib_div::_GP('id'),
+			t3lib_div::_GP('type'),
+			t3lib_div::_GP('no_cache'),
+			t3lib_div::_GP('cHash'),
+			t3lib_div::_GP('jumpurl'),
+			t3lib_div::_GP('MP'),
+			t3lib_div::_GP('RDCT')
+		);
+
+		$TSFE->connectToMySQL();
+		if ($TSFE->RDCT)    {
+			$TSFE->sendRedirect();
 		}
 
-		$fTWHERE = str_replace('###CURRENT_PID###', intval($TSconfig['_CURRENT_PID']), $fTWHERE);
-		$fTWHERE = str_replace('###THIS_UID###', intval($TSconfig['_THIS_UID']), $fTWHERE);
-		$fTWHERE = str_replace('###THIS_CID###', intval($TSconfig['_THIS_CID']), $fTWHERE);
-		$fTWHERE = str_replace('###STORAGE_PID###', intval($TSconfig['_STORAGE_PID']), $fTWHERE);
-		$fTWHERE = str_replace('###SITEROOT###', intval($TSconfig['_SITEROOT']), $fTWHERE);
-		$fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', intval($TSconfig[$field]['PAGE_TSCONFIG_ID']), $fTWHERE);
-		$fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', $GLOBALS['TYPO3_DB']->cleanIntList($TSconfig[$field]['PAGE_TSCONFIG_IDLIST']), $fTWHERE);
+		// *******************
+		// output compression
+		// *******************
+		if ($GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel'])    {
+		ob_start();
+		require_once(PATH_t3lib.'class.gzip_encode.php');
+		}
 
-		$fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', $GLOBALS['TYPO3_DB']->quoteStr($TSconfig[$field]['PAGE_TSCONFIG_STR'], $foreign_table), $fTWHERE);
+		// *********
+		// FE_USER
+		// *********
+		$TT->push('Front End user initialized','');
+		$TSFE->initFEuser();
+		$TT->pull();
 
-		return $fTWHERE;
+		// *****************************************
+		// Proces the ID, type and other parameters
+		// After this point we have an array, $page in TSFE, which is the
+		// page-record of the current page, $id
+		// *****************************************
+		$TT->push('Process ID','');
+		// not needed and doesnot work with realurl //
+		$TSFE->checkAlternativeIdMethods();
+		$TSFE->clear_preview();
+		$TSFE->determineId();
+
+			// Now, if there is a backend user logged in and he has NO access to
+			// this page, then re-evaluate the id shown!
+		if ($TSFE->beUserLogin && !$BE_USER->extPageReadAccess($TSFE->page))    {
+
+			// Remove user
+			unset($BE_USER);
+			$TSFE->beUserLogin = 0;
+
+				// Re-evaluate the page-id.
+			$TSFE->checkAlternativeIdMethods();
+			$TSFE->clear_preview();
+			$TSFE->determineId();
+		}
+		$TSFE->makeCacheHash();
+		$TT->pull();
+
+		// *******************************************
+		// Get compressed $TCA-Array();
+		// After this, we should now have a valid $TCA, though minimized
+		// *******************************************
+		$TSFE->getCompressedTCarray();
+
+		// ********************************
+		// Starts the template
+		// *******************************
+		$TT->push('Start Template','');
+		$TSFE->initTemplate();
+		$TSFE->tmpl->getFileName_backPath = PATH_site;
+		$TT->pull();
+
+		// ******************************************************
+		// Get config if not already gotten
+		// After this, we should have a valid config-array ready
+		// ******************************************************
+		$TSFE->getConfigArray();
 	}
+
+
+	/**
+	 * This is will calculate your setup as a PHP function
+	 * This function is called in your stdWrap preUserFunc function.
+	 * 		preUserFunc = tx_div2007_alpha->phpFunc
+	 *		preUserFunc {
+	 *			php = round($value,12);
+	 *		}
+	 * The $value in the PHP string will be replaced by your value and the function
+	 * will be evaluated.
+	 *
+	 * @param	string		value
+	 * @param	array		the configuration. only the 'php' part is used.
+	 * @return	string		The processed string
+	 * @see tslib_cObj::parseFunc()
+	 */
+	function phpFunc ($content, $conf)	{
+
+		if ($conf['php'] != '')	{
+			$evalStr = str_replace('$value',$content,$conf['php']);
+			$rc = eval('return ' . $evalStr);
+		}
+		return $rc;
+	}
+
+
+	/**
+	 * Returns a class-name prefixed with $this->prefixId and with all underscores substituted to dashes (-)
+	 * this is an initial state, not yet finished! Therefore the debug lines have been left.
+	 *
+	 * @param	string		The class name (or the END of it since it will be prefixed by $prefixId.'-')
+	 * @param	string		$prefixId
+	 * @return	string		The combined class name (with the correct prefix)
+	 */
+	function unserialize_fh001 ($str, $bErrorCheck=TRUE)	{
+		$rc = FALSE;
+
+		$codeArray = array('a','s');
+		$len = strlen($str);
+		$depth = 0;
+		$mode = 'c';
+		$i=0;
+		$errorOffset = -1;
+		$controlArray = array();
+		$controlCount = array();
+		$controlData = array();
+		$controlIndex = 0;
+		while ($i < $len)	{
+/*debug ($controlArray[$controlIndex], '$controlArray['.$controlIndex.']', __LINE__, __FILE__);*/
+			$ch = $str{$i};
+// debug ($ch, '$ch', __LINE__, __FILE__);
+			$i++;
+			$next = $str{$i};
+// debug ($next, '$next', __LINE__, __FILE__);
+			if ($next == ':')	{
+				$i++;
+				$paramPos = strpos($str,':',$i);
+				$param1 = substr($str,$i,$paramPos-$i);
+				if ($param1 != '')	{
+					$i = $paramPos+1;
+					switch ($ch)	{
+						case 'a':
+/*debug ($str{$i}, '$str{'.$i.'}', __LINE__, __FILE__);
+debug ($str{$i+1}, '$str{'.($i+1).'}', __LINE__, __FILE__);*/
+							if (isset($var))	{
+							} else {
+								$var = array();
+// 								debug ($var, 'unserialize_fh001 $var', __LINE__, __FILE__);
+							}
+							if ($str{$i}=='{')	{
+								$i++;
+								$controlIndex++;
+// 								debug ($param1, 'unserialize_fh001 a $param1', __LINE__, __FILE__);
+								$controlArray[$controlIndex] = $ch;
+								$controlData[$controlIndex] = array('param' => $param1);
+								$controlCount[$controlIndex] = 0;
+// debug ($controlCount[$controlIndex], '$controlCount['.$controlIndex.']', __LINE__, __FILE__);
+							} else {
+								$errorOffset = $i;
+							}
+						break;
+						case 's':
+							if (isset($var))	{
+/*								debug ($param1, 'unserialize_fh001 s $param1 ', __LINE__, __FILE__);
+debug ($str{$i}, '$str{'.$i.'}', __LINE__, __FILE__);*/
+								if ($str{$i}=='"')	{
+									$i++;
+// 									debug (substr($str, $i, 40),'nächstes', __LINE__, __FILE__);
+									$param2 = substr($str,$i,$param1);
+									$fixPos = strpos($param2,'";');
+// debug ($param2{$fixPos+2}, '$param2{'.($fixPos+2).'} fix Pos s', __LINE__, __FILE__);
+// 									debug (substr($param2, $fixPos, 40),'nächstes zu fixen', __LINE__, __FILE__);
+									if ($fixPos !== FALSE && in_array($param2{$fixPos+2},$codeArray))	{
+										$i += $fixPos; // fix wrong string length if it is really shorter now
+										$param2 = substr($param2,0,$fixPos);
+									} else {
+										$i += $param1;
+									}
+// 									debug ($param2, 'unserialize_fh001 s $param2 ', __LINE__, __FILE__);
+// debug ($controlArray[$controlIndex], '$controlArray['.$controlIndex.']', __LINE__, __FILE__);
+// debug ($controlCount[$controlIndex], '$controlCount['.$controlIndex.']', __LINE__, __FILE__);
+// debug ($controlData[$controlIndex], '$controlData['.$controlIndex.']', __LINE__, __FILE__);
+// debug ($str{$i}, '$str{'.$i.'} Pos s', __LINE__, __FILE__);
+// debug (substr($str,$i,32), 'nächste 32', __LINE__, __FILE__);
+
+									if ($str{$i}=='"' && $str{$i+1}==';')	{
+										$i += 2;
+										if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k']=='' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
+											$controlData[$controlIndex]['k'] = $param2;
+// 									debug ($i, 'unserialize_fh001 s $i ', __LINE__, __FILE__);
+											continue;
+										}
+									}
+
+									if ($controlArray[$controlIndex] == 'a' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'] && isset($controlData[$controlIndex]['k']))	{
+										$controlCount[$controlIndex]++;
+										$var[$controlData[$controlIndex]['k']] = $param2;
+// 									debug ($var, 'unserialize_fh001 s $var ', __LINE__, __FILE__);
+										$controlData[$controlIndex]['k']='';
+									}
+								}
+							} else {
+// 								debug ($param1, 'unserialize_fh001 $param1', __LINE__, __FILE__);
+								$var = '';
+							}
+
+						break;
+						default:
+							$errorOffset = $i;
+						break;
+					}
+				} else {
+					$errorOffset = $i;
+				}
+			} else {
+				$errorOffset = $i;
+			}
+			if ($errorOffset >= 0)	{
+// 					debug ($rc, 'unserialize_fh001 $rc', __LINE__, __FILE__);
+					if ($bErrorCheck)	{
+						trigger_error('unserialize_fh001(): Error at offset '.$errorOffset.' of '.$len.' bytes \''.substr($str,$errorOffset,12).'\'',E_USER_NOTICE);
+						$rc = FALSE;
+					}
+				break;
+			}
+		}
+		if (isset($var) && (!$bErrorCheck || $errorOffset==0))	{
+			$rc = $var;
+		}
+		return $rc;
+	}
+
 }
 
-if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_alpha.php']) {
-	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_alpha.php']);
-}
+
 ?>

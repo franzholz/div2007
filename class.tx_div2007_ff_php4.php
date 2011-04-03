@@ -2,7 +2,7 @@
 /**
  * Collection of static functions for flexforms
  *
- * PHP version 5
+ * PHP version 4
  *
  * Copyright (c) 2006-2007 Fabien Udriot
  *
@@ -40,21 +40,21 @@
  * @subpackage div
  * @author     Fabien Udriot <fudriot@omic.ch>
  */
-class tx_div2007_ff{
+class tx_div2007_ff_php4 {
 
 	/**
 	 * The current loaded flexform
 	 *
 	 * @var array
 	 */
-	static $flexForm = array(); //the current loaded flexform
+	$flexForm = array(); //the current loaded flexform
 
 	/**
 	 * A set of flexforms that are stored in case they are going to be use.
 	 *
 	 * @var array
 	 */
-	static $flexForms = array();
+	$flexForms = array();
 
 	/**
 	 * Load a flexform in memory
@@ -68,21 +68,21 @@ class tx_div2007_ff{
 		if(is_string($flexForm)){
 			//test if $flexForm already exists in the memory. In this case load the flexform according to its key
 			if(array_key_exists($flexForm,tx_div2007_ff::$flexForms)){
-				self::$flexForm = tx_div2007_ff::$flexForms[$flexForm];
+				tx_div2007_ff_php4::$flexForm = tx_div2007_ff::$flexForms[$flexForm];
 			}
 			else{
 				//if false, it means it is *still* a string to convert in an array
-				self::$flexForm = t3lib_div::xml2array($flexForm);
+				tx_div2007_ff_php4::$flexForm = t3lib_div::xml2array($flexForm);
 			}
 		}
 		else{
 			//else it is right away an array, load it in memory
-			self::$flexForm = $flexForm;
+			tx_div2007_ff_php4::$flexForm = $flexForm;
 		}
 
 		//true when the flexform is going to be stored for further use
 		if($flexFormName != ''){
-			self::setFlexForm($flexFormName,self::$flexForm);
+			tx_div2007_ff_php4::setFlexForm($flexFormName,tx_div2007_ff_php4::$flexForm);
 		}
 	}
 
@@ -94,7 +94,7 @@ class tx_div2007_ff{
 	 * @return  void
 	 */
 	function setFlexForm ($flexFormName,$flexForm){
-		self::$flexForms[$flexFormName] = $flexForm;
+		tx_div2007_ff_php4::$flexForms[$flexFormName] = $flexForm;
 	}
 
 	/**
@@ -105,8 +105,8 @@ class tx_div2007_ff{
 	 */
 	function getFlexForm ($flexFormName){
 		$result = false;
-		if(array_key_exists($flexFormName,self::$flexForms)){
-			$result = self::$flexForms[$flexFormName];
+		if(array_key_exists($flexFormName,tx_div2007_ff_php4::$flexForms)){
+			$result = tx_div2007_ff_php4::$flexForms[$flexFormName];
 		}
 		return $result;
 	}
@@ -126,11 +126,11 @@ class tx_div2007_ff{
 		//true when the first arguement is a flexForm or a reference to flexForm
 		if(is_array(func_get_arg(0)) || array_key_exists(func_get_arg(0),tx_div2007_ff::$flexForms)){
 			//case 1, $args 1 is an array...     case 2, $args 1 is a key array that contains a flexform
-			is_array(func_get_arg(0)) ? $_flexForm = func_get_arg(0) : $_flexForm =& tx_div2007_ff::getFlexForm(func_get_arg(0));
+			is_array(func_get_arg(0)) ? $_flexForm = func_get_arg(0) : $_flexForm =& tx_div2007_ff_php4::getFlexForm(func_get_arg(0));
 			$index = 1;
 		}
 		else{
-			$_flexForm =& self::$flexForm;
+			$_flexForm =& tx_div2007_ff_php4::$flexForm;
 			$index = 0;
 		}
 		$fieldName = func_get_arg($index);
@@ -141,7 +141,7 @@ class tx_div2007_ff{
 		is_array($_flexForm) ? $sheetArray = $_flexForm['data'][$sheet][$lang] : $sheetArray = '';
 		$result = null;
 		if (is_array($sheetArray)){
-			$result = self::_getFFValueFromSheetArray($sheetArray,explode('/',$fieldName),$value);
+			$result = tx_div2007_ff_php4::_getFFValueFromSheetArray($sheetArray,explode('/',$fieldName),$value);
 		}
 		return $result;
 	}
@@ -176,5 +176,6 @@ class tx_div2007_ff{
 	}
 
 }
+
 
 ?>

@@ -1,14 +1,14 @@
 
 = Static functions for extension development =
 
-== The functions of ''tx_div'' in alphabetic order ==
+== The functions of ''tx_div2007'' in alphabetic order ==
 
 === autoLoadAll ===
 
 ==== Definition ====
 
-This function walks through all directories of an extension and includes 
-all class files it findes. 
+This function walks through all directories of an extension and includes
+all class files it findes.
 
 ==== Comment ====
 
@@ -19,12 +19,12 @@ are drawbacks. Please see sourcecode comments before you use it.
 
 ==== Definition ====
 
-Store data into the browser session or load it from there. 
+Store data into the browser session or load it from there.
 
 ==== Comment ====
 
-The browser session lasts, while the browser is opened,  by default with a maximum of 24 hours. 
-Also see ''tx_div::userSession()'' and ''tx_div::session()''. 
+The browser session lasts, while the browser is opened,  by default with a maximum of 24 hours.
+Also see ''tx_div2007::userSession()'' and ''tx_div2007::session()''.
 
 === clearAllCaches ===
 
@@ -42,7 +42,7 @@ if you forget to disable it on your live server.
 
 ==== Definition ====
 
-This is an alias for the function ''tx_div::getDataBase()''.
+This is an alias for the function ''tx_div2007::getDataBase()''.
 
 === explode ===
 
@@ -56,27 +56,27 @@ This is typically used to simplify user input i.e. by TypoScript.
 
 Strings are exploded by '',;:'' comma, semicolon and colon.
 The resulting tokens are trimmed. Whitespace inside the token is kept.
-The list of names: ''David Copperfiel, Mr. Wickfield, Uriah Heep'' 
-would be splitted into 3 tokens. 
+The list of names: ''David Copperfiel, Mr. Wickfield, Uriah Heep''
+would be splitted into 3 tokens.
 
 === findTce ===
 
 ==== Definition ====
 
-Get an instance of the TCE.   
+Get an instance of the TCE.
 
 ==== Comment ====
 
 Use the features of the TCE also from the frontend.
-Useful to do INSERT and UPDATE queries in full accordance 
-with the T3 constraints, but not very fast. 
-A backend user must be logged in or be faked. 
+Useful to do INSERT and UPDATE queries in full accordance
+with the T3 constraints, but not very fast.
+A backend user must be logged in or be faked.
 
 === getDataBase ===
 
 ==== Definition ====
 
-Get the global TYPO3_DB object. 
+Get the global TYPO3_DB object.
 
 ==== Comment ====
 
@@ -110,15 +110,15 @@ loaded it returns false.
 
 ==== Comment ====
 
-Helps you to find the real, valid key, if you only know the key 
-with underscores stripped. The stripped key is i.e. part of class names. 
+Helps you to find the real, valid key, if you only know the key
+with underscores stripped. The stripped key is i.e. part of class names.
 
 === guessKey ===
 
 ==== Definition ====
 
 Takes a string like a class name or a file path, that contains any information
-about the extension key, and tries to extract it in the official format with 
+about the extension key, and tries to extract it in the official format with
 underscores.
 
 === getGlobal ===
@@ -131,7 +131,7 @@ Get the global variable of the given key.
 
 ==== Definition ====
 
-This is an alias for the function ''tx_div::loadClass()''.
+This is an alias for the function ''tx_div2007::loadClass()''.
 
 === loadClass ===
 
@@ -160,10 +160,10 @@ Load the class file and make an instance of the class.
 
 ==== Comment ====
 
-This is an extension to t3lib_div::makeInstance(). 
-It autmatically finds and includes the required class file. 
+This is an extension to t3lib_div::makeInstance().
+It autmatically finds and includes the required class file.
 The XCLASS mechanisms are working.
-See ''tx_div::makeInstanceClassName()''.
+See ''tx_div2007::makeInstanceClassName()''.
 
 === makeInstanceClassName ===
 
@@ -173,82 +173,82 @@ Load the class file and return the classname or the ux_classname.
 
 ==== Comment ====
 
-See ''tx_div::makeInstance()''.
+See ''tx_div2007::makeInstance()''.
 
 === resolvePathWithExtPrefix ===
 
 ==== Definition ====
 
-Resolve extension pathes that make use of the "EXT:" prefix.  
+Resolve extension pathes that make use of the "EXT:" prefix.
 
 ==== Comment ====
 
 The path is relative to PATH_site.
-See ''tx_div::getSiteRelativeExtensionPath()''.
+See ''tx_div2007::getSiteRelativeExtensionPath()''.
 
 === session ===
 
 ==== Definition ====
 
-This is an alias for the function ''tx_div::browserSession()''.
+This is an alias for the function ''tx_div2007::browserSession()''.
 
 === tce ===
 
 ==== Definition ====
 
-This is an alias for the function ''tx_div::findTce()''.
+This is an alias for the function ''tx_div2007::findTce()''.
 
 === toHashArray ===
 
 ==== Definition ====
 
-Takes suitable data as input and converts it to a hash array. 
+Takes suitable data as input and converts it to a hash array.
 
 === toHashObject ===
 
 ==== Definition ====
 
-Takes suitable data as input and converts it to a hash object. 
+Takes suitable data as input and converts it to a hash object.
 
 === toHashString ===
 
 ==== Definition ====
 
-Takes suitable data as input and converts it to a hash string. 
+Takes suitable data as input and converts it to a hash string.
 
 === toListArray ===
 
 ==== Definition ====
 
-Takes suitable data as input and converts it to a list array. 
+Takes suitable data as input and converts it to a list array.
 
 === toListObject ===
 
 ==== Definition ====
 
-Takes suitable data as input and converts it to a list object. 
+Takes suitable data as input and converts it to a list object.
 
 === toListString ===
 
 ==== Definition ====
 
-Takes suitable data as input and converts it to a list string. 
+Takes suitable data as input and converts it to a list string.
 
 === user ===
 
 ==== Definition ====
 
-This is an alias for the function ''tx_div::getFrontEndUser()''.
+This is an alias for the function ''tx_div2007::getFrontEndUser()''.
 
 === userSession ===
 
 ==== Definition ====
 
-Store data into the user session or load it from there. 
+Store data into the user session or load it from there.
 
 ==== Comment ====
 
 The user session is bound to the user account. If a frontend user logs into the
-same account on a different machine, the session data is already there. 
-Also see ''tx_div::browserSession()''. 
+same account on a different machine, the session data is already there.
+Also see ''tx_div2007::browserSession()''.
 

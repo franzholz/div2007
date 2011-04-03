@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008-2008 Franz Holzinger <contact@fholzinger.com>
+*  (c) 2008-2011 Franz Holzinger <franz@ttproducts.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -33,7 +33,7 @@
  * $Id$
  *
  * @author  Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @maintainer	Franz Holzinger <contact@fholzinger.com> 
+ * @maintainer	Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3
  * @subpackage div2007
  *
@@ -60,12 +60,12 @@ class tx_div2007_alpha_language_base	{
 	 */
 	public $conf = Array();
 
-	public function init(&$cObj, $extKey, $conf, $scriptRelPath)	{
+	public function init (&$cObj, $extKey, $conf, $scriptRelPath) {
 		global $TSFE;
 
-		if ($TSFE->config['config']['language'])	{
+		if ($TSFE->config['config']['language']) {
 			$this->LLkey = $TSFE->config['config']['language'];
-			if ($TSFE->config['config']['language_alt'])	{
+			if ($TSFE->config['config']['language_alt']) {
 				$this->altLLkey = $TSFE->config['config']['language_alt'];
 			}
 		}
@@ -74,6 +74,22 @@ class tx_div2007_alpha_language_base	{
 		$this->extKey = $extKey;
 		$this->conf = $conf;
 		$this->scriptRelPath = $scriptRelPath;
+	}
+
+	public function &getLocallang () {
+		return $this->LOCAL_LANG;
+	}
+
+	public function &getLLkey () {
+		return $this->LLkey;
+	}
+
+	public function &getCObj () {
+		return $this->cObj;
+	}
+
+	public function &getConf () {
+		return $this->conf;
 	}
 }
 

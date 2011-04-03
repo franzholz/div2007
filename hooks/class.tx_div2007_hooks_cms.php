@@ -32,7 +32,7 @@
  * $Id:$
  *
  * @author	Franz Holzinger <contact@fholzinger.com>
- * @maintainer	Franz Holzinger <contact@fholzinger.com> 
+ * @maintainer	Franz Holzinger <contact@fholzinger.com>
  * @package TYPO3
  * @subpackage div2007
  *
@@ -67,9 +67,5 @@ class tx_div2007_hooks_cms {
 	}
 }
 
-
-if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/div2007/hooks/class.tx_div2007_hooks_cms.phpp'])	{
-	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/div2007/hooks/class.tx_div2007_hooks_cms.php']);
-}
 
 ?>

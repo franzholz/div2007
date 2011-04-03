@@ -1,10 +1,10 @@
 <?php
-/** 
+/**
  * Collection of static functions
  *
  * PHP versions 4 and 5
  *
- * Copyright (c) 2008-2008 Franz Holzinger
+ * Copyright (c) 2008-2010 Franz Holzinger
  *
  * LICENSE:
  *
@@ -24,8 +24,8 @@
  *
  * @package    TYPO3
  * @subpackage div2007
- * @author     Franz Holzinger <contact@fholzinger.com>
- * @copyright  2008-2008 Franz Holzinger
+ * @author     Franz Holzinger <franz@ttproducts.de>
+ * @copyright  2008-2010 Franz Holzinger
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version    SVN: $Id:$
  * @since      0.1
@@ -64,14 +64,12 @@ class tx_double6 {
 					break;
 				}
 			}
-			$theDec = ereg_replace('[^0-9]','',$theDec).'000000';
+			$theDec = preg_replace('/[^0-9]/', '', $theDec) . '000000';
 			$value = intval(str_replace(' ','',$value)).'.'.substr($theDec,0,6);
 		}
 		return $value;
 	}
 }
 
-if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/div2007/hooks/class.tx_div2007_hooks_eval.php']) {
-	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/div2007/hooks/class.tx_div2007_hooks_eval.php']);
-}
+
 ?>
