@@ -1,5 +1,6 @@
-03-04-11 Franz Holzinger  <franz@ttproducts.de>
+23-04-11 Franz Holzinger  <franz@ttproducts.de>
 	* add constants DIV2007_EXTkey and PATH_BE_div2007
+	* rename tx_lib_spl_arrayIterator into tx_div2007_spl_arrayIterator
 
 31-03-11 Franz Holzinger  <franz@ttproducts.de>
 	* add getter methods to class class.tx_div2007_alpha_language_base

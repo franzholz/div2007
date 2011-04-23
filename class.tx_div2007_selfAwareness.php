@@ -47,9 +47,9 @@
  * @since      0.1
  */
 class tx_div2007_selfAwareness {
-	var $cObjectSingleton;
-	var $defaultDesignator;
-	var $defaultDestinaton;
+	public $cObjectSingleton;
+	public $defaultDesignator;
+	public $defaultDestinaton;
 
 
 	// -------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ class tx_div2007_selfAwareness {
 	 * @see		getDesignator()
 	 * @see		getDefaultDesignator()
 	 */
-	function setDefaultDesignator ($string) {
+	public function setDefaultDesignator ($string) {
 		$this->defaultDesignator = $string;
 	}
 
@@ -83,7 +83,7 @@ class tx_div2007_selfAwareness {
 	 * @see		getDestination()
 	 * @see		getDefaultDestination()
 	 */
-	function setDefaultDestination ($string) {
+	public function setDefaultDestination ($string) {
 		$this->defaultDestination = $string;
 	}
 
@@ -95,7 +95,7 @@ class tx_div2007_selfAwareness {
 	 * @param	string		filepath relative to the extensions main directory
 	 * @return	void
 	 */
-	function includeExtensionFile ($relativePath) {
+	public function includeExtensionFile ($relativePath) {
 		include($this->extensionPath() . $relativePath);
 	}
 
@@ -111,7 +111,7 @@ class tx_div2007_selfAwareness {
 	 *
 	 * @return	void
 	 */
-	function api () {
+	public function api () {
 		print '<h1>Class: ' . get_class($this) . '</h1>';
 		print '<h2>Methodes:</h2>';
 		$methods = get_class_methods($this);
@@ -156,7 +156,7 @@ class tx_div2007_selfAwareness {
 	 *
 	 * @return	object		cObject
 	 */
-	function findCObject () {
+	public function findCObject () {
 		if(!$this->cObjectSingleton) {
 			$this->cObjectSingleton = t3lib_div::makeInstance('tslib_cObj');
 		}
@@ -171,7 +171,7 @@ class tx_div2007_selfAwareness {
 	 *
 	 * @return	string		classname
 	 */
-	function getClassName () {
+	public function getClassName () {
 		return get_class($this);
 	}
 
@@ -186,7 +186,7 @@ class tx_div2007_selfAwareness {
 	 *
 	 * @return	string		default designator
 	 */
-	function getDefaultDesignator () {
+	public function getDefaultDesignator () {
 			if($this->defaultDesignator) {
 				return $this->defaultDesignator;                    // explicit given designator
 			} elseif(is_object($this->controller)) {
@@ -204,7 +204,7 @@ class tx_div2007_selfAwareness {
 	 *
 	 * @return	string		default designator
 	 */
-	function getDefaultDestination () {
+	public function getDefaultDestination () {
 			if($this->defaultDestination) {
 				return $this->defaultDestination;                    // explicitly given destination
 			} elseif(is_object($this->controller)) {
@@ -221,7 +221,7 @@ class tx_div2007_selfAwareness {
 	 *
 	 * @return	string		extension key
 	 */
-	function getExtensionKey () {
+	public function getExtensionKey () {
 		if(preg_match('/^tx_([^_]+)/', get_class($this), $matches) ||
 		   preg_match('/^user_([^_]+)/', get_class($this), $matches)) {
 			$candidate = $matches[1];
@@ -246,7 +246,7 @@ class tx_div2007_selfAwareness {
 	 * @return	string		path to the extension
 	 * @see		t3lib_extMgm::extPath()
 	 */
-	function getExtensionPath () {
+	public function getExtensionPath () {
 		return t3lib_extMgm::extPath($this->getExtensionKey());
 	}
 
@@ -262,7 +262,7 @@ class tx_div2007_selfAwareness {
 	 * @return	string		extension key
 	 * @see		getExtensionKey()
 	 */
-	function getExtensionPrefix () {
+	public function getExtensionPrefix () {
 		return 'tx_' . str_replace ('_','', $this->getExtensionKey());
 	}
 
@@ -271,7 +271,7 @@ class tx_div2007_selfAwareness {
 	 *
 	 * @return	integer		frontside page UID
 	 */
-	function getPageId () {
+	public function getPageId () {
 		return $GLOBALS['TSFE']->id;
 	}
 
@@ -281,7 +281,7 @@ class tx_div2007_selfAwareness {
 	 * @return string
 	 * @status alphpa
 	 */
-	function getResultStatus () {
+	public function getResultStatus () {
 		return 1;
 	}
 
@@ -297,7 +297,7 @@ class tx_div2007_selfAwareness {
 	 * @return	string		default designator
 	 * @see		getDefaultDesignator()
 	 */
-	function getDesignator () {
+	public function getDesignator () {
 		return $this->getDefaultDesignator();
 	}
 
@@ -309,7 +309,7 @@ class tx_div2007_selfAwareness {
 	 * @return	string		default destination
 	 * @see		getDefaultDestination()
 	 */
-	function getDestination () {
+	public function getDestination () {
 		return $this->getDefaultDestination();
 	}
 
@@ -326,7 +326,7 @@ class tx_div2007_selfAwareness {
 	 * @return	void
 	 * @access	protected
 	 */
-	function _die ($text, $file, $line) {
+	public function _die ($text, $file, $line) {
 		print '<h1>You died:</h1>';
 		print '<pre><strong>' . chr(10) . $text . chr(10) . '</strong></pre>';
 		print '<p>File: ' . $file . '</p>';

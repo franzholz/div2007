@@ -1,9 +1,9 @@
 <?php
 
 /**
- * PHP4 implementation of the SPL class ArrayObject
+ * PHP5 implementation of the SPL class ArrayObject
  *
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007 Elmar Hinz
  *
@@ -33,7 +33,7 @@
  */
 
 /**
- * PHP4 implementation of the SPL class ArrayObject
+ * implementation of the SPL class ArrayObject
  *
  * This class would implement the interfaces: IteratorAggregate, ArrayAccess, Countable
  *
@@ -43,9 +43,9 @@
  */
 class tx_div2007_spl_arrayObject {
 
-	var $array = array();
-	var $iteratorClass;
-	var $flags;
+	public $array = array();
+	public $iteratorClass;
+	public $flags;
 
 	/**
 	 * Constructs a tx_div2007_spl_arrayObject using the given arguments.
@@ -57,7 +57,11 @@ class tx_div2007_spl_arrayObject {
 	 * @param	integer		some flags
 	 * @param	string		classname of a iterator class
 	 */
-	function tx_div2007_spl_arrayObject($array=array(), $flags=0, $iteratorClass = 'tx_lib_spl_arrayIterator') {
+	public function tx_div2007_spl_arrayObject (
+		$array = array(),
+		$flags = 0,
+		$iteratorClass = 'tx_div2007_spl_arrayIterator'
+	) {
 		$this->_setArray($array);
 		$this->flags = $flags;
 		$this->iteratorClass = $iteratorClass;
@@ -68,14 +72,14 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @param	mixed		value to append
 	 */
-	function append($value) {
+	public function append ($value) {
 		$this->array[] = $value;
 	}
 
 	/**
 	 * Sorts this array using the asort() function of PHP.
 	 */
-	function asort() {
+	public function asort () {
 		asort($this->array);
 	}
 
@@ -84,7 +88,7 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @return	integer		number of elements
 	 */
-	function count() {
+	public function count () {
 		return count($this->array);
 	}
 
@@ -94,7 +98,7 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @param	array		the new array to be set
 	 */
-	function exchangeArray($array){
+	public function exchangeArray ($array) {
 		$this->_setArray($array);
 	}
 
@@ -103,8 +107,9 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @return	array		a copy of the array
 	 */
-	function getArrayCopy() {
-		return $this->array;
+	public function getArrayCopy () {
+		$result = $this->array;
+		return $result;
 	}
 
 	/**
@@ -112,8 +117,9 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @return	integer		the flags
 	 */
-	function getFlags() {
-		return $this->flags;
+	public function getFlags () {
+		$result = $this->flags;
+		return $result;
 	}
 
 	/**
@@ -121,10 +127,11 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @return	object		the new iterator
 	 */
-	function getIterator() {
+	public function getIterator () {
 		$iteratorClass = $this->iteratorClass;
 		tx_div2007::loadClass('class.' . $iteratorClass . '.php');
-		return new $iteraratorClass($this->array);
+		$result = new $iteratorClass($this->array);
+		return $result;
 	}
 
 	/**
@@ -132,28 +139,29 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @return	string		iterator class name
 	 */
-	function getIteratorClass() {
-		return $this->iteratorClass;
+	public function getIteratorClass () {
+		$result = $this->iteratorClass;
+		return $result;
 	}
 
 	/**
 	 * Sorts this array using the ksort() function of PHP.
 	 */
-	function ksort() {
+	public function ksort () {
 		ksort($this->array);
 	}
 
 	/**
 	 * Sorts this array using the natcasesort() function of PHP.
 	 */
-	function natcasesort() {
+	public function natcasesort () {
 		natcasesort($this->array);
 	}
 
 	/**
 	 * Sorts this array using the natsort() function of PHP.
 	 */
-	function natsort() {
+	public function natsort () {
 		natsort($this->array);
 	}
 
@@ -163,8 +171,9 @@ class tx_div2007_spl_arrayObject {
 	 * @param	integer		array offset to test
 	 * @return	boolean		true if element exists, false otherwise
 	 */
-	function offsetExists($index){
-		return isset($this->array[$index]);
+	public function offsetExists ($index) {
+		$result = isset($this->array[$index]);
+		return $result;
 	}
 
 	/**
@@ -173,8 +182,9 @@ class tx_div2007_spl_arrayObject {
 	 * @param	integer		the index of the element to be returned
 	 * @return	mixed		the element at given index
 	 */
-	function offsetGet($index){
-		return $this->array[$index];
+	public function offsetGet ($index) {
+		$result = $this->array[$index];
+		return $result;
 	}
 
 	/**
@@ -183,7 +193,7 @@ class tx_div2007_spl_arrayObject {
 	 * @param	integer		the offset to write to
 	 * @param	mixed		the new value
 	 */
-	function offsetSet($index,$newval){
+	public function offsetSet ($index, $newval) {
 		$this->array[$index] = $newval;
 	}
 
@@ -192,7 +202,7 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @param	integer		position of array to unset
 	 */
-	function offsetUnset($index){
+	public function offsetUnset ($index) {
 		unset($this->array[$index]);
 	}
 
@@ -201,7 +211,7 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @param	integer		the flags
 	 */
-	function setFlags($flags){
+	public function setFlags ($flags) {
 		$this->flags = $flags;
 	}
 
@@ -210,7 +220,7 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @param	string		name of iterator class
 	 */
-	function setIteratorClass($iteratorClass){
+	public function setIteratorClass ($iteratorClass) {
 		$this->iteratorClass = $iteratorClass;
 	}
 
@@ -219,7 +229,7 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @param	function		a function used as callback for sorting
 	 */
-	function uasort($userFunction){
+	public function uasort ($userFunction) {
 		uasort ($this->array, $userFunction);
 	}
 
@@ -228,7 +238,7 @@ class tx_div2007_spl_arrayObject {
 	 *
 	 * @param	function		a function used as callback for sorting
 	 */
-	function uksort($userFunction){
+	public function uksort ($userFunction) {
 		uksort ($this->array, $userFunction);
 	}
 
@@ -238,10 +248,10 @@ class tx_div2007_spl_arrayObject {
 	 * @param	mixed			the new array
 	 * @access	private
 	 */
-	function _setArray($array){
-		if(is_object($array)){
+	public function _setArray ($array) {
+		if(is_object($array)) {
 			$this->array = $array->getArrayCopy();
-		} elseif(is_array($array)){
+		} elseif(is_array($array)) {
 			$this->array = $array;
 		} else {
 			$this->array = array();

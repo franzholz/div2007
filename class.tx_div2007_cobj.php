@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008 Kasper Skaarhoj (kasperYYYY@typo3.com)
+*  (c) 2011 Kasper Skaarhoj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -34,7 +34,7 @@
  * @package    TYPO3
  * @subpackage div2007
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
- * @author	Franz Holzinger <contact@fholzinger.com>
+ * @author	Franz Holzinger <franz@ttproducts.de>
  */
 
 require_once(PATH_tslib.'class.tslib_content.php');

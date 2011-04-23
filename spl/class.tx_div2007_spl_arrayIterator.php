@@ -1,9 +1,9 @@
 <?php
 
 /**
- * PHP4 implementation of the SPL class ArrayIterator
+ * PHP5 implementation of the SPL class ArrayIterator
  *
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007 Elmar Hinz
  *
@@ -43,14 +43,14 @@
  */
 class tx_div2007_spl_arrayIterator extends tx_div2007_spl_arrayObject {
 
-	var $valid = FALSE;
+	public $valid = FALSE;
 
 	/**
 	 * Returns the current element in the iterated array.
 	 *
 	 * @return	mixed		the current element
 	 */
-	function current() {
+	public function current () {
 		return current($this->array);
 	}
 
@@ -59,7 +59,7 @@ class tx_div2007_spl_arrayIterator extends tx_div2007_spl_arrayObject {
 	 *
 	 * @return	mixed		the key of the current element
 	 */
-	function key() {
+	public function key () {
 		return key($this->array);
 	}
 
@@ -68,7 +68,7 @@ class tx_div2007_spl_arrayIterator extends tx_div2007_spl_arrayObject {
 	 *
 	 * @return	boolean		true if there is a next element, false otherwise
 	 */
-	function next() {
+	public function next () {
 		$this->valid = (FALSE !== next($this->array));
 	}
 
@@ -77,7 +77,7 @@ class tx_div2007_spl_arrayIterator extends tx_div2007_spl_arrayObject {
 	 *
 	 * @return	boolean		true if the array is not empty, false otherwise
 	 */
-	function rewind() {
+	public function rewind () {
 		$this->valid = (FALSE !== reset($this->array));
 	}
 
@@ -87,7 +87,7 @@ class tx_div2007_spl_arrayIterator extends tx_div2007_spl_arrayObject {
 	 * @param	integer		the position of the requested element in array
 	 * @return	mixed		an array element
 	 */
-	function seek($index) {
+	public function seek ($index) {
 		return $this->array[$index];
 	}
 
@@ -96,7 +96,7 @@ class tx_div2007_spl_arrayIterator extends tx_div2007_spl_arrayObject {
 	 *
 	 * @return	boolean		true if iterator is valid, false otherwise
 	 */
-	function valid() {
+	public function valid () {
 		return $this->valid;
 	}
 }

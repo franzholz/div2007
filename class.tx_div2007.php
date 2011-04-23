@@ -32,7 +32,7 @@
  *
  *
  * @package    TYPO3
- * @subpackage div
+ * @subpackage div2007
  * @author     Elmar Hinz <elmar.hinz@team-red.net>
  * @copyright  2006-2008 Elmar Hinz
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
@@ -135,7 +135,7 @@
  *    </pre>
  *
  * @package    TYPO3
- * @subpackage div
+ * @subpackage div2007
  * @author     Elmar Hinz <elmar.hinz@team-red.net>
  */
 
@@ -621,6 +621,7 @@ class tx_div2007 {
 	 * @return  object      an hashObject
 	 */
 	function toHashObject ($mixed, $splitCharacters = ',;:' ) {
+// Todo: tx_lib_data does not exist
 		return new tx_lib_data(tx_div2007::toHashArray($mixed, $splitCharacters));
 	}
 
