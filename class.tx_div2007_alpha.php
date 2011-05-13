@@ -89,7 +89,9 @@ class tx_div2007_alpha {
 				$mmTablename = $tableConf['MM'];
 				$foreignFieldname = 'uid_foreign';
 			}
+
 			$mmTableConf = $TCA[$mmTablename]['columns'][$foreignFieldname]['config'];
+
 			if ($tableConf['type'] == 'inline') 	{
 				$foreignTable = $mmTableConf['foreign_table'];
 			} else if ($tableConf['type'] == 'select') 	{
@@ -295,6 +297,8 @@ class tx_div2007_alpha {
 	*/
 	function loadTcaAdditions_fh001 ($ext_keys){
 		global $_EXTKEY, $TCA;
+
+		$loadTcaAdditions = TRUE;
 
 		//Merge all ext_keys
 		if (is_array($ext_keys)) {
