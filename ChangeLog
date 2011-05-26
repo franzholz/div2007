@@ -1,3 +1,7 @@
+26-05-11 Franz Holzinger  <franz@ttproducts.de>
+	* add parameter path to getExtensionInfo_fh002
+	* methode getTypoLink_fh003 which confirms already set parameters in the parameter $conf
+
 13-05-11 Franz Holzinger  <franz@ttproducts.de>
 	* add variable $loadTcaAdditions to loadTcaAdditions_fh001. Use this in your file ext_tables.php to not include the $TCA modificationd and other stuff of your own extension.
 
