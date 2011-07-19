@@ -1,6 +1,11 @@
+19-07-11 Franz Holzinger  <franz@ttproducts.de>
+	* add tx_div2007_controller, tx_div2007_context, tx_div2007_configurations, tx_div2007_parameters
+	* replace deprecated method makeInstanceClassName by a call of makeInstance with the parameters of the constructor
+	* add the static statement to the functions in class.tx_div2007_alpha5.php
+
 26-05-11 Franz Holzinger  <franz@ttproducts.de>
 	* add parameter path to getExtensionInfo_fh002
-	* methode getTypoLink_fh003 which confirms already set parameters in the parameter $conf
+	* method getTypoLink_fh003 which confirms already set parameters in the parameter $conf
 
 13-05-11 Franz Holzinger  <franz@ttproducts.de>
 	* add variable $loadTcaAdditions to loadTcaAdditions_fh001. Use this in your file ext_tables.php to not include the $TCA modificationd and other stuff of your own extension.

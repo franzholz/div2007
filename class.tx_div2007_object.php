@@ -91,7 +91,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @param	mixed		controller or data array or data object
 	 * @return	void
 	 */
-	function tx_div2007_objectBase ($parameter1 = null, $parameter2 = null) {
+	public function tx_div2007_objectBase ($parameter1 = null, $parameter2 = null) {
 		t3lib_div::requireOnce(PATH_BE_div2007 . 'spl/class.tx_div2007_spl_arrayObject.php');
 		t3lib_div::requireOnce(PATH_BE_div2007 . 'spl/class.tx_div2007_spl_arrayIterator.php');
 
@@ -99,12 +99,12 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 		if(method_exists($this, 'preset')) {
 			$this->preset();
 		}
-		if(is_object($parameter1) && is_subclass_of($parameter1, 'tx_lib_controller')) {
+		if(is_object($parameter1) && is_subclass_of($parameter1, 'tx_div2007_controller')) {
 			$this->controller = &$parameter1;
 		} elseif(isset($parameter1)) {
 			$this->overwriteArray($parameter1);
 		}
-		if(is_object($parameter2) && is_subclass_of($parameter2, 'tx_lib_controller')) {
+		if(is_object($parameter2) && is_subclass_of($parameter2, 'tx_div2007_controller')) {
 			$this->controller = &$parameter2;
 		} elseif(isset($parameter2)) {
 			$this->overwriteArray($parameter2);
@@ -115,7 +115,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	}
 
 	// -------------------------------------------------------------------------------------
-	// Interface to tx_lib_spl_arrayObject
+	// Interface to _div2007_spl_arrayObject
 	// -------------------------------------------------------------------------------------
 
 	/**
@@ -123,14 +123,14 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @param	mixed		value to append
 	 */
-	function append ($value) {
+	public function append ($value) {
 		$this->_iterator->append($value);
 	}
 
 	/**
 	 * Sorts this array using the asort() function of PHP.
 	 */
-	function asort () {
+	public function asort () {
 		$this->_iterator->asort();
 	}
 
@@ -139,7 +139,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	integer		number of elements
 	 */
-	function count () {
+	public function count () {
 		return $this->_iterator->count();
 	}
 
@@ -149,7 +149,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @param	array		the new array to be set
 	 */
-	function exchangeArray ($array) {
+	public function exchangeArray ($array) {
 		$this->_iterator->exchangeArray($array);
 	}
 
@@ -158,7 +158,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	array		a copy of the array
 	 */
-	function getArrayCopy () {
+	public function getArrayCopy () {
 		return $this->_iterator->getArrayCopy();
 	}
 
@@ -167,7 +167,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	integer		the flags
 	 */
-	function getFlags () {
+	public function getFlags () {
 		return $this->_iterator->getFlags();
 	}
 
@@ -176,7 +176,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	object		the new iterator
 	 */
-	function getIterator () {
+	public function getIterator () {
 		return $this->_iterator->getIterator();
 	}
 
@@ -185,28 +185,28 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	string		iterator class name
 	 */
-	function getIteratorClass () {
+	public function getIteratorClass () {
 		return $this->_iterator->getIteratorClass();
 	}
 
 	/**
 	 * Sorts this array using the ksort() function of PHP.
 	 */
-	function ksort () {
+	public function ksort () {
 		$this->_iterator->ksort();
 	}
 
 	/**
 	 * Sorts this array using the natcasesort() function of PHP.
 	 */
-	function natcasesort () {
+	public function natcasesort () {
 		$this->_iterator->natcasesort();
 	}
 
 	/**
 	 * Sorts this array using the natsort() function of PHP.
 	 */
-	function natsort () {
+	public function natsort () {
 		$this->_iterator->natsort();
 	}
 
@@ -216,7 +216,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @param	integer		array offset to test
 	 * @return	boolean		true if element exists, false otherwise
 	 */
-	function offsetExists ($index) {
+	public function offsetExists ($index) {
 		$result = $this->_iterator->offsetExists($index);
 		return $result;
 	}
@@ -227,7 +227,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @param	integer		the index of the element to be returned
 	 * @return	mixed		the element at given index
 	 */
-	function offsetGet ($index) {
+	public function offsetGet ($index) {
 		$result = $this->_iterator->offsetGet($index);
 		return $result;
 	}
@@ -238,7 +238,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @param	integer		the offset to write to
 	 * @param	mixed		the new value
 	 */
-	function offsetSet ($index, $newval) {
+	public function offsetSet ($index, $newval) {
 		$this->_iterator->offsetSet($index, $newval);
 	}
 
@@ -247,7 +247,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @param	integer		position of array to unset
 	 */
-	function offsetUnset ($index) {
+	public function offsetUnset ($index) {
 		$this->_iterator->offsetUnset($index);
 	}
 
@@ -256,7 +256,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @param	integer		the flags
 	 */
-	function setFlags ($flags) {
+	public function setFlags ($flags) {
 		$this->_iterator->setFlags($flags);
 	}
 
@@ -265,7 +265,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @param	string		name of iterator class
 	 */
-	function setIteratorClass ($iteratorClass) {
+	public function setIteratorClass ($iteratorClass) {
 		$this->_iterator->setIteratorClass($iteratorClass);
 	}
 
@@ -274,7 +274,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @param	function		a function used as callback for sorting
 	 */
-	function uasort ($userFunction) {
+	public function uasort ($userFunction) {
 		$this->_iterator->uasort($userFunction);
 	}
 
@@ -283,7 +283,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @param	function		a function used as callback for sorting
 	 */
-	function uksort ($userFunction) {
+	public function uksort ($userFunction) {
 		$this->_iterator->uksort($userFunction);
 	}
 
@@ -296,7 +296,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	mixed		the current element
 	 */
-	function current () {
+	public function current () {
 		return $this->_iterator->current();
 	}
 
@@ -305,7 +305,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	mixed		the key of the current element
 	 */
-	function key () {
+	public function key () {
 		return $this->_iterator->key();
 	}
 
@@ -314,7 +314,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	boolean		true if there is a next element, false otherwise
 	 */
-	function next () {
+	public function next () {
 		$this->_iterator->next();
 	}
 
@@ -323,7 +323,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	boolean		true if the array is not empty, false otherwise
 	 */
-	function rewind () {
+	public function rewind () {
 		$this->_iterator->rewind();
 	}
 
@@ -333,7 +333,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @param	integer		the position of the requested element in array
 	 * @return	mixed		an array element
 	 */
-	function seek ($index) {
+	public function seek ($index) {
 		return $this->_iterator->seek($index);
 	}
 
@@ -342,7 +342,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	boolean		true if iterator is valid, false otherwise
 	 */
-	function valid () {
+	public function valid () {
 		return $this->_iterator->valid();
 	}
 
@@ -359,15 +359,17 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * internal array.
 	 *
 	 * @param	object		the data object list (i.e. from the model)
-	 * @param	string		classname of output entries, defaults to tx_lib_object
+	 * @param	string		classname of output entries, defaults to _div2007_object
 	 * @return	void
 	 */
-	function asObjectOfObjects ($objectList, $entryClassName = 'tx_lib_object') {
+	public function asObjectOfObjects ($objectList, $entryClassName = '_div2007_object') {
 		$this->checkController(__FILE__, __LINE__);
-		$entryClassName = tx_div2007::makeInstanceClassName($entryClassName);
 		$this->clear();
 		for($objectList->rewind(); $objectList->valid(); $objectList->next()) {
-			$this->append(new $entryClassName($this->controller, tx_div2007::toHashArray($objectList->current())));
+			$entryClassObject = tx_div2007::makeInstance(
+				$entryClassName, $this->controller, tx_div2007::toHashArray($objectList->current())
+			);
+			$this->append($entryClassObject);
 		}
 	}
 
@@ -377,20 +379,25 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * All (hash) elements of the internal array are transformed to objects of
 	 * the class given as parameter.
 	 *
-	 * By default the function tx_div2007::makeInstanceClassName() is applied. That means:
+	 * By default the function tx_div2007::makeInstance() is applied. That means:
 	 *
 	 * - The file is loaded automatically.
 	 * - XCLASS is used if available.
 	 *
 	 * @param  string   Class name for the internal elements.
-	 * @param  boolean  Yes, apply tx_div2007:makeInstanceClassName().
 	 * @return void
-	 * @see    tx_div2007::makeInstanceClassName()
+	 * @see    tx_div2007::makeInstance()
 	 */
-	function castElements ($entryClassName = 'tx_lib_object', $callMakeInstanceClassName = TRUE) {
-		if($callMakeInstanceClasName) $entryClassName = tx_div2007::makeInstanceClassName($entryClassName);
-		for($this->rewind(); $this->valid(); $this->next())
-			$this->set($this->key(), new $entryClassName($this->controller, tx_div2007::toHashArray($this->current())));
+	public function castElements ($entryClassName = 'tx_div2007_object') {
+
+		for($this->rewind(); $this->valid(); $this->next()) {
+			$entryObject = tx_div2007::makeInstance(
+				$entryClassName,
+				$this->controller,
+				tx_div2007::toHashArray($this->current())
+			);
+			$this->set($this->key(), $entryObject);
+		}
 	}
 
 	/**
@@ -400,7 +407,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	void
 	 */
-	function clear () {
+	public function clear () {
 		$this->exchangeArray(array());
 	}
 
@@ -415,7 +422,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @return	void
 	 * @see		tx_div2007::toHashArray()
 	 */
-	function overwriteArray ($hashData, $splitCharacters = ',;:\s') {
+	public function overwriteArray ($hashData, $splitCharacters = ',;:\s') {
 		$array = tx_div2007::toHashArray($hashData, $splitCharacters);
 		foreach((array) $array as $key => $value) {
 			$this->set($key, $value);
@@ -425,14 +432,14 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	/**
 	 * Assign a value to a key
 	 *
-	 * It's just a convenient way to use the offsetSet() function from tx_lib_spl_arrayObject.
+	 * It's just a convenient way to use the offsetSet() function from _div2007_spl_arrayObject.
 	 *
 	 * @param	mixed		key
 	 * @param	mixed		value
 	 * @return	void
-	 * @see		tx_lib_spl_arrayObject::offsetSet()
+	 * @see		div2007_spl_arrayObject::offsetSet()
 	 */
-	function set ($key, $value) {
+	public function set ($key, $value) {
 		$this->offsetSet($key, $value);
 	}
 
@@ -448,7 +455,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @return	void
 	 * @see		tx_div2007::toHashArray()
 	 */
-	function setArray ($hashData, $splitCharacters = ',;:\s') {
+	public function setArray ($hashData, $splitCharacters = ',;:\s') {
 		$this->exchangeArray(tx_div2007::toHashArray($hashData, $splitCharacters));
 	}
 
@@ -464,7 +471,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @param   optional key
 	 * @return	void
 	 */
-	function dump ($key = NULL) {
+	public function dump ($key = NULL) {
 		if($key)
 			$value = $this->get($key);
 		else
@@ -477,13 +484,13 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	/**
 	 * Get a value for a key
 	 *
-	 * It's just a convenient way to use the offsetGet() function from tx_lib_spl_arrayObject.
+	 * It's just a convenient way to use the offsetGet() function from _div2007_spl_arrayObject.
 	 *
 	 * @param	mixed		key
 	 * @return	mixed		value
-	 * @see		tx_lib_spl_arrayObject::offsetGet()
+	 * @see		tx_div2007_spl_arrayObject::offsetGet()
 	 */
-	function get ($key) {
+	public function get ($key) {
 		$result = $this->offsetGet($key);
 		return $result;
 	}
@@ -493,7 +500,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	array		Copy of the internal array
 	 */
-	function getHashArray () {
+	public function getHashArray () {
 		$result = $this->getArrayCopy();
 		return $result;
 	}
@@ -505,17 +512,23 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * The hash data is created into the exported object as hash objects.
 	 * The classes of the exported object and the entries are take as arguments.
 	 *
-	 * @param	string		Classname of exported object, defaults to tx_lib_object.
-	 * @param	string		Classname of exported entries, defaults to tx_lib_object.
+	 * @param	string		Classname of exported object, defaults to tx_div2007_object.
+	 * @param	string		Classname of exported entries, defaults to tx_div2007_object.
 	 * @return	object  The exported object.
 	 */
-	function toObjectOfObjects ($outputListClass = 'tx_lib_object', $outputEntryClass = 'tx_lib_object') {
+	public function toObjectOfObjects ($outputListClass = 'tx_div2007_object', $outputEntryClass = 'tx_div2007_object') {
 		$this->checkController(__FILE__, __LINE__);
 		$outputList = tx_div2007::makeInstance($outputListClass);
 		$outputList->controller = $this->controller;
-		$outputEntryClassName = tx_div2007::makeInstanceClassName($outputEntryClass);
-		for($this->rewind(); $this->valid(); $this->next())
-			$outputList->append(new $outputEntryClassName($this->controller, tx_div2007::toHashArray($this->current())));
+
+		for($this->rewind(); $this->valid(); $this->next()) {
+			$outputEntryObject = tx_div2007::makeInstance(
+				$outputEntryClass,
+				$this->controller,
+				tx_div2007::toHashArray($this->current())
+			);
+			$outputList->append($outputEntryObject);
+		}
 		return $outputList;
 	}
 
@@ -528,7 +541,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @param	mixed		key of internal data array
 	 * @return	boolean		is something set?
 	 */
-	function has ($key) {
+	public function has ($key) {
 		$result = ($this->get($key) != null);
 		return $result;
 	}
@@ -538,7 +551,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	boolean		is it empty?
 	 */
-	function isEmpty () {
+	public function isEmpty () {
 		$result = ($this->count() == 0);
 		return $result;
 	}
@@ -548,7 +561,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @return	boolean		is something in it?
 	 */
-	function isNotEmpty () {
+	public function isNotEmpty () {
 		$result = ($this->count() > 0);
 		return $result;
 	}
@@ -564,7 +577,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @return	array		selected values associative array
 	 * @see		tx_div2007:toListArray();
 	 */
-	function selectHashArray ($keys, $splitCharacters = ',;:\s') {
+	public function selectHashArray ($keys, $splitCharacters = ',;:\s') {
 		foreach(tx_div2007::toListArray($keys, $splitCharacters) as $key) {
 			$return[$key] = $this->get($key);
 		}
@@ -581,9 +594,9 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @param	mixed		the key
 	 * @return	void
 	 */
-	function storeToSession ($key) {
+	public function storeToSession ($key) {
 		session_start();
-		$_SESSION[$key] = new tx_lib_object($this); // use a copy resp. a new object (for PHP4)
+		$_SESSION[$key] = new tx_div2007_object($this); // use a copy resp. a new object (for PHP4)
 		$_SESSION[$key . '.']['className'] = $this->getClassName();
 	}
 
@@ -593,7 +606,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @param	mixed		the key
 	 * @return	void
 	 */
-	function loadFromSession ($key) {
+	public function loadFromSession ($key) {
 		session_start();
 		if($className = $_SESSION[$key . '.']['className']){
 			tx_div2007::load($className);
@@ -612,24 +625,27 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 *
 	 * @param	string		set the __FILE__ constant
 	 * @param	string		set the __LINE__ constant
-	 * @return	object		tx_lib_controller
+	 * @return	object		tx_div2007_controller
 	 */
-	function checkController ($file, $line) {
-		if(!is_object($this->controller))
+	public function checkController ($file, $line) {
+		if(!is_object($this->controller)) {
 			$this->_die('Missing the controller.', $file, $line);
-		else
+		} else {
 			return $this->controller;
+		}
 	}
 
 	/**
 	 * Set and get the controller object
 	 *
-	 * @param	object		tx_lib_controller type
-	 * @return	object		tx_lib_controller type
+	 * @param	object		tx_div2007_controller type
+	 * @return	object		tx_div2007_controller type
 	 */
-	function controller ($object = NULL) {
+	public function controller ($object = NULL) {
 		$object = $this->controller = $object ? $object : $this->controller;
-		if(!$object) die('Missing controller in ' . __CLASS__ . ' line ' . __LINE__);
+		if (!$object) {
+			die('Missing controller in ' . __CLASS__ . ' line ' . __LINE__);
+		}
 		return $object;
 	}
 

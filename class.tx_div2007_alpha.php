@@ -229,7 +229,6 @@ class tx_div2007_alpha {
 	 * @return	string		HTML to display the help page
 	 * @access	public
 	 * deprecated, use displayHelpPage_fh002 instead
-	 * @see fhlibrary_pibase::pi_displayHelpPage
 	 */
 	function displayHelpPage_fh001 (&$langObj, $helpTemplate, $extKey, $errorMessage='', $theCode='') {
 			// Get language version
@@ -265,7 +264,6 @@ class tx_div2007_alpha {
 	 * @return	string		HTML to display the help page
 	 * @access	public
 	 *
-	 * @see fhlibrary_pibase::pi_displayHelpPage
 	 */
 	function displayHelpPage_fh002 (&$langObj, &$cObj, $helpTemplate, $extKey, $errorMessage='', $theCode='') {
 			// Get language version
@@ -1389,17 +1387,7 @@ class tx_div2007_alpha {
 		// Create $TSFE object (TSFE = TypoScript Front End)
 		// Connecting to database
 		// ***********************************
-		$temp_TSFEclassName=t3lib_div::makeInstanceClassName('tslib_fe');
-		$TSFE = new $temp_TSFEclassName(
-			$GLOBALS['TYPO3_CONF_VARS'],
-			t3lib_div::_GP('id'),
-			t3lib_div::_GP('type'),
-			t3lib_div::_GP('no_cache'),
-			t3lib_div::_GP('cHash'),
-			t3lib_div::_GP('jumpurl'),
-			t3lib_div::_GP('MP'),
-			t3lib_div::_GP('RDCT')
-		);
+		$TSFE = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
 
 		$TSFE->connectToMySQL();
 		if ($TSFE->RDCT)    {
@@ -1410,8 +1398,7 @@ class tx_div2007_alpha {
 		// output compression
 		// *******************
 		if ($GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel'])    {
-		ob_start();
-		require_once(PATH_t3lib.'class.gzip_encode.php');
+			require_once(PATH_t3lib.'class.gzip_encode.php');
 		}
 
 		// *********

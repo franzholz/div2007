@@ -59,7 +59,7 @@ class tx_div2007_selfAwareness {
 	/**
 	 * Set the default designator.
 	 *
-	 * Usefull for classes of the library tx_lib that are not inherited but directly instantiated.
+	 * Usefull for classes of the library tx_div2007 that are not inherited but directly instantiated.
 	 *
 	 * A default designator is rarely set explicitly. Typically you will use the fallback of the designator,
 	 * the extension key by calling getDefaultDesignator() or getDesignator().

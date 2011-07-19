@@ -86,9 +86,8 @@ class tx_div2007_alpha5 {
 	 * @return	string		name of the field to look for in the flexform
 	 * @access	public
 	 *
-	 * @see fhlibrary_pibase::pi_getSetupOrFFvalue
 	 */
-	function getSetupOrFFvalue_fh002 (&$cObj, $code, $codeExt, $defaultCode, $T3FlexForm_array, $fieldName='display_mode', $useFlexforms=1, $sheet='sDEF',$lang='lDEF',$value='vDEF') {
+	public static function getSetupOrFFvalue_fh002 (&$cObj, $code, $codeExt, $defaultCode, $T3FlexForm_array, $fieldName='display_mode', $useFlexforms=1, $sheet='sDEF',$lang='lDEF',$value='vDEF') {
 		$rc = '';
 		if (empty($code)) {
 			if ($useFlexforms) {
@@ -116,27 +115,27 @@ class tx_div2007_alpha5 {
 	 * @return	boolean		Returns TRUE (1) if conditions are met.
 	 * @see linkTP_keepCtrlVars()
 	 */
-	public function autoCache_fh001 ($pObject, $inArray)	{
+	public static function autoCache_fh001 ($pObject, $inArray) {
 
 		$bUseCache = TRUE;
 
-		if (is_array($inArray))	{
-			foreach($inArray as $fN => $fV)	{
+		if (is_array($inArray)) {
+			foreach($inArray as $fN => $fV) {
 				$bIsCachable = FALSE;
-				if (!strcmp($inArray[$fN],''))	{
+				if (!strcmp($inArray[$fN],'')) {
 					$bIsCachable = TRUE;
-				} elseif (is_array($pObject->autoCacheFields[$fN]))	{
+				} elseif (is_array($pObject->autoCacheFields[$fN])) {
 					if (is_array($pObject->autoCacheFields[$fN]['range'])
 							 && intval($inArray[$fN])>=intval($pObject->autoCacheFields[$fN]['range'][0])
-							 && intval($inArray[$fN])<=intval($pObject->autoCacheFields[$fN]['range'][1]))	{
+							 && intval($inArray[$fN])<=intval($pObject->autoCacheFields[$fN]['range'][1])) {
 								$bIsCachable = TRUE;
 					}
 					if (is_array($this->autoCacheFields[$fN]['list'])
-							 && in_array($inArray[$fN],$pObject->autoCacheFields[$fN]['list']))	{
+							 && in_array($inArray[$fN],$pObject->autoCacheFields[$fN]['list'])) {
 								$bIsCachable = TRUE;
 					}
 				}
-				if (!$bIsCachable)	{
+				if (!$bIsCachable) {
 					$bUseCache = FALSE;
 					break;
 				}
@@ -153,7 +152,7 @@ class tx_div2007_alpha5 {
 	 * @param	string		$prefixId
 	 * @return	string		The combined class name (with the correct prefix)
 	 */
-	public function getClassName_fh001 ($class, $prefixId='')	{
+	public static function getClassName_fh001 ($class, $prefixId='') {
 		return str_replace('_','-',$prefixId) . ($prefixId ? '-' : '') . $class;
 	}
 
@@ -168,12 +167,12 @@ class tx_div2007_alpha5 {
 	 * @return	string		A "class" attribute with value and a single space char before it.
 	 * @see pi_classParam()
 	 */
-	public function classParam_fh001 ($class, $addClasses='', $prefixId='')	{
+	public static function classParam_fh001 ($class, $addClasses='', $prefixId='') {
 		$output = '';
-		foreach (t3lib_div::trimExplode(',',$class) as $v)	{
+		foreach (t3lib_div::trimExplode(',',$class) as $v) {
 			$output .= ' ' . self::getClassName_fh001($v, $prefixId);
 		}
-		foreach (t3lib_div::trimExplode(',',$addClasses) as $v)	{
+		foreach (t3lib_div::trimExplode(',',$addClasses) as $v) {
 			$output .= ' ' . $v;
 		}
 		return ' class="' . trim($output) . '"';
@@ -193,7 +192,7 @@ class tx_div2007_alpha5 {
 	 * @return	string		The input string wrapped in <a> tags
 	 * @see pi_linkTP_keepPIvars(), tslib_cObj::typoLink()
 	 */
-	public function linkTP ($pObject,$cObj,$str,$urlParameters=array(),$cache=0,$altPageId=0)	{
+	public static function linkTP ($pObject,$cObj,$str,$urlParameters=array(),$cache=0,$altPageId=0) {
 		$conf=array();
 		$conf['useCacheHash'] = $pObject->bUSER_INT_obj ? 0 : $cache;
 		$conf['no_cache'] = $pObject->bUSER_INT_obj ? 0 : !$cache;
@@ -219,12 +218,12 @@ class tx_div2007_alpha5 {
 	 * @return	string		The input string wrapped in <a> tags
 	 * @see self::linkTP()
 	 */
-	public function linkTP_keepCtrlVars ($pObject,$cObj,$prefixId,$str,$overruleCtrlVars=array(),$cache=0,$clearAnyway=0,$altPageId=0)	{
-		if (is_array($pObject->ctrlVars) && is_array($overruleCtrlVars) && !$clearAnyway)	{
+	public static function linkTP_keepCtrlVars ($pObject,$cObj,$prefixId,$str,$overruleCtrlVars=array(),$cache=0,$clearAnyway=0,$altPageId=0) {
+		if (is_array($pObject->ctrlVars) && is_array($overruleCtrlVars) && !$clearAnyway) {
 			$ctrlVars = $pObject->ctrlVars;
 			unset($ctrlVars['DATA']);
 			$overruleCtrlVars = t3lib_div::array_merge_recursive_overrule($ctrlVars,$overruleCtrlVars);
-			if ($pObject->bAutoCacheEn)	{
+			if ($pObject->bAutoCacheEn) {
 				$cache = self::autoCache_fh001($pObject, $overruleCtrlVars);
 			}
 		}
@@ -249,7 +248,7 @@ class tx_div2007_alpha5 {
  	 * @return	string		The wrapped $label-text string
 	 * @see getTypoLink_URL()
 	 */
-	public function getTypoLink_fh003 ($cObj, $label, $params, $urlParameters=array(), $target='', $conf=array()) {
+	public static function getTypoLink_fh003 ($cObj, $label, $params, $urlParameters=array(), $target='', $conf=array()) {
 
 		$result = FALSE;
 
@@ -292,10 +291,10 @@ class tx_div2007_alpha5 {
 	 * @return	string		The URL
 	 * @see getTypoLink()
 	 */
-	public function getTypoLink_URL_fh003 ($cObj, $params, $urlParameters=array(), $target='', $conf=array()) {
+	public static function getTypoLink_URL_fh003 ($cObj, $params, $urlParameters=array(), $target='', $conf=array()) {
 		$result = FALSE;
 
-		if (is_object($cObj))	{
+		if (is_object($cObj)) {
 			$result = self::getTypoLink_fh003($cObj, '', $params, $urlParameters, $target, $conf);
 			if ($result !== FALSE) {
 				$result = $cObj->lastTypoLinkUrl;
@@ -335,7 +334,7 @@ class tx_div2007_alpha5 {
 	 * @param	array		Additional query string to be passed as parameters to the links
 	 * @return	string		Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
 	 */
-	function &list_browseresults_fh002 ($pObject, $langObj, $cObj, $prefixId, $bCSSStyled=TRUE, $showResultCount=1, $browseParams='', $wrapArr=array(), $pointerName='pointer', $hscText=TRUE, $addQueryString=array())	{
+	public static function &list_browseresults_fh002 ($pObject, $langObj, $cObj, $prefixId, $bCSSStyled=TRUE, $showResultCount=1, $browseParams='', $wrapArr=array(), $pointerName='pointer', $hscText=TRUE, $addQueryString=array()) {
 
 		// example $wrapArr-array how it could be traversed from an extension
 		/* $wrapArr = array(
@@ -375,7 +374,7 @@ class tx_div2007_alpha5 {
 		}
 
 				// default values for "traditional" wrapping with a table. Can be overwritten by vars from $wrapArr
-		if ($bCSSStyled)	{
+		if ($bCSSStyled) {
 			$wrapper['disabledLinkWrap'] = '<span class="disabledLinkWrap">|</span>';
 			$wrapper['inactiveLinkWrap'] = '<span class="inactiveLinkWrap">|</span>';
 			$wrapper['activeLinkWrap'] = '<span class="activeLinkWrap">|</span>';
@@ -391,7 +390,7 @@ class tx_div2007_alpha5 {
 			$wrapper['browseLinksWrap'] = trim('<table '.$browseParams).'><tr>|</tr></table>';
 		}
 
-		if (is_array($pObject->internal['image']) && $pObject->internal['image']['path'])	{
+		if (is_array($pObject->internal['image']) && $pObject->internal['image']['path']) {
 			$onMouseOver = ($pObject->internal['image']['onmouseover'] ? 'onmouseover="'.$pObject->internal['image']['onmouseover'] . '" ': '');
 			$onMouseOut = ($pObject->internal['image']['onmouseout'] ? 'onmouseout="' . $pObject->internal['image']['onmouseout'] . '" ': '');
 			$onMouseOverActive = ($pObject->internal['imageactive']['onmouseover'] ? 'onmouseover="' . $pObject->internal['imageactive']['onmouseover'] . '" ': '');
@@ -400,7 +399,7 @@ class tx_div2007_alpha5 {
 			$wrapper['activeBrowseTextWrap'] = '<img src="' . $pObject->internal['image']['path'] . $pObject->internal['imageactive']['filemask'] . '" ' . $onMouseOverActive . $onMouseOutActive . '>';
 		}
 
-		if ($bCSSStyled)	{
+		if ($bCSSStyled) {
 			$wrapper['showResultsWrap'] = '<div class="showResultsWrap">|</div>';
 			$wrapper['browseBoxWrap'] = '<div class="browseBoxWrap">|</div>';
 		} else {
@@ -429,29 +428,29 @@ class tx_div2007_alpha5 {
 
 				// Make browse-table/links:
 			if ($bShowFirstLast) { // Link to first page
-				if ($pointer>0)	{
+				if ($pointer>0) {
 					$linkArray[$pointerName] = null;
 					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,tx_div2007_alpha::getLL($langObj,'list_browseresults_first','<< First',$hscText),$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
 				} else {
 					$links[]=$cObj->wrap(tx_div2007_alpha::getLL($langObj,'list_browseresults_first','<< First',$hscText),$wrapper['disabledLinkWrap']);
 				}
 			}
-			if ($alwaysPrev>=0)	{ // Link to previous page
+			if ($alwaysPrev>=0) { // Link to previous page
 				$previousText = tx_div2007_alpha::getLL($langObj,'list_browseresults_prev','< Previous',$hscText);
-				if ($pointer>0)	{
+				if ($pointer>0) {
 					$linkArray[$pointerName] = ($pointer-1?$pointer-1:'');
 					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,$previousText,$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
-				} elseif ($alwaysPrev)	{
+				} elseif ($alwaysPrev) {
 					$links[]=$cObj->wrap($previousText,$wrapper['disabledLinkWrap']);
 				}
 			}
 
-			for($a=$firstPage;$a<$lastPage;$a++)	{ // Links to pages
+			for($a=$firstPage;$a<$lastPage;$a++) { // Links to pages
 				$pageText = '';
 				if ($pObject->internal['showRange']) {
 					$pageText = (($a*$limit)+1) . '-' . min($count,(($a+1)*$limit));
-				} else if ($totalPages > 1)	{
-					if ($wrapper['browseTextWrap'])	{
+				} else if ($totalPages > 1) {
+					if ($wrapper['browseTextWrap']) {
 						if ($pointer == $a) { // current page
 							$pageText = $cObj->wrap(($a+1),$wrapper['activeBrowseTextWrap']);
 						} else {
@@ -464,7 +463,7 @@ class tx_div2007_alpha5 {
 				if ($pointer == $a) { // current page
 					if ($pObject->internal['dontLinkActivePage']) {
 						$links[] = $cObj->wrap($pageText,$wrapper['activeLinkWrap']);
-					} else if ($pageText != ''){
+					} else if ($pageText != '') {
 						$linkArray[$pointerName] = ($a?$a:'');
 						$link = self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,$pageText,$linkArray,$bUseCache);
 						$links[] = $cObj->wrap($link,$wrapper['activeLinkWrap']);
@@ -474,7 +473,7 @@ class tx_div2007_alpha5 {
 					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,$pageText,$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
 				}
 			}
-			if ($pointer<$totalPages-1 || $bShowFirstLast)	{
+			if ($pointer < $totalPages-1 || $bShowFirstLast) {
 				$nextText = tx_div2007_alpha::getLL($langObj,'list_browseresults_next','Next >',$hscText);
 				if ($pointer==$totalPages-1) { // Link to next page
 					$links[]=$cObj->wrap($nextText,$wrapper['disabledLinkWrap']);
@@ -535,12 +534,26 @@ class tx_div2007_alpha5 {
 	}
 
 
-	public function slashName ($name, $apostrophe='"') {
+	public static function slashName ($name, $apostrophe='"') {
 		$name = str_replace(',' , ' ', $name);
 		$rc = $apostrophe . addcslashes($name, '<>()@;:\\".[]' . chr('\n')) . $apostrophe;
 		return $rc;
 	}
+
+	/* workaround to get the absolute image link if no absolute reference prefix is used */
+	/* $imageCode is the result of a call $this->cObj->IMAGE(...) */
+	public static function fixImageCodeAbsRefPrefix (&$imageCode) {
+		if ($GLOBALS['TSFE']->absRefPrefix == '') {
+			$absRefPrefix = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+			$fixImgCode = str_replace('index.php', $absRefPrefix . 'index.php', $imageCode);
+			$fixImgCode = str_replace('src="', 'src="' . $absRefPrefix, $fixImgCode);
+			$fixImgCode = str_replace('"uploads/', '"' . $absRefPrefix . 'uploads/', $fixImgCode);
+			$imageCode = $fixImgCode;
+		}
+	}
+
 }
+
 
 
 if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_alpha5.php']) {

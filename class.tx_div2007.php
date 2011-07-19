@@ -102,10 +102,10 @@
  *    </pre>
  *
  * - listObject:
- *    This is an object of the SPL type i.e. tx_lib_data with integers as keys to the internal value:
+ *    This is an object of the SPL type i.e. tx_div2007_data with integers as keys to the internal value:
  *    <pre>
- *     Example: new tx_lib_data(array( 'red', 'yellow', 'green'))
- *     Example: new tx_lib_data(split(' ', 'alpha beta gamma'))
+ *     Example: new tx_div2007_data(array( 'red', 'yellow', 'green'))
+ *     Example: new tx_div2007_data(split(' ', 'alpha beta gamma'))
  *    </pre>
  *
  * <b> The hash family</b>
@@ -129,9 +129,9 @@
  *    </pre>
  *
  * - hashObject:
- *    This is an object of the SPL type i.e. tx_lib_data with keys and values:
+ *    This is an object of the SPL type i.e. tx_div2007_data with keys and values:
  *    <pre>
- *     Example: new tx_lib_data(array( 'firstname' => 'Peter', 'surname' => 'Potter'))
+ *     Example: new tx_div2007_data(array( 'firstname' => 'Peter', 'surname' => 'Potter'))
  *    </pre>
  *
  * @package    TYPO3
@@ -147,7 +147,6 @@ class tx_div2007 {
 	 * This function is a workaround for the __autoload() function from PHP5.
 	 * - Limitation: Doesn't work for "intra extension inheritance". (see below)
 	 * - Disadvantage: All classfiles are required, even if not used.
-	 * - Advantage: It also works in PHP4.
 	 * - Advantage: It doesn't require the same __autolod pattern for all extensions.
 	 * - Alternative: tx_div2007::load() to require on demand.
 	 *
@@ -464,7 +463,7 @@ class tx_div2007 {
 	 *
 	 * @param	string		classname or path matching for the type of loader
 	 * @return	boolean		true if successfull, false otherwise
-	 * @see     tx_lib_loader
+	 * @see     tx_div2007_loader
 	 */
 	function loadClass ($classNameOrPathInformation) {
 		require_once(PATH_BE_div2007 . 'class.tx_div2007_t3Loader.php');
@@ -509,8 +508,7 @@ class tx_div2007 {
 	 *
 	 * @param	string		classname
 	 * @return	object		the instance else FALSE
-	 * @see     tx_div2007::makeInstanceClassName
-	 * @see     tx_lib_loader
+	 * @see     tx_div2007_loader
 	 */
 	function makeInstance ($className) {
 		$instance = FALSE;
@@ -525,27 +523,6 @@ class tx_div2007 {
 		}
 	}
 
-
-	/**
-	 * Load the class file, return the classname or the ux_classname
-	 *
-	 * This is an extension to t3lib_div::makeInstanceClassName. The advantage
-	 * is that it tries to autoload the file. In combination with the shorter
-	 * notation it simplyfies the finding of the classname.
-	 *
-	 * @param	string		classname
-	 * @return	string		classname or ux_classsname (maybe  service classname)
-	 * @see     tx_div2007::makeInstance
-	 * @see     tx_lib_loader
-	 */
-	function makeInstanceClassName ($inputName) {
-		$outputName = FALSE;
-		if(!$outputName) {
-			require_once(PATH_BE_div2007 . 'class.tx_div2007_t3Loader.php');
-			$outputName = tx_div2007_t3Loader::makeInstanceClassName($inputName);
-		}
-		return $outputName;
-	}
 
 	/**
 	 * Resolves the "EXT:" prefix relative to PATH_site. If not given the path is untouched.
@@ -621,8 +598,8 @@ class tx_div2007 {
 	 * @return  object      an hashObject
 	 */
 	function toHashObject ($mixed, $splitCharacters = ',;:' ) {
-// Todo: tx_lib_data does not exist
-		return new tx_lib_data(tx_div2007::toHashArray($mixed, $splitCharacters));
+// Todo: tx_div2007_data does not exist
+		return new tx_div2007_data(tx_div2007::toHashArray($mixed, $splitCharacters));
 	}
 
 	/**
@@ -671,7 +648,7 @@ class tx_div2007 {
 	 * @return  object      a listObject
 	 */
 	function toListObject ($mixed, $splitCharacters = ',;:' ) {
-		return new tx_lib_data(tx_div2007::toListArray($mixed, $splitCharacters));
+		return new tx_div2007_data(tx_div2007::toListArray($mixed, $splitCharacters));
 	}
 
 

@@ -104,27 +104,6 @@ class tx_div2007_t3Loader {
 		}
 	}
 
-	/**
-	 * Load a t3 class and make an instance
-	 *
-	 * Returns ux_ extension classname if any by, making use of t3lib_div::makeInstanceClassName
-	 *
-	 * @param	string		classname
-	 * @param	string		extension key that varies from classnames
-	 * @param	string		prefix of classname
-	 * @param	string		ending of classname
-	 * @return	string		classname or ux_ classname
-	 * @see		t3lib_div::makeInstanceClassName
-	 * @see		load()
-	 */
-	function makeInstanceClassName ($class, $alternativeKey='', $prefix = 'class.', $suffix = '.php') {
-		if(tx_div2007_t3Loader::load($class, $alternativeKey, $prefix, $suffix)) {
-			return t3lib_div::makeInstanceClassName($class); // returns ux_ classes
-		} else {
-			return false;
-		}
-	}
-
 	//--------------------------------------------------------------
 	// Private functions
 	//--------------------------------------------------------------
@@ -219,7 +198,7 @@ class tx_div2007_t3Loader {
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_t3Loader.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_t3Loader.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/lib/class.tx_div2007_t3Loader.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/lib/class.tx_div2007_t3Loader.php']);
 }
 ?>

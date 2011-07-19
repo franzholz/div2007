@@ -33,7 +33,7 @@
  */
 
 /**
- * PHP4 implementation of the SPL class ArrayIterator
+ * implementation of the SPL class ArrayIterator
  *
  * This class would implement the interfaces: SeekableIterator, ArrayAccess, Countable
  *
