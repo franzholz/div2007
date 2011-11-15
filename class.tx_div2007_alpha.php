@@ -75,26 +75,26 @@ class tx_div2007_alpha {
 	 * @access	public
 	 *
 	 */
-	function getForeignTableInfo_fh002 ($tablename,$fieldname)	{
+	function getForeignTableInfo_fh002 ($tablename, $fieldname) {
 		global $TCA, $TYPO3_DB;
 
 		$rc = array();
-		if ($fieldname != '')	{
+		if ($fieldname != '') {
 			$tableConf = $TCA[$tablename]['columns'][$fieldname]['config'];
 
-			if ($tableConf['type'] == 'inline') 	{
+			if ($tableConf['type'] == 'inline') {
 				$mmTablename = $tableConf['foreign_table'];
 				$foreignFieldname = $tableConf['foreign_selector'];
-			} else if ($tableConf['type'] == 'select' && isset($tableConf['MM'])) 	{
+			} else if ($tableConf['type'] == 'select' && isset($tableConf['MM'])) {
 				$mmTablename = $tableConf['MM'];
 				$foreignFieldname = 'uid_foreign';
 			}
 
 			$mmTableConf = $TCA[$mmTablename]['columns'][$foreignFieldname]['config'];
 
-			if ($tableConf['type'] == 'inline') 	{
+			if ($tableConf['type'] == 'inline') {
 				$foreignTable = $mmTableConf['foreign_table'];
-			} else if ($tableConf['type'] == 'select') 	{
+			} else if ($tableConf['type'] == 'select') {
 				$foreignTable = $tableConf['foreign_table'];
 			}
 
@@ -123,7 +123,7 @@ class tx_div2007_alpha {
 	 * @access	public
 	 *
 	 */
-	function getTablenames_fh001 ($theTable, $field, &$foreignMMtable, &$foreignField, &$foreignSelector, &$foreignTable, $bIsMMRelation=TRUE) {
+	function getTablenames_fh001 ($theTable, $field, &$foreignMMtable, &$foreignField, &$foreignSelector, &$foreignTable, $bIsMMRelation = TRUE) {
 		global $TCA;
 
 		$foreignMMtable = $TCA[$theTable]['columns'][$field]['config']['foreign_table'];
@@ -131,7 +131,7 @@ class tx_div2007_alpha {
 		$foreignSelector = $TCA[$theTable]['columns'][$field]['config']['foreign_selector'];
 		$foreignTable = $TCA[$foreignMMtable]['columns'][$foreignSelector]['config']['foreign_table'];
 
-		if ($bIsMMRelation && (!$foreignMMtable || !$foreignField || !$foreignSelector || !$foreignTable))	{
+		if ($bIsMMRelation && (!$foreignMMtable || !$foreignField || !$foreignSelector || !$foreignTable)) {
 			die ('internal error: no #2 TCA tables for field \''.$field.'\' of table \''.$theTable.'\' are missing.  $foreignMMtable='.$foreignMMtable.'  $foreignField='.$foreignField.'  $foreignSelector='.$foreignSelector.'  $foreignTable='.$foreignTable);
 		}
 	}
@@ -148,18 +148,18 @@ class tx_div2007_alpha {
 	 * @access	public
 	 *
 	 */
-	function getLocalTableField_fh001 ($theTable, $foreignTable)	{
+	function getLocalTableField_fh001 ($theTable, $foreignTable) {
 		global $TCA;
 
 		$rc = '';
-		if (!isset($TCA[$theTable]['columns']))	{
+		if (!isset($TCA[$theTable]['columns'])) {
 			t3lib_div::loadTCA($theTable);
 			t3lib_div::loadTCA($foreignTable);
 		}
 
-		if (isset($TCA[$theTable]['columns']) && is_array($TCA[$theTable]['columns']))	{
+		if (isset($TCA[$theTable]['columns']) && is_array($TCA[$theTable]['columns'])) {
 
-			foreach ($TCA[$theTable]['columns'] as $field => $ConfigArray)	{
+			foreach ($TCA[$theTable]['columns'] as $field => $ConfigArray) {
 
 				if ($TCA[$theTable]['columns'][$field]['config']['foreign_table'] == $foreignTable)	{
 					$rc = $field;
@@ -186,11 +186,12 @@ class tx_div2007_alpha {
 	function foreign_table_where_query ($fieldValue, $field = '', $TSconfig = array(), $prefix = '') {
 		global $TCA;
 
-		$foreign_table = $fieldValue['config'][$prefix.'foreign_table'];
+		$foreign_table = $fieldValue['config'][$prefix . 'foreign_table'];
 		t3lib_div::loadTCA($foreign_table);
 		$rootLevel = $TCA[$foreign_table]['ctrl']['rootLevel'];
 
-		$fTWHERE = $fieldValue['config'][$prefix.'foreign_table_where'];
+		$fTWHERE = $fieldValue['config'][$prefix . 'foreign_table_where'];
+
 		if (strstr($fTWHERE, '###REC_FIELD_')) {
 			$fTWHERE_parts = explode('###REC_FIELD_', $fTWHERE);
 			while(list($kk, $vv) = each($fTWHERE_parts)) {
@@ -207,10 +208,17 @@ class tx_div2007_alpha {
 		$fTWHERE = str_replace('###THIS_CID###', intval($TSconfig['_THIS_CID']), $fTWHERE);
 		$fTWHERE = str_replace('###STORAGE_PID###', intval($TSconfig['_STORAGE_PID']), $fTWHERE);
 		$fTWHERE = str_replace('###SITEROOT###', intval($TSconfig['_SITEROOT']), $fTWHERE);
-		$fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', intval($TSconfig[$field]['PAGE_TSCONFIG_ID']), $fTWHERE);
-		$fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', $GLOBALS['TYPO3_DB']->cleanIntList($TSconfig[$field]['PAGE_TSCONFIG_IDLIST']), $fTWHERE);
 
-		$fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', $GLOBALS['TYPO3_DB']->quoteStr($TSconfig[$field]['PAGE_TSCONFIG_STR'], $foreign_table), $fTWHERE);
+		if (isset($TSconfig[$field]) && is_array($TSconfig[$field])) {
+			$fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', intval($TSconfig[$field]['PAGE_TSCONFIG_ID']), $fTWHERE);
+			$fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', $GLOBALS['TYPO3_DB']->cleanIntList($TSconfig[$field]['PAGE_TSCONFIG_IDLIST']), $fTWHERE);
+
+			$fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', $GLOBALS['TYPO3_DB']->quoteStr($TSconfig[$field]['PAGE_TSCONFIG_STR'], $foreign_table), $fTWHERE);
+		} else {
+			$fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', 0, $fTWHERE);
+			$fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', 0, $fTWHERE);
+			$fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', 0, $fTWHERE);
+		}
 
 		return $fTWHERE;
 	}
@@ -233,7 +241,7 @@ class tx_div2007_alpha {
 	function displayHelpPage_fh001 (&$langObj, $helpTemplate, $extKey, $errorMessage='', $theCode='') {
 			// Get language version
 		$helpTemplate_lang='';
-		if ($langObj->LLkey)	{
+		if ($langObj->LLkey) {
 			$helpTemplate_lang = $this->cObj->getSubpart($helpTemplate,'###TEMPLATE_'.$langObj->LLkey.'###');
 		}
 
@@ -268,7 +276,7 @@ class tx_div2007_alpha {
 	function displayHelpPage_fh002 (&$langObj, &$cObj, $helpTemplate, $extKey, $errorMessage='', $theCode='') {
 			// Get language version
 		$helpTemplate_lang='';
-		if ($langObj->LLkey)	{
+		if ($langObj->LLkey) {
 			$helpTemplate_lang = $cObj->getSubpart($helpTemplate,'###TEMPLATE_'.$langObj->LLkey.'###');
 		}
 
@@ -293,7 +301,7 @@ class tx_div2007_alpha {
 	*
 	* @param array     extension keys which have TCA additions to load
 	*/
-	function loadTcaAdditions_fh001 ($ext_keys){
+	function loadTcaAdditions_fh001 ($ext_keys) {
 		global $_EXTKEY, $TCA;
 
 		$loadTcaAdditions = TRUE;
@@ -301,9 +309,9 @@ class tx_div2007_alpha {
 		//Merge all ext_keys
 		if (is_array($ext_keys)) {
 
-			foreach ($ext_keys as $_EXTKEY)	{
+			foreach ($ext_keys as $_EXTKEY) {
 
-				if (t3lib_extMgm::isLoaded($_EXTKEY))	{
+				if (t3lib_extMgm::isLoaded($_EXTKEY)) {
 					//Include the ext_table
 					include(t3lib_extMgm::extPath($_EXTKEY).'ext_tables.php');
 				}
@@ -311,7 +319,7 @@ class tx_div2007_alpha {
 		}
 
 			// ext-script
-		if (TYPO3_extTableDef_script)	{
+		if (TYPO3_extTableDef_script) {
 			include (PATH_typo3conf.TYPO3_extTableDef_script);
 		}
 	}
@@ -330,7 +338,7 @@ class tx_div2007_alpha {
 			$path = t3lib_extMgm::extPath($extKey);
 
 			$file = $path.'/ext_emconf.php';
-			if (@is_file($file))	{
+			if (@is_file($file)) {
 				$_EXTKEY = $extKey;
 				$EM_CONF = array();
 				include($file);
@@ -344,7 +352,7 @@ class tx_div2007_alpha {
 				$eInfo['version'] = $EM_CONF[$extKey]['version'];
 				$eInfo['CGLcompliance'] = $EM_CONF[$extKey]['CGLcompliance'];
 				$eInfo['CGLcompliance_note'] = $EM_CONF[$extKey]['CGLcompliance_note'];
-				if (is_array($EM_CONF[$extKey]['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends']))	{
+				if (is_array($EM_CONF[$extKey]['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
 					$eInfo['TYPO3_version'] = $EM_CONF[$extKey]['constraints']['depends']['typo3'];
 				} else {
 					$eInfo['TYPO3_version'] = $EM_CONF[$extKey]['TYPO3_version'];
@@ -367,68 +375,74 @@ class tx_div2007_alpha {
 	 * Gets information for an extension, eg. version and most-recently-edited-script
 	 *
 	 * @param	string		Extension key
+	 * @param	string		predefined path ... needed if you have the extension in another place
 	 * @return	array		Information array (unless an error occured)
 	 */
-	function getExtensionInfo_fh002 ($extKey, $path='') {
+	function getExtensionInfo_fh002 ($extKey, $path = '') {
 		$rc = '';
 
 		if (t3lib_extMgm::isLoaded($extKey)) {
 			if (!$path) {
 				$path = t3lib_extMgm::extPath($extKey);
 			}
-			$file = $path.'/ext_emconf.php';
 
-			if (@is_file($file))	{
-				$_EXTKEY = $extKey;
-				$EM_CONF = array();
-				include($file);
+			if (is_dir($path)) {
+				$file = $path . 'ext_emconf.php';
 
-				$eInfo = array();
-				$fieldArray = array(
-					'author',
-					'author_company',
-					'author_email',
-					'category',
-					'constraints',
-					'description',
-					'lastuploaddate',
-					'reviewstate',
-					'state',
-					'title',
-					'version',
-					'CGLcompliance',
-					'CGLcompliance_note'
-				);
-				$extConf = $EM_CONF[$extKey];
+				if (@is_file($file)) {
+					$_EXTKEY = $extKey;
+					$EM_CONF = array();
+					include($file);
 
-				if (isset($extConf) && is_array($extConf)) {
-					foreach ($extConf as $field => $value) {
-						if (in_array($field, $fieldArray)) {
-							$eInfo[$field] = $value;
+					$eInfo = array();
+					$fieldArray = array(
+						'author',
+						'author_company',
+						'author_email',
+						'category',
+						'constraints',
+						'description',
+						'lastuploaddate',
+						'reviewstate',
+						'state',
+						'title',
+						'version',
+						'CGLcompliance',
+						'CGLcompliance_note'
+					);
+					$extConf = $EM_CONF[$extKey];
+
+					if (isset($extConf) && is_array($extConf)) {
+						foreach ($extConf as $field => $value) {
+							if (in_array($field, $fieldArray)) {
+								$eInfo[$field] = $value;
+							}
 						}
-					}
 
-					foreach ($fieldArray as $field) {
-						// Info from emconf:
-						$eInfo[$field] = $extConf[$field];
-					}
+						foreach ($fieldArray as $field) {
+							// Info from emconf:
+							$eInfo[$field] = $extConf[$field];
+						}
 
-					if (is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
-						$eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
+						if (is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
+							$eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
+						} else {
+							$eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
+						}
+						$filesHash = unserialize($extConf['_md5_values_when_last_written']);
+						$eInfo['manual'] = @is_file($path . '/doc/manual.sxw');
+						$rc = $eInfo;
 					} else {
-						$eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
+						$rc = 'ERROR: The array $EM_CONF is wrong in file: ' . $file;
 					}
-					$filesHash = unserialize($extConf['_md5_values_when_last_written']);
-					$eInfo['manual'] = @is_file($path.'/doc/manual.sxw');
-					$rc = $eInfo;
 				} else {
-					$rc = 'ERROR: The array $EM_CONF is wrong in file: '.$file;
+					$rc = 'ERROR: No emconf.php file: ' . $file;
 				}
 			} else {
-				$rc = 'ERROR: No emconf.php file: '.$file;
+				$rc = 'ERROR: Path not found: ' . $path;
 			}
 		} else {
-			$rc = 'Error: Extension '.$extKey.' has not been installed. (tx_fhlibrary_system::getExtensionInfo)';
+			$rc = 'Error: Extension ' . $extKey . ' has not been installed. (tx_fhlibrary_system::getExtensionInfo)';
 		}
 
 		return $rc;
@@ -446,19 +460,19 @@ class tx_div2007_alpha {
 	 * @param	boolean		If true, the output label is passed through htmlspecialchars()
 	 * @return	string		The value from LOCAL_LANG.
 	 */
-	function getLL (&$langObj,$key,$alt='',$hsc=FALSE)	{
+	function getLL (&$langObj, $key, $alt = '', $hsc = FALSE) {
 
-		if (is_object($langObj))	{
-			if (isset($langObj->LOCAL_LANG[$langObj->LLkey][$key]))	{
+		if (is_object($langObj)) {
+			if (isset($langObj->LOCAL_LANG[$langObj->LLkey][$key])) {
 				$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$langObj->LLkey][$key], $langObj->LOCAL_LANG_charset[$langObj->LLkey][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
-			} elseif ($langObj->altLLkey && isset($langObj->LOCAL_LANG[$langObj->altLLkey][$key]))	{
+			} elseif ($langObj->altLLkey && isset($langObj->LOCAL_LANG[$langObj->altLLkey][$key])) {
 				$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$langObj->altLLkey][$key], $langObj->LOCAL_LANG_charset[$langObj->altLLkey][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
-			} elseif (isset($langObj->LOCAL_LANG['default'][$key]))	{
+			} elseif (isset($langObj->LOCAL_LANG['default'][$key])) {
 				$word = $langObj->LOCAL_LANG['default'][$key];	// No charset conversion because default is english and thereby ASCII
 			} else {
-				$word = $langObj->LLtestPrefixAlt.$alt;
+				$word = $langObj->LLtestPrefixAlt . $alt;
 			}
-			$output = $langObj->LLtestPrefix.$word;
+			$output = $langObj->LLtestPrefix . $word;
 			if ($hsc)	$output = htmlspecialchars($output);
 		} else {
 			$output = 'error in call of tx_div2007_alpha::getLL: parameter $langObj is not an object';
@@ -481,22 +495,22 @@ class tx_div2007_alpha {
 	 * @param	boolean		If true, the output label is passed through htmlspecialchars()
 	 * @return	string		The value from LOCAL_LANG.
 	 */
-	function getLL_fh001 (&$langObj,&$usedLang,$key,$alt='',$hsc=FALSE)	{
+	function getLL_fh001 (&$langObj, &$usedLang, $key, $alt = '', $hsc = FALSE) {
 
-		if (isset($langObj->LOCAL_LANG[$langObj->LLkey][$key]))	{
+		if (isset($langObj->LOCAL_LANG[$langObj->LLkey][$key])) {
 			$usedLang = $langObj->LLkey;
 			$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$usedLang][$key], $langObj->LOCAL_LANG_charset[$usedLang][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
-		} elseif ($langObj->altLLkey && isset($langObj->LOCAL_LANG[$langObj->altLLkey][$key]))	{
+		} elseif ($langObj->altLLkey && isset($langObj->LOCAL_LANG[$langObj->altLLkey][$key])) {
 			$usedLang = $langObj->altLLkey;
 			$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$usedLang][$key], $langObj->LOCAL_LANG_charset[$usedLang][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
-		} elseif (isset($langObj->LOCAL_LANG['default'][$key]))	{
+		} elseif (isset($langObj->LOCAL_LANG['default'][$key])) {
 			$usedLang = 'default';
 			$word = $langObj->LOCAL_LANG[$usedLang][$key];	// No charset conversion because default is English and thereby ASCII
 		} else {
-			$word = $langObj->LLtestPrefixAlt.$alt;
+			$word = $langObj->LLtestPrefixAlt . $alt;
 		}
-		$output = $langObj->LLtestPrefix.$word;
-		if ($hsc)	{
+		$output = $langObj->LLtestPrefix . $word;
+		if ($hsc) {
 			$output = htmlspecialchars($output);
 		}
 
@@ -515,13 +529,13 @@ class tx_div2007_alpha {
 	 *
 	 * @return	void
 	 */
-	function loadLL_fh001 (&$langObj,$langFileParam,$overwrite=TRUE)	{
+	function loadLL_fh001 (&$langObj, $langFileParam, $overwrite = TRUE) {
 		global $TSFE;
 
-		if (is_object($langObj))	{
+		if (is_object($langObj)) {
 			$langFile = ($langFileParam ? $langFileParam : 'locallang.php');
 
-			if (substr($langFile,0,4)==='EXT:' || substr($langFile,0,5)==='typo3' || substr($langFile,0,9)==='fileadmin')	{
+			if (substr($langFile,0,4)==='EXT:' || substr($langFile,0,5)==='typo3' || substr($langFile,0,9)==='fileadmin') {
 				$basePath = $langFile;
 			} else {
 				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
@@ -530,10 +544,10 @@ class tx_div2007_alpha {
 				// However, this function guarantees only return output for default language plus the specified language (which is different from how 3.7.0 dealt with it)
 			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$langObj->LLkey,$TSFE->renderCharset);
 
-			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG))	{
-				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray)	{
-					if (is_array($tempLOCAL_LANG[$langKey]))	{
-						if ($overwrite)	{
+			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
+				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
+					if (is_array($tempLOCAL_LANG[$langKey])) {
+						if ($overwrite) {
 							$langObj->LOCAL_LANG[$langKey] = array_merge($langObj->LOCAL_LANG[$langKey],$tempLOCAL_LANG[$langKey]);
 						} else {
 							$langObj->LOCAL_LANG[$langKey] = array_merge($tempLOCAL_LANG[$langKey], $langObj->LOCAL_LANG[$langKey]);
@@ -543,13 +557,13 @@ class tx_div2007_alpha {
 			} else {
 				$langObj->LOCAL_LANG = $tempLOCAL_LANG;
 			}
-			if ($langObj->altLLkey)	{
+			if ($langObj->altLLkey) {
 				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$langObj->altLLkey,$TSFE->renderCharset);
 
-				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG))	{
-					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray)	{
-						if (is_array($tempLOCAL_LANG[$langKey]))	{
-							if ($overwrite)	{
+				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
+					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
+						if (is_array($tempLOCAL_LANG[$langKey])) {
+							if ($overwrite) {
 								$langObj->LOCAL_LANG[$langKey] = array_merge($langObj->LOCAL_LANG[$langKey],$tempLOCAL_LANG[$langKey]);
 							} else {
 								$langObj->LOCAL_LANG[$langKey] = array_merge($tempLOCAL_LANG[$langKey],$langObj->LOCAL_LANG[$langKey]);
@@ -562,43 +576,43 @@ class tx_div2007_alpha {
 			}
 
 				// Overlaying labels from TypoScript (including fictious language keys for non-system languages!):
-			if (is_array($langObj->conf['_LOCAL_LANG.']))	{
+			if (is_array($langObj->conf['_LOCAL_LANG.'])) {
 
-				foreach($langObj->conf['_LOCAL_LANG.'] as $k => $lA)	{
-					if (is_array($lA))	{
+				foreach($langObj->conf['_LOCAL_LANG.'] as $k => $lA) {
+					if (is_array($lA)) {
 						$k = substr($k,0,-1);
-						foreach($lA as $llK => $llV)	{
-							if (is_array($llV))	{
+						foreach($lA as $llK => $llV) {
+							if (is_array($llV)) {
 								foreach ($llV as $llk2 => $llV2) {
-									if (is_array($llV2))	{
+									if (is_array($llV2)) {
 										foreach ($llV2 as $llk3 => $llV3) {
-											if (is_array($llV3))	{
+											if (is_array($llV3)) {
 												foreach ($llV3 as $llk4 => $llV4) {
-														if (is_array($llV4))	{
+														if (is_array($llV4)) {
 														} else {
 														$langObj->LOCAL_LANG[$k][$llK.$llk2.$llk3.$llk4] = $llV4;
-														if ($k != 'default')	{
+														if ($k != 'default') {
 															$langObj->LOCAL_LANG_charset[$k][$llK.$llk2.$llk3.$llk4] = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];	// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
 														}
-														}
+													}
 												}
 											} else {
 												$langObj->LOCAL_LANG[$k][$llK.$llk2.$llk3] = $llV3;
-												if ($k != 'default')	{
+												if ($k != 'default') {
 													$langObj->LOCAL_LANG_charset[$k][$llK.$llk2.$llk3] = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];	// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
 												}
 											}
 										}
 									} else {
 										$langObj->LOCAL_LANG[$k][$llK.$llk2] = $llV2;
-										if ($k != 'default')	{
+										if ($k != 'default') {
 											$langObj->LOCAL_LANG_charset[$k][$llK.$llk2] = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];	// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
 										}
 									}
 								}
-							} else	{
+							} else {
 								$langObj->LOCAL_LANG[$k][$llK] = $llV;
-								if ($k != 'default')	{
+								if ($k != 'default') {
 									$langObj->LOCAL_LANG_charset[$k][$llK] = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];	// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
 								}
 							}
@@ -619,10 +633,10 @@ class tx_div2007_alpha {
 	 * @param	string		Key string. Accepts the "LLL:" prefix.
 	 * @return	string		Label value, if any.
 	 */
-	function sL_fh001 ($input)	{
+	function sL_fh001 ($input) {
 		$restStr = trim(substr($input,4));
 		$extPrfx='';
-		if (!strcmp(substr($restStr,0,4),'EXT:'))	{
+		if (!strcmp(substr($restStr,0,4),'EXT:')) {
 			$restStr = trim(substr($restStr,4));
 			$extPrfx='EXT:';
 		}
@@ -659,10 +673,20 @@ class tx_div2007_alpha {
 	 *
 	 * @see fhlibrary_pibase::pi_getSetupOrFFvalue
 	 */
-
-	function getSetupOrFFvalue_fh001 (&$langObj, $code, $codeExt, $defaultCode, $T3FlexForm_array, $fieldName='display_mode', $useFlexforms=1, $sheet='sDEF',$lang='lDEF',$value='vDEF') {
+	function getSetupOrFFvalue_fh001 (
+		&$langObj,
+		$code,
+		$codeExt,
+		$defaultCode,
+		$T3FlexForm_array,
+		$fieldName = 'display_mode',
+		$useFlexforms = 1,
+		$sheet = 'sDEF',
+		$lang = 'lDEF',
+		$value = 'vDEF'
+	) {
 		$rc = '';
-		if (is_object($langObj))	{
+		if (is_object($langObj)) {
 			if (empty($code)) {
 				if ($useFlexforms) {
 					// Converting flexform data into array:
@@ -719,13 +743,13 @@ class tx_div2007_alpha {
 		$defaultCode,
 		$T3FlexForm_array,
 		$fieldName='display_mode',
-		$bUseFlexforms=TRUE,
-		$sheet='sDEF',
-		$lang='lDEF',
-		$value='vDEF'
+		$bUseFlexforms = TRUE,
+		$sheet = 'sDEF',
+		$lang = 'lDEF',
+		$value = 'vDEF'
 	) {
 		$rc = '';
-		if (is_object($langObj))	{
+		if (is_object($langObj)) {
 			if (empty($code)) {
 				if ($bUseFlexforms) {
 					include_once(PATH_BE_div2007 . 'class.tx_div2007_ff.php');
@@ -790,7 +814,7 @@ class tx_div2007_alpha {
 		$value='vDEF'
 	) {
 		$rc = '';
-		if (is_object($cObj))	{
+		if (is_object($cObj)) {
 			if (empty($code)) {
 				if ($bUseFlexforms) {
 					include_once(PATH_BE_div2007 . 'class.tx_div2007_ff.php');
@@ -829,8 +853,14 @@ class tx_div2007_alpha {
  	 * @return	string		The wrapped $label-text string
 	 * @see getTypoLink_URL()
 	 */
-	function getTypoLink_fh001 (&$langObj,$label,$params,$urlParameters=array(),$target='',$conf=array())	{
-
+	function getTypoLink_fh001 (
+		&$langObj,
+		$label,
+		$params,
+		$urlParameters = array(),
+		$target = '',
+		$conf = array()
+	) {
 		if (is_object($langObj))	{
 			$conf['parameter'] = $params;
 			if ($target)	{
@@ -868,23 +898,29 @@ class tx_div2007_alpha {
  	 * @return	string		The wrapped $label-text string
 	 * @see getTypoLink_URL()
 	 */
-	function getTypoLink_fh002 (&$cObj,$label,$params,$urlParameters=array(),$target='',$conf=array())	{
-
-		if (is_object($cObj))	{
+	function getTypoLink_fh002 (
+		&$cObj,
+		$label,
+		$params,
+		$urlParameters = array(),
+		$target = '',
+		$conf = array()
+	)	{
+		if (is_object($cObj)) {
 			$rc = FALSE;
 			$conf['parameter'] = $params;
-			if ($target)	{
+			if ($target) {
 				$conf['target']=$target;
 				$conf['extTarget']=$target;
 			}
-			if (is_array($urlParameters))	{
-				if (count($urlParameters))	{
+			if (is_array($urlParameters)) {
+				if (count($urlParameters)) {
 					$conf['additionalParams'].= t3lib_div::implodeArrayForUrl('',$urlParameters);
 				}
 			} else {
 				$conf['additionalParams'].=$urlParameters;
 			}
-			if (is_object($cObj))	{
+			if (is_object($cObj)) {
 				$rc = $cObj->typolink($label,$conf);
 			}
 		} else {
@@ -906,8 +942,21 @@ class tx_div2007_alpha {
 	 * @return	string		The URL
 	 * @see getTypoLink()
 	 */
-	function getTypoLink_URL_fh001 (&$langObj, $params,$urlParameters=array(),$target='',$conf=array())	{
-		tx_div2007_alpha::getTypoLink_fh001($langObj,'',$params,$urlParameters,$target,$conf);
+	function getTypoLink_URL_fh001 (
+		&$langObj,
+		$params,
+		$urlParameters = array(),
+		$target = '',
+		$conf = array()
+	) {
+		tx_div2007_alpha::getTypoLink_fh001(
+			$langObj,
+			'',
+			$params,
+			$urlParameters,
+			$target,
+			$conf
+		);
 		$rc = $langObj->cObj->lastTypoLinkUrl;
 		return $rc;
 	}
@@ -924,10 +973,23 @@ class tx_div2007_alpha {
 	 * @return	string		The URL
 	 * @see getTypoLink()
 	 */
-	function getTypoLink_URL_fh002 (&$cObj, $params,$urlParameters=array(),$target='',$conf=array())	{
+	function getTypoLink_URL_fh002 (
+		&$cObj,
+		$params,
+		$urlParameters = array(),
+		$target = '',
+		$conf = array()
+	) {
 		$rc = FALSE;
 		if (is_object($cObj))	{
-			$out = tx_div2007_alpha::getTypoLink_fh002($cObj,'',$params,$urlParameters,$target,$conf);
+			$out = tx_div2007_alpha::getTypoLink_fh002(
+				$cObj,
+				'',
+				$params,
+				$urlParameters,
+				$target,
+				$conf
+			);
 			$rc = $cObj->lastTypoLinkUrl;
 		}
 		return $rc;
@@ -955,8 +1017,20 @@ class tx_div2007_alpha {
 	 * @return	string		The resulting URL
 	 * @see pi_linkToPage()
 	 */
-	function getPageLink_fh001 (&$langObj,$id,$target='',$urlParameters=array(),$conf=array())	{
-		$rc = tx_div2007_alpha::getTypoLink_URL_fh001($langObj,$id,$urlParameters,$target,$conf);
+	function getPageLink_fh001 (
+		&$langObj,
+		$id,
+		$target = '',
+		$urlParameters = array(),
+		$conf = array()
+	) {
+		$rc = tx_div2007_alpha::getTypoLink_URL_fh001(
+			$langObj,
+			$id,
+			$urlParameters,
+			$target,
+			$conf
+		);
 		return $rc;
 	}
 
@@ -976,8 +1050,20 @@ class tx_div2007_alpha {
 	 * @return	string		The resulting URL
 	 * @see pi_linkToPage()
 	 */
-	function getPageLink_fh002 (&$cObj,$id,$target='',$urlParameters=array(),$conf=array())	{
-		$rc = tx_div2007_alpha::getTypoLink_URL_fh002($cObj,$id,$urlParameters,$target,$conf);
+	function getPageLink_fh002 (
+		&$cObj,
+		$id,
+		$target = '',
+		$urlParameters = array(),
+		$conf = array()
+	) {
+		$rc = tx_div2007_alpha::getTypoLink_URL_fh002(
+			$cObj,
+			$id,
+			$urlParameters,
+			$target,
+			$conf
+		);
 		return $rc;
 	}
 
@@ -993,11 +1079,16 @@ class tx_div2007_alpha {
 	 * @return	string		The resulting content
 	 * @see pi_linkToPage()
 	 */
-	function wrapContentCode_fh001 (&$content,$theCode,$prefixId,$templateSuffix)	{
+	function wrapContentCode_fh001 (
+		&$content,
+		$theCode,
+		$prefixId,
+		$templateSuffix
+	) {
 		$rc = '';
 
 		$idNumber = str_replace('_','-',$prefixId.'-'.strtolower($theCode));
-		if ($templateSuffix)	{
+		if ($templateSuffix) {
 			$idNumber .= strtolower(str_replace('_','-',$templateSuffix));
 		}
 		$rc ='<!-- START: '.$idNumber.' --><div id="'.$idNumber.'">'.($content!='' ? $content : '').'</div><!-- END: '.$idNumber.' -->';
@@ -1016,7 +1107,12 @@ class tx_div2007_alpha {
 	 * @return	string		The resulting content
 	 * @see pi_linkToPage()
 	 */
-	function wrapContentCode_fh002 (&$content,$theCode,$prefixId,$uid)	{
+	function wrapContentCode_fh002 (
+		&$content,
+		$theCode,
+		$prefixId,
+		$uid
+	) {
 		$rc = '';
 
 		$idNumber = str_replace('_','-',$prefixId.'-'.strtolower($theCode));
@@ -1037,10 +1133,15 @@ class tx_div2007_alpha {
 	 * @return	string		The resulting content
 	 * @see pi_linkToPage()
 	 */
-	function wrapContentCode_fh003 (&$content,$theCode,$prefixId,$uid)	{
+	function wrapContentCode_fh003 (
+		&$content,
+		$theCode,
+		$prefixId,
+		$uid
+	) {
 		$rc = '';
 
-		$idNumber = str_replace('_','-',$prefixId . '-' . strtolower($theCode));
+		$idNumber = str_replace('_', '-', $prefixId . '-' . strtolower($theCode));
 		if ($uid != '')	{
 			$idNumber .= '-' . $uid;
 		}
@@ -1058,14 +1159,17 @@ class tx_div2007_alpha {
 	 * @return	string		HTML content wrapped, ready to return to the parent object.
 	 * @see pi_wrapInBaseClass()
 	 */
-	function wrapInBaseClass_fh001 ($str, $prefixId, $extKey)	{
-
+	function wrapInBaseClass_fh001 (
+		$str,
+		$prefixId,
+		$extKey
+	) {
 		$content = '<div class="' . str_replace('_','-',$prefixId) . '">
 		' . $str . '
 	</div>
 	';
 
-		if(!$GLOBALS['TSFE']->config['config']['disablePrefixComment'])	{
+		if(!$GLOBALS['TSFE']->config['config']['disablePrefixComment']) {
 			$content = '
 
 
@@ -1089,10 +1193,13 @@ class tx_div2007_alpha {
 	 * @param	object		tx_div2007_alpha_language_base object
 	 * @param	string		Configuration Key
 	 */
-	function getExternalCObject_fh001 (&$pOb, $mConfKey)	{
-		if ($pOb->conf[$mConfKey] && $pOb->conf[$mConfKey.'.'])	{
+	function getExternalCObject_fh001 (
+		&$pOb,
+		$mConfKey
+	) {
+		if ($pOb->conf[$mConfKey] && $pOb->conf[$mConfKey.'.']) {
 			$pOb->cObj->regObj = &$pOb;
-			return $pOb->cObj->cObjGetSingle($pOb->conf[$mConfKey],$pOb->conf[$mConfKey.'.'],'/'.$mConfKey.'/').'';
+			return $pOb->cObj->cObjGetSingle($pOb->conf[$mConfKey], $pOb->conf[$mConfKey . '.'], '/' . $mConfKey . '/') . '';
 		}
 	}
 
@@ -1102,10 +1209,13 @@ class tx_div2007_alpha {
 	 * @param	object		tx_div2007_alpha_language_base object
 	 * @param	string		Configuration Key
 	 */
-	function getExternalCObject_fh002 ($pOb, $mConfKey) {
+	function getExternalCObject_fh002 (
+		$pOb,
+		$mConfKey
+	) {
 		$result = '';
 
-		if ($pOb->conf[$mConfKey] && $pOb->conf[$mConfKey.'.'])	{
+		if ($pOb->conf[$mConfKey] && $pOb->conf[$mConfKey.'.']) {
 			$pOb->cObj->regObj = $pOb;
 			$result = $pOb->cObj->cObjGetSingle(
 				$pOb->conf[$mConfKey],
@@ -1122,7 +1232,7 @@ class tx_div2007_alpha {
 	 * run function from external cObject
 	 * @param	object		tx_div2007_alpha_language_base object
 	 */
-	function load_noLinkExtCobj_fh001 (&$langObj)	{
+	function load_noLinkExtCobj_fh001 (&$langObj) {
 		if ($langObj->conf['externalProcessing_final'] || is_array($langObj->conf['externalProcessing_final.']))	{	// If there is given another cObject for the final order confirmation template!
 			$langObj->externalCObject = tx_div2007_alpha::getExternalCObject_fh001($langObj, 'externalProcessing_final');
 		}
@@ -1132,13 +1242,22 @@ class tx_div2007_alpha {
 	/**
 	 * Calls user function
 	 */
-	function userProcess_fh001 (&$pObject, &$conf, $mConfKey, $passVar)	{
+	function userProcess_fh001 (
+		&$pObject,
+		&$conf,
+		$mConfKey,
+		$passVar
+	) {
 		global $TSFE;
 
-		if (isset($conf) && is_array($conf) && $conf[$mConfKey])	{
+		if (isset($conf) && is_array($conf) && $conf[$mConfKey]) {
 			$funcConf = $conf[$mConfKey.'.'];
-			$funcConf['parentObj']=&$pObject;
-			$passVar = $TSFE->cObj->callUserFunction($conf[$mConfKey], $funcConf, $passVar);
+			$funcConf['parentObj'] = &$pObject;
+			$passVar = $TSFE->cObj->callUserFunction(
+				$conf[$mConfKey],
+				$funcConf,
+				$passVar
+			);
 		}
 		return $passVar;
 	} // userProcess
@@ -1155,11 +1274,11 @@ class tx_div2007_alpha {
 	 * @return	string		The processed string
 	 * @see tslib_cObj::parseFunc()
 	 */
-	function RTEcssText (&$cObj, $str)	{
+	function RTEcssText (&$cObj, $str) {
 		global $TSFE;
 
 		$parseFunc = $TSFE->tmpl->setup['lib.']['parseFunc_RTE.'];
-		if (is_array($parseFunc))	{
+		if (is_array($parseFunc)) {
 			$str = $cObj->parseFunc($str, $parseFunc);
 		}
 		return $str;
@@ -1173,8 +1292,8 @@ class tx_div2007_alpha {
 	 * @param	string		$prefixId
 	 * @return	string		The combined class name (with the correct prefix)
 	 */
-	function getClassName ($class, $prefixId='')	{
-		return str_replace('_','-',$prefixId).($prefixId?'-':'').$class;
+	function getClassName ($class, $prefixId = '')	{
+		return str_replace('_', '-', $prefixId) . ($prefixId ? '-' : '') . $class;
 	}
 
 
@@ -1202,12 +1321,18 @@ class tx_div2007_alpha {
 	 * @param	boolean		enable htmlspecialchars() for the pi_getLL function (set this to FALSE if you want f.e use images instead of text for links like 'previous' and 'next').
 	 * @return	string		Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
 	 */
-	function list_browseresults_fh001 (&$pObject, $showResultCount=1,$tableParams='',$wrapArr=array(), $pointerName = 'pointer', $hscText = TRUE)	{
-
+	function list_browseresults_fh001 (
+		&$pObject,
+		$showResultCount = 1,
+		$tableParams = '',
+		$wrapArr = array(),
+		$pointerName = 'pointer',
+		$hscText = TRUE
+	) {
 			// Initializing variables:
 		$pointer = intval($pObject->piVars[$pointerName]);
 		$count = intval($pObject->internal['res_count']);
-		$results_at_a_time = t3lib_div::intInRange($pObject->internal['results_at_a_time'],1,1000);
+		$results_at_a_time = t3lib_div::intInRange($pObject->internal['results_at_a_time'], 1, 1000);
 		$totalPages = ceil($count/$results_at_a_time);
 		$maxPages = t3lib_div::intInRange($pObject->internal['maxPages'],1,100);
 		$pi_isOnlyFields = $pObject->pi_isOnlyFields($pObject->pi_isOnlyFields);
@@ -1390,14 +1515,14 @@ class tx_div2007_alpha {
 		$TSFE = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
 
 		$TSFE->connectToMySQL();
-		if ($TSFE->RDCT)    {
+		if ($TSFE->RDCT) {
 			$TSFE->sendRedirect();
 		}
 
 		// *******************
 		// output compression
 		// *******************
-		if ($GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel'])    {
+		if ($GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel']) {
 			require_once(PATH_t3lib.'class.gzip_encode.php');
 		}
 
@@ -1421,7 +1546,7 @@ class tx_div2007_alpha {
 
 			// Now, if there is a backend user logged in and he has NO access to
 			// this page, then re-evaluate the id shown!
-		if ($TSFE->beUserLogin && !$BE_USER->extPageReadAccess($TSFE->page))    {
+		if ($TSFE->beUserLogin && !$BE_USER->extPageReadAccess($TSFE->page)) {
 
 			// Remove user
 			unset($BE_USER);
@@ -1472,9 +1597,11 @@ class tx_div2007_alpha {
 	 * @return	string		The processed string
 	 * @see tslib_cObj::parseFunc()
 	 */
-	function phpFunc ($content, $conf)	{
-
-		if ($conf['php'] != '')	{
+	function phpFunc (
+		$content,
+		$conf
+	) {
+		if ($conf['php'] != '') {
 			$evalStr = str_replace('$value',$content,$conf['php']);
 			$rc = eval('return ' . $evalStr);
 		}
@@ -1490,7 +1617,10 @@ class tx_div2007_alpha {
 	 * @param	string		$prefixId
 	 * @return	string		The combined class name (with the correct prefix)
 	 */
-	function unserialize_fh001 ($str, $bErrorCheck=TRUE)	{
+	function unserialize_fh001 (
+		$str,
+		$bErrorCheck = TRUE
+	) {
 		$rc = FALSE;
 
 		$codeArray = array('a','s');
@@ -1607,7 +1737,6 @@ debug ($str{$i}, '$str{'.$i.'}', __LINE__, __FILE__);*/
 		}
 		return $rc;
 	}
-
 }
 
 

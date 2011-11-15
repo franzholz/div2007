@@ -46,10 +46,10 @@ class tx_div2007_alpha_language_base	{
 	public $LOCAL_LANG = Array();		// Local Language content
 	public $LOCAL_LANG_charset = Array();	// Local Language content charset for individual labels (overriding)
 	public $LOCAL_LANG_loaded = 0;		// Flag that tells if the locallang file has been fetch (or tried to be fetched) already.
-	public $LLkey='default';		// Pointer to the language to use.
-	public $altLLkey='';			// Pointer to alternative fall-back language to use.
-	public $LLtestPrefix='';		// You can set this during development to some value that makes it easy for you to spot all labels that ARe delivered by the getLL function.
-	public $LLtestPrefixAlt='';		// Save as LLtestPrefix, but additional prefix for the alternative value in getLL() function calls
+	public $LLkey = 'default';		// Pointer to the language to use.
+	public $altLLkey = '';			// Pointer to alternative fall-back language to use.
+	public $LLtestPrefix = '';		// You can set this during development to some value that makes it easy for you to spot all labels that ARe delivered by the getLL function.
+	public $LLtestPrefixAlt = '';		// Save as LLtestPrefix, but additional prefix for the alternative value in getLL() function calls
 	public $scriptRelPath;	// Path to the plugin class script relative to extension directory, eg. 'pi1/class.tx_newfaq_pi1.php'
 	public $extKey;		// Extension key.
 	/**
@@ -59,6 +59,8 @@ class tx_div2007_alpha_language_base	{
 	 * $conf[userFunc] / $conf[includeLibs]  reserved for setting up the USER / USER_INT object. See TSref
 	 */
 	public $conf = Array();
+	public $typoVersion;
+
 
 	public function init (&$cObj, $extKey, $conf, $scriptRelPath) {
 		global $TSFE;
@@ -74,6 +76,7 @@ class tx_div2007_alpha_language_base	{
 		$this->extKey = $extKey;
 		$this->conf = $conf;
 		$this->scriptRelPath = $scriptRelPath;
+		$this->typoVersion = t3lib_div::int_from_ver($GLOBALS['TYPO_VERSION']);
 	}
 
 	public function &getLocallang () {
@@ -90,6 +93,10 @@ class tx_div2007_alpha_language_base	{
 
 	public function &getConf () {
 		return $this->conf;
+	}
+
+	public function getTypoVersion () {
+		return $this->typoVersion;
 	}
 }
 

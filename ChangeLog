@@ -1,3 +1,11 @@
+06-11-15 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug with TYPO3 4.6: add modified methods list_browseresults_fh003, loadLL_fh002 and getLL_fh002
+	* fetch tx_div from TYPO3 4.6 as tx_div2007_div
+
+06-10-11 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug in foreign_table_where_query: an array must be checked if it is an array before the members are accessed
+	* add modified method wrapContentCode_fh004 which also includes a class attribute for the wrapped div tag
+
 19-07-11 Franz Holzinger  <franz@ttproducts.de>
 	* add tx_div2007_controller, tx_div2007_context, tx_div2007_configurations, tx_div2007_parameters
 	* replace deprecated method makeInstanceClassName by a call of makeInstance with the parameters of the constructor
