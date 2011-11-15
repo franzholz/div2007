@@ -61,7 +61,7 @@ define('CRLF', CR . LF);
  * @package TYPO3
  * @subpackage t3lib
  */
-final class t3lib_div {
+final class tx_div2007_div {
 
 		// Severity constants used by t3lib_div::sysLog()
 	const SYSLOG_SEVERITY_INFO = 0;
@@ -2958,13 +2958,13 @@ final class t3lib_div {
 	 */
 	public static function mkdir_deep($directory, $deepDirectory = '') {
 		if (!is_string($directory)) {
-			throw new \InvalidArgumentException(
+			throw new InvalidArgumentException(
 				'The specified directory is of type "' . gettype($directory) . '" but a string is expected.',
 				1303662955
 			);
 		}
 		if (!is_string($deepDirectory)) {
-			throw new \InvalidArgumentException(
+			throw new InvalidArgumentException(
 				'The specified directory is of type "' . gettype($deepDirectory) . '" but a string is expected.',
 				1303662956
 			);
@@ -2978,7 +2978,7 @@ final class t3lib_div {
 				TRUE
 			);
 			if (!is_dir($fullPath)) {
-				throw new \RuntimeException(
+				throw new RuntimeException(
 					'Could not create directory!',
 					1170251400
 				);
