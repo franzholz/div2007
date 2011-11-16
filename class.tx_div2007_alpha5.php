@@ -274,7 +274,7 @@ class tx_div2007_alpha5 {
 			$result = $cObj->typolink($label, $conf);
 		} else {
 			$out = 'error in call of tx_div2007_alpha5::getTypoLink_fh003: parameter $cObj is not an object';
-			debug ($out, '$out', __LINE__, __FILE__);
+			debug($out, '$out'); // keep this
 		}
 		return $rc;
 	}
@@ -400,46 +400,135 @@ class tx_div2007_alpha5 {
 	 *
 	 * @return	void
 	 */
-	static public function loadLL_fh002 (&$langObj) {
+	static public function loadLL_fh002 (&$langObj, $langFileParam = '', $overwrite = TRUE) {
 
-		if (!$langObj->LOCAL_LANG_loaded && $langObj->scriptRelPath) {
-			$basePath = 'EXT:' . $langObj->extKey . '/' . dirname($langObj->scriptRelPath) . '/locallang.xml';
+		if (is_object($langObj)) {
+			$typoVersion = $langObj->getTypoVersion();
+			$langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
+
+			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' ||  substr($langFile, 0, 9) === 'fileadmin') {
+				$basePath = $langFile;
+			} else {
+				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
+			}
 
 				// Read the strings in the required charset (since TYPO3 4.2)
-			$langObj->LOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, $GLOBALS['TSFE']->renderCharset);
+			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, $GLOBALS['TSFE']->renderCharset);
+
+			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
+				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
+					if (is_array($tempLOCAL_LANG[$langKey])) {
+						if ($overwrite) {
+							$langObj->LOCAL_LANG[$langKey] = array_merge($langObj->LOCAL_LANG[$langKey],$tempLOCAL_LANG[$langKey]);
+						} else {
+							$langObj->LOCAL_LANG[$langKey] = array_merge($tempLOCAL_LANG[$langKey], $langObj->LOCAL_LANG[$langKey]);
+						}
+					}
+				}
+			} else {
+				$langObj->LOCAL_LANG = $tempLOCAL_LANG;
+			}
+
 			if ($langObj->altLLkey) {
-				$langObj->LOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->altLLkey);
+				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->altLLkey, $GLOBALS['TSFE']->renderCharset);
+
+				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
+					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
+						if (is_array($tempLOCAL_LANG[$langKey])) {
+							if ($overwrite) {
+								$langObj->LOCAL_LANG[$langKey] = array_merge($langObj->LOCAL_LANG[$langKey],$tempLOCAL_LANG[$langKey]);
+							} else {
+								$langObj->LOCAL_LANG[$langKey] = array_merge($tempLOCAL_LANG[$langKey],$langObj->LOCAL_LANG[$langKey]);
+							}
+						}
+					}
+				} else {
+					$langObj->LOCAL_LANG = $tempLOCAL_LANG;
+				}
 			}
 
 				// Overlaying labels from TypoScript (including fictitious language keys for non-system languages!):
 			$confLL = $langObj->conf['_LOCAL_LANG.'];
 
 			if (is_array($confLL)) {
+
 				foreach ($confLL as $languageKey => $languageArray) {
-						// Don't process label if the langue is not loaded
-					$languageKey = substr($languageKey,0,-1);
-					if (is_array($languageArray) && is_array($langObj->LOCAL_LANG[$languageKey])) {
+					if (is_array($languageArray)) {
+						$languageKey = substr($languageKey, 0, -1);
+						$charset = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];
+
+						// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset"
+						// and if that is not set, assumed to be that of the individual system languages
+						if (!$charset) {
+							$charset = $GLOBALS['TSFE']->csConvObj->charSetArray[$languageKey];
+						}
+
 							// Remove the dot after the language key
 						foreach ($languageArray as $labelKey => $labelValue) {
-							if (!is_array($labelValue))	{
-								$langObj->LOCAL_LANG[$languageKey][$labelKey][0]['target'] = $labelValue;
+							if (is_array($labelValue)) {
+								foreach ($labelValue as $labelKey2 => $labelValue2) {
+									if (is_array($labelValue2)) {
+										foreach ($labelValue2 as $labelKey3 => $labelValue3) {
+											if (is_array($labelValue3)) {
+												foreach ($labelValue3 as $labelKey4 => $labelValue4) {
+													if (is_array($labelValue4)) {
+													} else {
+														if ($typoVersion >= 4006000) {
+															$langObj->LOCAL_LANG[$languageKey][$labelKey . $labelKey2 . $labelKey3 . $labelKey4][0]['target'] = $labelValue4;
+														} else {
+															$langObj->LOCAL_LANG[$languageKey][$labelKey . $labelKey2 . $labelKey3 . $labelKey4] = $labelValue4;
+														}
 
-									// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset"
-									// and if that is not set, assumed to be that of the individual system languages
-								if ($GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset']) {
-									$langObj->LOCAL_LANG_charset[$languageKey][$labelKey] = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];
+														if ($languageKey != 'default') {
+															$langObj->LOCAL_LANG_charset[$languageKey][$labelKey . $labelKey2 . $labelKey3 . $labelKey4] = $charset;	// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
+														}
+													}
+												}
+											} else {
+												if ($typoVersion >= 4006000) {
+													$langObj->LOCAL_LANG[$languageKey][$labelKey . $labelKey2 . $labelKey3][0]['target'] = $labelValue3;
+												} else {
+													$langObj->LOCAL_LANG[$languageKey][$labelKey . $labelKey2 . $labelKey3] = $labelValue3;
+												}
+
+												if ($languageKey != 'default') {
+													$langObj->LOCAL_LANG_charset[$languageKey][$labelKey . $labelKey2 . $labelKey3] = $charset;	// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
+												}
+											}
+										}
+									} else {
+										if ($typoVersion >= 4006000) {
+											$langObj->LOCAL_LANG[$languageKey][$labelKey . $labelKey2][0]['target'] = $labelValue2;
+										} else {
+											$langObj->LOCAL_LANG[$languageKey][$labelKey . $labelKey2] = $labelValue2;
+										}
+
+										if ($languageKey != 'default') {
+											$langObj->LOCAL_LANG_charset[$languageKey][$labelKey . $labelKey2] = $charset;	// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
+										}
+									}
+								}
+							} else {
+								if ($typoVersion >= 4006000) {
+									$langObj->LOCAL_LANG[$languageKey][$labelKey][0]['target'] = $labelValue;
 								} else {
-									$langObj->LOCAL_LANG_charset[$languageKey][$labelKey] = $GLOBALS['TSFE']->csConvObj->charSetArray[$languageKey];
+									$langObj->LOCAL_LANG[$languageKey][$labelKey] = $labelValue;
+								}
+
+								if ($languageKey != 'default') {
+									$langObj->LOCAL_LANG_charset[$languageKey][$labelKey] = $charset;	// For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
 								}
 							}
 						}
 					}
 				}
 			}
+			$langObj->LOCAL_LANG_loaded = 1;
+		} else {
+			$output = 'error in call of tx_div2007_alpha::loadLL_fh001: parameter $langObj is not an object';
+			debug($output, '$output'); // keep this
 		}
-		$langObj->LOCAL_LANG_loaded = 1;
 	}
-
 
 
 	/**
@@ -472,7 +561,7 @@ class tx_div2007_alpha5 {
 	 * @param	array		Additional query string to be passed as parameters to the links
 	 * @return	string		Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
 	 */
-	function &list_browseresults_fh002 ($pObject, $langObj, $cObj, $prefixId, $bCSSStyled=TRUE, $showResultCount=1, $browseParams='', $wrapArr=array(), $pointerName='pointer', $hscText=TRUE, $addQueryString=array())	{
+	function &list_browseresults_fh002 ($pObject, $langObj, $cObj, $prefixId, $bCSSStyled=TRUE, $showResultCount=1, $browseParams='', $wrapArr=array(), $pointerName='pointer', $hscText=TRUE, $addQueryString=array()) {
 
 		// example $wrapArr-array how it could be traversed from an extension
 		/* $wrapArr = array(
@@ -702,8 +791,19 @@ class tx_div2007_alpha5 {
 	 * @param	array		Additional query string to be passed as parameters to the links
 	 * @return	string		Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
 	 */
-	static public function &list_browseresults_fh003 ($pObject, $langObj, $cObj, $prefixId, $bCSSStyled=TRUE, $showResultCount=1, $browseParams='', $wrapArr=array(), $pointerName='pointer', $hscText=TRUE, $addQueryString=array()) {
-
+	static public function &list_browseresults_fh003 (
+		$pObject,
+		$langObj,
+		$cObj,
+		$prefixId,
+		$bCSSStyled = TRUE,
+		$showResultCount = 1,
+		$browseParams = '',
+		$wrapArr = array(),
+		$pointerName = 'pointer',
+		$hscText = TRUE,
+		$addQueryString = array()
+	) {
 		// example $wrapArr-array how it could be traversed from an extension
 		/* $wrapArr = array(
 			'showResultsNumbersWrap' => '<span class="showResultsNumbersWrap">|</span>'

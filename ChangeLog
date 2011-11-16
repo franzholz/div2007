@@ -1,3 +1,6 @@
+06-11-16 Franz Holzinger  <franz@ttproducts.de>
+	* enhance loadLL_fh002 with the advanced features from loadLL_fh001.
+
 06-11-15 Franz Holzinger  <franz@ttproducts.de>
 	* fix bug with TYPO3 4.6: add modified methods list_browseresults_fh003, loadLL_fh002 and getLL_fh002
 	* fetch tx_div from TYPO3 4.6 as tx_div2007_div
