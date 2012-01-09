@@ -1,3 +1,9 @@
+09-01-12 Franz Holzinger  <franz@ttproducts.de>
+	* replace deprecated t3lib_div::intInRange by t3lib_utility_Math::forceIntegerInRange
+	* replace deprecated t3lib_div::testInt by t3lib_utility_Math::canBeInterpretedAsInteger
+	* bugfix getLL_fh002: do not require the parameter $usedLang
+	* make typoVersion compatible to TYPO3 4.6
+
 06-11-16 Franz Holzinger  <franz@ttproducts.de>
 	* enhance loadLL_fh002 with the advanced features from loadLL_fh001.
 

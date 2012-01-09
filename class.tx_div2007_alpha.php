@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2011 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2012 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -10,7 +10,7 @@
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation; either version 2 of the License, or
 *  (at your option) any later version.
-*
+// *
 *  The GNU General Public License can be found at
 *  http://www.gnu.org/copyleft/gpl.html.
 *  A copy is found in the textfile GPL.txt and important notices to the license
@@ -1332,9 +1332,17 @@ class tx_div2007_alpha {
 			// Initializing variables:
 		$pointer = intval($pObject->piVars[$pointerName]);
 		$count = intval($pObject->internal['res_count']);
-		$results_at_a_time = t3lib_div::intInRange($pObject->internal['results_at_a_time'], 1, 1000);
+		$results_at_a_time = (
+			class_exists('t3lib_utility_Math') ?
+				t3lib_utility_Math::forceIntegerInRange($pObject->internal['results_at_a_time'], 1, 1000) :
+				t3lib_div::intInRange($pObject->internal['results_at_a_time'], 1, 1000)
+		);
 		$totalPages = ceil($count/$results_at_a_time);
-		$maxPages = t3lib_div::intInRange($pObject->internal['maxPages'],1,100);
+		$maxPages = (
+			class_exists('t3lib_utility_Math') ?
+				t3lib_utility_Math::forceIntegerInRange($pObject->internal['maxPages'], 1, 100) :
+				t3lib_div::intInRange($pObject->internal['maxPages'], 1, 100)
+		);
 		$pi_isOnlyFields = $pObject->pi_isOnlyFields($pObject->pi_isOnlyFields);
 
 			// $showResultCount determines how the results of the pagerowser will be shown.
@@ -1354,7 +1362,11 @@ class tx_div2007_alpha {
 				$pagefloat = ceil(($maxPages - 1)/2);
 			} else {
 				// pagefloat set as integer. 0 = left, value >= $pObject->internal['maxPages'] = right
-				$pagefloat = t3lib_div::intInRange($pObject->internal['pagefloat'],-1,$maxPages-1);
+				$pagefloat = (
+					class_exists('t3lib_utility_Math') ?
+						t3lib_utility_Math::forceIntegerInRange($pObject->internal['pagefloat'], -1, $maxPages-1) :
+						t3lib_div::intInRange($pObject->internal['pagefloat'], -1, $maxPages-1)
+				);
 			}
 		} else {
 			$pagefloat = -1; // pagefloat disabled
@@ -1392,7 +1404,11 @@ class tx_div2007_alpha {
 				$firstPage = max(0,$lastPage-$maxPages);
 			} else {
 				$firstPage = 0;
-				$lastPage = t3lib_div::intInRange($totalPages,1,$maxPages);
+				$lastPage = (
+					class_exists('t3lib_utility_Math') ?
+						t3lib_utility_Math::forceIntegerInRange($totalPages, 1, $maxPages) :
+						t3lib_div::intInRange($totalPages, 1, $maxPages)
+				);
 			}
 			$links=array();
 

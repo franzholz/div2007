@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2011 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2012 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -329,9 +329,15 @@ class tx_div2007_alpha5 {
 	 * @param	boolean		If TRUE, the output label is passed through htmlspecialchars()
 	 * @return	string		The value from LOCAL_LANG.
 	 */
-	static public function getLL_fh002 (&$langObj, $key, &$usedLang, $alternativeLabel = '', $hsc = FALSE) {
-
-		$typoVersion = $langObj->getTypoVersion();
+	static public function getLL_fh002 (&$langObj, $key, &$usedLang = '', $alternativeLabel = '', $hsc = FALSE) {
+		if (method_exists($langObj, 'getTypoVersion')) {
+			$typoVersion = $langObj->getTypoVersion();
+		} else {
+			$typoVersion =
+				class_exists('t3lib_utility_VersionNumber') ?
+				t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) :
+				t3lib_div::int_from_ver(TYPO3_version);
+		}
 
 		if ($typoVersion >= 4006000) {
 			if (isset($langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'])) {
@@ -347,8 +353,8 @@ class tx_div2007_alpha5 {
 					$word = $langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'];
 				}
 			} elseif ($langObj->altLLkey && isset($langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'])) {
-
 				$usedLang = $langObj->altLLkey;
+
 					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
 				if (isset($langObj->LOCAL_LANG_charset[$langObj->altLLkey][$key])) {
 					$word = $GLOBALS['TSFE']->csConv(
@@ -364,7 +370,6 @@ class tx_div2007_alpha5 {
 					// Get default translation (without charset conversion, english)
 				$word = $langObj->LOCAL_LANG['default'][$key][0]['target'];
 			} else {
-
 					// Return alternative string or empty
 				$word = (isset($langObj->LLtestPrefixAlt)) ? $langObj->LLtestPrefixAlt . $alternativeLabel : $alternativeLabel;
 			}
@@ -411,7 +416,6 @@ class tx_div2007_alpha5 {
 			} else {
 				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
-
 				// Read the strings in the required charset (since TYPO3 4.2)
 			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, $GLOBALS['TSFE']->renderCharset);
 
@@ -525,7 +529,7 @@ class tx_div2007_alpha5 {
 			}
 			$langObj->LOCAL_LANG_loaded = 1;
 		} else {
-			$output = 'error in call of tx_div2007_alpha::loadLL_fh001: parameter $langObj is not an object';
+			$output = 'error in call of tx_div2007_alpha::loadLL_fh002: parameter $langObj is not an object';
 			debug($output, '$output'); // keep this
 		}
 	}
@@ -572,9 +576,17 @@ class tx_div2007_alpha5 {
 			// Initializing variables:
 		$pointer = intval($pObject->ctrlVars[$pointerName]);
 		$count = intval($pObject->internal['resCount']);
-		$limit = t3lib_div::intInRange($pObject->internal['limit'],1,1000);
+		$limit = (
+			class_exists('t3lib_utility_Math') ?
+				t3lib_utility_Math::forceIntegerInRange($pObject->internal['limit'], 1, 1000) :
+				t3lib_div::intInRange($pObject->internal['limit'], 1, 1000)
+			);
 		$totalPages = ceil($count/$limit);
-		$maxPages = t3lib_div::intInRange($pObject->internal['maxPages'],1,100);
+		$maxPages = (
+			class_exists('t3lib_utility_Math') ?
+				t3lib_utility_Math::forceIntegerInRange($pObject->internal['maxPages'], 1, 100) :
+				t3lib_div::intInRange($pObject->internal['maxPages'], 1, 100)
+			);
 		$bUseCache = self::autoCache_fh001($pObject, $pObject->ctrlVars);
 
 			// $showResultCount determines how the results of the pagerowser will be shown.
@@ -594,7 +606,11 @@ class tx_div2007_alpha5 {
 				$pagefloat = ceil(($maxPages - 1)/2);
 			} else {
 				// pagefloat set as integer. 0 = left, value >= $pObject->internal['maxPages'] = right
-				$pagefloat = t3lib_div::intInRange($pObject->internal['pagefloat'],-1,$maxPages-1);
+				$pagefloat = (
+					class_exists('t3lib_utility_Math') ?
+						t3lib_utility_Math::forceIntegerInRange($pObject->internal['pagefloat'], -1, $maxPages-1) :
+						t3lib_div::intInRange($pObject->internal['pagefloat'], -1, $maxPages-1)
+				);
 			}
 		} else {
 			$pagefloat = -1; // pagefloat disabled
@@ -649,7 +665,11 @@ class tx_div2007_alpha5 {
 				$firstPage = max(0,$lastPage-$maxPages);
 			} else {
 				$firstPage = 0;
-				$lastPage = t3lib_div::intInRange($totalPages,1,$maxPages);
+				$lastPage = (
+					class_exists('t3lib_utility_Math') ?
+						t3lib_utility_Math::forceIntegerInRange($totalPages, 1, $maxPages) :
+						t3lib_div::intInRange($totalPages, 1, $maxPages)
+				);
 			}
 			$links=array();
 
@@ -814,9 +834,17 @@ class tx_div2007_alpha5 {
 			// Initializing variables:
 		$pointer = intval($pObject->ctrlVars[$pointerName]);
 		$count = intval($pObject->internal['resCount']);
-		$limit = t3lib_div::intInRange($pObject->internal['limit'],1,1000);
+		$limit = (
+			class_exists('t3lib_utility_Math') ?
+				t3lib_utility_Math::forceIntegerInRange($pObject->internal['limit'], 1, 1000) :
+				t3lib_div::intInRange($pObject->internal['limit'], 1, 1000)
+		);
 		$totalPages = ceil($count/$limit);
-		$maxPages = t3lib_div::intInRange($pObject->internal['maxPages'],1,100);
+		$maxPages = (
+			class_exists('t3lib_utility_Math') ?
+				t3lib_utility_Math::forceIntegerInRange($pObject->internal['maxPages'], 1, 100) :
+				t3lib_div::intInRange($pObject->internal['maxPages'], 1, 100)
+		);
 		$bUseCache = self::autoCache_fh001($pObject, $pObject->ctrlVars);
 
 			// $showResultCount determines how the results of the pagerowser will be shown.
@@ -836,7 +864,11 @@ class tx_div2007_alpha5 {
 				$pagefloat = ceil(($maxPages - 1)/2);
 			} else {
 				// pagefloat set as integer. 0 = left, value >= $pObject->internal['maxPages'] = right
-				$pagefloat = t3lib_div::intInRange($pObject->internal['pagefloat'],-1,$maxPages-1);
+				$pagefloat = (
+					class_exists('t3lib_utility_Math') ?
+						t3lib_utility_Math::forceIntegerInRange($pObject->internal['pagefloat'], -1, $maxPages-1) :
+						t3lib_div::intInRange($pObject->internal['pagefloat'], -1, $maxPages-1)
+				);
 			}
 		} else {
 			$pagefloat = -1; // pagefloat disabled
@@ -891,7 +923,11 @@ class tx_div2007_alpha5 {
 				$firstPage = max(0,$lastPage-$maxPages);
 			} else {
 				$firstPage = 0;
-				$lastPage = t3lib_div::intInRange($totalPages,1,$maxPages);
+				$lastPage = (
+					class_exists('t3lib_utility_Math') ?
+						t3lib_utility_Math::forceIntegerInRange($totalPages, 1, $maxPages) :
+						t3lib_div::intInRange($totalPages, 1, $maxPages)
+				);
 			}
 			$links=array();
 
