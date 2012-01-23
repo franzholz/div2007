@@ -34,7 +34,7 @@
  * @package    TYPO3
  * @subpackage div2007
  * @author     Elmar Hinz <elmar.hinz@team-red.net>
- * @copyright  2006-2008 Elmar Hinz
+ * @copyright  2006-2011 Elmar Hinz
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version    SVN: $Id$
  * @since      0.1
@@ -173,7 +173,7 @@ class tx_div2007 {
 	 * @param	string		subdirectory
 	 * @return	void
 	 */
-	function autoLoadAll ($extensionKey, $subdirectory = '', $pregFileNamePattern='/^class[.]tx_(.*)[.]php$/') {
+	public function autoLoadAll ($extensionKey, $subdirectory = '', $pregFileNamePattern='/^class[.]tx_(.*)[.]php$/') {
 		// Format subdirectory first to '.../' or ''
 		preg_match('/^\/?(.*)\/?$/', $subdirectory, $matches);
 		$subdirectory = strlen($matches[1]) ? $matches[1] . '/' : '';
@@ -184,7 +184,7 @@ class tx_div2007 {
 				if(preg_match($pregFileNamePattern, $entry)) {
 					require_once($path . $entry);
 				} elseif(is_dir($path . $entry) && !preg_match('/\./', $entry)) {
-					tx_div2007::autoLoadAll($extensionKey, $subdirectory . $entry, $pregFileNamePattern);
+					self::autoLoadAll($extensionKey, $subdirectory . $entry, $pregFileNamePattern);
 				}
 			}
 		} else {
@@ -206,7 +206,7 @@ class tx_div2007 {
 	 * @see    userSeesion()
 	 * @see    session()
 	 */
-	function browserSession ($key, $value = NULL) {
+	static public function browserSession ($key, $value = NULL) {
 		if($value != NULL)
 			$GLOBALS['TSFE']->fe_user->setKey('ses', $key, $value);
 		return $GLOBALS['TSFE']->fe_user->getKey('ses', $key);
@@ -222,7 +222,7 @@ class tx_div2007 {
 	 *
 	 * @return	void
 	 */
-	function clearAllCaches () {
+	public function clearAllCaches () {
 		require_once(PATH_t3lib.'class.t3lib_tcemain.php');
 		$tce = new t3lib_tcemain();
 		$tce->admin = TRUE;
@@ -237,8 +237,8 @@ class tx_div2007 {
 	 * @return object TYPO3_DB
 	 * @see tx_div2007::getDataBase()
 	 */
-	function db (){
-		return tx_div2007::getDataBase();
+	static public function db (){
+		return self::getDataBase();
 	}
 
 	/**
@@ -249,7 +249,8 @@ class tx_div2007 {
 	 * @param	integer		linenumber the script died
 	 * @return	void
 	 */
-	function end ($text, $file, $line) {
+	static public function end ($text, $file, $line) {
+		debug ($text, 'end $text');
 		print '<h1>You died:</h1>';
 		print '<pre><strong>' . chr(10) . $text . chr(10) . '</strong></pre>';
 		print '<p>File: ' . $file . '</p>';
@@ -269,7 +270,7 @@ class tx_div2007 {
 	 * @param	string		regular expression that defines the splitter
 	 * @return	array		with the results
 	 */
-	function explode ($value, $splitCharacters = ',;:\s') {
+	static public function explode ($value, $splitCharacters = ',;:\s') {
 		$pattern = '/[' . $splitCharacters . ']+/';
 		$results = preg_split($pattern, $value, -1, PREG_SPLIT_NO_EMPTY);
 		$return = array();
@@ -286,7 +287,7 @@ class tx_div2007 {
 	 *
 	 * @return	tslib_cObj		a tslib_CObj
 	 */
-	function findCObject () {
+	public function findCObject () {
 		if(is_object($this->controller) && is_object($this->controller->cObject)){
 			return $this->controller->cObject;
 		}
@@ -310,7 +311,7 @@ class tx_div2007 {
 	 *
 	 * @return	object		TCE
 	 */
-	function findTce () {
+	public function findTce () {
 		global $BE_USER, $TCA, $PAGES_TYPES, $ICON_TYPES, $LANG_GENERAL_LABELS, $TBE_STYLES, $TBE_MODULES, $FILEICONS;
 		ob_start();
 		require(PATH_t3lib.'stddb/tables.php');
@@ -331,18 +332,30 @@ class tx_div2007 {
 	 * @return object TYPO3_DB
 	 * @see tx_div2007::db();
 	 */
-	function getDataBase () {
-		return tx_div2007::getGlobal('TYPO3_DB');
+	public function getDataBase () {
+		return self::getGlobal('TYPO3_DB');
 	}
 
 	/**
-	 * Get the frontend user
+	 * Get the logged in front end user
 	 *
-	 * @return object The current frontend user.
+	 * @param	string		field of the user if set
+	 *
+	 * @return object The current frontend user or string value of the field or boolean FALSE.
 	 * @see tx_div2007::user();
 	 */
-	function getFrontEndUser () {
-	 return $GLOBALS['TSFE']->fe_user;
+	static public function getFrontEndUser ($field = '') {
+		$result = FALSE;
+
+		if (isset($GLOBALS['TSFE']->fe_user) && is_object($GLOBALS['TSFE']->fe_user) && is_array($GLOBALS['TSFE']->fe_user)) {
+			$result = $GLOBALS['TSFE']->fe_user;
+
+			if ($field != '' && isset($result[$field])) {
+				$result = $result[$field];
+			}
+		}
+
+		return $result;
 	}
 
 	/**
@@ -351,7 +364,7 @@ class tx_div2007 {
 	 * @param string Extension key to resolve.
 	 * @return string Site relative path. FALSE if not found.
 	 */
-	function getSiteRelativeExtensionPath ($key) {
+	public function getSiteRelativeExtensionPath ($key) {
 		global $TYPO3_LOADED_EXT;
 		if(isset($TYPO3_LOADED_EXT[$key]['siteRelPath']) ) {
 			return $TYPO3_LOADED_EXT[$key]['siteRelPath'];
@@ -368,8 +381,8 @@ class tx_div2007 {
 	 * @param	string		extension key to check
 	 * @return	boolean		is the key valid?
 	 */
-	function getValidKey ($rawKey) {
-		$uKeys = array_keys(tx_div2007::getGlobal('TYPO3_LOADED_EXT'));
+	public function getValidKey ($rawKey) {
+		$uKeys = array_keys(self::getGlobal('TYPO3_LOADED_EXT'));
 		foreach((array)$uKeys as $uKey) {
 			if( str_replace('_', '', $uKey) == str_replace('_', '', $rawKey) ){
 				$result =  $uKey;
@@ -388,7 +401,7 @@ class tx_div2007 {
 	 *    <pre>
 	 *     Example: my_extension
 	 *    </pre>
-	 * 2. A classnmae of the pattern tx_KEY_something_else is tried.
+	 * 2. A classname of the pattern tx_KEY_something_else is tried.
 	 *    <pre>
 	 *     Example: tx_myextension_view
 	 *    </pre>
@@ -405,29 +418,29 @@ class tx_div2007 {
 	 * @param	string		the minimal necessary information (see 1-4)
 	 * @return	string		the guessed key, FALSE if no result
 	 */
-	function guessKey ($minimalInformation) {
+	public function guessKey ($minimalInformation) {
 		$info=trim($minimalInformation);
 		$key = FALSE;
 		if($info){
 			// Can it be the key itself?
 			if(!$key && preg_match('/^([A-Za-z_]*)$/', $info, $matches ) ) {
 				$key = $matches[1];
-				$key = tx_div2007::getValidKey($key);
+				$key = self::getValidKey($key);
 			}
 			// Is it a classname that contains the key?
 			if(!$key && (preg_match('/^tx_([^_]*)(.*)$/', $info, $matches ) || preg_match('/^user_([^_]*)(.*)$/', $info, $matches )) ) {
 				$key = $matches[1];
-				$key = tx_div2007::getValidKey($key);
+				$key = self::getValidKey($key);
 			}
 			// Is there a full filename that contains the key in it?
 			if(!$key && (preg_match('/^.*?tx_([^_]*)(.*)\.php$/', $info, $matches ) || preg_match('/^.*?user_([^_]*)(.*)\.php$/', $info, $matches )) ) {
 				$key = $matches[1];
-				$key = tx_div2007::getValidKey($key);
+				$key = self::getValidKey($key);
 			}
 			// Is it a path that starts with the key?
 			if(!$key && $last = strstr('/',$info)) {
 				$key = substr($info, 0, $last);
-				$key = tx_div2007::getValidKey($key);
+				$key = self::getValidKey($key);
 			}
 		}
 		return $key ? $key : FALSE;
@@ -439,7 +452,7 @@ class tx_div2007 {
 	 * @param string   The key of the global variable
 	 * @return mixed   The global variable.
 	 */
-	function getGlobal ($key) {
+	public function getGlobal ($key) {
 		return $GLOBALS[$key];
 	}
 
@@ -450,8 +463,8 @@ class tx_div2007 {
 	 * @return	boolean		true if successfull else false
 	 * @see     tx_div2007::loadClass()
 	 */
-	function load ($classNameOrPathInformation) {
-		return tx_div2007::loadClass($classNameOrPathInformation);
+	public function load ($classNameOrPathInformation) {
+		return self::loadClass($classNameOrPathInformation);
 	}
 
 
@@ -465,7 +478,7 @@ class tx_div2007 {
 	 * @return	boolean		true if successfull, false otherwise
 	 * @see     tx_div2007_loader
 	 */
-	function loadClass ($classNameOrPathInformation) {
+	public function loadClass ($classNameOrPathInformation) {
 		require_once(PATH_BE_div2007 . 'class.tx_div2007_t3Loader.php');
 		if(tx_div2007_t3Loader::load($classNameOrPathInformation)) {
 			return TRUE;
@@ -486,7 +499,7 @@ class tx_div2007 {
 	 * @return      void
 	 * @author      Franz Holzinger
 	 */
-	function loadTcaAdditions ($ext_keys) {
+	public function loadTcaAdditions ($ext_keys) {
 		global $_EXTKEY, $TCA;
 		//Merge all ext_keys
 		if (is_array($ext_keys)) {
@@ -510,7 +523,7 @@ class tx_div2007 {
 	 * @return	object		the instance else FALSE
 	 * @see     tx_div2007_loader
 	 */
-	function makeInstance ($className) {
+	public function makeInstance ($className) {
 		$instance = FALSE;
 		if(!is_object($instance)) {
 			require_once(PATH_BE_div2007 . 'class.tx_div2007_t3Loader.php');
@@ -530,11 +543,11 @@ class tx_div2007 {
 	 * @param string Path to resolve.
 	 * @return string Resolved path.
 	 */
-	function resolvePathWithExtPrefix ($path) {
+	public function resolvePathWithExtPrefix ($path) {
 		if(substr($path, 0, 4) == 'EXT:') {
 			list($extKey, $local) = explode('/', substr($path,4),2);
 			if(t3lib_extMgm::isLoaded($extKey)) {
-				$path = tx_div2007::getSiteRelativeExtensionPath($extKey) . $local;
+				$path = self::getSiteRelativeExtensionPath($extKey) . $local;
 			}
 		}
 		return $path;
@@ -551,8 +564,8 @@ class tx_div2007 {
 	 * @see    userSeesion()
 	 * @see    browserSession()
 	 */
-	function session ($key, $value = NULL) {
-		return tx_div2007::browserSession($key, $value);
+	public function session ($key, $value = NULL) {
+		return self::browserSession($key, $value);
 	}
 
 	/**
@@ -562,8 +575,8 @@ class tx_div2007 {
 	 * @return object TYPO3_DB
 	 * @see tx_div2007::findTce()
 	 */
-	function tce (){
-		return tx_div2007::findTce();
+	public function tce (){
+		return self::findTce();
 	}
 
 	/**
@@ -573,9 +586,9 @@ class tx_div2007 {
 	 * @param   string      string of characters used to split first argument
 	 * @return  array       an hashArray
 	 */
-	function toHashArray ($mixed, $splitCharacters = ',;:\s' ) {
+	public function toHashArray ($mixed, $splitCharacters = ',;:\s' ) {
 		if(is_string($mixed)) {
-			$array = tx_div2007::explode($mixed, $splitCharacters); // TODO: Enable empty values by defining a better explode functions.
+			$array = self::explode($mixed, $splitCharacters); // TODO: Enable empty values by defining a better explode functions.
 			for($i = 0; $i < count($array); $i = $i + 2) {
 				$hashArray[$array[$i]] = $array[$i+1];
 			}
@@ -597,9 +610,9 @@ class tx_div2007 {
 	 * @param   string      string of characters used to split first argument
 	 * @return  object      an hashObject
 	 */
-	function toHashObject ($mixed, $splitCharacters = ',;:' ) {
+	public function toHashObject ($mixed, $splitCharacters = ',;:' ) {
 // Todo: tx_div2007_data does not exist
-		return new tx_div2007_data(tx_div2007::toHashArray($mixed, $splitCharacters));
+		return new tx_div2007_data(self::toHashArray($mixed, $splitCharacters));
 	}
 
 	/**
@@ -609,8 +622,8 @@ class tx_div2007 {
 	 * @param   string      string of characters used to split first argument
 	 * @return  string      an hashString
 	 */
-	function toHashString ($mixed, $splitCharacters = ',;:' ) {
-		$array = tx_div2007::toHashArray($mixed, $splitCharacters);
+	public function toHashString ($mixed, $splitCharacters = ',;:' ) {
+		$array = self::toHashArray($mixed, $splitCharacters);
 		$string = '';
 		for($i = 0; $i < count($array); $i = $i + 2) {
 			$string .= $array[$i] . ' : ' . $array[$i + 1] . ', ';
@@ -626,9 +639,9 @@ class tx_div2007 {
 	 * @param   string      string of characters used to split first argument
 	 * @return  array       a listArray
 	 */
-	function toListArray ($mixed, $splitCharacters = ',;:\s') {
+	public function toListArray ($mixed, $splitCharacters = ',;:\s') {
 		if(is_string($mixed)) {
-			$listArray = tx_div2007::explode($mixed, $splitCharacters);
+			$listArray = self::explode($mixed, $splitCharacters);
 		} elseif(is_array($mixed)) {
 			$listArray = array_values($mixed);
 		} elseif(is_object($mixed) && method_exists($mixed, 'getArrayCopy')) {
@@ -647,8 +660,8 @@ class tx_div2007 {
 	 * @param   string      string of characters used to split first argument
 	 * @return  object      a listObject
 	 */
-	function toListObject ($mixed, $splitCharacters = ',;:' ) {
-		return new tx_div2007_data(tx_div2007::toListArray($mixed, $splitCharacters));
+	public function toListObject ($mixed, $splitCharacters = ',;:' ) {
+		return new tx_div2007_data(self::toListArray($mixed, $splitCharacters));
 	}
 
 
@@ -659,8 +672,8 @@ class tx_div2007 {
 	 * @param   string      string of characters used to split first argument
 	 * @return  string      a listString
 	 */
-	function toListString ($mixed, $splitCharacters = ',;:' ) {
-		return implode(', ', tx_div2007::toListArray($mixed, $splitCharacters));
+	public function toListString ($mixed, $splitCharacters = ',;:' ) {
+		return implode(', ', self::toListArray($mixed, $splitCharacters));
 	}
 
 	/**
@@ -670,8 +683,8 @@ class tx_div2007 {
 	 *
 	 * @return	object	The current frontend user.
 	 */
-	function user () {
-		return tx_div2007::getFrontEndUser();
+	public function user () {
+		return self::getFrontEndUser();
 	}
 
 	/**
@@ -687,9 +700,10 @@ class tx_div2007 {
 	 * @return	mixed	session value
 	 * @see    browserSeesion()
 	 */
-	function userSession ($key, $value = NULL) {
-		if($value != NULL)
+	public function userSession ($key, $value = NULL) {
+		if($value != NULL) {
 			$GLOBALS['TSFE']->fe_user->setKey('user', $key, $value);
+		}
 		return $GLOBALS['TSFE']->fe_user->getKey('user', $key);
 	}
 

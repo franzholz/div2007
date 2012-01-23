@@ -45,12 +45,12 @@
 /**
  * Collection of static functions contributed by different people
  *
- * This class contains diverse staticfunctions in "alphpa" status.
+ * This class contains diverse staticfunctions in "alpha" status.
  * It is a kind of quarantine for newly suggested functions.
  *
- * The class offers the possibilty to quickly add new functions to div,
+ * The class offers the possibilty to quickly add new functions to div2007,
  * without much planning before. In a second step the functions will be reviewed,
- * adapted and fully implemented into the system of lib/div classes.
+ * adapted and fully implemented into the system of div2007 classes.
  *
  * @package    TYPO3
  * @subpackage div2007

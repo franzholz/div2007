@@ -1,3 +1,7 @@
+23-01-12 Franz Holzinger  <franz@ttproducts.de>
+	* add new classes for email and error message generation
+	* change function calls for PHP5
+
 09-01-12 Franz Holzinger  <franz@ttproducts.de>
 	* replace deprecated t3lib_div::intInRange by t3lib_utility_Math::forceIntegerInRange
 	* replace deprecated t3lib_div::testInt by t3lib_utility_Math::canBeInterpretedAsInteger

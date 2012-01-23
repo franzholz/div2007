@@ -26,10 +26,14 @@
 ***************************************************************/
 
 /**
- * Collection of static functions to work in cooperation with the extension lib (lib/div)
+ * Collection of static functions contributed by different people
  *
- * PHP version 5
+ * This class contains diverse staticfunctions in "alpha" status.
+ * It is a kind of quarantine for newly suggested functions.
  *
+ * The class offers the possibilty to quickly add new functions to div2007,
+ * without much planning before. In a second step the functions will be reviewed,
+ * adapted and fully implemented into the system of div2007 classes.
  *
  * @package    TYPO3
  * @subpackage div2007
@@ -40,22 +44,7 @@
  * @since      0.1
  */
 
-/**
- * Collection of static functions contributed by different people
- *
- * This class contains diverse staticfunctions in "alphpa" status.
- * It is a kind of quarantine for newly suggested functions.
- *
- * The class offers the possibilty to quickly add new functions to div,
- * without much planning before. In a second step the functions will be reviewed,
- * adapted and fully implemented into the system of lib/div classes.
- *
- * @package    TYPO3
- * @subpackage div2007
- * @author     different Members of the Extension Coordination Team
- */
-
-require_once (PATH_BE_div2007.'class.tx_div2007_ff.php');
+require_once (PATH_BE_div2007 . 'class.tx_div2007_ff.php');
 
 class tx_div2007_alpha5 {
 
@@ -335,8 +324,8 @@ class tx_div2007_alpha5 {
 		} else {
 			$typoVersion =
 				class_exists('t3lib_utility_VersionNumber') ?
-				t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) :
-				t3lib_div::int_from_ver(TYPO3_version);
+					t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) :
+					t3lib_div::int_from_ver(TYPO3_version);
 		}
 
 		if ($typoVersion >= 4006000) {
@@ -344,10 +333,10 @@ class tx_div2007_alpha5 {
 
 				$usedLang = $langObj->LLkey;
 					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-				if (isset($langObj->LOCAL_LANG_charset[$langObj->LLkey][$key])) {
+				if (isset($langObj->LOCAL_LANG_charset[$usedLang][$key])) {
 					$word = $GLOBALS['TSFE']->csConv(
-						$langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'],
-						$langObj->LOCAL_LANG_charset[$langObj->LLkey][$key]
+						$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
+						$langObj->LOCAL_LANG_charset[$usedLang][$key]
 					);
 				} else {
 					$word = $langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'];
@@ -356,10 +345,10 @@ class tx_div2007_alpha5 {
 				$usedLang = $langObj->altLLkey;
 
 					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-				if (isset($langObj->LOCAL_LANG_charset[$langObj->altLLkey][$key])) {
+				if (isset($langObj->LOCAL_LANG_charset[$usedLang][$key])) {
 					$word = $GLOBALS['TSFE']->csConv(
-						$langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'],
-						$langObj->LOCAL_LANG_charset[$langObj->altLLkey][$key]
+						$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
+						$langObj->LOCAL_LANG_charset[$usedLang][$key]
 					);
 				} else {
 					$word = $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'];
@@ -368,7 +357,7 @@ class tx_div2007_alpha5 {
 
 				$usedLang = 'default';
 					// Get default translation (without charset conversion, english)
-				$word = $langObj->LOCAL_LANG['default'][$key][0]['target'];
+				$word = $langObj->LOCAL_LANG[$usedLang][$key][0]['target'];
 			} else {
 					// Return alternative string or empty
 				$word = (isset($langObj->LLtestPrefixAlt)) ? $langObj->LLtestPrefixAlt . $alternativeLabel : $alternativeLabel;
@@ -405,10 +394,12 @@ class tx_div2007_alpha5 {
 	 *
 	 * @return	void
 	 */
-	static public function loadLL_fh002 (&$langObj, $langFileParam = '', $overwrite = TRUE) {
+	static public function loadLL_fh002 (&$langObj, $langFileParam = '', $overwrite = TRUE, $typoVersion = '') {
 
 		if (is_object($langObj)) {
-			$typoVersion = $langObj->getTypoVersion();
+			if (!$typoVersion) {
+				$typoVersion = $langObj->getTypoVersion();
+			}
 			$langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
 
 			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' ||  substr($langFile, 0, 9) === 'fileadmin') {
