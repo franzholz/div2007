@@ -1,3 +1,6 @@
+28-01-12 Franz Holzinger  <franz@ttproducts.de>
+	* new feature: allow the usage of a pibase object instead of class.tx_div2007_alpha_language_base
+
 23-01-12 Franz Holzinger  <franz@ttproducts.de>
 	* add new classes for email and error message generation
 	* change function calls for PHP5

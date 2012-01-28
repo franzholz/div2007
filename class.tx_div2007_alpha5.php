@@ -76,22 +76,39 @@ class tx_div2007_alpha5 {
 	 * @access	public
 	 *
 	 */
-	static public function getSetupOrFFvalue_fh002 (&$cObj, $code, $codeExt, $defaultCode, $T3FlexForm_array, $fieldName='display_mode', $useFlexforms=1, $sheet='sDEF',$lang='lDEF',$value='vDEF') {
-		$rc = '';
+	static public function getSetupOrFFvalue_fh002 (
+		&$cObj,
+		$code,
+		$codeExt,
+		$defaultCode,
+		$T3FlexForm_array,
+		$fieldName = 'display_mode',
+		$useFlexforms = 1,
+		$sheet = 'sDEF',
+		$lang = 'lDEF',
+		$value = 'vDEF'
+	) {
+		$result = '';
 		if (empty($code)) {
 			if ($useFlexforms) {
 				// Converting flexform data into array:
-				$rc = tx_div2007_ff::get($T3FlexForm_array, $fieldName, $sheet, $lang, $value);
+				$result = tx_div2007_ff::get(
+					$T3FlexForm_array,
+					$fieldName,
+					$sheet,
+					$lang,
+					$value
+				);
 			} else {
-				$rc = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
+				$result = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
 			}
-			if (empty($rc)) {
-				$rc = strtoupper($defaultCode);
+			if (empty($result)) {
+				$result = strtoupper($defaultCode);
 			}
 		} else {
-			$rc = $code;
+			$result = $code;
 		}
-		return $rc;
+		return $result;
 	}
 
 
@@ -311,7 +328,7 @@ class tx_div2007_alpha5 {
 	 * Returns the localized label of the LOCAL_LANG key, $key used since TYPO3 4.6
 	 * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->LLtestPrefixAlt and ->LLtestPrefix
 	 *
-	 * @param	object		tx_div2007_alpha_language_base object
+	 * @param	object		tx_div2007_alpha_language_base or a tslib_pibase object
 	 * @param	string		The key from the LOCAL_LANG array for which to return the value.
 	 * @param	string		output: the used language
 	 * @param	string		Alternative string to return IF no value is found set for the key, neither for the local language nor the default.
@@ -319,6 +336,8 @@ class tx_div2007_alpha5 {
 	 * @return	string		The value from LOCAL_LANG.
 	 */
 	static public function getLL_fh002 (&$langObj, $key, &$usedLang = '', $alternativeLabel = '', $hsc = FALSE) {
+		$typoVersion = '';
+
 		if (method_exists($langObj, 'getTypoVersion')) {
 			$typoVersion = $langObj->getTypoVersion();
 		} else {
@@ -390,16 +409,30 @@ class tx_div2007_alpha5 {
 	/**
      * used since TYPO3 4.6
 	 * Loads local-language values by looking for a "locallang.php" file in the plugin class directory ($langObj->scriptRelPath) and if found includes it.
-	 * Also locallang values set in the TypoScript property "_LOCAL_LANG" are merged onto the values found in the "locallang.php" file.
+	 * Also locallang values set in the TypoScript property "_LOCAL_LANG" are merged onto the values found in the "locallang.xml" file.
 	 *
+	 * @param	object		tx_div2007_alpha_language_base or a tslib_pibase object
+	 * @param	string		language file to load
+	 * @param	boolean		If TRUE, then former language items can be overwritten from the new file
 	 * @return	void
 	 */
-	static public function loadLL_fh002 (&$langObj, $langFileParam = '', $overwrite = TRUE, $typoVersion = '') {
-
+	static public function loadLL_fh002 (
+		&$langObj,
+		$langFileParam = '',
+		$overwrite = TRUE
+	) {
 		if (is_object($langObj)) {
-			if (!$typoVersion) {
+			$typoVersion = '';
+
+			if (method_exists($langObj, 'getTypoVersion')) {
 				$typoVersion = $langObj->getTypoVersion();
+			} else {
+				$typoVersion =
+					class_exists('t3lib_utility_VersionNumber') ?
+						t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) :
+						t3lib_div::int_from_ver(TYPO3_version);
 			}
+
 			$langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
 
 			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' ||  substr($langFile, 0, 9) === 'fileadmin') {
@@ -431,9 +464,9 @@ class tx_div2007_alpha5 {
 					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
 						if (is_array($tempLOCAL_LANG[$langKey])) {
 							if ($overwrite) {
-								$langObj->LOCAL_LANG[$langKey] = array_merge($langObj->LOCAL_LANG[$langKey],$tempLOCAL_LANG[$langKey]);
+								$langObj->LOCAL_LANG[$langKey] = array_merge($langObj->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
 							} else {
-								$langObj->LOCAL_LANG[$langKey] = array_merge($tempLOCAL_LANG[$langKey],$langObj->LOCAL_LANG[$langKey]);
+								$langObj->LOCAL_LANG[$langKey] = array_merge($tempLOCAL_LANG[$langKey], $langObj->LOCAL_LANG[$langKey]);
 							}
 						}
 					}
