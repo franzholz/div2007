@@ -313,7 +313,7 @@ class tx_div2007_alpha {
 
 				if (t3lib_extMgm::isLoaded($_EXTKEY)) {
 					//Include the ext_table
-					include(t3lib_extMgm::extPath($_EXTKEY).'ext_tables.php');
+					include(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
 				}
 			}
 		}
@@ -379,73 +379,69 @@ class tx_div2007_alpha {
 	 * @return	array		Information array (unless an error occured)
 	 */
 	function getExtensionInfo_fh002 ($extKey, $path = '') {
-		$rc = '';
+		$result = '';
 
-		if (t3lib_extMgm::isLoaded($extKey)) {
-			if (!$path) {
-				$path = t3lib_extMgm::extPath($extKey);
-			}
-
-			if (is_dir($path)) {
-				$file = $path . 'ext_emconf.php';
-
-				if (@is_file($file)) {
-					$_EXTKEY = $extKey;
-					$EM_CONF = array();
-					include($file);
-
-					$eInfo = array();
-					$fieldArray = array(
-						'author',
-						'author_company',
-						'author_email',
-						'category',
-						'constraints',
-						'description',
-						'lastuploaddate',
-						'reviewstate',
-						'state',
-						'title',
-						'version',
-						'CGLcompliance',
-						'CGLcompliance_note'
-					);
-					$extConf = $EM_CONF[$extKey];
-
-					if (isset($extConf) && is_array($extConf)) {
-						foreach ($extConf as $field => $value) {
-							if (in_array($field, $fieldArray)) {
-								$eInfo[$field] = $value;
-							}
-						}
-
-						foreach ($fieldArray as $field) {
-							// Info from emconf:
-							$eInfo[$field] = $extConf[$field];
-						}
-
-						if (is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
-							$eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
-						} else {
-							$eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
-						}
-						$filesHash = unserialize($extConf['_md5_values_when_last_written']);
-						$eInfo['manual'] = @is_file($path . '/doc/manual.sxw');
-						$rc = $eInfo;
-					} else {
-						$rc = 'ERROR: The array $EM_CONF is wrong in file: ' . $file;
-					}
-				} else {
-					$rc = 'ERROR: No emconf.php file: ' . $file;
-				}
-			} else {
-				$rc = 'ERROR: Path not found: ' . $path;
-			}
-		} else {
-			$rc = 'Error: Extension ' . $extKey . ' has not been installed. (tx_fhlibrary_system::getExtensionInfo)';
+		if (!$path) {
+			$path = t3lib_extMgm::extPath($extKey);
 		}
 
-		return $rc;
+		if (is_dir($path)) {
+			$file = $path . 'ext_emconf.php';
+
+			if (@is_file($file)) {
+				$_EXTKEY = $extKey;
+				$EM_CONF = array();
+				include($file);
+
+				$eInfo = array();
+				$fieldArray = array(
+					'author',
+					'author_company',
+					'author_email',
+					'category',
+					'constraints',
+					'description',
+					'lastuploaddate',
+					'reviewstate',
+					'state',
+					'title',
+					'version',
+					'CGLcompliance',
+					'CGLcompliance_note'
+				);
+				$extConf = $EM_CONF[$extKey];
+
+				if (isset($extConf) && is_array($extConf)) {
+					foreach ($extConf as $field => $value) {
+						if (in_array($field, $fieldArray)) {
+							$eInfo[$field] = $value;
+						}
+					}
+
+					foreach ($fieldArray as $field) {
+						// Info from emconf:
+						$eInfo[$field] = $extConf[$field];
+					}
+
+					if (is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
+						$eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
+					} else {
+						$eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
+					}
+					$filesHash = unserialize($extConf['_md5_values_when_last_written']);
+					$eInfo['manual'] = @is_file($path . '/doc/manual.sxw');
+					$result = $eInfo;
+				} else {
+					$result = 'ERROR: The array $EM_CONF is wrong in file: ' . $file;
+				}
+			} else {
+				$result = 'ERROR: No emconf.php file: ' . $file;
+			}
+		} else {
+			$result = 'ERROR: Path not found: ' . $path;
+		}
+
+		return $result;
 	}
 
 

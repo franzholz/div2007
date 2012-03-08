@@ -132,12 +132,12 @@ class tx_div2007_alpha5 {
 					$bIsCachable = TRUE;
 				} elseif (is_array($pObject->autoCacheFields[$fN])) {
 					if (is_array($pObject->autoCacheFields[$fN]['range'])
-							 && intval($inArray[$fN])>=intval($pObject->autoCacheFields[$fN]['range'][0])
-							 && intval($inArray[$fN])<=intval($pObject->autoCacheFields[$fN]['range'][1])) {
+							 && intval($inArray[$fN]) >= intval($pObject->autoCacheFields[$fN]['range'][0])
+							 && intval($inArray[$fN]) <= intval($pObject->autoCacheFields[$fN]['range'][1])) {
 								$bIsCachable = TRUE;
 					}
 					if (is_array($this->autoCacheFields[$fN]['list'])
-							 && in_array($inArray[$fN],$pObject->autoCacheFields[$fN]['list'])) {
+							 && in_array($inArray[$fN], $pObject->autoCacheFields[$fN]['list'])) {
 								$bIsCachable = TRUE;
 					}
 				}
@@ -178,7 +178,7 @@ class tx_div2007_alpha5 {
 		foreach (t3lib_div::trimExplode(',',$class) as $v) {
 			$output .= ' ' . self::getClassName_fh001($v, $prefixId);
 		}
-		foreach (t3lib_div::trimExplode(',',$addClasses) as $v) {
+		foreach (t3lib_div::trimExplode(',', $addClasses) as $v) {
 			$output .= ' ' . $v;
 		}
 		return ' class="' . trim($output) . '"';
@@ -198,8 +198,15 @@ class tx_div2007_alpha5 {
 	 * @return	string		The input string wrapped in <a> tags
 	 * @see pi_linkTP_keepPIvars(), tslib_cObj::typoLink()
 	 */
-	static public function linkTP ($pObject,$cObj,$str,$urlParameters=array(),$cache=0,$altPageId=0) {
-		$conf=array();
+	static public function linkTP (
+		$pObject,
+		$cObj,
+		$str,
+		$urlParameters = array(),
+		$cache = 0,
+		$altPageId = 0
+	) {
+		$conf = array();
 		$conf['useCacheHash'] = $pObject->bUSER_INT_obj ? 0 : $cache;
 		$conf['no_cache'] = $pObject->bUSER_INT_obj ? 0 : !$cache;
 		$conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
@@ -224,16 +231,35 @@ class tx_div2007_alpha5 {
 	 * @return	string		The input string wrapped in <a> tags
 	 * @see self::linkTP()
 	 */
-	static public function linkTP_keepCtrlVars ($pObject,$cObj,$prefixId,$str,$overruleCtrlVars=array(),$cache=0,$clearAnyway=0,$altPageId=0) {
+	static public function linkTP_keepCtrlVars (
+		$pObject,
+		$cObj,
+		$prefixId,
+		$str,
+		$overruleCtrlVars = array(),
+		$cache = 0,
+		$clearAnyway = 0,
+		$altPageId = 0
+	) {
 		if (is_array($pObject->ctrlVars) && is_array($overruleCtrlVars) && !$clearAnyway) {
 			$ctrlVars = $pObject->ctrlVars;
 			unset($ctrlVars['DATA']);
-			$overruleCtrlVars = t3lib_div::array_merge_recursive_overrule($ctrlVars,$overruleCtrlVars);
+			$overruleCtrlVars = t3lib_div::array_merge_recursive_overrule($ctrlVars, $overruleCtrlVars);
 			if ($pObject->bAutoCacheEn) {
 				$cache = self::autoCache_fh001($pObject, $overruleCtrlVars);
 			}
 		}
-		$res = self::linkTP($pObject,$cObj,$str,Array($prefixId=>$overruleCtrlVars),$cache,$altPageId);
+		$res =
+			self::linkTP(
+				$pObject,
+				$cObj,
+				$str,
+				array(
+					$prefixId => $overruleCtrlVars
+				),
+				$cache,
+				$altPageId
+			);
 		return $res;
 	}
 
@@ -254,8 +280,14 @@ class tx_div2007_alpha5 {
  	 * @return	string		The wrapped $label-text string
 	 * @see getTypoLink_URL()
 	 */
-	static public function getTypoLink_fh003 ($cObj, $label, $params, $urlParameters=array(), $target='', $conf=array()) {
-
+	static public function getTypoLink_fh003 (
+		$cObj,
+		$label,
+		$params,
+		$urlParameters = array(),
+		$target = '',
+		$conf = array()
+	) {
 		$result = FALSE;
 
 		if (is_object($cObj)) {
@@ -335,7 +367,13 @@ class tx_div2007_alpha5 {
 	 * @param	boolean		If TRUE, the output label is passed through htmlspecialchars()
 	 * @return	string		The value from LOCAL_LANG.
 	 */
-	static public function getLL_fh002 (&$langObj, $key, &$usedLang = '', $alternativeLabel = '', $hsc = FALSE) {
+	static public function getLL_fh002 (
+		&$langObj,
+		$key,
+		&$usedLang = '',
+		$alternativeLabel = '',
+		$hsc = FALSE
+	) {
 		$typoVersion = '';
 
 		if (method_exists($langObj, 'getTypoVersion')) {
@@ -351,6 +389,7 @@ class tx_div2007_alpha5 {
 			if (isset($langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'])) {
 
 				$usedLang = $langObj->LLkey;
+
 					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
 				if (isset($langObj->LOCAL_LANG_charset[$usedLang][$key])) {
 					$word = $GLOBALS['TSFE']->csConv(
@@ -373,7 +412,6 @@ class tx_div2007_alpha5 {
 					$word = $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'];
 				}
 			} elseif (isset($langObj->LOCAL_LANG['default'][$key][0]['target'])) {
-
 				$usedLang = 'default';
 					// Get default translation (without charset conversion, english)
 				$word = $langObj->LOCAL_LANG[$usedLang][$key][0]['target'];
@@ -589,8 +627,19 @@ class tx_div2007_alpha5 {
 	 * @param	array		Additional query string to be passed as parameters to the links
 	 * @return	string		Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
 	 */
-	function &list_browseresults_fh002 ($pObject, $langObj, $cObj, $prefixId, $bCSSStyled=TRUE, $showResultCount=1, $browseParams='', $wrapArr=array(), $pointerName='pointer', $hscText=TRUE, $addQueryString=array()) {
-
+	function &list_browseresults_fh002 (
+		$pObject,
+		$langObj,
+		$cObj,
+		$prefixId,
+		$bCSSStyled = TRUE,
+		$showResultCount = 1,
+		$browseParams = '',
+		$wrapArr = array(),
+		$pointerName = 'pointer',
+		$hscText = TRUE,
+		$addQueryString = array()
+	) {
 		// example $wrapArr-array how it could be traversed from an extension
 		/* $wrapArr = array(
 			'showResultsNumbersWrap' => '<span class="showResultsNumbersWrap">|</span>'
@@ -685,8 +734,8 @@ class tx_div2007_alpha5 {
 
 		if ($showResultCount != 2) { //show pagebrowser
 			if ($pagefloat > -1) {
-				$lastPage = min($totalPages,max($pointer+1 + $pagefloat,$maxPages));
-				$firstPage = max(0,$lastPage-$maxPages);
+				$lastPage = min($totalPages,max($pointer + 1 + $pagefloat, $maxPages));
+				$firstPage = max(0, $lastPage - $maxPages);
 			} else {
 				$firstPage = 0;
 				$lastPage = (
@@ -701,73 +750,73 @@ class tx_div2007_alpha5 {
 			if ($bShowFirstLast) { // Link to first page
 				if ($pointer>0)	{
 					$linkArray[$pointerName] = null;
-					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,tx_div2007_alpha::getLL($langObj,'list_browseresults_first','<< First',$hscText),$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
+					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj, $prefixId, tx_div2007_alpha::getLL($langObj, 'list_browseresults_first', '<< First', $hscText), $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				} else {
-					$links[]=$cObj->wrap(tx_div2007_alpha::getLL($langObj,'list_browseresults_first','<< First',$hscText),$wrapper['disabledLinkWrap']);
+					$links[] = $cObj->wrap(tx_div2007_alpha::getLL($langObj, 'list_browseresults_first', '<< First', $hscText), $wrapper['disabledLinkWrap']);
 				}
 			}
 			if ($alwaysPrev>=0)	{ // Link to previous page
-				$previousText = tx_div2007_alpha::getLL($langObj,'list_browseresults_prev','< Previous',$hscText);
+				$previousText = tx_div2007_alpha::getLL($langObj, 'list_browseresults_prev', '< Previous', $hscText);
 				if ($pointer>0)	{
-					$linkArray[$pointerName] = ($pointer-1?$pointer-1:'');
-					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,$previousText,$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
+					$linkArray[$pointerName] = ($pointer - 1 ? $pointer-1 : '');
+					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $previousText, $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				} elseif ($alwaysPrev)	{
-					$links[]=$cObj->wrap($previousText,$wrapper['disabledLinkWrap']);
+					$links[] = $cObj->wrap($previousText, $wrapper['disabledLinkWrap']);
 				}
 			}
 
-			for($a=$firstPage;$a<$lastPage;$a++)	{ // Links to pages
+			for($a = $firstPage; $a < $lastPage; $a++)	{ // Links to pages
 				$pageText = '';
 				if ($pObject->internal['showRange']) {
-					$pageText = (($a*$limit)+1) . '-' . min($count,(($a+1)*$limit));
+					$pageText = (($a * $limit) + 1) . '-' . min($count, (($a + 1) * $limit));
 				} else if ($totalPages > 1)	{
 					if ($wrapper['browseTextWrap'])	{
 						if ($pointer == $a) { // current page
-							$pageText = $cObj->wrap(($a+1),$wrapper['activeBrowseTextWrap']);
+							$pageText = $cObj->wrap(($a + 1), $wrapper['activeBrowseTextWrap']);
 						} else {
-							$pageText = $cObj->wrap(($a+1),$wrapper['browseTextWrap']);
+							$pageText = $cObj->wrap(($a + 1), $wrapper['browseTextWrap']);
 						}
 					} else {
-						$pageText = trim(tx_div2007_alpha::getLL($langObj,'list_browseresults_page','Page',$hscText)) . ' ' . ($a+1);
+						$pageText = trim(tx_div2007_alpha::getLL($langObj, 'list_browseresults_page', 'Page', $hscText)) . ' ' . ($a+1);
 					}
 				}
 				if ($pointer == $a) { // current page
 					if ($pObject->internal['dontLinkActivePage']) {
-						$links[] = $cObj->wrap($pageText,$wrapper['activeLinkWrap']);
+						$links[] = $cObj->wrap($pageText, $wrapper['activeLinkWrap']);
 					} else if ($pageText != ''){
-						$linkArray[$pointerName] = ($a?$a:'');
-						$link = self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,$pageText,$linkArray,$bUseCache);
-						$links[] = $cObj->wrap($link,$wrapper['activeLinkWrap']);
+						$linkArray[$pointerName] = ($a ? $a : '');
+						$link = self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $pageText, $linkArray, $bUseCache);
+						$links[] = $cObj->wrap($link, $wrapper['activeLinkWrap']);
 					}
 				} else if ($pageText != '') {
-					$linkArray[$pointerName] = ($a?$a:'');
-					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,$pageText,$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
+					$linkArray[$pointerName] = ($a ? $a : '');
+					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $pageText, $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				}
 			}
-			if ($pointer<$totalPages-1 || $bShowFirstLast)	{
-				$nextText = tx_div2007_alpha::getLL($langObj,'list_browseresults_next','Next >',$hscText);
-				if ($pointer==$totalPages-1) { // Link to next page
-					$links[]=$cObj->wrap($nextText,$wrapper['disabledLinkWrap']);
+			if ($pointer < $totalPages - 1 || $bShowFirstLast)	{
+				$nextText = tx_div2007_alpha::getLL($langObj, 'list_browseresults_next', 'Next >', $hscText);
+				if ($pointer == $totalPages-1) { // Link to next page
+					$links[] = $cObj->wrap($nextText, $wrapper['disabledLinkWrap']);
 				} else {
 					$linkArray[$pointerName] = $pointer+1;
-					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,$nextText,$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
+					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $nextText, $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				}
 			}
 			if ($bShowFirstLast) { // Link to last page
-				if ($pointer<$totalPages-1) {
+				if ($pointer < $totalPages-1) {
 					$linkArray[$pointerName] = $totalPages-1;
-					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,tx_div2007_alpha::getLL($langObj,'list_browseresults_last','Last >>',$hscText),$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
+					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, tx_div2007_alpha::getLL($langObj, 'list_browseresults_last', 'Last >>', $hscText), $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				} else {
-					$links[]=$cObj->wrap(tx_div2007_alpha::getLL($langObj,'list_browseresults_last','Last >>',$hscText),$wrapper['disabledLinkWrap']);
+					$links[] = $cObj->wrap(tx_div2007_alpha::getLL($langObj, 'list_browseresults_last', 'Last >>', $hscText), $wrapper['disabledLinkWrap']);
 				}
 			}
-			$theLinks = $cObj->wrap(implode(chr(10),$links),$wrapper['browseLinksWrap']);
+			$theLinks = $cObj->wrap(implode(chr(10), $links), $wrapper['browseLinksWrap']);
 		} else {
 			$theLinks = '';
 		}
 
-		$pR1 = $pointer*$limit+1;
-		$pR2 = $pointer*$limit+$limit;
+		$pR1 = $pointer * $limit + 1;
+		$pR2 = $pointer * $limit + $limit;
 
 		if ($showResultCount) {
 			if (isset($wrapper['showResultsNumbersWrap'])) {
@@ -775,28 +824,28 @@ class tx_div2007_alpha5 {
 				// the formatting string is expected to hold template markers (see function header). Example: 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###'
 
 				$markerArray['###FROM###'] = $cObj->wrap($count > 0 ? $pR1 : 0,$wrapper['showResultsNumbersWrap']);
-				$markerArray['###TO###'] = $cObj->wrap(min($count,$pR2),$wrapper['showResultsNumbersWrap']);
-				$markerArray['###OUT_OF###'] = $cObj->wrap($count,$wrapper['showResultsNumbersWrap']);
-				$markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . tx_div2007_alpha::getLL($langObj, 'list_browseresults_to', 'to') . ' ' . min($count,$pR2),$wrapper['showResultsNumbersWrap']);
-				$markerArray['###CURRENT_PAGE###'] = $cObj->wrap($pointer+1,$wrapper['showResultsNumbersWrap']);
+				$markerArray['###TO###'] = $cObj->wrap(min($count, $pR2), $wrapper['showResultsNumbersWrap']);
+				$markerArray['###OUT_OF###'] = $cObj->wrap($count, $wrapper['showResultsNumbersWrap']);
+				$markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . tx_div2007_alpha::getLL($langObj, 'list_browseresults_to', 'to') . ' ' . min($count, $pR2),$wrapper['showResultsNumbersWrap']);
+				$markerArray['###CURRENT_PAGE###'] = $cObj->wrap($pointer + 1,$wrapper['showResultsNumbersWrap']);
 				$markerArray['###TOTAL_PAGES###'] = $cObj->wrap($totalPages,$wrapper['showResultsNumbersWrap']);
-				$list_browseresults_displays = tx_div2007_alpha::getLL($langObj,'list_browseresults_displays_marker','Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
+				$list_browseresults_displays = tx_div2007_alpha::getLL($langObj, 'list_browseresults_displays_marker','Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
 				// substitute markers
-				$resultCountMsg = $cObj->substituteMarkerArray($list_browseresults_displays,$markerArray);
+				$resultCountMsg = $cObj->substituteMarkerArray($list_browseresults_displays, $markerArray);
 			} else {
 				// render the resultcount in the "traditional" way using sprintf
 				$resultCountMsg = sprintf(
 					str_replace(
 						'###SPAN_BEGIN###',
 						'<span' . self::classParam_fh001('browsebox-strong', '', $prefixId) . '>',
-						tx_div2007_alpha::getLL($langObj,'list_browseresults_displays','Displaying results ###SPAN_BEGIN###%s to %s</span> out of ###SPAN_BEGIN###%s</span>')
+						tx_div2007_alpha::getLL($langObj, 'list_browseresults_displays', 'Displaying results ###SPAN_BEGIN###%s to %s</span> out of ###SPAN_BEGIN###%s</span>')
 					),
 					$count > 0 ? $pR1 : 0,
 					min($count,$pR2),
 					$count
 				);
 			}
-			$resultCountMsg = $cObj->wrap($resultCountMsg,$wrapper['showResultsWrap']);
+			$resultCountMsg = $cObj->wrap($resultCountMsg, $wrapper['showResultsWrap']);
 		} else {
 			$resultCountMsg = '';
 		}
@@ -966,18 +1015,18 @@ class tx_div2007_alpha5 {
 			}
 			if ($alwaysPrev>=0) { // Link to previous page
 				$previousText = self::getLL_fh002($langObj, 'list_browseresults_prev', $usedLang, '< Previous', $hscText);
-				if ($pointer>0) {
-					$linkArray[$pointerName] = ($pointer-1?$pointer-1:'');
-					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId,$previousText,$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
+				if ($pointer > 0) {
+					$linkArray[$pointerName] = ($pointer - 1 ? $pointer - 1 : '');
+					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $previousText, $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				} elseif ($alwaysPrev) {
-					$links[]=$cObj->wrap($previousText,$wrapper['disabledLinkWrap']);
+					$links[] = $cObj->wrap($previousText, $wrapper['disabledLinkWrap']);
 				}
 			}
 
-			for($a=$firstPage;$a<$lastPage;$a++) { // Links to pages
+			for($a = $firstPage; $a < $lastPage; $a++) { // Links to pages
 				$pageText = '';
 				if ($pObject->internal['showRange']) {
-					$pageText = (($a*$limit)+1) . '-' . min($count,(($a+1)*$limit));
+					$pageText = (($a * $limit) + 1) . '-' . min($count, (($a + 1) * $limit));
 				} else if ($totalPages > 1) {
 					if ($wrapper['browseTextWrap']) {
 						if ($pointer == $a) { // current page
@@ -991,15 +1040,15 @@ class tx_div2007_alpha5 {
 				}
 				if ($pointer == $a) { // current page
 					if ($pObject->internal['dontLinkActivePage']) {
-						$links[] = $cObj->wrap($pageText,$wrapper['activeLinkWrap']);
+						$links[] = $cObj->wrap($pageText, $wrapper['activeLinkWrap']);
 					} else if ($pageText != '') {
-						$linkArray[$pointerName] = ($a?$a:'');
-						$link = self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,$pageText,$linkArray,$bUseCache);
-						$links[] = $cObj->wrap($link,$wrapper['activeLinkWrap']);
+						$linkArray[$pointerName] = ($a ? $a : '');
+						$link = self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $pageText, $linkArray, $bUseCache);
+						$links[] = $cObj->wrap($link, $wrapper['activeLinkWrap']);
 					}
 				} else if ($pageText != '') {
-					$linkArray[$pointerName] = ($a?$a:'');
-					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,$pageText,$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
+					$linkArray[$pointerName] = ($a ? $a : '');
+					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $pageText, $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				}
 			}
 			if ($pointer < $totalPages-1 || $bShowFirstLast) {
@@ -1007,25 +1056,25 @@ class tx_div2007_alpha5 {
 				if ($pointer==$totalPages-1) { // Link to next page
 					$links[]=$cObj->wrap($nextText,$wrapper['disabledLinkWrap']);
 				} else {
-					$linkArray[$pointerName] = $pointer+1;
-					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject,$cObj,$prefixId,$nextText,$linkArray,$bUseCache),$wrapper['inactiveLinkWrap']);
+					$linkArray[$pointerName] = $pointer + 1;
+					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $nextText, $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				}
 			}
 			if ($bShowFirstLast) { // Link to last page
-				if ($pointer<$totalPages-1) {
+				if ($pointer < $totalPages-1) {
 					$linkArray[$pointerName] = $totalPages-1;
 					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, self::getLL_fh002($langObj, 'list_browseresults_last', $usedLang, 'Last >>', $hscText), $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				} else {
 					$links[]=$cObj->wrap(self::getLL_fh002($langObj, 'list_browseresults_last', $usedLang, 'Last >>', $hscText), $wrapper['disabledLinkWrap']);
 				}
 			}
-			$theLinks = $cObj->wrap(implode(chr(10),$links),$wrapper['browseLinksWrap']);
+			$theLinks = $cObj->wrap(implode(chr(10), $links), $wrapper['browseLinksWrap']);
 		} else {
 			$theLinks = '';
 		}
 
-		$pR1 = $pointer*$limit+1;
-		$pR2 = $pointer*$limit+$limit;
+		$pR1 = $pointer * $limit + 1;
+		$pR2 = $pointer * $limit + $limit;
 
 		if ($showResultCount) {
 			if (isset($wrapper['showResultsNumbersWrap'])) {
@@ -1033,14 +1082,14 @@ class tx_div2007_alpha5 {
 				// the formatting string is expected to hold template markers (see function header). Example: 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###'
 
 				$markerArray['###FROM###'] = $cObj->wrap($count > 0 ? $pR1 : 0,$wrapper['showResultsNumbersWrap']);
-				$markerArray['###TO###'] = $cObj->wrap(min($count,$pR2),$wrapper['showResultsNumbersWrap']);
-				$markerArray['###OUT_OF###'] = $cObj->wrap($count,$wrapper['showResultsNumbersWrap']);
+				$markerArray['###TO###'] = $cObj->wrap(min($count, $pR2), $wrapper['showResultsNumbersWrap']);
+				$markerArray['###OUT_OF###'] = $cObj->wrap($count, $wrapper['showResultsNumbersWrap']);
 				$markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . self::getLL_fh002($langObj, 'list_browseresults_to', $usedLang, 'to') . ' ' . min($count,$pR2),$wrapper['showResultsNumbersWrap']);
-				$markerArray['###CURRENT_PAGE###'] = $cObj->wrap($pointer+1,$wrapper['showResultsNumbersWrap']);
-				$markerArray['###TOTAL_PAGES###'] = $cObj->wrap($totalPages,$wrapper['showResultsNumbersWrap']);
-				$list_browseresults_displays = self::getLL_fh002($langObj, 'list_browseresults_displays_marker', $usedLang, 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
+				$markerArray['###CURRENT_PAGE###'] = $cObj->wrap($pointer + 1, $wrapper['showResultsNumbersWrap']);
+				$markerArray['###TOTAL_PAGES###'] = $cObj->wrap($totalPages, $wrapper['showResultsNumbersWrap']);
+				$list_browseresults_displays = self::getLL_fh002($langObj,  'list_browseresults_displays_marker', $usedLang, 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
 				// substitute markers
-				$resultCountMsg = $cObj->substituteMarkerArray($list_browseresults_displays,$markerArray);
+				$resultCountMsg = $cObj->substituteMarkerArray($list_browseresults_displays, $markerArray);
 			} else {
 				// render the resultcount in the "traditional" way using sprintf
 				$resultCountMsg = sprintf(
@@ -1050,11 +1099,11 @@ class tx_div2007_alpha5 {
 						self::getLL_fh002($langObj, 'list_browseresults_displays', $usedLang, 'Displaying results ###SPAN_BEGIN###%s to %s</span> out of ###SPAN_BEGIN###%s</span>')
 					),
 					$count > 0 ? $pR1 : 0,
-					min($count,$pR2),
+					min($count, $pR2),
 					$count
 				);
 			}
-			$resultCountMsg = $cObj->wrap($resultCountMsg,$wrapper['showResultsWrap']);
+			$resultCountMsg = $cObj->wrap($resultCountMsg, $wrapper['showResultsWrap']);
 		} else {
 			$resultCountMsg = '';
 		}

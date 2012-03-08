@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2011 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2012 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -62,7 +62,7 @@ class tx_div2007_alpha_language_base {
 	public $typoVersion;
 
 
-	public function init (&$cObj, $extKey, $conf, $scriptRelPath) {
+	public function init ($cObj, $extKey, $conf, $scriptRelPath) {
 		global $TSFE;
 
 		if ($TSFE->config['config']['language']) {
@@ -72,7 +72,7 @@ class tx_div2007_alpha_language_base {
 			}
 		}
 
-		$this->cObj = &$cObj;
+		$this->cObj = $cObj;
 		$this->extKey = $extKey;
 		$this->conf = $conf;
 		$this->scriptRelPath = $scriptRelPath;

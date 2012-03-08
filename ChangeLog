@@ -1,3 +1,8 @@
+
+08-03-12 Franz Holzinger  <franz@ttproducts.de>
+	* improvement in getExtensionInfo_fh002: the extension needs not have been installed before
+	* add class for the sending of emails with support for the Swift Mailer
+
 28-01-12 Franz Holzinger  <franz@ttproducts.de>
 	* new feature: allow the usage of a pibase object instead of class.tx_div2007_alpha_language_base
 
@@ -11,10 +16,10 @@
 	* bugfix getLL_fh002: do not require the parameter $usedLang
 	* make typoVersion compatible to TYPO3 4.6
 
-06-11-16 Franz Holzinger  <franz@ttproducts.de>
+16-11-11 Franz Holzinger  <franz@ttproducts.de>
 	* enhance loadLL_fh002 with the advanced features from loadLL_fh001.
 
-06-11-15 Franz Holzinger  <franz@ttproducts.de>
+15-11-11 Franz Holzinger  <franz@ttproducts.de>
 	* fix bug with TYPO3 4.6: add modified methods list_browseresults_fh003, loadLL_fh002 and getLL_fh002
 	* fetch tx_div from TYPO3 4.6 as tx_div2007_div
 

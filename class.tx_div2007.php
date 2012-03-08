@@ -501,6 +501,9 @@ class tx_div2007 {
 	 */
 	public function loadTcaAdditions ($ext_keys) {
 		global $_EXTKEY, $TCA;
+
+		$loadTcaAdditions = TRUE;
+
 		//Merge all ext_keys
 		if (is_array($ext_keys)) {
 			for($i = 0; $i < sizeof($ext_keys); $i++){
