@@ -34,10 +34,13 @@
  * @author  Franz Holzinger <franz@ttproducts.de>
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3
- * @subpackage tt_products
+ * @subpackage div2007
  *
  *
  */
+
+
+require_once(PATH_BE_div2007 . 'class.tx_div2007_alpha5.php');
 
 
 
@@ -277,9 +280,6 @@ class tx_div2007_email {
 			}
 		}
 	}
-
-
-
 
 	/**
 	 * Embeds media into the mail message

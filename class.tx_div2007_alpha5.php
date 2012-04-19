@@ -113,6 +113,60 @@ class tx_div2007_alpha5 {
 
 
 	/**
+	 * Returns informations about the table and foreign table
+	 * This is used by various tables.
+	 *
+	 * @param	string		name of the table
+	 * @param	string		field of the table
+	 *
+	 * @return	array		infos about the table and foreign table:
+					table         ... name of the table
+					foreign_table ... name of the foreign table
+					mmtable       ... name of the mm table
+					foreign_field ... name of the field in the mm table which joins with
+					                  the foreign table
+	 * @access	public
+	 *
+	 */
+	static public function getForeignTableInfo_fh003 ($tablename, $fieldname) {
+		global $TCA, $TYPO3_DB;
+
+		$result = array();
+		if ($fieldname != '') {
+			$tableConf = $TCA[$tablename]['columns'][$fieldname]['config'];
+			$type = $tableConf['type'];
+			if ($type == 'group') {
+				$type = 'select';
+			}
+
+			if ($type == 'inline') {
+				$mmTablename = $tableConf['foreign_table'];
+				$foreignFieldname = $tableConf['foreign_selector'];
+			} else if ($type == 'select' && isset($tableConf['MM'])) {
+				$mmTablename = $tableConf['MM'];
+				$LocalFieldname = 'uid_local';
+				$foreignFieldname = 'uid_foreign';
+			}
+
+			$mmTableConf = $TCA[$mmTablename]['columns'][$foreignFieldname]['config'];
+
+			if ($type == 'inline') {
+				$foreignTable = $mmTableConf['foreign_table'];
+			} else if ($type == 'select') {
+				$foreignTable = $tableConf['foreign_table'];
+			}
+
+			$result['table'] = $tablename;
+			$result['foreign_table'] = $foreignTable;
+			$result['mmtable'] = $mmTablename;
+			$result['local_field'] = $LocalFieldname;
+			$result['foreign_field'] = $foreignFieldname;
+		}
+		return $result;
+	}
+
+
+	/**
 	 * Returns true if the array $inArray contains only values allowed to be cached based on the configuration in $this->pi_autoCacheFields
 	 * Used by self::linkTP_keepCtrlVars
 	 * This is an advanced form of evaluation of whether a URL should be cached or not.
@@ -149,7 +203,6 @@ class tx_div2007_alpha5 {
 		}
 		return $bUseCache;
 	}
-
 
 	/**
 	 * Returns a class-name prefixed with $prefixId and with all underscores substituted to dashes (-)
@@ -386,12 +439,12 @@ class tx_div2007_alpha5 {
 		}
 
 		if ($typoVersion >= 4006000) {
-			if (isset($langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'])) {
 
+			if ($langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'] != '') {
 				$usedLang = $langObj->LLkey;
 
 					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-				if (isset($langObj->LOCAL_LANG_charset[$usedLang][$key])) {
+				if ($langObj->LOCAL_LANG_charset[$usedLang][$key] != '') {
 					$word = $GLOBALS['TSFE']->csConv(
 						$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
 						$langObj->LOCAL_LANG_charset[$usedLang][$key]
@@ -399,7 +452,7 @@ class tx_div2007_alpha5 {
 				} else {
 					$word = $langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'];
 				}
-			} elseif ($langObj->altLLkey && isset($langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'])) {
+			} elseif ($langObj->altLLkey && $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'] != '') {
 				$usedLang = $langObj->altLLkey;
 
 					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
@@ -411,7 +464,7 @@ class tx_div2007_alpha5 {
 				} else {
 					$word = $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'];
 				}
-			} elseif (isset($langObj->LOCAL_LANG['default'][$key][0]['target'])) {
+			} elseif ($langObj->LOCAL_LANG['default'][$key][0]['target'] != '') {
 				$usedLang = 'default';
 					// Get default translation (without charset conversion, english)
 				$word = $langObj->LOCAL_LANG[$usedLang][$key][0]['target'];
@@ -897,11 +950,6 @@ class tx_div2007_alpha5 {
 		$hscText = TRUE,
 		$addQueryString = array()
 	) {
-		// example $wrapArr-array how it could be traversed from an extension
-		/* $wrapArr = array(
-			'showResultsNumbersWrap' => '<span class="showResultsNumbersWrap">|</span>'
-		); */
-
 		$usedLang = '';
 		$linkArray = $addQueryString;
 			// Initializing variables:

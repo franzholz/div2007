@@ -1,3 +1,7 @@
+19-04-12 Franz Holzinger  <franz@ttproducts.de>
+	* bugfix in getLL_fh002 for TYPO3 4.6.: Do not use an empty string for localization but show the default language.
+	* add autoloader file ext_autoload.php
+	* add improved function getForeignTableInfo_fh003
 
 08-03-12 Franz Holzinger  <franz@ttproducts.de>
 	* improvement in getExtensionInfo_fh002: the extension needs not have been installed before
