@@ -1,3 +1,7 @@
+20-04-12 Franz Holzinger  <franz@ttproducts.de>
+	* set version to stable
+	* include t3lib_div from TYPO3 4.7 rc2
+
 19-04-12 Franz Holzinger  <franz@ttproducts.de>
 	* bugfix in getLL_fh002 for TYPO3 4.6.: Do not use an empty string for localization but show the default language.
 	* add autoloader file ext_autoload.php

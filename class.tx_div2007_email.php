@@ -82,9 +82,11 @@ class tx_div2007_email {
 		global $TYPO3_CONF_VARS;
 
 		$result = TRUE;
+		$fromName = str_replace('"', '\'', $fromName);
+		$fromNameSlashed = tx_div2007_alpha5::slashName($fromName);
 
 		if ($subject == '') {
-			$defaultSubject = 'message from ' . $fromName . ($fromName != '' ? '<' : '') . $fromEMail . ($fromName != '' ? '>' : '');
+			$defaultSubject = 'message from ' . $fromNameSlashed . ($fromNameSlashed != '' ? '<' : '') . $fromEMail . ($fromNameSlashed != '' ? '>' : '');
 				// First line is subject
 			if ($HTMLContent) {
 				$parts = preg_split('/<title>|<\\/title>/i', $HTMLContent, 3);
@@ -96,14 +98,21 @@ class tx_div2007_email {
 				$PLAINContent = trim($parts[1]);
 			}
 		}
+		$typo3Version = class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : t3lib_div::int_from_ver(TYPO3_version);
 
 		if (
-			isset($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
-			is_array($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
-			isset($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
-			is_array($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
-			array_search('t3lib_mail_SwiftMailerAdapter', $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) !== FALSE
+			$typo3Version >= 4007000 ||
+			(
+				isset($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
+				is_array($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
+				isset($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
+				is_array($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
+				array_search('t3lib_mail_SwiftMailerAdapter', $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) !== FALSE
+			)
 		) {
+			if (preg_match('#[/\(\)\\<>,;:@\.\]\[\s]#', $fromName)) {
+				$fromName = '"' . $fromName . '"';
+			}
 			if (!is_array($toEMail)) {
 				$emailArray = t3lib_div::trimExplode(',', $toEMail);
 				$toEMail = array();
