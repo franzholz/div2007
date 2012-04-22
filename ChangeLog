@@ -1,3 +1,7 @@
+
+22-04-12 Franz Holzinger  <franz@ttproducts.de>
+	* extract tx_div2007_objectBase from file class.tx_div2007_object.php
+
 20-04-12 Franz Holzinger  <franz@ttproducts.de>
 	* set version to stable
 	* include t3lib_div from TYPO3 4.7 rc2
