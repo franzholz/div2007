@@ -906,18 +906,18 @@ class tx_div2007_alpha {
 			$rc = FALSE;
 			$conf['parameter'] = $params;
 			if ($target) {
-				$conf['target']=$target;
-				$conf['extTarget']=$target;
+				$conf['target'] = $target;
+				$conf['extTarget'] = $target;
 			}
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'].= t3lib_div::implodeArrayForUrl('',$urlParameters);
+					$conf['additionalParams'] .= t3lib_div::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
-				$conf['additionalParams'].=$urlParameters;
+				$conf['additionalParams'] .= $urlParameters;
 			}
 			if (is_object($cObj)) {
-				$rc = $cObj->typolink($label,$conf);
+				$rc = $cObj->typolink($label, $conf);
 			}
 		} else {
 			$out = 'error in call of tx_div2007_alpha::getTypoLink_fh002: parameter $cObj is not an object';
@@ -977,7 +977,7 @@ class tx_div2007_alpha {
 		$conf = array()
 	) {
 		$rc = FALSE;
-		if (is_object($cObj))	{
+		if (is_object($cObj)) {
 			$out = tx_div2007_alpha::getTypoLink_fh002(
 				$cObj,
 				'',
@@ -1288,7 +1288,7 @@ class tx_div2007_alpha {
 	 * @param	string		$prefixId
 	 * @return	string		The combined class name (with the correct prefix)
 	 */
-	function getClassName ($class, $prefixId = '')	{
+	function getClassName ($class, $prefixId = '') {
 		return str_replace('_', '-', $prefixId) . ($prefixId ? '-' : '') . $class;
 	}
 
@@ -1646,12 +1646,9 @@ class tx_div2007_alpha {
 		$controlData = array();
 		$controlIndex = 0;
 		while ($i < $len)	{
-/*debug ($controlArray[$controlIndex], '$controlArray['.$controlIndex.']', __LINE__, __FILE__);*/
 			$ch = $str{$i};
-// debug ($ch, '$ch', __LINE__, __FILE__);
 			$i++;
 			$next = $str{$i};
-// debug ($next, '$next', __LINE__, __FILE__);
 			if ($next == ':')	{
 				$i++;
 				$paramPos = strpos($str,':',$i);
@@ -1660,54 +1657,37 @@ class tx_div2007_alpha {
 					$i = $paramPos+1;
 					switch ($ch)	{
 						case 'a':
-/*debug ($str{$i}, '$str{'.$i.'}', __LINE__, __FILE__);
-debug ($str{$i+1}, '$str{'.($i+1).'}', __LINE__, __FILE__);*/
 							if (isset($var))	{
 							} else {
 								$var = array();
-// 								debug ($var, 'unserialize_fh001 $var', __LINE__, __FILE__);
 							}
 							if ($str{$i}=='{')	{
 								$i++;
 								$controlIndex++;
-// 								debug ($param1, 'unserialize_fh001 a $param1', __LINE__, __FILE__);
 								$controlArray[$controlIndex] = $ch;
 								$controlData[$controlIndex] = array('param' => $param1);
 								$controlCount[$controlIndex] = 0;
-// debug ($controlCount[$controlIndex], '$controlCount['.$controlIndex.']', __LINE__, __FILE__);
 							} else {
 								$errorOffset = $i;
 							}
 						break;
 						case 's':
 							if (isset($var))	{
-/*								debug ($param1, 'unserialize_fh001 s $param1 ', __LINE__, __FILE__);
-debug ($str{$i}, '$str{'.$i.'}', __LINE__, __FILE__);*/
 								if ($str{$i}=='"')	{
 									$i++;
-// 									debug (substr($str, $i, 40),'nächstes', __LINE__, __FILE__);
 									$param2 = substr($str,$i,$param1);
 									$fixPos = strpos($param2,'";');
-// debug ($param2{$fixPos+2}, '$param2{'.($fixPos+2).'} fix Pos s', __LINE__, __FILE__);
-// 									debug (substr($param2, $fixPos, 40),'nächstes zu fixen', __LINE__, __FILE__);
 									if ($fixPos !== FALSE && in_array($param2{$fixPos+2},$codeArray))	{
 										$i += $fixPos; // fix wrong string length if it is really shorter now
 										$param2 = substr($param2,0,$fixPos);
 									} else {
 										$i += $param1;
 									}
-// 									debug ($param2, 'unserialize_fh001 s $param2 ', __LINE__, __FILE__);
-// debug ($controlArray[$controlIndex], '$controlArray['.$controlIndex.']', __LINE__, __FILE__);
-// debug ($controlCount[$controlIndex], '$controlCount['.$controlIndex.']', __LINE__, __FILE__);
-// debug ($controlData[$controlIndex], '$controlData['.$controlIndex.']', __LINE__, __FILE__);
-// debug ($str{$i}, '$str{'.$i.'} Pos s', __LINE__, __FILE__);
-// debug (substr($str,$i,32), 'nächste 32', __LINE__, __FILE__);
 
 									if ($str{$i}=='"' && $str{$i+1}==';')	{
 										$i += 2;
 										if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k']=='' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
 											$controlData[$controlIndex]['k'] = $param2;
-// 									debug ($i, 'unserialize_fh001 s $i ', __LINE__, __FILE__);
 											continue;
 										}
 									}
@@ -1715,12 +1695,10 @@ debug ($str{$i}, '$str{'.$i.'}', __LINE__, __FILE__);*/
 									if ($controlArray[$controlIndex] == 'a' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'] && isset($controlData[$controlIndex]['k']))	{
 										$controlCount[$controlIndex]++;
 										$var[$controlData[$controlIndex]['k']] = $param2;
-// 									debug ($var, 'unserialize_fh001 s $var ', __LINE__, __FILE__);
 										$controlData[$controlIndex]['k']='';
 									}
 								}
 							} else {
-// 								debug ($param1, 'unserialize_fh001 $param1', __LINE__, __FILE__);
 								$var = '';
 							}
 
@@ -1736,7 +1714,6 @@ debug ($str{$i}, '$str{'.$i.'}', __LINE__, __FILE__);*/
 				$errorOffset = $i;
 			}
 			if ($errorOffset >= 0)	{
-// 					debug ($rc, 'unserialize_fh001 $rc', __LINE__, __FILE__);
 					if ($bErrorCheck)	{
 						trigger_error('unserialize_fh001(): Error at offset '.$errorOffset.' of '.$len.' bytes \''.substr($str,$errorOffset,12).'\'',E_USER_NOTICE);
 						$rc = FALSE;

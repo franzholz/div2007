@@ -250,7 +250,7 @@ class tx_div2007 {
 	 * @return	void
 	 */
 	static public function end ($text, $file, $line) {
-		debug ($text, 'end $text');
+		debug ($text, 'end $text'); // keep this
 		print '<h1>You died:</h1>';
 		print '<pre><strong>' . chr(10) . $text . chr(10) . '</strong></pre>';
 		print '<p>File: ' . $file . '</p>';
@@ -711,6 +711,5 @@ class tx_div2007 {
 	}
 
 }
-
 
 ?>

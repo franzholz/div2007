@@ -1,6 +1,6 @@
-
-22-04-12 Franz Holzinger  <franz@ttproducts.de>
+27-04-12 Franz Holzinger  <franz@ttproducts.de>
 	* extract tx_div2007_objectBase from file class.tx_div2007_object.php
+	* add the include file to class.tx_div2007_object.php because the autoloader does not work in TYPO3 4.7 rc2
 
 20-04-12 Franz Holzinger  <franz@ttproducts.de>
 	* set version to stable

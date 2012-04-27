@@ -113,6 +113,11 @@
  * @see        tx_div2007_objectBase
  */
 
+require_once (PATH_BE_div2007 . 'class.tx_div2007_objectbase.php');
+
+
+
+
 
 class tx_div2007_object extends tx_div2007_objectBase implements ArrayAccess, SeekableIterator {
 
