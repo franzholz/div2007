@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2011 Kasper Skaarhoj (kasperYYYY@typo3.com)
+*  (c) 2012 Kasper Skaarhoj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -36,8 +36,6 @@
  * @author	Kasper Skaarhoj <kasperYYYY@typo3.com>
  * @author	Franz Holzinger <franz@ttproducts.de>
  */
-
-require_once(PATH_tslib.'class.tslib_content.php');
 
 
 class tx_div2007_cobj extends tslib_cObj {

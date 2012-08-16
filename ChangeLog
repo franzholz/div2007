@@ -1,3 +1,10 @@
+
+16-08-12 Franz Holzinger  <franz@ttproducts.de>
+	* fix security issue in t3lib_div::quoteJSvalue as in TYPO3 4.7.4
+
+28-07-12 Franz Holzinger  <franz@ttproducts.de>
+	* include t3lib_div from TYPO3 4.7.2
+
 27-04-12 Franz Holzinger  <franz@ttproducts.de>
 	* extract tx_div2007_objectBase from file class.tx_div2007_object.php
 	* add the include file to class.tx_div2007_object.php because the autoloader does not work in TYPO3 4.7 rc2

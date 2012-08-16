@@ -54,6 +54,7 @@ define('CRLF', CR . LF);
  */
 final class tx_div2007_div {
 
+
 		// Severity constants used by t3lib_div::sysLog()
 	const SYSLOG_SEVERITY_INFO = 0;
 	const SYSLOG_SEVERITY_NOTICE = 1;
@@ -2731,10 +2732,10 @@ final class tx_div2007_div {
 			)
 			);
 
-			$content = file_get_contents($url, FALSE, $ctx);
+			$content = @file_get_contents($url, FALSE, $ctx);
 
 			if ($content === FALSE && isset($report)) {
-				$report['error']   = -1;
+				$report['error'] = -1;
 				$report['message'] = 'Couldn\'t get URL: ' . implode(LF, $http_response_header);
 			}
 		} else {
@@ -2742,10 +2743,10 @@ final class tx_div2007_div {
 				$report['lib'] = 'file';
 			}
 
-			$content = file_get_contents($url);
+			$content = @file_get_contents($url);
 
 			if ($content === FALSE && isset($report)) {
-				$report['error']   = -1;
+				$report['error'] = -1;
 				$report['message'] = 'Couldn\'t get URL: ' . implode(LF, $http_response_header);
 			}
 		}
@@ -2933,13 +2934,13 @@ final class tx_div2007_div {
 	 */
 	public static function mkdir_deep($directory, $deepDirectory = '') {
 		if (!is_string($directory)) {
-			throw new \InvalidArgumentException(
+			throw new InvalidArgumentException(
 				'The specified directory is of type "' . gettype($directory) . '" but a string is expected.',
 				1303662955
 			);
 		}
 		if (!is_string($deepDirectory)) {
-			throw new \InvalidArgumentException(
+			throw new InvalidArgumentException(
 				'The specified directory is of type "' . gettype($deepDirectory) . '" but a string is expected.',
 				1303662956
 			);
@@ -2978,7 +2979,7 @@ final class tx_div2007_div {
 
 			$result = @mkdir($fullDirectoryPath, $permissionMask, TRUE);
 			if (!$result) {
-				throw new \RuntimeException('Could not create directory!', 1170251400);
+				throw new RuntimeException('Could not create directory!', 1170251400);
 			}
 		}
 		return $firstCreatedPath;
@@ -3646,7 +3647,7 @@ final class tx_div2007_div {
 				if ($proxySSL == '*') {
 					$proxySSL = $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP'];
 				}
-				if (self::cmpIP($_SERVER['REMOTE_ADDR'], $proxySSL)) {
+				if (self::cmpIP(self::getIndpEnv('REMOTE_ADDR'), $proxySSL)) {
 					$retVal = TRUE;
 				} else {
 					$retVal = $_SERVER['SSL_SESSION_ID'] || !strcasecmp($_SERVER['HTTPS'], 'on') || !strcmp($_SERVER['HTTPS'], '1') ? TRUE : FALSE; // see http://bugs.typo3.org/view.php?id=3909
@@ -4623,7 +4624,7 @@ final class tx_div2007_div {
 			if ($errorMode == 2) {
 				throw new InvalidArgumentException($errorMsg, 1294585864);
 			} elseif (!$errorMode) {
-				debug($errorMsg, 't3lib_div::callUserFunction'); // keep this
+				debug($errorMsg, 't3lib_div::callUserFunction');
 			}
 			return FALSE;
 		}
@@ -4664,7 +4665,7 @@ final class tx_div2007_div {
 					if ($errorMode == 2) {
 						throw new InvalidArgumentException($errorMsg, 1294585865);
 					} elseif (!$errorMode) {
-						debug($errorMsg, 't3lib_div::callUserFunction'); // keep this
+						debug($errorMsg, 't3lib_div::callUserFunction');
 					}
 				}
 			} else {
@@ -4672,7 +4673,7 @@ final class tx_div2007_div {
 				if ($errorMode == 2) {
 					throw new InvalidArgumentException($errorMsg, 1294585866);
 				} elseif (!$errorMode) {
-					debug($errorMsg, 't3lib_div::callUserFunction'); // keep this
+					debug($errorMsg, 't3lib_div::callUserFunction');
 				}
 			}
 		} else { // Function
@@ -4683,7 +4684,7 @@ final class tx_div2007_div {
 				if ($errorMode == 2) {
 					throw new InvalidArgumentException($errorMsg, 1294585867);
 				} elseif (!$errorMode) {
-					debug($errorMsg, 't3lib_div::callUserFunction'); // keep this
+					debug($errorMsg, 't3lib_div::callUserFunction');
 				}
 			}
 		}
@@ -4728,7 +4729,7 @@ final class tx_div2007_div {
 				// Check prefix is valid:
 			if ($checkPrefix && !self::hasValidClassPrefix($class, array($checkPrefix))) {
 				if (!$silent) {
-					debug("Class '" . $class . "' was not prepended with '" . $checkPrefix . "'", 't3lib_div::getUserObj'); // keep this
+					debug("Class '" . $class . "' was not prepended with '" . $checkPrefix . "'", 't3lib_div::getUserObj');
 				}
 				return FALSE;
 			}
@@ -4745,7 +4746,7 @@ final class tx_div2007_div {
 				return $classObj;
 			} else {
 				if (!$silent) {
-					debug("<strong>ERROR:</strong> No class named: " . $class, 't3lib_div::getUserObj'); // keep this
+					debug("<strong>ERROR:</strong> No class named: " . $class, 't3lib_div::getUserObj');
 				}
 			}
 		}
@@ -5666,25 +5667,15 @@ final class tx_div2007_div {
 
 
 	/**
-	 * Quotes a string for usage as JS parameter. Depends whether the value is
-	 * used in script tags (it doesn't need/must not get htmlspecialchar'ed in
-	 * this case).
+	 * Quotes a string for usage as JS parameter.
 	 *
 	 * @param string $value the string to encode, may be empty
-	 * @param boolean $withinCData
-	 *		whether the escaped data is expected to be used as CDATA and thus
-	 *		does not need to be htmlspecialchared
 	 *
 	 * @return string the encoded value already quoted (with single quotes),
 	 *				will not be empty
 	 */
-	static public function quoteJSvalue($value, $withinCData = FALSE) {
-		$escapedValue = addcslashes(
-			$value, '\'' . '"' . '\\' . TAB . LF . CR
-		);
-		if (!$withinCData) {
-			$escapedValue = htmlspecialchars($escapedValue);
-		}
+	public static function quoteJSvalue($value) {
+		$escapedValue = t3lib_div::makeInstance('t3lib_codec_JavaScriptEncoder')->encode($value);
 		return '\'' . $escapedValue . '\'';
 	}
 

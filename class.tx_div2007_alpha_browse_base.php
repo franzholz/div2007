@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009-2009 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2009-2012 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -41,10 +41,10 @@
 
 
 	// this class must be overridden and filled out. You can use the init method.
-class tx_div2007_alpha_browse_base	{
+class tx_div2007_alpha_browse_base {
 	public $ctrlVars = array();
 	public $internal = array();
-	public $autoCacheFields=array();
+	public $autoCacheFields = array();
 	public $bAutoCacheEn = FALSE;
 	public $bUSER_INT_obj;
 	public $tmpPageId = 0;
@@ -87,8 +87,62 @@ class tx_div2007_alpha_browse_base	{
 		$pagefloat,
 		$imageArray,
 		$imageActiveArray
-	)	{
+	) {
+		$this->ctrlVars = $ctrlVars;
+		$this->autoCacheFields = $ctrlLimits;
+		$this->bAutoCacheEn = $bAutoCacheEnable;
+		$this->bUSER_INT_obj = $bUSER_INT_obj;
+		$this->internal['resCount'] = $resCount;
+		$this->internal['limit'] = $limit;
+		$this->internal['maxPages'] = $maxPages;
+		$this->internal['bShowFirstLast'] = $bShowFirstLast;
+		$this->internal['bAlwaysPrev'] = $bAlwaysPrev;
+		$this->internal['pagefloat'] = $pagefloat;
+		$this->internal['image'] = $imageArray;
+		$this->internal['imageactive'] = $imageActiveArray;
+	}
 
+
+	/**
+	 * Initializes the control class for the browser
+	 *
+	 * @param	array		configuration
+	 * @param	array		ctrlVars: control array with the pointer variable as index
+	 * @param	array		ctrlLimits: limits to the pointer variable: the first index corresponds to the control array
+	 * 						[...]['range'][0]  ... lowest range value
+	 * 						[...]['range'][1]  ... highest range value
+	 * 						[...]['list']      ... list of allowed values
+	 * @param	boolean		$bAutoCacheEnable: auto cache enabled
+	 * @param	boolean		$bUSER_INT_obj: if it is a USER_INT object
+	 * @param	integer		resCount: total number of items in the query
+	 * @param	integer		limit: maximum number of items shown in the list
+	 * @param	integer		maxPages: maximum number of pages to browse
+	 * @param	boolean		bShowFirstLast: if the first and last entry will have a marker
+	 * @param	boolean		bAlwaysPrev: if the previous text is always shown even if there is no previous possible
+	 * @param	integer		pagefloat: page float
+	 * @param	array		imageArray: path - path to the images
+	 *									onmouseover
+	 *									onmouseout
+	 * @param	array		imageActiveArray: same as imageArray but for actively selected images
+	 *
+	 * @return	void
+	 */
+	public function init_fh002 (
+		$conf,
+		$ctrlVars,
+		$ctrlLimits,
+		$bAutoCacheEnable,
+		$bUSER_INT_obj,
+		$resCount,
+		$limit,
+		$maxPages,
+		$bShowFirstLast,
+		$bAlwaysPrev,
+		$pagefloat,
+		$imageArray,
+		$imageActiveArray
+	) {
+		$this->conf = $conf;
 		$this->ctrlVars = $ctrlVars;
 		$this->autoCacheFields = $ctrlLimits;
 		$this->bAutoCacheEn = $bAutoCacheEnable;

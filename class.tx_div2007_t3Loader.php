@@ -73,7 +73,7 @@ class tx_div2007_t3Loader {
 	 * @param	string		ending of classname
 	 * @return	boolean		TRUE if class was loaded
 	 */
-	function load ($minimalInformation, $alternativeKey='', $prefix = 'class.', $suffix = '.php') {
+	function load ($minimalInformation, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
 		$path = tx_div2007_t3Loader::_find($minimalInformation, $alternativeKey, $prefix, $suffix);
 		if($path) {
 			require_once($path);
@@ -96,7 +96,7 @@ class tx_div2007_t3Loader {
 	 * @see		t3lib_div::makeInstance
 	 * @see		load()
 	 */
-	function makeInstance ($class, $alternativeKey='', $prefix = 'class.', $suffix = '.php') {
+	function makeInstance ($class, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
 		if(tx_div2007_t3Loader::load($class, $alternativeKey, $prefix, $suffix)) {
 			return t3lib_div::makeInstance($class); // includes ux_ classes
 		} else {
@@ -120,7 +120,7 @@ class tx_div2007_t3Loader {
 	 * @return	string		the path, FALSE if invalid
 	 * @see		load()
 	 */
-	function _find ($minimalInformation, $alternativeKey='', $prefix = 'class.', $suffix = '.php') {
+	function _find ($minimalInformation, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
 		$info=trim($minimalInformation);
 		$path = '';
 		if(!$info) {
@@ -201,4 +201,5 @@ class tx_div2007_t3Loader {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/lib/class.tx_div2007_t3Loader.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/lib/class.tx_div2007_t3Loader.php']);
 }
+
 ?>

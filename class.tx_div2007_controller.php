@@ -122,7 +122,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	 * @param  object   Parameters object if called as subcontroller.
 	 * @return string   The complete result of the plugin, typically it's (x)html
 	 */
-	public function main ($input, $configurations, $context=NULL, $parameters=NULL) {
+	public function main ($input, $configurations, $context = NULL, $parameters = NULL) {
 		$this->input = $input;
 		$this->context = is_object($context) ? $context : $this->_createContext();
 		$this->parameters = is_object($parameters) ? $parameters : $this->_createParameters();
@@ -185,8 +185,11 @@ class tx_div2007_controller extends tx_div2007_object {
 	 */
 	public function configurations ($object = NULL) {
 		$this->configurations = is_object($object) ? $object : $this->configurations;
-		if($this->configurations) return $this->configurations;
-		else $this->_die('Missing the configurations object.',  __FILE__,  __LINE__);
+		if($this->configurations) {
+			return $this->configurations;
+		} else {
+			$this->_die('Missing the configurations object.',  __FILE__,  __LINE__);
+		}
 	}
 
 	/**
@@ -197,8 +200,11 @@ class tx_div2007_controller extends tx_div2007_object {
 	 */
 	public function parameters ($object = NULL) {
 		$this->parameters = is_object($object) ? $object : $this->parameters;
-		if($this->parameters) return $this->parameters;
-		else $this->_die('Missing the parameters object.',  __FILE__,  __LINE__);
+		if($this->parameters) {
+			return $this->parameters;
+		} else {
+			$this->_die('Missing the parameters object.',  __FILE__,  __LINE__);
+		}
 	}
 
 	/**
@@ -209,8 +215,11 @@ class tx_div2007_controller extends tx_div2007_object {
 	 */
 	public function context ($object = NULL) {
 		$this->context = is_object($object) ? $object : $this->context;
-		if($this->context) return $this->context;
-	 	else $this->_die('Missing the context object.',  __FILE__,  __LINE__);
+		if($this->context) {
+			return $this->context;
+		} else {
+			$this->_die('Missing the context object.',  __FILE__,  __LINE__);
+		}
 	}
 
 	//------------------------------------------------------------------------------------
@@ -232,11 +241,13 @@ class tx_div2007_controller extends tx_div2007_object {
 		$this->action = $action;
 		$controller = tx_div2007::makeInstance($controllerName);
 		// Set all values to the new controller
-		foreach(array_keys(get_class_vars(get_class($this))) as $key) $controller->$key =& $this->$key;
+		foreach(array_keys(get_class_vars(get_class($this))) as $key) {
+			$controller->$key = $this->$key;
+		}
 		// Rebuild the central quad
-		$controller->context->controller =& $controller;
-		$controller->parameters->controller =& $controller;
-		$controller->configurations->controller =& $controller;
+		$controller->context->controller = $controller;
+		$controller->parameters->controller = $controller;
+		$controller->configurations->controller = $controller;
 		return $controller;
 	}
 
@@ -251,9 +262,11 @@ class tx_div2007_controller extends tx_div2007_object {
 	 */
 	public function _controllerHasAction ($controllerName, $action) {
 		$hasAction = FALSE;
-		foreach((array)get_class_methods($controllerName) as $method)
-			if(strtolower($method) == strtolower($action))
+		foreach((array)get_class_methods($controllerName) as $method) {
+			if(strtolower($method) == strtolower($action)) {
 				$hasAction = TRUE;
+			}
+		}
 		return $hasAction;
 	}
 
@@ -268,7 +281,9 @@ class tx_div2007_controller extends tx_div2007_object {
 		$object = tx_div2007::makeInstance($this->configurationsClassName);
 		$object->controller($this);
 		$object->setTypoScriptConfiguration($configurationArray);
-		if(is_object($this->cObj)) $object->setFlexFormConfiguration($this->cObj->data['pi_flexform']);
+		if(is_object($this->cObj)) {
+			$object->setFlexFormConfiguration($this->cObj->data['pi_flexform']);
+		}
 		return $object;
 	}
 
@@ -281,7 +296,9 @@ class tx_div2007_controller extends tx_div2007_object {
 	public function _createContext () {
 		$object = tx_div2007::makeInstance($this->contextClassName);
 		$object->controller($this);
-		if(is_object($this->cObj)) $object->setContentObject($this->cObj);
+		if(is_object($this->cObj)) {
+			$object->setContentObject($this->cObj);
+		}
 		return $object;
 	}
 
@@ -313,7 +330,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	public function _findAction () {
 		$configurations = $this->configurations->getHashArray();
 		// 1. + 2.) A defaultAction can be set as class property or by TS.
-		$action = $configurations['defaultAction'] ? $configurations['defaultAction']   : $this->defaultAction;
+		$action = $configurations['defaultAction'] ? $configurations['defaultAction'] : $this->defaultAction;
 		// 3.) The action can result from link or submit event.
 		$action = $this->_getParameterAction() ? $this->_getParameterAction() : $action;
 		// 4.) The action can be forced by the TS setting "action".
@@ -398,7 +415,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	}
 
 	/**
-	 * Controll common processes after the action call.
+	 * Control common processes after the action call.
 	 *
 	 * @param	  object    Controller
 	 * @return	object    Controller
@@ -412,7 +429,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	}
 
 	/**
-	 * Controll common processes before the action call.
+	 * Control common processes before the action call.
 	 *
 	 * @param	  object    Controller
 	 * @return	object    Controller
@@ -465,4 +482,5 @@ class tx_div2007_controller extends tx_div2007_object {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_controller.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_controller.php']);
 }
+
 ?>

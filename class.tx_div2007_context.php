@@ -48,8 +48,8 @@ class tx_div2007_context extends tx_div2007_object {
 
 	public $contentObject;
 
-	public function setContentObject (&$contentObject) {
-		return $this->contentObject =& $contentObject;
+	public function setContentObject ($contentObject) {
+		return $this->contentObject = $contentObject;
 	}
 
 	public function getContentData () {

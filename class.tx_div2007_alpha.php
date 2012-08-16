@@ -132,7 +132,7 @@ class tx_div2007_alpha {
 		$foreignTable = $TCA[$foreignMMtable]['columns'][$foreignSelector]['config']['foreign_table'];
 
 		if ($bIsMMRelation && (!$foreignMMtable || !$foreignField || !$foreignSelector || !$foreignTable)) {
-			die ('internal error: no #2 TCA tables for field \''.$field.'\' of table \''.$theTable.'\' are missing.  $foreignMMtable='.$foreignMMtable.'  $foreignField='.$foreignField.'  $foreignSelector='.$foreignSelector.'  $foreignTable='.$foreignTable);
+			die ('internal error: no #2 TCA tables for field \'' . $field . '\' of table \'' . $theTable . '\' are missing.  $foreignMMtable=' . $foreignMMtable . '  $foreignField=' . $foreignField . '  $foreignSelector=' . $foreignSelector . '  $foreignTable=' . $foreignTable);
 		}
 	}
 
@@ -238,19 +238,19 @@ class tx_div2007_alpha {
 	 * @access	public
 	 * deprecated, use displayHelpPage_fh002 instead
 	 */
-	function displayHelpPage_fh001 (&$langObj, $helpTemplate, $extKey, $errorMessage='', $theCode='') {
+	function displayHelpPage_fh001 ($langObj, $helpTemplate, $extKey, $errorMessage = '', $theCode = '') {
 			// Get language version
-		$helpTemplate_lang='';
+		$helpTemplate_lang = '';
 		if ($langObj->LLkey) {
-			$helpTemplate_lang = $this->cObj->getSubpart($helpTemplate,'###TEMPLATE_'.$langObj->LLkey.'###');
+			$helpTemplate_lang = $this->cObj->getSubpart($helpTemplate, '###TEMPLATE_' . $langObj->LLkey . '###');
 		}
 
 		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $this->cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
 			// Markers and substitution:
 		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
-		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>'.$errorMessage.'</b><br/>' : '');
+		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
-		$rc = $langObj->cObj->substituteMarkerArray($helpTemplate,$markerArray);
+		$rc = $langObj->cObj->substituteMarkerArray($helpTemplate, $markerArray);
 		return $rc;
 	}
 
@@ -273,20 +273,20 @@ class tx_div2007_alpha {
 	 * @access	public
 	 *
 	 */
-	function displayHelpPage_fh002 (&$langObj, &$cObj, $helpTemplate, $extKey, $errorMessage='', $theCode='') {
+	function displayHelpPage_fh002 ($langObj, $cObj, $helpTemplate, $extKey, $errorMessage = '', $theCode = '') {
 			// Get language version
 		$helpTemplate_lang='';
 		if ($langObj->LLkey) {
-			$helpTemplate_lang = $cObj->getSubpart($helpTemplate,'###TEMPLATE_'.$langObj->LLkey.'###');
+			$helpTemplate_lang = $cObj->getSubpart($helpTemplate, '###TEMPLATE_' . $langObj->LLkey . '###');
 		}
 
 		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
 			// Markers and substitution:
 
 		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
-		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>'.$errorMessage.'</b><br/>' : '');
+		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
-		$rc = $cObj->substituteMarkerArray($helpTemplate,$markerArray);
+		$rc = $cObj->substituteMarkerArray($helpTemplate, $markerArray);
 		return $rc;
 	}
 
@@ -358,13 +358,13 @@ class tx_div2007_alpha {
 					$eInfo['TYPO3_version'] = $EM_CONF[$extKey]['TYPO3_version'];
 				}
 				$filesHash = unserialize($EM_CONF[$extKey]['_md5_values_when_last_written']);
-				$eInfo['manual'] = @is_file($path.'/doc/manual.sxw');
+				$eInfo['manual'] = @is_file($path . '/doc/manual.sxw');
 				$rc = $eInfo;
 			} else {
-				$rc = 'ERROR: No emconf.php file: '.$file;
+				$rc = 'ERROR: No emconf.php file: ' . $file;
 			}
 		} else {
-			$rc = 'Error: Extension '.$extKey.' has not been installed. (tx_fhlibrary_system::getExtensionInfo)';
+			$rc = 'Error: Extension ' . $extKey . ' has not been installed. (tx_fhlibrary_system::getExtensionInfo)';
 		}
 
 		return $rc;
@@ -531,14 +531,14 @@ class tx_div2007_alpha {
 		if (is_object($langObj)) {
 			$langFile = ($langFileParam ? $langFileParam : 'locallang.php');
 
-			if (substr($langFile,0,4)==='EXT:' || substr($langFile,0,5)==='typo3' || substr($langFile,0,9)==='fileadmin') {
+			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' || substr($langFile, 0, 9) === 'fileadmin') {
 				$basePath = $langFile;
 			} else {
 				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
 				// php or xml as source: In any case the charset will be that of the system language.
 				// However, this function guarantees only return output for default language plus the specified language (which is different from how 3.7.0 dealt with it)
-			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$langObj->LLkey,$TSFE->renderCharset);
+			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, $TSFE->renderCharset);
 
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -630,13 +630,13 @@ class tx_div2007_alpha {
 	 * @return	string		Label value, if any.
 	 */
 	function sL_fh001 ($input) {
-		$restStr = trim(substr($input,4));
-		$extPrfx='';
-		if (!strcmp(substr($restStr,0,4),'EXT:')) {
+		$restStr = trim(substr($input, 4));
+		$extPrfx = '';
+		if (!strcmp(substr($restStr, 0, 4), 'EXT:')) {
 			$restStr = trim(substr($restStr,4));
 			$extPrfx='EXT:';
 		}
-		$parts = explode(':',$restStr);
+		$parts = explode(':', $restStr);
 		return ($parts[1]);
 	}
 
@@ -670,7 +670,7 @@ class tx_div2007_alpha {
 	 * @see fhlibrary_pibase::pi_getSetupOrFFvalue
 	 */
 	function getSetupOrFFvalue_fh001 (
-		&$langObj,
+		$langObj,
 		$code,
 		$codeExt,
 		$defaultCode,
@@ -733,7 +733,7 @@ class tx_div2007_alpha {
 	 *
 	 */
 	function getSetupOrFFvalue_fh002 (
-		&$langObj,
+		$langObj,
 		$code,
 		$codeExt,
 		$defaultCode,
@@ -798,7 +798,7 @@ class tx_div2007_alpha {
 	 *
 	 */
 	function getSetupOrFFvalue_fh003 (
-		&$cObj,
+		$cObj,
 		$code,
 		$codeExt,
 		$defaultCode,
@@ -850,25 +850,25 @@ class tx_div2007_alpha {
 	 * @see getTypoLink_URL()
 	 */
 	function getTypoLink_fh001 (
-		&$langObj,
+		$langObj,
 		$label,
 		$params,
 		$urlParameters = array(),
 		$target = '',
 		$conf = array()
 	) {
-		if (is_object($langObj))	{
+		if (is_object($langObj)) {
 			$conf['parameter'] = $params;
-			if ($target)	{
+			if ($target) {
 				$conf['target']=$target;
 				$conf['extTarget']=$target;
 			}
-			if (is_array($urlParameters))	{
-				if (count($urlParameters))	{
-					$conf['additionalParams'].= t3lib_div::implodeArrayForUrl('',$urlParameters);
+			if (is_array($urlParameters)) {
+				if (count($urlParameters)) {
+					$conf['additionalParams'].= t3lib_div::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
-				$conf['additionalParams'].=$urlParameters;
+				$conf['additionalParams'] .= $urlParameters;
 			}
 			$out = $langObj->cObj->typolink($label,$conf);
 		} else {
@@ -895,7 +895,7 @@ class tx_div2007_alpha {
 	 * @see getTypoLink_URL()
 	 */
 	function getTypoLink_fh002 (
-		&$cObj,
+		$cObj,
 		$label,
 		$params,
 		$urlParameters = array(),
@@ -939,7 +939,7 @@ class tx_div2007_alpha {
 	 * @see getTypoLink()
 	 */
 	function getTypoLink_URL_fh001 (
-		&$langObj,
+		$langObj,
 		$params,
 		$urlParameters = array(),
 		$target = '',
@@ -970,7 +970,7 @@ class tx_div2007_alpha {
 	 * @see getTypoLink()
 	 */
 	function getTypoLink_URL_fh002 (
-		&$cObj,
+		$cObj,
 		$params,
 		$urlParameters = array(),
 		$target = '',
@@ -1014,7 +1014,7 @@ class tx_div2007_alpha {
 	 * @see pi_linkToPage()
 	 */
 	function getPageLink_fh001 (
-		&$langObj,
+		$langObj,
 		$id,
 		$target = '',
 		$urlParameters = array(),
@@ -1047,7 +1047,7 @@ class tx_div2007_alpha {
 	 * @see pi_linkToPage()
 	 */
 	function getPageLink_fh002 (
-		&$cObj,
+		$cObj,
 		$id,
 		$target = '',
 		$urlParameters = array(),
@@ -1081,14 +1081,14 @@ class tx_div2007_alpha {
 		$prefixId,
 		$templateSuffix
 	) {
-		$rc = '';
+		$result = '';
 
-		$idNumber = str_replace('_','-',$prefixId.'-'.strtolower($theCode));
+		$idNumber = str_replace('_', '-', $prefixId . '-' . strtolower($theCode));
 		if ($templateSuffix) {
-			$idNumber .= strtolower(str_replace('_','-',$templateSuffix));
+			$idNumber .= strtolower(str_replace('_', '-', $templateSuffix));
 		}
-		$rc ='<!-- START: '.$idNumber.' --><div id="'.$idNumber.'">'.($content!='' ? $content : '').'</div><!-- END: '.$idNumber.' -->';
-		return $rc;
+		$result = '<!-- START: ' . $idNumber . ' --><div id="' . $idNumber . '">' . ($content != '' ? $content : '') . '</div><!-- END: ' . $idNumber . ' -->';
+		return $result;
 	}
 
 
@@ -1111,9 +1111,9 @@ class tx_div2007_alpha {
 	) {
 		$rc = '';
 
-		$idNumber = str_replace('_','-',$prefixId.'-'.strtolower($theCode));
-		$idNumber .= '-'.$uid;
-		$rc ='<!-- START: '.$idNumber.' --><div id="'.$idNumber.'">'.($content!='' ? $content : '').'</div><!-- END: '.$idNumber.' -->';
+		$idNumber = str_replace('_', '-', $prefixId . '-' . strtolower($theCode));
+		$idNumber .= '-' . $uid;
+		$rc ='<!-- START: ' . $idNumber . ' --><div id="' . $idNumber . '">' . ($content != '' ? $content : '') . '</div><!-- END: ' . $idNumber . ' -->';
 		return $rc;
 	}
 
@@ -1190,11 +1190,11 @@ class tx_div2007_alpha {
 	 * @param	string		Configuration Key
 	 */
 	function getExternalCObject_fh001 (
-		&$pOb,
+		$pOb,
 		$mConfKey
 	) {
 		if ($pOb->conf[$mConfKey] && $pOb->conf[$mConfKey.'.']) {
-			$pOb->cObj->regObj = &$pOb;
+			$pOb->cObj->regObj = $pOb;
 			return $pOb->cObj->cObjGetSingle($pOb->conf[$mConfKey], $pOb->conf[$mConfKey . '.'], '/' . $mConfKey . '/') . '';
 		}
 	}
@@ -1211,14 +1211,14 @@ class tx_div2007_alpha {
 	) {
 		$result = '';
 
-		if ($pOb->conf[$mConfKey] && $pOb->conf[$mConfKey.'.']) {
+		if ($pOb->conf[$mConfKey] && $pOb->conf[$mConfKey . '.']) {
 			$pOb->cObj->regObj = $pOb;
 			$result = $pOb->cObj->cObjGetSingle(
 				$pOb->conf[$mConfKey],
 				$pOb->conf[$mConfKey . '.'],
 				'/' . $mConfKey . '/'
-			)
-				. '';
+			) .
+			'';
 		}
 		return $result;
 	}
@@ -1228,7 +1228,7 @@ class tx_div2007_alpha {
 	 * run function from external cObject
 	 * @param	object		tx_div2007_alpha_language_base object
 	 */
-	function load_noLinkExtCobj_fh001 (&$langObj) {
+	function load_noLinkExtCobj_fh001 ($langObj) {
 		if ($langObj->conf['externalProcessing_final'] || is_array($langObj->conf['externalProcessing_final.']))	{	// If there is given another cObject for the final order confirmation template!
 			$langObj->externalCObject = tx_div2007_alpha::getExternalCObject_fh001($langObj, 'externalProcessing_final');
 		}
@@ -1239,7 +1239,7 @@ class tx_div2007_alpha {
 	 * Calls user function
 	 */
 	function userProcess_fh001 (
-		&$pObject,
+		$pObject,
 		&$conf,
 		$mConfKey,
 		$passVar
@@ -1248,7 +1248,7 @@ class tx_div2007_alpha {
 
 		if (isset($conf) && is_array($conf) && $conf[$mConfKey]) {
 			$funcConf = $conf[$mConfKey.'.'];
-			$funcConf['parentObj'] = &$pObject;
+			$funcConf['parentObj'] = $pObject;
 			$passVar = $TSFE->cObj->callUserFunction(
 				$conf[$mConfKey],
 				$funcConf,
@@ -1270,7 +1270,7 @@ class tx_div2007_alpha {
 	 * @return	string		The processed string
 	 * @see tslib_cObj::parseFunc()
 	 */
-	function RTEcssText (&$cObj, $str) {
+	function RTEcssText ($cObj, $str) {
 		global $TSFE;
 
 		$parseFunc = $TSFE->tmpl->setup['lib.']['parseFunc_RTE.'];
@@ -1360,8 +1360,8 @@ class tx_div2007_alpha {
 				// pagefloat set as integer. 0 = left, value >= $pObject->internal['maxPages'] = right
 				$pagefloat = (
 					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::forceIntegerInRange($pObject->internal['pagefloat'], -1, $maxPages-1) :
-						t3lib_div::intInRange($pObject->internal['pagefloat'], -1, $maxPages-1)
+						t3lib_utility_Math::forceIntegerInRange($pObject->internal['pagefloat'], -1, $maxPages - 1) :
+						t3lib_div::intInRange($pObject->internal['pagefloat'], -1, $maxPages - 1)
 				);
 			}
 		} else {
@@ -1371,16 +1371,16 @@ class tx_div2007_alpha {
 			// default values for "traditional" wrapping with a table. Can be overwritten by vars from $wrapArr
 		$wrapper['disabledLinkWrap'] = '<td nowrap="nowrap"><p>|</p></td>';
 		$wrapper['inactiveLinkWrap'] = '<td nowrap="nowrap"><p>|</p></td>';
-		$wrapper['activeLinkWrap'] = '<td'.$pObject->pi_classParam('browsebox-SCell').' nowrap="nowrap"><p>|</p></td>';
-		$wrapper['browseLinksWrap'] = trim('<table '.$tableParams).'><tr>|</tr></table>';
+		$wrapper['activeLinkWrap'] = '<td' . $pObject->pi_classParam('browsebox-SCell') . ' nowrap="nowrap"><p>|</p></td>';
+		$wrapper['browseLinksWrap'] = trim('<table ' . $tableParams) . '><tr>|</tr></table>';
 
 		if ($pObject->internal['imagePath'])	{
-			$onMouseOver = ($pObject->internal['imageOnMouseOver'] ? 'onmouseover="'.$pObject->internal['imageOnMouseOver'].'" ': '');
-			$onMouseOut = ($pObject->internal['imageOnMouseOut'] ? 'onmouseout="'.$pObject->internal['imageOnMouseOut'].'" ': '');
-			$onMouseOverActive = ($pObject->internal['imageActiveOnMouseOver'] ? 'onmouseover="'.$pObject->internal['imageActiveOnMouseOver'].'" ': '');
-			$onMouseOutActive = ($pObject->internal['imageActiveOnMouseOut'] ? 'onmouseout="'.$pObject->internal['imageActiveOnMouseOut'].'" ': '');
-			$wrapper['browseTextWrap'] = '<img src="'.$pObject->internal['imagePath'].$pObject->internal['imageFilemask'].'" '.$onMouseOver.$onMouseOut.'>';
-			$wrapper['activeBrowseTextWrap'] = '<img src="'.$pObject->internal['imagePath'].$pObject->internal['imageActiveFilemask'].'" '.$onMouseOverActive.$onMouseOutActive.'>';
+			$onMouseOver = ($pObject->internal['imageOnMouseOver'] ? 'onmouseover="' . $pObject->internal['imageOnMouseOver'] . '" ': '');
+			$onMouseOut = ($pObject->internal['imageOnMouseOut'] ? 'onmouseout="' . $pObject->internal['imageOnMouseOut'] . '" ': '');
+			$onMouseOverActive = ($pObject->internal['imageActiveOnMouseOver'] ? 'onmouseover="' . $pObject->internal['imageActiveOnMouseOver'] . '" ': '');
+			$onMouseOutActive = ($pObject->internal['imageActiveOnMouseOut'] ? 'onmouseout="' . $pObject->internal['imageActiveOnMouseOut'] . '" ': '');
+			$wrapper['browseTextWrap'] = '<img src="' . $pObject->internal['imagePath'] . $pObject->internal['imageFilemask'].'" ' . $onMouseOver . $onMouseOut . '>';
+			$wrapper['activeBrowseTextWrap'] = '<img src="' . $pObject->internal['imagePath'] . $pObject->internal['imageActiveFilemask'] . '" ' . $onMouseOverActive . $onMouseOutActive . '>';
 		}
 		$wrapper['showResultsWrap'] = '<p>|</p>';
 		$wrapper['browseBoxWrap'] = '
@@ -1396,8 +1396,8 @@ class tx_div2007_alpha {
 
 		if ($showResultCount != 2) { //show pagebrowser
 			if ($pagefloat > -1) {
-				$lastPage = min($totalPages,max($pointer+1 + $pagefloat,$maxPages));
-				$firstPage = max(0,$lastPage-$maxPages);
+				$lastPage = min($totalPages,max($pointer + 1 + $pagefloat, $maxPages));
+				$firstPage = max(0, $lastPage - $maxPages);
 			} else {
 				$firstPage = 0;
 				$lastPage = (
@@ -1406,63 +1406,63 @@ class tx_div2007_alpha {
 						t3lib_div::intInRange($totalPages, 1, $maxPages)
 				);
 			}
-			$links=array();
+			$links = array();
 
 				// Make browse-table/links:
 			if ($showFirstLast) { // Link to first page
-				if ($pointer>0)	{
-					$links[]=$pObject->cObj->wrap($pObject->pi_linkTP_keepPIvars(htmlspecialchars($pObject->pi_getLL('pi_list_browseresults_first','<< First',$hscText)),array($pointerName => null),$pi_isOnlyFields),$wrapper['inactiveLinkWrap']);
+				if ($pointer > 0)	{
+					$links[] = $pObject->cObj->wrap($pObject->pi_linkTP_keepPIvars(htmlspecialchars($pObject->pi_getLL('pi_list_browseresults_first', '<< First', $hscText)), array($pointerName => null),$pi_isOnlyFields), $wrapper['inactiveLinkWrap']);
 				} else {
-					$links[]=$pObject->cObj->wrap(htmlspecialchars($pObject->pi_getLL('pi_list_browseresults_first','<< First',$hscText)),$wrapper['disabledLinkWrap']);
+					$links[] = $pObject->cObj->wrap(htmlspecialchars($pObject->pi_getLL('pi_list_browseresults_first', '<< First', $hscText)), $wrapper['disabledLinkWrap']);
 				}
 			}
-			if ($alwaysPrev>=0)	{ // Link to previous page
-				$previousText = $pObject->pi_getLL('pi_list_browseresults_prev','< Previous',$hscText);
-				if ($pointer>0)	{
-					$links[]=$pObject->cObj->wrap($pObject->pi_linkTP_keepPIvars($previousText,array($pointerName => ($pointer-1?$pointer-1:'')),$pi_isOnlyFields),$wrapper['inactiveLinkWrap']);
-				} elseif ($alwaysPrev)	{
-					$links[]=$pObject->cObj->wrap($previousText,$wrapper['disabledLinkWrap']);
+			if ($alwaysPrev >= 0) { // Link to previous page
+				$previousText = $pObject->pi_getLL('pi_list_browseresults_prev', '< Previous', $hscText);
+				if ($pointer > 0) {
+					$links[] = $pObject->cObj->wrap($pObject->pi_linkTP_keepPIvars($previousText, array($pointerName => ($pointer - 1 ? $pointer - 1 : '')), $pi_isOnlyFields), $wrapper['inactiveLinkWrap']);
+				} elseif ($alwaysPrev) {
+					$links[] = $pObject->cObj->wrap($previousText, $wrapper['disabledLinkWrap']);
 				}
 			}
-			for($a=$firstPage;$a<$lastPage;$a++)	{ // Links to pages
+			for($a = $firstPage; $a < $lastPage; $a++)	{ // Links to pages
 				if ($pObject->internal['showRange']) {
-					$pageText = (($a*$results_at_a_time)+1).'-'.min($count,(($a+1)*$results_at_a_time));
+					$pageText = (($a * $results_at_a_time) + 1) . '-' . min($count, (($a + 1) * $results_at_a_time));
 				} else if ($totalPages > 1)	{
 					if ($wrapper['browseTextWrap'])	{
 						if ($pointer == $a) { // current page
-							$pageText = $pObject->cObj->wrap(($a+1),$wrapper['activeBrowseTextWrap']);
+							$pageText = $pObject->cObj->wrap(($a + 1), $wrapper['activeBrowseTextWrap']);
 						} else {
-							$pageText = $pObject->cObj->wrap(($a+1),$wrapper['browseTextWrap']);
+							$pageText = $pObject->cObj->wrap(($a + 1), $wrapper['browseTextWrap']);
 						}
 					} else {
-						$pageText = trim($pObject->pi_getLL('pi_list_browseresults_page','Page',$hscText)).' '.($a+1);
+						$pageText = trim($pObject->pi_getLL('pi_list_browseresults_page', 'Page', $hscText)) . ' ' . ($a + 1);
 					}
 				}
 				if ($pointer == $a) { // current page
 					if ($pObject->internal['dontLinkActivePage']) {
-						$links[] = $pObject->cObj->wrap($pageText,$wrapper['activeLinkWrap']);
+						$links[] = $pObject->cObj->wrap($pageText, $wrapper['activeLinkWrap']);
 					} else {
-						$linkArray = array($pointerName  => ($a?$a:''));
-						$link = $pObject->pi_linkTP_keepPIvars($pageText,$linkArray,$pi_isOnlyFields);
-						$links[] = $pObject->cObj->wrap($link,$wrapper['activeLinkWrap']);
+						$linkArray = array($pointerName  => ($a ? $a : ''));
+						$link = $pObject->pi_linkTP_keepPIvars($pageText, $linkArray, $pi_isOnlyFields);
+						$links[] = $pObject->cObj->wrap($link, $wrapper['activeLinkWrap']);
 					}
 				} else {
-					$links[] = $pObject->cObj->wrap($pObject->pi_linkTP_keepPIvars($pageText,array($pointerName => ($a?$a:'')),$pi_isOnlyFields),$wrapper['inactiveLinkWrap']);
+					$links[] = $pObject->cObj->wrap($pObject->pi_linkTP_keepPIvars($pageText, array($pointerName => ($a ? $a : '')), $pi_isOnlyFields), $wrapper['inactiveLinkWrap']);
 				}
 			}
-			if ($pointer<$totalPages-1 || $showFirstLast)	{
-				$nextText = $pObject->pi_getLL('pi_list_browseresults_next','Next >',$hscText);
-				if ($pointer==$totalPages-1) { // Link to next page
-					$links[]=$pObject->cObj->wrap($nextText,$wrapper['disabledLinkWrap']);
+			if ($pointer < $totalPages - 1 || $showFirstLast)	{
+				$nextText = $pObject->pi_getLL('pi_list_browseresults_next', 'Next >', $hscText);
+				if ($pointer == $totalPages-1) { // Link to next page
+					$links[] = $pObject->cObj->wrap($nextText, $wrapper['disabledLinkWrap']);
 				} else {
-					$links[]=$pObject->cObj->wrap($pObject->pi_linkTP_keepPIvars($nextText,array($pointerName => $pointer+1),$pi_isOnlyFields),$wrapper['inactiveLinkWrap']);
+					$links[]=$pObject->cObj->wrap($pObject->pi_linkTP_keepPIvars($nextText, array($pointerName => $pointer + 1), $pi_isOnlyFields), $wrapper['inactiveLinkWrap']);
 				}
 			}
 			if ($showFirstLast) { // Link to last page
-				if ($pointer<$totalPages-1) {
-					$links[]=$pObject->cObj->wrap($pObject->pi_linkTP_keepPIvars($pObject->pi_getLL('pi_list_browseresults_last','Last >>',$hscText),array($pointerName => $totalPages-1),$pi_isOnlyFields),$wrapper['inactiveLinkWrap']);
+				if ($pointer < $totalPages-1) {
+					$links[] = $pObject->cObj->wrap($pObject->pi_linkTP_keepPIvars($pObject->pi_getLL('pi_list_browseresults_last', 'Last >>', $hscText),array($pointerName => $totalPages - 1), $pi_isOnlyFields), $wrapper['inactiveLinkWrap']);
 				} else {
-					$links[]=$pObject->cObj->wrap($pObject->pi_getLL('pi_list_browseresults_last','Last >>',$hscText),$wrapper['disabledLinkWrap']);
+					$links[] = $pObject->cObj->wrap($pObject->pi_getLL('pi_list_browseresults_last', 'Last >>', $hscText), $wrapper['disabledLinkWrap']);
 				}
 			}
 			$theLinks = $pObject->cObj->wrap(implode(chr(10),$links),$wrapper['browseLinksWrap']);
@@ -1470,8 +1470,8 @@ class tx_div2007_alpha {
 			$theLinks = '';
 		}
 
-		$pR1 = $pointer*$results_at_a_time+1;
-		$pR2 = $pointer*$results_at_a_time+$results_at_a_time;
+		$pR1 = $pointer * $results_at_a_time + 1;
+		$pR2 = $pointer * $results_at_a_time + $results_at_a_time;
 
 		if ($showResultCount) {
 			if (isset($wrapper['showResultsNumbersWrap'])) {
@@ -1479,54 +1479,69 @@ class tx_div2007_alpha {
 				// the formatting string is expected to hold template markers (see function header). Example: 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###'
 
 				$markerArray['###FROM###'] = $pObject->cObj->wrap($pObject->internal['res_count'] > 0 ? $pR1 : 0,$wrapper['showResultsNumbersWrap']);
-				$markerArray['###TO###'] = $pObject->cObj->wrap(min($pObject->internal['res_count'],$pR2),$wrapper['showResultsNumbersWrap']);
+				$markerArray['###TO###'] = $pObject->cObj->wrap(min($pObject->internal['res_count'], $pR2), $wrapper['showResultsNumbersWrap']);
 				$markerArray['###OUT_OF###'] = $pObject->cObj->wrap($pObject->internal['res_count'],$wrapper['showResultsNumbersWrap']);
-				$markerArray['###FROM_TO###'] = $pObject->cObj->wrap(($pObject->internal['res_count'] > 0 ? $pR1 : 0).' '.$pObject->pi_getLL('pi_list_browseresults_to','to').' '.min($pObject->internal['res_count'],$pR2),$wrapper['showResultsNumbersWrap']);
-				$markerArray['###CURRENT_PAGE###'] = $pObject->cObj->wrap($pointer+1,$wrapper['showResultsNumbersWrap']);
-				$markerArray['###TOTAL_PAGES###'] = $pObject->cObj->wrap($totalPages,$wrapper['showResultsNumbersWrap']);
-				$pi_list_browseresults_displays = $pObject->pi_getLL('pi_list_browseresults_displays','Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
+				$markerArray['###FROM_TO###'] = $pObject->cObj->wrap(($pObject->internal['res_count'] > 0 ? $pR1 : 0) . ' ' . $pObject->pi_getLL('pi_list_browseresults_to', 'to') . ' ' . min($pObject->internal['res_count'], $pR2), $wrapper['showResultsNumbersWrap']);
+				$markerArray['###CURRENT_PAGE###'] = $pObject->cObj->wrap($pointer + 1, $wrapper['showResultsNumbersWrap']);
+				$markerArray['###TOTAL_PAGES###'] = $pObject->cObj->wrap($totalPages, $wrapper['showResultsNumbersWrap']);
+				$pi_list_browseresults_displays = $pObject->pi_getLL('pi_list_browseresults_displays', 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
 				// substitute markers
-				$resultCountMsg = $pObject->cObj->substituteMarkerArray($pi_list_browseresults_displays,$markerArray);
+				$resultCountMsg = $pObject->cObj->substituteMarkerArray($pi_list_browseresults_displays, $markerArray);
 			} else {
 				// render the resultcount in the "traditional" way using sprintf
 				$resultCountMsg = sprintf(
-					str_replace('###SPAN_BEGIN###','<span'.$pObject->pi_classParam('browsebox-strong').'>',$pObject->pi_getLL('pi_list_browseresults_displays','Displaying results ###SPAN_BEGIN###%s to %s</span> out of ###SPAN_BEGIN###%s</span>')),
+					str_replace('###SPAN_BEGIN###', '<span' . $pObject->pi_classParam('browsebox-strong') . '>', $pObject->pi_getLL('pi_list_browseresults_displays', 'Displaying results ###SPAN_BEGIN###%s to %s</span> out of ###SPAN_BEGIN###%s</span>')),
 					$count > 0 ? $pR1 : 0,
-					min($count,$pR2),
+					min($count, $pR2),
 					$count);
 			}
-			$resultCountMsg = $pObject->cObj->wrap($resultCountMsg,$wrapper['showResultsWrap']);
+			$resultCountMsg = $pObject->cObj->wrap($resultCountMsg, $wrapper['showResultsWrap']);
 		} else {
 			$resultCountMsg = '';
 		}
 
-		$sTables = $pObject->cObj->wrap($resultCountMsg.$theLinks,$wrapper['browseBoxWrap']);
+		$sTables = $pObject->cObj->wrap($resultCountMsg . $theLinks, $wrapper['browseBoxWrap']);
 		return $sTables;
 	}
 
 
-	function initFE () {
+	public function initFE () {
 		global $TT, $TSFE;
 
 		// *********************
 		// Libraries included
 		// *********************
 		$TT->push('Include Frontend libraries','');
-		require_once(PATH_tslib.'class.tslib_fe.php');
-		require_once(PATH_t3lib.'class.t3lib_page.php');
-		require_once(PATH_t3lib.'class.t3lib_userauth.php');
-		require_once(PATH_tslib.'class.tslib_feuserauth.php');
-		require_once(PATH_t3lib.'class.t3lib_tstemplate.php');
-		require_once(PATH_t3lib.'class.t3lib_cs.php');
+		require_once(PATH_tslib . 'class.tslib_fe.php');
+		require_once(PATH_t3lib . 'class.t3lib_page.php');
+		require_once(PATH_t3lib . 'class.t3lib_userauth.php');
+		require_once(PATH_tslib . 'class.tslib_feuserauth.php');
+		require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
+		require_once(PATH_t3lib . 'class.t3lib_cs.php');
 		$TT->pull();
 
 		// ***********************************
 		// Create $TSFE object (TSFE = TypoScript Front End)
 		// Connecting to database
 		// ***********************************
-		$TSFE = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
+		$TSFE = t3lib_div::makeInstance('tslib_fe',
+			$TYPO3_CONF_VARS,
+			t3lib_div::_GP('id'),
+			t3lib_div::_GP('type'),
+			t3lib_div::_GP('no_cache'),
+			t3lib_div::_GP('cHash'),
+			t3lib_div::_GP('jumpurl'),
+			t3lib_div::_GP('MP'),
+			t3lib_div::_GP('RDCT')
+		);
 
-		$TSFE->connectToMySQL();
+		if($TYPO3_CONF_VARS['FE']['pageUnavailable_force'] &&
+			!t3lib_div::cmpIP(t3lib_div::getIndpEnv('REMOTE_ADDR'), $TYPO3_CONF_VARS['SYS']['devIPmask'])) {
+			$TSFE->pageUnavailableAndExit('This page is temporarily unavailable.');
+		}
+
+		$TSFE->connectToDB();
+
 		if ($TSFE->RDCT) {
 			$TSFE->sendRedirect();
 		}
@@ -1535,13 +1550,13 @@ class tx_div2007_alpha {
 		// output compression
 		// *******************
 		if ($GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel']) {
-			require_once(PATH_t3lib.'class.gzip_encode.php');
+			require_once(PATH_t3lib . 'class.gzip_encode.php');
 		}
 
 		// *********
 		// FE_USER
 		// *********
-		$TT->push('Front End user initialized','');
+		$TT->push('Front End user initialized', '');
 		$TSFE->initFEuser();
 		$TT->pull();
 
@@ -1550,7 +1565,7 @@ class tx_div2007_alpha {
 		// After this point we have an array, $page in TSFE, which is the
 		// page-record of the current page, $id
 		// *****************************************
-		$TT->push('Process ID','');
+		$TT->push('Process ID', '');
 		// not needed and doesnot work with realurl //
 		$TSFE->checkAlternativeIdMethods();
 		$TSFE->clear_preview();
@@ -1614,7 +1629,7 @@ class tx_div2007_alpha {
 		$conf
 	) {
 		if ($conf['php'] != '') {
-			$evalStr = str_replace('$value',$content,$conf['php']);
+			$evalStr = str_replace('$value', $content, $conf['php']);
 			$rc = eval('return ' . $evalStr);
 		}
 		return $rc;
@@ -1635,33 +1650,33 @@ class tx_div2007_alpha {
 	) {
 		$rc = FALSE;
 
-		$codeArray = array('a','s');
+		$codeArray = array('a', 's');
 		$len = strlen($str);
 		$depth = 0;
 		$mode = 'c';
-		$i=0;
+		$i = 0;
 		$errorOffset = -1;
 		$controlArray = array();
 		$controlCount = array();
 		$controlData = array();
 		$controlIndex = 0;
-		while ($i < $len)	{
+		while ($i < $len) {
 			$ch = $str{$i};
 			$i++;
 			$next = $str{$i};
-			if ($next == ':')	{
+			if ($next == ':') {
 				$i++;
-				$paramPos = strpos($str,':',$i);
-				$param1 = substr($str,$i,$paramPos-$i);
-				if ($param1 != '')	{
-					$i = $paramPos+1;
-					switch ($ch)	{
+				$paramPos = strpos($str, ':', $i);
+				$param1 = substr($str, $i, $paramPos - $i);
+				if ($param1 != '') {
+					$i = $paramPos + 1;
+					switch ($ch) {
 						case 'a':
-							if (isset($var))	{
+							if (isset($var)) {
 							} else {
 								$var = array();
 							}
-							if ($str{$i}=='{')	{
+							if ($str{$i} == '{') {
 								$i++;
 								$controlIndex++;
 								$controlArray[$controlIndex] = $ch;
@@ -1672,19 +1687,19 @@ class tx_div2007_alpha {
 							}
 						break;
 						case 's':
-							if (isset($var))	{
-								if ($str{$i}=='"')	{
+							if (isset($var)) {
+								if ($str{$i} == '"') {
 									$i++;
-									$param2 = substr($str,$i,$param1);
-									$fixPos = strpos($param2,'";');
-									if ($fixPos !== FALSE && in_array($param2{$fixPos+2},$codeArray))	{
+									$param2 = substr($str, $i, $param1);
+									$fixPos = strpos($param2, '";');
+									if ($fixPos !== FALSE && in_array($param2{$fixPos + 2}, $codeArray)) {
 										$i += $fixPos; // fix wrong string length if it is really shorter now
-										$param2 = substr($param2,0,$fixPos);
+										$param2 = substr($param2, 0, $fixPos);
 									} else {
 										$i += $param1;
 									}
 
-									if ($str{$i}=='"' && $str{$i+1}==';')	{
+									if ($str{$i} == '"' && $str{$i + 1} == ';') {
 										$i += 2;
 										if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k']=='' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
 											$controlData[$controlIndex]['k'] = $param2;
@@ -1713,15 +1728,15 @@ class tx_div2007_alpha {
 			} else {
 				$errorOffset = $i;
 			}
-			if ($errorOffset >= 0)	{
-					if ($bErrorCheck)	{
-						trigger_error('unserialize_fh001(): Error at offset '.$errorOffset.' of '.$len.' bytes \''.substr($str,$errorOffset,12).'\'',E_USER_NOTICE);
+			if ($errorOffset >= 0) {
+					if ($bErrorCheck) {
+						trigger_error('unserialize_fh001(): Error at offset ' . $errorOffset . ' of ' . $len . ' bytes \'' . substr($str, $errorOffset, 12) . '\'', E_USER_NOTICE);
 						$rc = FALSE;
 					}
 				break;
 			}
 		}
-		if (isset($var) && (!$bErrorCheck || $errorOffset==0))	{
+		if (isset($var) && (!$bErrorCheck || $errorOffset == 0))	{
 			$rc = $var;
 		}
 		return $rc;

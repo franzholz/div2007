@@ -72,7 +72,7 @@ class tx_div2007_ff {
 	 * @param   string      $flexFormName (optinal) give a name to the flexform in order to be stored for further use.
 	 * @return  void
 	 */
-	function load ($flexForm,$flexFormName = ''){
+	function load ($flexForm, $flexFormName = ''){
 		//handle the case $flexForm is a string. It can be a xml string or key array
 		if(is_string($flexForm)){
 			//test if $flexForm already exists in the memory. In this case load the flexform according to its key
@@ -91,7 +91,7 @@ class tx_div2007_ff {
 
 		//true when the flexform is going to be stored for further use
 		if($flexFormName != ''){
-			self::setFlexForm($flexFormName,self::$flexForm);
+			self::setFlexForm($flexFormName, self::$flexForm);
 		}
 	}
 
@@ -102,7 +102,7 @@ class tx_div2007_ff {
 	 * @param   array      the flexForm
 	 * @return  void
 	 */
-	function setFlexForm ($flexFormName,$flexForm){
+	function setFlexForm ($flexFormName, $flexForm){
 		self::$flexForms[$flexFormName] = $flexForm;
 	}
 
@@ -112,9 +112,9 @@ class tx_div2007_ff {
 	 * @param   string     the flexForm name
 	 * @return  array      the flexform
 	 */
-	function getFlexForm ($flexFormName){
+	function getFlexForm ($flexFormName) {
 		$result = false;
-		if(array_key_exists($flexFormName,self::$flexForms)){
+		if(array_key_exists($flexFormName, self::$flexForms)) {
 			$result = self::$flexForms[$flexFormName];
 		}
 		return $result;
@@ -130,10 +130,10 @@ class tx_div2007_ff {
 	 * @param   string     $value Value pointer, eg. "vDEF"
 	 * @return  array      The content.
 	 */
-	function get (){
+	function get () {
 
 		//true when the first arguement is a flexForm or a reference to flexForm
-		if(is_array(func_get_arg(0)) || array_key_exists(func_get_arg(0),tx_div2007_ff::$flexForms)){
+		if(is_array(func_get_arg(0)) || array_key_exists(func_get_arg(0),tx_div2007_ff::$flexForms)) {
 			//case 1, $args 1 is an array...     case 2, $args 1 is a key array that contains a flexform
 			is_array(func_get_arg(0)) ? $_flexForm = func_get_arg(0) : $_flexForm =& tx_div2007_ff::getFlexForm(func_get_arg(0));
 			$index = 1;
@@ -143,14 +143,14 @@ class tx_div2007_ff {
 			$index = 0;
 		}
 		$fieldName = func_get_arg($index);
-		@func_get_arg($index+1) ? $sheet = func_get_arg($index+1) : $sheet='sDEF';
-		@func_get_arg($index+2) ? $lang = func_get_arg($index+2) : $lang='lDEF';
-		@func_get_arg($index+3) ? $value = func_get_arg($index+3) : $value='vDEF';
+		@func_get_arg($index + 1) ? $sheet = func_get_arg($index + 1) : $sheet = 'sDEF';
+		@func_get_arg($index + 2) ? $lang = func_get_arg($index + 2) : $lang = 'lDEF';
+		@func_get_arg($index + 3) ? $value = func_get_arg($index + 3) : $value = 'vDEF';
 
 		is_array($_flexForm) ? $sheetArray = $_flexForm['data'][$sheet][$lang] : $sheetArray = '';
 		$result = null;
 		if (is_array($sheetArray)){
-			$result = self::_getFFValueFromSheetArray($sheetArray,explode('/',$fieldName),$value);
+			$result = self::_getFFValueFromSheetArray($sheetArray, explode('/', $fieldName), $value);
 		}
 		return $result;
 	}
@@ -163,8 +163,8 @@ class tx_div2007_ff {
 	 * @param   string     Value for outermost key, typ. "vDEF" depending on language.
 	 * @return  mixed      The value, typ. string. private
 	 */
-	function _getFFValueFromSheetArray ($sheetArray,$fieldNameArr,$value){
-		$tempArr=$sheetArray;
+	function _getFFValueFromSheetArray ($sheetArray, $fieldNameArr, $value){
+		$tempArr = $sheetArray;
 		foreach($fieldNameArr as $k => $v){
 			if (
 				class_exists('t3lib_utility_Math') ?
@@ -172,9 +172,9 @@ class tx_div2007_ff {
 					t3lib_div::testInt($v)
 			) {
 				if (is_array($tempArr)){
-					$c=0;
+					$c = 0;
 					foreach($tempArr as $values){
-						if ($c==$v){
+						if ($c == $v){
 							$tempArr=$values;
 							break;
 						}

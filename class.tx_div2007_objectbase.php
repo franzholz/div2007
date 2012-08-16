@@ -96,12 +96,12 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 			$this->preset();
 		}
 		if(is_object($parameter1) && is_subclass_of($parameter1, 'tx_div2007_controller')) {
-			$this->controller = &$parameter1;
+			$this->controller = $parameter1;
 		} elseif(isset($parameter1)) {
 			$this->overwriteArray($parameter1);
 		}
 		if(is_object($parameter2) && is_subclass_of($parameter2, 'tx_div2007_controller')) {
-			$this->controller = &$parameter2;
+			$this->controller = $parameter2;
 		} elseif(isset($parameter2)) {
 			$this->overwriteArray($parameter2);
 		}

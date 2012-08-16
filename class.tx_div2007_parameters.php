@@ -76,7 +76,7 @@ class tx_div2007_parameters extends tx_div2007_object {
 		for($this->rewind(); $this->valid(); $this->next()){
 			if(!is_array($this->current())) {  // TODO: use also arrays
 				$out .= sprintf('%s<input type="hidden" name="%s[%s]" value="%s">', chr(10),
-						$this->getDesignator(), $this->key(), htmlspecialchars($this->current()));
+					$this->getDesignator(), $this->key(), htmlspecialchars($this->current()));
 			}
 		}
 		return $out;
@@ -86,4 +86,5 @@ class tx_div2007_parameters extends tx_div2007_object {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_parameters.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_parameters.php']);
 }
+
 ?>

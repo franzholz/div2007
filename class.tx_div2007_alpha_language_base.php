@@ -73,6 +73,7 @@ class tx_div2007_alpha_language_base {
 		}
 
 		$this->cObj = $cObj;
+
 		$this->extKey = $extKey;
 		$this->conf = $conf;
 		$this->scriptRelPath = $scriptRelPath;
@@ -83,19 +84,19 @@ class tx_div2007_alpha_language_base {
 		);
 	}
 
-	public function &getLocallang () {
+	public function getLocallang () {
 		return $this->LOCAL_LANG;
 	}
 
-	public function &getLLkey () {
+	public function getLLkey () {
 		return $this->LLkey;
 	}
 
-	public function &getCObj () {
+	public function getCObj () {
 		return $this->cObj;
 	}
 
-	public function &getConf () {
+	public function getConf () {
 		return $this->conf;
 	}
 

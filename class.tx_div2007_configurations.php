@@ -80,8 +80,12 @@ class tx_div2007_configurations extends tx_div2007_object {
 	 * @return	void
 	 */
 	function setTypoScriptConfiguration ($configuration) {
-		if(is_array($configuration['configurations.']))  $configuration = $configuration['configurations.'];
-		foreach((array)$configuration as $key => $value) $this->set($key, $value);
+		if(is_array($configuration['configurations.'])) {
+			$configuration = $configuration['configurations.'];
+		}
+		foreach((array)$configuration as $key => $value) {
+			$this->set($key, $value);
+		}
 	}
 
 	/**
