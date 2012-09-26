@@ -638,6 +638,7 @@ class tx_div2007_alpha5 {
 			}
 
 				// Overlaying labels from TypoScript (including fictitious language keys for non-system languages!):
+
 			$confLL = $langObj->conf['_LOCAL_LANG.'];
 
 			if (is_array($confLL)) {
@@ -1247,6 +1248,43 @@ class tx_div2007_alpha5 {
 			$fixImgCode = str_replace('src="', 'src="' . $absRefPrefix, $fixImgCode);
 			$fixImgCode = str_replace('"uploads/', '"' . $absRefPrefix . 'uploads/', $fixImgCode);
 			$imageCode = $fixImgCode;
+		}
+	}
+
+
+	static public function fixImageCodeAbsRefPrefix_fh001 (&$imageCode, $domain = '') {
+		$absRefPrefix = '';
+		$absRefPrefixDomain = '';
+		$bSetAbsRefPrefix = FALSE;
+		if ($GLOBALS['TSFE']->absRefPrefix != '') {
+			$absRefPrefix = $GLOBALS['TSFE']->absRefPrefix;
+		} else {
+			$bSetAbsRefPrefix = TRUE;
+			$absRefPrefix = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+		}
+
+		if ($domain != '') {
+			$absRefPrefixArray = explode('?', $absRefPrefix);
+			$protocollArray = explode('//', $absRefPrefixArray['0']);
+			$absRefPrefixArray['0'] = $protocollArray['0'] . '//' . $domain;
+			$absRefPrefixDomain = implode('?', $absRefPrefixArray);
+		}
+
+		if ($bSetAbsRefPrefix) {
+			if ($absRefPrefixDomain != '') {
+				$absRefPrefix = $absRefPrefixDomain . '/';
+			}
+			$fixImgCode = str_replace('index.php', $absRefPrefix . 'index.php', $imageCode);
+			$fixImgCode = str_replace('src="', 'src="' . $absRefPrefix, $fixImgCode);
+			$fixImgCode = str_replace('"uploads/', '"' . $absRefPrefix . 'uploads/', $fixImgCode);
+			$imageCode = $fixImgCode;
+		} else {
+			if ($absRefPrefixDomain != '') {
+				$fixImgCode = str_replace($absRefPrefix . 'index.php', $absRefPrefixDomain . 'index.php', $imageCode);
+				$fixImgCode = str_replace('src="' . $absRefPrefix, 'src="' . $absRefPrefixDomain, $fixImgCode);
+				$fixImgCode = str_replace('"' . $absRefPrefix . 'uploads/', '"' . $absRefPrefixDomain . 'uploads/', $fixImgCode);
+				$imageCode = $fixImgCode;
+			}
 		}
 	}
 
