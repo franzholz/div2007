@@ -1,3 +1,5 @@
+10-10-12 Franz Holzinger  <franz@ttproducts.de>
+	* add new class tx_div2007_store to store the latest cOject and other data
 
 16-08-12 Franz Holzinger  <franz@ttproducts.de>
 	* fix security issue in t3lib_div::quoteJSvalue as in TYPO3 4.7.4
