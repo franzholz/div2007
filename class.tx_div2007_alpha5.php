@@ -218,20 +218,21 @@ class tx_div2007_alpha5 {
 	}
 
 	/**
-	 * Returns a class-name prefixed with $prefixId and with all underscores substituted to dashes (-)
+	 * Returns a class-name prefixed with $prefixId and with all underscores substituted to dashes (-). Copied from pi_getClassName
 	 *
 	 * @param	string		The class name (or the END of it since it will be prefixed by $prefixId.'-')
 	 * @param	string		$prefixId
 	 * @return	string		The combined class name (with the correct prefix)
+	 * @see pi_getClassName()
 	 */
-	public static function getClassName_fh001 ($class, $prefixId='') {
-		return str_replace('_','-',$prefixId) . ($prefixId ? '-' : '') . $class;
+	public static function getClassName_fh001 ($class, $prefixId = '') {
+		return str_replace('_', '-', $prefixId) . ($prefixId ? '-' : '') . $class;
 	}
 
 
 	/**
 	 * Returns the class-attribute with the correctly prefixed classname
-	 * Using pi_getClassName()
+	 * Using getClassName_fh001()
 	 *
 	 * @param	string		The class name(s) (suffix) - separate multiple classes with commas
 	 * @param	string		Additional class names which should not be prefixed - separate multiple classes with commas
@@ -241,7 +242,7 @@ class tx_div2007_alpha5 {
 	 */
 	static public function classParam_fh001 ($class, $addClasses = '', $prefixId = '') {
 		$output = '';
-		foreach (t3lib_div::trimExplode(',',$class) as $v) {
+		foreach (t3lib_div::trimExplode(',', $class) as $v) {
 			$output .= ' ' . self::getClassName_fh001($v, $prefixId);
 		}
 		foreach (t3lib_div::trimExplode(',', $addClasses) as $v) {
@@ -380,7 +381,7 @@ class tx_div2007_alpha5 {
 			$out = 'error in call of tx_div2007_alpha5::getTypoLink_fh003: parameter $cObj is not an object';
 			debug($out, '$out'); // keep this
 		}
-		return $rc;
+		return $result;
 	}
 
 
@@ -413,14 +414,15 @@ class tx_div2007_alpha5 {
 				$target,
 				$conf
 			);
-
 			if ($result !== FALSE) {
 				$result = $cObj->lastTypoLinkUrl;
 			}
+		} else {
+			$out = 'error in call of tx_div2007_alpha5::getTypoLink_URL_fh003: parameter $cObj is not an object';
+			debug($out, '$out'); // keep this
 		}
 		return $result;
 	}
-
 
 
 	/**
