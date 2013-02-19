@@ -2,9 +2,9 @@
 /**
  * Collection of static functions
  *
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2008-2010 Franz Holzinger
+ * Copyright (c) 2008-2012 Franz Holzinger
  *
  * LICENSE:
  *
@@ -25,7 +25,7 @@
  * @package    TYPO3
  * @subpackage div2007
  * @author     Franz Holzinger <franz@ttproducts.de>
- * @copyright  2008-2010 Franz Holzinger
+ * @copyright  2008-2012 Franz Holzinger
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
  * @version    SVN: $Id:$
  * @since      0.1
@@ -42,7 +42,7 @@
  *
  * @package    TYPO3
  * @subpackage div2007
- * @author     Franz Holzinger <contact@fholzinger.com>
+ * @author     Franz Holzinger <franz@ttproducts.de>
  */
 
 class tx_double6 {
@@ -54,22 +54,21 @@ class tx_double6 {
 	 * @param	boolean		if TRUE the value is set
 	 * @return	string		Modified $value
 	 */
-	function evaluateFieldValue ($value,$is_in,$set)	{
-		if ($set)	{
+	public function evaluateFieldValue ($value, $is_in, $set) {
+		if ($set) {
 			$theDec = 0;
-			for ($a=strlen($value); $a>0; $a--)	{
-				if (substr($value,$a-1,1)=='.' || substr($value,$a-1,1)==',')	{
-					$theDec = substr($value,$a);
-					$value = substr($value,0,$a-1);
+			for ($a=strlen($value); $a > 0; $a--) {
+				if (substr($value, $a - 1, 1) == '.' || substr($value, $a - 1, 1) == ',') {
+					$theDec = substr($value, $a);
+					$value = substr($value, 0, $a - 1);
 					break;
 				}
 			}
 			$theDec = preg_replace('/[^0-9]/', '', $theDec) . '000000';
-			$value = intval(str_replace(' ','',$value)).'.'.substr($theDec,0,6);
+			$value = intval(str_replace(' ', '', $value)) . '.' . substr($theDec, 0, 6);
 		}
 		return $value;
 	}
 }
-
 
 ?>

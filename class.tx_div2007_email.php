@@ -40,9 +40,6 @@
  */
 
 
-require_once(PATH_BE_div2007 . 'class.tx_div2007_alpha5.php');
-
-
 
 class tx_div2007_email {
 
@@ -87,6 +84,7 @@ class tx_div2007_email {
 
 		if ($subject == '') {
 			$defaultSubject = 'message from ' . $fromNameSlashed . ($fromNameSlashed != '' ? '<' : '') . $fromEMail . ($fromNameSlashed != '' ? '>' : '');
+
 				// First line is subject
 			if ($HTMLContent) {
 				$parts = preg_split('/<title>|<\\/title>/i', $HTMLContent, 3);
@@ -110,9 +108,10 @@ class tx_div2007_email {
 				array_search('t3lib_mail_SwiftMailerAdapter', $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) !== FALSE
 			)
 		) {
-			if (preg_match('#[/\(\)\\<>,;:@\.\]\[\s]#', $fromName)) {
+			if (preg_match('#[/\(\)\\<>,;:@\.\]\[]#', $fromName)) {
 				$fromName = '"' . $fromName . '"';
 			}
+
 			if (!is_array($toEMail)) {
 				$emailArray = t3lib_div::trimExplode(',', $toEMail);
 				$toEMail = array();
@@ -181,7 +180,9 @@ class tx_div2007_email {
 
 			$mail->subject = $subject;
 			$mail->from_email = $fromEMail;
-			$mail->returnPath = $fromEMail;
+			if ($returnPath != '') {
+				$mail->returnPath = $returnPath;
+			}
 			$mail->from_name = $fromName;
 			if ($replyTo) {
 				$mail->replyto_email = $replyTo;
@@ -282,10 +283,12 @@ class tx_div2007_email {
 			is_object($mail)
 		) {
 			$mailClass = get_class($mail);
-			if ($mailClass == 't3lib_mail_Message') {
-				$mail->send();
-			} else {
+			$mail->send();
+
+			if (method_exists($mail, 'sendTheMail')) {
 				$mail->sendTheMail();
+			} else {
+				$mail->send();
 			}
 		}
 	}

@@ -421,6 +421,7 @@ class tx_div2007_alpha5 {
 			$out = 'error in call of tx_div2007_alpha5::getTypoLink_URL_fh003: parameter $cObj is not an object';
 			debug($out, '$out'); // keep this
 		}
+
 		return $result;
 	}
 

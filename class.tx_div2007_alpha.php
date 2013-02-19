@@ -472,7 +472,7 @@ class tx_div2007_alpha {
 			if ($hsc)	$output = htmlspecialchars($output);
 		} else {
 			$output = 'error in call of tx_div2007_alpha::getLL: parameter $langObj is not an object';
-			debug ($output, '$output', __LINE__, __FILE__);
+			debug ($output, '$output'); // keep this
 		}
 
 		return $output;
@@ -618,7 +618,7 @@ class tx_div2007_alpha {
 			}
 		} else {
 			$output = 'error in call of tx_div2007_alpha::loadLL_fh001: parameter $langObj is not an object';
-			debug ($output, '$output', __LINE__, __FILE__);
+			debug ($output, '$output'); // keep this
 		}
 	}
 
@@ -698,7 +698,7 @@ class tx_div2007_alpha {
 			}
 		} else {
 			$rc = 'error in call of tx_div2007_alpha::getSetupOrFFvalue_fh001: parameter $langObj is not an object';
-			debug ($rc, '$rc', __LINE__, __FILE__);
+			debug ($rc, '$rc'); // keep this
 		}
 		return $rc;
 	}
@@ -763,7 +763,7 @@ class tx_div2007_alpha {
 			}
 		} else {
 			$rc = 'error in call of tx_div2007_alpha::getSetupOrFFvalue_fh002: parameter $langObj is not an object';
-			debug ($rc, '$rc', __LINE__, __FILE__);
+			debug ($rc, '$rc'); // keep this
 		}
 		return $rc;
 	}
@@ -803,18 +803,16 @@ class tx_div2007_alpha {
 		$codeExt,
 		$defaultCode,
 		$T3FlexForm_array,
-		$fieldName='display_mode',
-		$bUseFlexforms=TRUE,
-		$sheet='sDEF',
-		$lang='lDEF',
-		$value='vDEF'
+		$fieldName = 'display_mode',
+		$bUseFlexforms = TRUE,
+		$sheet = 'sDEF',
+		$lang = 'lDEF',
+		$value = 'vDEF'
 	) {
 		$rc = '';
 		if (is_object($cObj)) {
 			if (empty($code)) {
 				if ($bUseFlexforms) {
-					include_once(PATH_BE_div2007 . 'class.tx_div2007_ff.php');
-
 					// Converting flexform data into array:
 					$rc = tx_div2007_ff::get($T3FlexForm_array, $fieldName, $sheet, $lang, $value);
 				} else {
@@ -828,7 +826,7 @@ class tx_div2007_alpha {
 			}
 		} else {
 			$rc = 'error in call of tx_div2007_alpha::getSetupOrFFvalue_fh003: parameter $cObj is not an object';
-			debug ($rc, '$rc', __LINE__, __FILE__);
+			debug ($rc, '$rc'); // keep this
 		}
 		return $rc;
 	}
@@ -873,7 +871,7 @@ class tx_div2007_alpha {
 			$out = $langObj->cObj->typolink($label,$conf);
 		} else {
 			$out = 'error in call of tx_div2007_alpha::getTypoLink_fh001: parameter $langObj is not an object';
-			debug ($out, '$out', __LINE__, __FILE__);
+			debug ($out, '$out'); // keep this
 		}
 		return $out;
 	}
@@ -921,7 +919,7 @@ class tx_div2007_alpha {
 			}
 		} else {
 			$out = 'error in call of tx_div2007_alpha::getTypoLink_fh002: parameter $cObj is not an object';
-			debug ($out, '$out', __LINE__, __FILE__);
+			debug ($out, '$out'); // keep this
 		}
 		return $rc;
 	}
@@ -1238,18 +1236,25 @@ class tx_div2007_alpha {
 	/**
 	 * Calls user function
 	 */
-	function userProcess_fh001 (
+	/**
+	* Invokes a user process
+	*
+	* @param object $pObject: the name of the parent object
+	* @param array  $conf:    the base TypoScript setup
+	* @param array  $mConfKey: the configuration array of the user process
+	* @param array  $passVar: the array of variables to be passed to the user process
+	* @return array the updated array of passed variables
+	*/
+	public function userProcess_fh001 (
 		$pObject,
-		&$conf,
+		$conf,
 		$mConfKey,
 		$passVar
 	) {
-		global $TSFE;
-
 		if (isset($conf) && is_array($conf) && $conf[$mConfKey]) {
-			$funcConf = $conf[$mConfKey.'.'];
+			$funcConf = $conf[$mConfKey . '.'];
 			$funcConf['parentObj'] = $pObject;
-			$passVar = $TSFE->cObj->callUserFunction(
+			$passVar = $GLOBALS['TSFE']->cObj->callUserFunction(
 				$conf[$mConfKey],
 				$funcConf,
 				$passVar

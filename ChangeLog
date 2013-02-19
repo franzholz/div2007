@@ -1,3 +1,6 @@
+19-02-13 Franz Holzinger  <franz@ttproducts.de>
+	* fix change in TYPO3 6.0.2: use the send method for sending of emails
+
 10-10-12 Franz Holzinger  <franz@ttproducts.de>
 	* add new class tx_div2007_store to store the latest cOject and other data
 
@@ -10,6 +13,7 @@
 27-04-12 Franz Holzinger  <franz@ttproducts.de>
 	* extract tx_div2007_objectBase from file class.tx_div2007_object.php
 	* add the include file to class.tx_div2007_object.php because the autoloader does not work in TYPO3 4.7 rc2
+	* remove unnecessary quoting of the email sender name containing a space when the Swift Mailer is active
 
 20-04-12 Franz Holzinger  <franz@ttproducts.de>
 	* set version to stable
