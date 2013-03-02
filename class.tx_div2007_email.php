@@ -283,7 +283,6 @@ class tx_div2007_email {
 			is_object($mail)
 		) {
 			$mailClass = get_class($mail);
-			$mail->send();
 
 			if (method_exists($mail, 'sendTheMail')) {
 				$mail->sendTheMail();
