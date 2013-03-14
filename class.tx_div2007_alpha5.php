@@ -1320,6 +1320,19 @@ class tx_div2007_alpha5 {
 
 		return $result;
 	}
+
+
+	static public function getCsConvObj () {
+		if (is_object($GLOBALS['LANG'])) {
+			$csConvObj = $GLOBALS['LANG']->csConvObj;
+		} elseif (is_object($GLOBALS['TSFE'])) {
+			$csConvObj = $GLOBALS['TSFE']->csConvObj;
+		} else {
+			$csConvObj = self::makeInstance('t3lib_cs');
+		}
+
+		return $csConvObj;
+	}
 }
 
 
