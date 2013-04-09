@@ -348,11 +348,11 @@ class tx_div2007 {
 	static public function getFrontEndUser ($field = '') {
 		$result = FALSE;
 
-		if (isset($GLOBALS['TSFE']->fe_user) && is_object($GLOBALS['TSFE']->fe_user) && is_array($GLOBALS['TSFE']->fe_user)) {
+		if (isset($GLOBALS['TSFE']->fe_user) && is_object($GLOBALS['TSFE']->fe_user) && is_array($GLOBALS['TSFE']->fe_user->user)) {
 			$result = $GLOBALS['TSFE']->fe_user;
 
-			if ($field != '' && isset($result[$field])) {
-				$result = $result[$field];
+			if ($field != '' && isset($GLOBALS['TSFE']->fe_user->user[$field])) {
+				$result = $GLOBALS['TSFE']->fe_user->user[$field];
 			}
 		}
 
