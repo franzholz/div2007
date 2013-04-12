@@ -389,7 +389,7 @@ final class tx_div2007_div {
 	 * @param string $newlineChar The string to implode the broken lines with (default/typically \n)
 	 * @param integer $lineWidth The line width
 	 * @return string reformatted text
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 4.8 - Use t3lib_utility_Mail::breakLinesForEmail()
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Mail::breakLinesForEmail()
 	 */
 	public static function breakLinesForEmail($str, $newlineChar = LF, $lineWidth = 76) {
 		self::logDeprecatedFunction();
@@ -859,7 +859,7 @@ final class tx_div2007_div {
 	 * @param integer $max Higher limit
 	 * @param integer $zeroValue Default value if input is FALSE.
 	 * @return integer The input value forced into the boundaries of $min and $max
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 4.8 - Use t3lib_utility_Math::forceIntegerInRange() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::forceIntegerInRange() instead
 	 */
 	public static function intInRange($theInt, $min, $max = 2000000000, $zeroValue = 0) {
 		self::logDeprecatedFunction();
@@ -871,7 +871,7 @@ final class tx_div2007_div {
 	 *
 	 * @param integer $theInt Integer string to process
 	 * @return integer
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 4.8 - Use t3lib_utility_Math::convertToPositiveInteger() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::convertToPositiveInteger() instead
 	 */
 	public static function intval_positive($theInt) {
 		self::logDeprecatedFunction();
@@ -883,7 +883,7 @@ final class tx_div2007_div {
 	 *
 	 * @param string $verNumberStr Version number on format x.x.x
 	 * @return integer Integer version of version number (where each part can count to 999)
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 4.9 - Use t3lib_utility_VersionNumber::convertVersionNumberToInteger() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.1 - Use t3lib_utility_VersionNumber::convertVersionNumberToInteger() instead
 	 */
 	public static function int_from_ver($verNumberStr) {
 			// Deprecation log is activated only for TYPO3 4.7 and above
@@ -936,26 +936,27 @@ final class tx_div2007_div {
 	 * Returns a proper HMAC on a given input string and secret TYPO3 encryption key.
 	 *
 	 * @param string $input Input string to create HMAC from
+	 * @param string $additionalSecret additionalSecret to prevent hmac beeing used in a different context
 	 * @return string resulting (hexadecimal) HMAC currently with a length of 40 (HMAC-SHA-1)
 	 */
-	public static function hmac($input) {
+	public static function hmac($input, $additionalSecret = '') {
 		$hashAlgorithm = 'sha1';
 		$hashBlocksize = 64;
 		$hmac = '';
-
+		$secret = $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] . $additionalSecret;
 		if (extension_loaded('hash') && function_exists('hash_hmac') && function_exists('hash_algos') && in_array($hashAlgorithm, hash_algos())) {
-			$hmac = hash_hmac($hashAlgorithm, $input, $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']);
+			$hmac = hash_hmac($hashAlgorithm, $input, $secret);
 		} else {
 				// outer padding
 			$opad = str_repeat(chr(0x5C), $hashBlocksize);
 				// inner padding
 			$ipad = str_repeat(chr(0x36), $hashBlocksize);
-			if (strlen($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']) > $hashBlocksize) {
+			if (strlen($secret) > $hashBlocksize) {
 					// keys longer than block size are shorten
-				$key = str_pad(pack('H*', call_user_func($hashAlgorithm, $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'])), $hashBlocksize, chr(0x00));
+				$key = str_pad(pack('H*', call_user_func($hashAlgorithm, $secret)), $hashBlocksize, chr(0));
 			} else {
 					// keys shorter than block size are zero-padded
-				$key = str_pad($GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'], $hashBlocksize, chr(0x00));
+				$key = str_pad($secret, $hashBlocksize, chr(0));
 			}
 			$hmac = call_user_func($hashAlgorithm, ($key ^ $opad) . pack('H*', call_user_func($hashAlgorithm, ($key ^ $ipad) . $input)));
 		}
@@ -1074,7 +1075,7 @@ final class tx_div2007_div {
 	 *
 	 * @param mixed $var Any input variable to test
 	 * @return boolean Returns TRUE if string is an integer
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 4.8 - Use t3lib_utility_Math::canBeInterpretedAsInteger() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::canBeInterpretedAsInteger() instead
 	 */
 	public static function testInt($var) {
 		self::logDeprecatedFunction();
@@ -1167,7 +1168,7 @@ final class tx_div2007_div {
 	 * @param string $string Input string, eg "123 + 456 / 789 - 4"
 	 * @return integer Calculated value. Or error string.
 	 * @see calcParenthesis()
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 4.8 - Use t3lib_utility_Math::calculateWithPriorityToAdditionAndSubtraction() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::calculateWithPriorityToAdditionAndSubtraction() instead
 	 */
 	public static function calcPriority($string) {
 		self::logDeprecatedFunction();
@@ -1181,7 +1182,7 @@ final class tx_div2007_div {
 	 * @param string $string Input string, eg "(123 + 456) / 789 - 4"
 	 * @return integer Calculated value. Or error string.
 	 * @see calcPriority(), tslib_cObj::stdWrap()
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 4.8 - Use t3lib_utility_Math::calculateWithParentheses() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::calculateWithParentheses() instead
 	 */
 	public static function calcParenthesis($string) {
 		self::logDeprecatedFunction();
@@ -1863,6 +1864,10 @@ final class tx_div2007_div {
 	 */
 	public static function array_merge_recursive_overrule(array $arr0, array $arr1, $notAddKeys = FALSE, $includeEmptyValues = TRUE, $enableUnsetFeature = TRUE) {
 		foreach ($arr1 as $key => $val) {
+			if ($enableUnsetFeature && $val === '__UNSET') {
+				unset($arr0[$key]);
+				continue;
+			}
 			if (is_array($arr0[$key])) {
 				if (is_array($arr1[$key])) {
 					$arr0[$key] = self::array_merge_recursive_overrule(
@@ -1873,12 +1878,11 @@ final class tx_div2007_div {
 						$enableUnsetFeature
 					);
 				}
-			} elseif (!$notAddKeys || isset($arr0[$key])) {
-				if ($enableUnsetFeature && $val === '__UNSET') {
-					unset($arr0[$key]);
-				} elseif ($includeEmptyValues || $val) {
-					$arr0[$key] = $val;
-				}
+			} elseif (
+				(!$notAddKeys || isset($arr0[$key])) &&
+				($includeEmptyValues || $val)
+			) {
+				$arr0[$key] = $val;
 			}
 		}
 
@@ -2934,13 +2938,13 @@ final class tx_div2007_div {
 	 */
 	public static function mkdir_deep($directory, $deepDirectory = '') {
 		if (!is_string($directory)) {
-			throw new InvalidArgumentException(
+			throw new \InvalidArgumentException(
 				'The specified directory is of type "' . gettype($directory) . '" but a string is expected.',
 				1303662955
 			);
 		}
 		if (!is_string($deepDirectory)) {
-			throw new InvalidArgumentException(
+			throw new \InvalidArgumentException(
 				'The specified directory is of type "' . gettype($deepDirectory) . '" but a string is expected.',
 				1303662956
 			);
@@ -2979,7 +2983,7 @@ final class tx_div2007_div {
 
 			$result = @mkdir($fullDirectoryPath, $permissionMask, TRUE);
 			if (!$result) {
-				throw new RuntimeException('Could not create directory!', 1170251400);
+				throw new \RuntimeException('Could not create directory "' . $fullDirectoryPath . '"!', 1170251400);
 			}
 		}
 		return $firstCreatedPath;
@@ -3080,7 +3084,7 @@ final class tx_div2007_div {
 								$sortarray[$key] = filemtime($path . '/' . $entry);
 							}
 							elseif ($order) {
-								$sortarray[$key] = $entry;
+								$sortarray[$key] = strtolower($entry);
 							}
 						}
 					}
@@ -3856,7 +3860,7 @@ final class tx_div2007_div {
 	 * So it's compatible with the UNIX style path strings valid for TYPO3 internally.
 	 *
 	 * @param string $theFile File path to evaluate
-	 * @return boolean TRUE, $theFile is allowed path string
+	 * @return boolean TRUE, $theFile is allowed path string, FALSE otherwise
 	 * @see http://php.net/manual/en/security.filesystem.nullbytes.php
 	 * @todo Possible improvement: Should it rawurldecode the string first to check if any of these characters is encoded?
 	 */
@@ -3864,6 +3868,8 @@ final class tx_div2007_div {
 		if (strpos($theFile, '//') === FALSE && strpos($theFile, '\\') === FALSE && !preg_match('#(?:^\.\.|/\.\./|[[:cntrl:]])#u', $theFile)) {
 			return TRUE;
 		}
+
+		return FALSE;
 	}
 
 	/**
@@ -4015,9 +4021,12 @@ final class tx_div2007_div {
 	 * @see upload_to_tempfile(), tempnam()
 	 */
 	public static function unlink_tempfile($uploadedTempFileName) {
-		if ($uploadedTempFileName && self::validPathStr($uploadedTempFileName) && self::isFirstPartOfStr($uploadedTempFileName, PATH_site . 'typo3temp/') && @is_file($uploadedTempFileName)) {
-			if (unlink($uploadedTempFileName)) {
-				return TRUE;
+		if ($uploadedTempFileName) {
+			$uploadedTempFileName = self::fixWindowsFilePath($uploadedTempFileName);
+			if (self::validPathStr($uploadedTempFileName) && self::isFirstPartOfStr($uploadedTempFileName, PATH_site . 'typo3temp/') && @is_file($uploadedTempFileName)) {
+				if (unlink($uploadedTempFileName)) {
+					return TRUE;
+				}
 			}
 		}
 	}
@@ -4072,7 +4081,7 @@ final class tx_div2007_div {
 	 * @param string $addQueryParams Query-parameters: "&xxx=yyy&zzz=uuu"
 	 * @return array Array with key/value pairs of query-parameters WITHOUT a certain list of variable names (like id, type, no_cache etc.) and WITH a variable, encryptionKey, specific for this server/installation
 	 * @see tslib_fe::makeCacheHash(), tslib_cObj::typoLink(), t3lib_div::calculateCHash()
-	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 4.9 - use t3lib_cacheHash instead
+	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 6.1 - use t3lib_cacheHash instead
 	 */
 	public static function cHashParams($addQueryParams) {
 		t3lib_div::logDeprecatedFunction();
@@ -4106,7 +4115,7 @@ final class tx_div2007_div {
 	 * @param string $addQueryParams Query-parameters: "&xxx=yyy&zzz=uuu"
 	 * @return string Hash of all the values
 	 * @see t3lib_div::cHashParams(), t3lib_div::calculateCHash()
-	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 4.9 - use t3lib_cacheHash instead
+	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 6.1 - use t3lib_cacheHash instead
 	 */
 	public static function generateCHash($addQueryParams) {
 		t3lib_div::logDeprecatedFunction();
@@ -4120,7 +4129,7 @@ final class tx_div2007_div {
 	 *
 	 * @param array $params Array of key-value pairs
 	 * @return string Hash of all the values
-	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 4.9 - use t3lib_cacheHash instead
+	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 6.1 - use t3lib_cacheHash instead
 	 */
 	public static function calculateCHash($params) {
 		t3lib_div::logDeprecatedFunction();
@@ -4178,7 +4187,7 @@ final class tx_div2007_div {
 	 * @param string $langKey TYPO3 language key, eg. "dk" or "de" or "default"
 	 * @param string $charset Character set (optional)
 	 * @return array LOCAL_LANG array in return.
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 4.8 - use t3lib_l10n_parser_Llphp::getParsedData() from now on
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - use t3lib_l10n_parser_Llphp::getParsedData() from now on
 	 */
 	public static function readLLPHPfile($fileRef, $langKey, $charset = '') {
 		t3lib_div::logDeprecatedFunction();
@@ -4262,7 +4271,7 @@ final class tx_div2007_div {
 	 * @param string $langKey TYPO3 language key, eg. "dk" or "de" or "default"
 	 * @param string $charset Character set (optional)
 	 * @return array LOCAL_LANG array in return.
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 4.8 - use t3lib_l10n_parser_Llxml::getParsedData() from now on
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - use t3lib_l10n_parser_Llxml::getParsedData() from now on
 	 */
 	public static function readLLXMLfile($fileRef, $langKey, $charset = '') {
 		t3lib_div::logDeprecatedFunction();
@@ -5565,6 +5574,12 @@ final class tx_div2007_div {
 			return;
 		}
 
+			// This require_once is needed for deprecation calls
+			// thrown early during bootstrap, if the autoloader is
+			// not instantiated yet. This can happen for example if
+			// ext_localconf triggers a deprecation.
+		require_once 'utility/class.t3lib_utility_debug.php';
+
 		$trail = debug_backtrace();
 
 		if ($trail[1]['type']) {
@@ -5701,8 +5716,8 @@ final class tx_div2007_div {
 	public static function flushOutputBuffers() {
 		$obContent = '';
 
-		while ($obContent .= ob_get_clean()) {
-			;
+		while ($content = ob_get_clean()) {
+			$obContent .= $content;
 		}
 
 			// if previously a "Content-Encoding: whatever" has been set, we have to unset it
