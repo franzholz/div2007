@@ -1,5 +1,6 @@
-09-04-13 Franz Holzinger  <franz@ttproducts.de>
+12-04-13 Franz Holzinger  <franz@ttproducts.de>
 	* fix bug: method getFrontEndUser must return the field inside of the FE user array
+	* integrate div2007 from TYPO3 4..7.10
 
 14-03-13 Franz Holzinger  <franz@ttproducts.de>
 	* add method tx_div2007_alpha5::getCsConvObj to fetch an object for the character set conversion
