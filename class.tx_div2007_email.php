@@ -74,7 +74,8 @@ class tx_div2007_email {
 		$returnPath = '',
 		$replyTo = '',
 		$extKey = '',
-		$hookVar = ''
+		$hookVar = '',
+		$defaultSubject = ''
 	) {
 		global $TYPO3_CONF_VARS;
 
@@ -83,7 +84,9 @@ class tx_div2007_email {
 		$fromNameSlashed = tx_div2007_alpha5::slashName($fromName);
 
 		if ($subject == '') {
-			$defaultSubject = 'message from ' . $fromNameSlashed . ($fromNameSlashed != '' ? '<' : '') . $fromEMail . ($fromNameSlashed != '' ? '>' : '');
+			if ($defaultSubject == '') {
+				$defaultSubject = 'message from ' . $fromNameSlashed . ($fromNameSlashed != '' ? '<' : '') . $fromEMail . ($fromNameSlashed != '' ? '>' : '');
+			}
 
 				// First line is subject
 			if ($HTMLContent) {

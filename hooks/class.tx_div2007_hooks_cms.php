@@ -51,16 +51,16 @@ class tx_div2007_hooks_cms {
 	 * @return	  string
 	 */
 
-	public function pmDrawItem (&$params, $pObj) {
-
-		if (t3lib_extMgm::isLoaded($this->extKey) &&
+	public function pmDrawItem ($params, $pObj) {
+		if (
+			$this->extKey != '' &&
+			t3lib_extMgm::isLoaded($this->extKey) &&
 			in_array(
-				intval($pObj->pageRecord['doktype']), array(1,2,5)
+				intval($pObj->pageRecord['doktype']),
+				array(1, 2, 5)
 			) &&
 			$params['row']['pi_flexform'] != ''
 		) {
-			include_once (PATH_BE_div2007 . 'class.tx_div2007_ff.php');
-
 			tx_div2007_ff::load(
 				$params['row']['pi_flexform'],
 				$this->extKey

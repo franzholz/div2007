@@ -57,7 +57,7 @@ class tx_double6 {
 	public function evaluateFieldValue ($value, $is_in, $set) {
 		if ($set) {
 			$theDec = 0;
-			for ($a=strlen($value); $a > 0; $a--) {
+			for ($a = strlen($value); $a > 0; $a--) {
 				if (substr($value, $a - 1, 1) == '.' || substr($value, $a - 1, 1) == ',') {
 					$theDec = substr($value, $a);
 					$value = substr($value, 0, $a - 1);

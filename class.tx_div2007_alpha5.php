@@ -189,7 +189,6 @@ class tx_div2007_alpha5 {
 	 * @see linkTP_keepCtrlVars()
 	 */
 	static public function autoCache_fh001 ($pObject, $inArray) {
-
 		$bUseCache = TRUE;
 
 		if (is_array($inArray)) {
@@ -229,6 +228,21 @@ class tx_div2007_alpha5 {
 		return str_replace('_', '-', $prefixId) . ($prefixId ? '-' : '') . $class;
 	}
 
+	/**
+	 * Returns a class-name prefixed with $prefixId and with all underscores substituted to dashes (-). Copied from pi_getClassName
+	 *
+	 * @param	string		The class name (or the END of it since it will be prefixed by $prefixId.'-')
+	 * @param	string		$prefixId
+	 * @param	boolean		if set, then the prefix 'tx_' is added to the extension name
+	 * @return	string		The combined class name (with the correct prefix)
+	 * @see pi_getClassName()
+	 */
+	public static function getClassName_fh002 ($class, $prefixId = '', $bAddPrefixTx = FALSE) {
+		if ($bAddPrefixTx && $prefixId != '' && strpos($prefixId, 'tx_') !== 0) {
+			$prefixId = 'tx_' . $prefixId;
+		}
+		return str_replace('_', '-', $prefixId) . ($prefixId != '' ? '-' : '') . $class;
+	}
 
 	/**
 	 * Returns the class-attribute with the correctly prefixed classname
@@ -251,6 +265,27 @@ class tx_div2007_alpha5 {
 		return ' class="' . trim($output) . '"';
 	}
 
+	/**
+	 * Returns the class-attribute with the correctly prefixed classname
+	 * Using getClassName_fh001()
+	 *
+	 * @param	string		The class name(s) (suffix) - separate multiple classes with commas
+	 * @param	string		Additional class names which should not be prefixed - separate multiple classes with commas
+	 * @param	string		$prefixId
+	 * @param	boolean		if set, then the prefix 'tx_' is added to the extension name
+	 * @return	string		A "class" attribute with value and a single space char before it.
+	 * @see pi_classParam()
+	 */
+	static public function classParam_fh002 ($class, $addClasses = '', $prefixId = '', $bAddPrefixTx = FALSE) {
+		$output = '';
+		foreach (t3lib_div::trimExplode(',', $class) as $v) {
+			$output .= ' ' . self::getClassName_fh002($v, $prefixId, $bAddPrefixTx);
+		}
+		foreach (t3lib_div::trimExplode(',', $addClasses) as $v) {
+			$output .= ' ' . $v;
+		}
+		return ' class="' . trim($output) . '"';
+	}
 
 	/**
 	 * Link string to the current page.
@@ -472,7 +507,7 @@ class tx_div2007_alpha5 {
 	 * @return	string		The input string wrapped in <a> tags with the URL and target set.
 	 * @see pi_getPageLink(), tslib_cObj::getTypoLink()
 	 */
-	static public function linkToPage_fh001(
+	static public function linkToPage_fh001 (
 		$cObj,
 		$str,
 		$id,
@@ -1322,12 +1357,20 @@ class tx_div2007_alpha5 {
 	}
 
 
-	static public function getCsConvObj () {
+	/**
+	 * Fetches the character set conversion object of class t3lib_cs
+	 *
+	 * @param	boolean		if TRUE, then the object will be created if no such object is present
+	 * @return	object/boolean		Object of class t3lib_cs or FALSE
+	 */
+	static public function getCsConvObj ($bCreateIfNotFound = FALSE) {
+		$csConvObj = FALSE;
+
 		if (is_object($GLOBALS['LANG'])) {
 			$csConvObj = $GLOBALS['LANG']->csConvObj;
 		} elseif (is_object($GLOBALS['TSFE'])) {
 			$csConvObj = $GLOBALS['TSFE']->csConvObj;
-		} else {
+		} elseif ($bCreateIfNotFound) {
 			$csConvObj = self::makeInstance('t3lib_cs');
 		}
 
