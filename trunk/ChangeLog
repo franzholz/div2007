@@ -1,0 +1,298 @@
+03-05-13 Franz Holzinger  <franz@ttproducts.de>
+	* new feature: function classParam_fh002 allows CSS class names and adds the tx_ prefix to the extension key
+
+12-04-13 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug: method getFrontEndUser must return the field inside of the FE user array
+	* integrate div2007 from TYPO3 4.7.10
+
+14-03-13 Franz Holzinger  <franz@ttproducts.de>
+	* add method tx_div2007_alpha5::getCsConvObj to fetch an object for the character set conversion
+
+02-03-13 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug: do not send the emails twice
+
+19-02-13 Franz Holzinger  <franz@ttproducts.de>
+	* fix change in TYPO3 6.0.2: use the send method for sending of emails
+
+10-10-12 Franz Holzinger  <franz@ttproducts.de>
+	* add new class tx_div2007_store to store the latest cOject and other data
+
+16-08-12 Franz Holzinger  <franz@ttproducts.de>
+	* fix security issue in t3lib_div::quoteJSvalue as in TYPO3 4.7.4
+
+28-07-12 Franz Holzinger  <franz@ttproducts.de>
+	* include t3lib_div from TYPO3 4.7.2
+
+27-04-12 Franz Holzinger  <franz@ttproducts.de>
+	* extract tx_div2007_objectBase from file class.tx_div2007_object.php
+	* add the include file to class.tx_div2007_object.php because the autoloader does not work in TYPO3 4.7 rc2
+	* remove unnecessary quoting of the email sender name containing a space when the Swift Mailer is active
+
+20-04-12 Franz Holzinger  <franz@ttproducts.de>
+	* set version to stable
+	* include t3lib_div from TYPO3 4.7 rc2
+
+19-04-12 Franz Holzinger  <franz@ttproducts.de>
+	* bugfix in getLL_fh002 for TYPO3 4.6.: Do not use an empty string for localization but show the default language.
+	* add autoloader file ext_autoload.php
+	* add improved function getForeignTableInfo_fh003
+
+08-03-12 Franz Holzinger  <franz@ttproducts.de>
+	* improvement in getExtensionInfo_fh002: the extension needs not have been installed before
+	* add class for the sending of emails with support for the Swift Mailer
+
+28-01-12 Franz Holzinger  <franz@ttproducts.de>
+	* new feature: allow the usage of a pibase object instead of class.tx_div2007_alpha_language_base
+
+23-01-12 Franz Holzinger  <franz@ttproducts.de>
+	* add new classes for email and error message generation
+	* change function calls for PHP5
+
+09-01-12 Franz Holzinger  <franz@ttproducts.de>
+	* replace deprecated t3lib_div::intInRange by t3lib_utility_Math::forceIntegerInRange
+	* replace deprecated t3lib_div::testInt by t3lib_utility_Math::canBeInterpretedAsInteger
+	* bugfix getLL_fh002: do not require the parameter $usedLang
+	* make typoVersion compatible to TYPO3 4.6
+
+16-11-11 Franz Holzinger  <franz@ttproducts.de>
+	* enhance loadLL_fh002 with the advanced features from loadLL_fh001.
+
+15-11-11 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug with TYPO3 4.6: add modified methods list_browseresults_fh003, loadLL_fh002 and getLL_fh002
+	* fetch tx_div from TYPO3 4.6 as tx_div2007_div
+
+06-10-11 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug in foreign_table_where_query: an array must be checked if it is an array before the members are accessed
+	* add modified method wrapContentCode_fh004 which also includes a class attribute for the wrapped div tag
+
+19-07-11 Franz Holzinger  <franz@ttproducts.de>
+	* add tx_div2007_controller, tx_div2007_context, tx_div2007_configurations, tx_div2007_parameters
+	* replace deprecated method makeInstanceClassName by a call of makeInstance with the parameters of the constructor
+	* add the static statement to the functions in class.tx_div2007_alpha5.php
+
+26-05-11 Franz Holzinger  <franz@ttproducts.de>
+	* add parameter path to getExtensionInfo_fh002
+	* method getTypoLink_fh003 which confirms already set parameters in the parameter $conf
+
+13-05-11 Franz Holzinger  <franz@ttproducts.de>
+	* add variable $loadTcaAdditions to loadTcaAdditions_fh001. Use this in your file ext_tables.php to not include the $TCA modificationd and other stuff of your own extension.
+
+23-04-11 Franz Holzinger  <franz@ttproducts.de>
+	* add constants DIV2007_EXTkey and PATH_BE_div2007
+	* rename tx_lib_spl_arrayIterator into tx_div2007_spl_arrayIterator
+
+31-03-11 Franz Holzinger  <franz@ttproducts.de>
+	* add getter methods to class class.tx_div2007_alpha_language_base
+
+14-03-11 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug: replace all tx_div calls by tx_div2007
+
+28-02-11 Franz Holzinger  <franz@ttproducts.de>
+	* new function slashName from tt_products to slash the name for emails
+
+19-02-11 Franz Holzinger  <franz@ttproducts.de>
+	* include object files in function tx_div2007_objectBase
+
+15-02-11 Franz Holzinger  <franz@ttproducts.de>
+	* remove reference from parameter $conf of function phpFunc
+
+11-02-11 Franz Holzinger  <franz@ttproducts.de>
+	* fetch tx_div from TYPO3 4.5 as tx_div2007_div
+
+10-02-11 Franz Holzinger  <franz@ttproducts.de>
+	* borrow the file class.tx_lib_t3Loader.php from the 'lib' extension
+	* copy spl/class.tx_lib_spl_arrayIterator.php, spl/class.tx_lib_spl_arrayObject.php, class.tx_lib_selfAwareness.php and class.tx_lib_object.php from extension lib
+
+25-11-10 Franz Holzinger  <franz@ttproducts.de>
+	* give error output if function getLL is called with no object as parameter
+	* include the file typo3conf/extTables.php after the loadTcaAdditions_fh001 to allow modifications
+	* getExternalCObject_fh002 adapted for PHP 5.
+
+25-05-10 Franz Holzinger  <franz@ttproducts.de>
+	* ready for PHP 5.3: replace ereg_replace by preg_replace
+
+01-04-10 Franz Holzinger  <franz@ttproducts.de>
+	* method wrapContentCode_fh003 which does never have a trailing - in the resulting id number
+
+06-03-10 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug: method getSetupOrFFvalue_fh003 to use the cObject instead of the language Object
+	* This is the first version which requires PHP5.
+
+05-03-10 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug: method getSetupOrFFvalue_fh002 must not use a pibase object
+	* This is the latest version for PHP4.
+
+15-01-10 Franz Holzinger  <franz@ttproducts.de>
+	* allow the usage of method loadLL_fh001 also if no scriptRelPath has been set in the language object
+	* add parameter $addQueryString to method tx_div2007_alpha5::list_browseresults_fh002 to pass these parameters in the browser
+
+11-11-09 Franz Holzinger  <franz@ttproducts.de>
+	* no htmlspecialchars for texts of the record browser
+	* no pi_base function calls inside of tx_div2007_div
+
+16-09-09 Franz Holzinger  <franz@ttproducts.de>
+	* modify function getFilesInDir: the key of the returned array is sequential and not based on a md5 sum
+	*    This saves memory and allows to index it by a number which is sequential.
+
+15-09-09 Franz Holzinger  <franz@ttproducts.de>
+	* new function wrapInBaseClass_fh001 to replace pi_wrapInBaseClass
+
+28-07-09 Franz Holzinger  <franz@ttproducts.de>
+	* consider if typo3CacheManager is available or not
+
+18-07-09 Franz Holzinger  <franz@ttproducts.de>
+	* new feature: copy t3lib_div of TYPO3 4.3 into tx_div2007_div.
+
+01-04-09 Franz Holzinger  <franz@ttproducts.de>
+	* new class file class.tx_div2007_alpha_browse_base.php for a record browser
+	* use renderCharset for a read in language file in loadLL_fh001
+
+06-03-09 Franz Holzinger  <franz@ttproducts.de>
+	* new class file class.tx_div2007_alpha5.php for changes in PHP5 of the former class.tx_div2007_alpha.php
+	* getSetupOrFFvalue_fh002 for fetching the flexform code independantly from the pi_base class
+
+03-03-09 Franz Holzinger  <franz@ttproducts.de>
+	* wrapContentCode_fh002 which uses the uid of the content element to generate a wrap with a unique HTML id
+
+02-02-09 Franz Holzinger  <franz@ttproducts.de>
+	* alternative to unserialize, still experimental
+
+28-01-09 Franz Holzinger  <franz@ttproducts.de>
+	* phpFunc: PHP function call for stdWrap userFunc
+
+09-01-09 Franz Holzinger  <franz@ttproducts.de>
+	* enhance loadLL_fh001 to allow a file parameter which already contains a relative typo3 path generated from setup  EXT:ext_key
+
+08-12-22 Franz Holzinger  <contact@fholzinger.com>
+	* additional class tx_div2007_ff_php4 with PHP4 compatibility
+	* method tx_div2007_alpha::getLL_fh001 which returns the used language string
+
+08-11-10 Franz Holzinger  <contact@fholzinger.com>
+	* new function getClassName from pi_base
+
+08-10-22 Franz Holzinger  <contact@fholzinger.com>
+	* getter function for the $LOCAL_LANG and $LLkey
+
+08-09-20 Franz Holzinger  <contact@fholzinger.com>
+	* no PHP5 key words
+	* new getTypoLink_URL_fh002 which uses cObject parameter instead of pibase
+
+08-09-17 Franz Holzinger  <contact@fholzinger.com>
+	* add init function for FE
+	* new link functions which use the cObject as parameter instead of pibase
+
+08-09-05 Franz Holzinger  <contact@fholzinger.com>
+	* fix bug in loadTcaAdditions_fh001: the $i variable could have been overwritten by an included file
+
+08-08-21 Franz Holzinger  <contact@fholzinger.com>
+	* dummy class tx_div2007_cobj which extends tslib_cObj.
+	  Now you can use "$local_cObj = &t3lib_div::getUserObj('&tx_div2007_cobj');" to save time and memory.
+
+08-06-20 Franz Holzinger  <contact@fholzinger.com>
+	* store the $conf for the language_base object to allow _LOCAL_LANG language override in setup
+
+08-06-13 Franz Holzinger  <contact@fholzinger.com>
+	* also allow page type 5 for flexform to CODE field display hook
+
+08-06-02 Franz Holzinger  <contact@fholzinger.com>
+	* fix bug: Do not use PHP5 specific things in class tx_div2007_alpha
+
+08-04-27 Franz Holzinger  <contact@fholzinger.com>
+	* new hook function for TYPO3 4.2. This will display the corresponding CODE for a flexform
+
+08-04-23 Franz Holzinger  <kontakt@fholzinger.com>
+
+	* new functions to get infos from TCA
+
+08-04-11 Franz Holzinger  <kontakt@fholzinger.com>
+
+	* rename filename of class tx_div2007_alpha_language_base
+
+08-03-06 Franz Holzinger  <kontakt@fholzinger.com>
+
+	* change most functions to have a langObj instead of a pibase as parameter
+	* new class tx_div2007_alpha_language_base which shall make pi_base obsolete
+
+08-01-16 Franz Holzinger  <kontakt@fholzinger.com>
+
+	* fix bugs in displayHelpPage_fh001
+
+07-11-30 Elmar Hinz  <elmar.hinz@team-red.net>
+
+	* Setting it to version 0.1.0 in sync with 0.1.0 of lib.
+
+07-10-05 Franz Holzinger  <kontakt@fholzinger.com>
+
+	* added some more functions stolen from tslib_pibase: RTEcssText and getLL. So you can get now rid of tslib_pibase using tx_div_alpha for most cases instead of pi_RTEcssText and pi_getLL.
+
+07-10-03 Franz Holzinger  <kontakt@fholzinger.com>
+
+	* added function userProcess_fh001 into tx_div_alpha. The userProcess function is e.g. used with itemMarkerArrayFunc in tt_products.
+
+07-08-05 Elmar Hinz  <elmar.hinz@team-red.net>
+
+	* Version 0.0.13.
+	* Milestone -1 alpha
+	* Many preparations for the action pipeline, but still half the way
+	* For this reason this version will not published to TER
+
+07-08-05 Franz Holzinger  <kontakt@fholzinger.com>
+
+	* added all functions from fh_library into tx_div_alpha in a modified naming scheme
+
+07-08-05 Elmar Hinz  <elmar.hinz@team-red.net>
+
+	* Version 0.0.12.
+	* Milestone -2 alpha
+	* First version of a documentation
+	* Added class tx_lib_alpha
+	* Added class tx_lib_ff
+	* Added functions user, getFrontendUser, getGlobal, session,
+	getBrowserSession, getUserSession
+	* Renaming function resolvePathWithEXT to resolvePathWithExtPrefix
+
+07-06-04 Elmar Hinz  <elmar.hinz@team-red.net>
+
+	* Publishing version 0.0.10.
+	* Added function autoLoadAll.
+	* Added function clearAllCaches.
+	* Switched dependencies of lib and div.
+
+07-01-29 Elmar Hinz  <elmar.hinz@team-red.net>
+
+	* publishing version 0.0.9
+	* definition of hash and list data structures
+	* functions to transform the data structures
+
+07-01-20 Elmar Hinz  <elmar.hinz@team-red.net>
+
+	* publishing version 0.0.8
+	* explode function
+
+07-01-15 Elmar Hinz  <elmar.hinz@team-red.net>
+
+	* publishing version 0.0.7
+	* to be sure it works still synchron with lib
+
+06-09-06 Franz Holzinger   <kontakt@fholzinger.com>
+
+	* loadTcaAdditions to add the TCA fields coming from some other extensions
+
+06-04-06 Elmar Hinz  <elmar.hinz@team-red.net>
+
+	* Guess Key
+	* Accessing tx_lib::t3loader
+
+06-03-23 Elmar Hinz  <elmar.hinz@team-red.net>
+
+
+	* Function loadClass
+
+
+06-03-17 Elmar Hinz  <elmar.hinz@team-red.net>
+
+	* Better icon
+
+06-03-16 ECT: Elmar Hinz, ....  <elmar.hinz@team-red.net>
+
+	* Initial release
