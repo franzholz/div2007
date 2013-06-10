@@ -1,3 +1,6 @@
+10-06-13 Franz Holzinger  <franz@ttproducts.de>
+	* enhanced function getLL_fh003 to fetch the string from a preconfigured language
+
 03-05-13 Franz Holzinger  <franz@ttproducts.de>
 	* new feature: function classParam_fh002 allows CSS class names and adds the tx_ prefix to the extension key
 
