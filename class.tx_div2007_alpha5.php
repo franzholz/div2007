@@ -178,6 +178,76 @@ class tx_div2007_alpha5 {
 		return $result;
 	}
 
+	/**
+	 * Will select all records from the "category table", $table, and return them in an array.
+	 *
+	 * @param	object		cObject
+	 * @param	string		The name of the category table to select from.
+	 * @param	integer		The page from where to select the category records.
+	 * @param	string		Optional additional WHERE clauses put in the end of the query. DO NOT PUT IN GROUP BY, ORDER BY or LIMIT!
+	 * @param	string		Optional GROUP BY field(s), if none, supply blank string.
+	 * @param	string		Optional ORDER BY field(s), if none, supply blank string.
+	 * @param	string		Optional LIMIT value ([begin,]max), if none, supply blank string.
+	 * @return	array		The array with the category records in.
+	 */
+	static public function getCategoryTableContents_fh001 (
+		$cObj,
+		$table,
+		$pid,
+		$whereClause = '',
+		$groupBy = '',
+		$orderBy = '',
+		$limit = ''
+	) {
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+			'*',
+			$table,
+			'pid=' . intval($pid).
+				$cObj->enableFields($table).' '.
+				$whereClause,	// whereClauseMightContainGroupOrderBy
+			$groupBy,
+			$orderBy,
+			$limit
+		);
+		$outArr = array();
+		while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+			$outArr[$row['uid']] = $row;
+		}
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
+
+		if (
+			count($outArr) &&
+			$GLOBALS['TSFE']->config['config']['sys_language_uid'] &&
+			$GLOBALS['TCA'][$table]['ctrl']['transForeignTable'] != ''
+		) {
+			$theTable = $GLOBALS['TCA'][$table]['ctrl']['transForeignTable'];
+			$theUidField = $GLOBALS['TCA'][$theTable]['ctrl']['transOrigPointerField'];
+			$uids = implode(',', array_keys($outArr));
+			$whereUids = ' AND ' . $theUidField . ' IN (' . $uids . ')';
+
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+				'*',
+				$theTable,
+				'pid=' . intval($pid).
+					$cObj->enableFields($theTable) . ' '. $whereUids,
+				$groupBy,
+				$orderBy,
+				$limit
+			);
+
+			$newOutArray = array(); // new array to get a new order
+			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$uidDefaultLanguage = $row[$theUidField];
+				$rowDefaultLanguage = $outArr[$uidDefaultLanguage];
+				$newOutArray[$uidDefaultLanguage] = array_merge($rowDefaultLanguage, $row);
+			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
+			$outArr = $newOutArray;
+		}
+
+
+		return $outArr;
+	}
 
 	/**
 	 * Returns true if the array $inArray contains only values allowed to be cached based on the configuration in $this->pi_autoCacheFields
@@ -542,8 +612,8 @@ class tx_div2007_alpha5 {
 			$typoVersion = $langObj->getTypoVersion();
 		} else {
 			$typoVersion =
-				class_exists('t3lib_utility_VersionNumber') ?
-					t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) :
+				class_exists('TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility') ?
+					\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) :
 					t3lib_div::int_from_ver(TYPO3_version);
 		}
 
@@ -701,8 +771,8 @@ class tx_div2007_alpha5 {
 				$typoVersion = $langObj->getTypoVersion();
 			} else {
 				$typoVersion =
-					class_exists('t3lib_utility_VersionNumber') ?
-						t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) :
+					class_exists('TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility') ?
+						\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) :
 						t3lib_div::int_from_ver(TYPO3_version);
 			}
 

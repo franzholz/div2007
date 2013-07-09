@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2012 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2013 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -77,8 +77,6 @@ class tx_div2007_email {
 		$hookVar = '',
 		$defaultSubject = ''
 	) {
-		global $TYPO3_CONF_VARS;
-
 		$result = TRUE;
 		$fromName = str_replace('"', '\'', $fromName);
 		$fromNameSlashed = tx_div2007_alpha5::slashName($fromName);
@@ -99,16 +97,20 @@ class tx_div2007_email {
 				$PLAINContent = trim($parts[1]);
 			}
 		}
-		$typo3Version = class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : t3lib_div::int_from_ver(TYPO3_version);
+
+		$typo3Version =
+			class_exists('TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility') ?
+				\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) :
+				t3lib_div::int_from_ver(TYPO3_version);
 
 		if (
 			$typo3Version >= 4007000 ||
 			(
-				isset($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
-				is_array($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
-				isset($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
-				is_array($TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
-				array_search('t3lib_mail_SwiftMailerAdapter', $TYPO3_CONF_VARS['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) !== FALSE
+				isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
+				is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
+				isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
+				is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
+				array_search('t3lib_mail_SwiftMailerAdapter', $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) !== FALSE
 			)
 		) {
 			if (preg_match('#[/\(\)\\<>,;:@\.\]\[]#', $fromName)) {
@@ -158,7 +160,7 @@ class tx_div2007_email {
 			if ($bcc != '') {
 				$mail->addBcc($bcc);
 			}
-		} else {
+		} else if (class_exists('t3lib_htmlmail')) {
 			$fromName = tx_div2007_alpha5::slashName($fromName);
 			t3lib_div::requireOnce(PATH_t3lib . 'class.t3lib_htmlmail.php');
 
@@ -242,6 +244,8 @@ class tx_div2007_email {
 			}
 			$mail->setContent();
 			$mail->setRecipient(explode(',', $toEMail));
+		} else {
+			$result = FALSE;
 		}
 
 		if (
@@ -274,7 +278,8 @@ class tx_div2007_email {
 						$returnPath,
 						$replyTo,
 						$extKey,
-						$hookVar
+						$hookVar,
+						$result
 					);
 				}
 			}
@@ -293,6 +298,8 @@ class tx_div2007_email {
 				$mail->send();
 			}
 		}
+
+		return $result;
 	}
 
 	/**

@@ -77,11 +77,11 @@ class tx_div2007_alpha_language_base {
 		$this->extKey = $extKey;
 		$this->conf = $conf;
 		$this->scriptRelPath = $scriptRelPath;
-		$this->typoVersion = (
-			class_exists('t3lib_utility_VersionNumber') ?
-				t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) :
-				t3lib_div::int_from_ver(TYPO3_version)
-		);
+		$this->typoVersion =
+			class_exists('TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility') ?
+				\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) :
+				t3lib_div::int_from_ver(TYPO3_version);
+
 	}
 
 	public function getLocallang () {

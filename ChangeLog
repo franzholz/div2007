@@ -1,3 +1,8 @@
+09-07-13 Franz Holzinger  <franz@ttproducts.de>
+	* add function getCategoryTableContents_fh001
+	* use TYPO3 6.x compatible method convertVersionNumberToInteger to fetch the TYPO3 version number
+	* sendMail returns the boolean FALSE if no email could be sent
+
 10-06-13 Franz Holzinger  <franz@ttproducts.de>
 	* enhanced function getLL_fh003 to fetch the string from a preconfigured language
 
