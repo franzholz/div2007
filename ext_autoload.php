@@ -25,6 +25,7 @@ return array(
 	'tx_div2007_hooks_cms' => $extensionPath . 'hooks/class.tx_div2007_hooks_cms.php',
 	'tx_div2007_spl_arrayiterator' => $extensionPath . 'spl/class.tx_div2007_spl_arrayIterator.php',
 	'tx_div2007_spl_arrayobject' => $extensionPath . 'spl/class.tx_div2007_spl_arrayObject.php',
+	'tx_div2007_staticinfotables' => $extensionPath . 'lib/class.tx_div2007_staticinfotables.php',
 	'tx_div2007_store' => $extensionPath . 'class.tx_div2007_store.php',
 );
 ?>

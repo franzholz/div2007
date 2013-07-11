@@ -14,4 +14,11 @@ if (!defined ('PATH_BE_div2007')) {
 	define('PATH_BE_div2007', t3lib_extMgm::extPath(DIV2007_EXT));
 }
 
+
+if (!defined ('STATIC_INFO_TABLES_EXT')) {
+	define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
+}
+
+
+
 ?>
