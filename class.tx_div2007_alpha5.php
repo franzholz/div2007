@@ -611,10 +611,11 @@ class tx_div2007_alpha5 {
 		if (method_exists($langObj, 'getTypoVersion')) {
 			$typoVersion = $langObj->getTypoVersion();
 		} else {
+			$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
 			$typoVersion =
-				class_exists('TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility') ?
-					\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) :
-					t3lib_div::int_from_ver(TYPO3_version);
+				method_exists('t3lib_div', 'int_from_ver') ?
+					t3lib_div::int_from_ver(TYPO3_version) :
+					call_user_func($className . '::convertVersionNumberToInteger', TYPO3_version);
 		}
 
 		if ($typoVersion >= 4006000) {
@@ -770,10 +771,11 @@ class tx_div2007_alpha5 {
 			if (method_exists($langObj, 'getTypoVersion')) {
 				$typoVersion = $langObj->getTypoVersion();
 			} else {
+				$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
 				$typoVersion =
-					class_exists('TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility') ?
-						\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) :
-						t3lib_div::int_from_ver(TYPO3_version);
+					method_exists('t3lib_div', 'int_from_ver') ?
+						t3lib_div::int_from_ver(TYPO3_version) :
+						call_user_func($className . '::convertVersionNumberToInteger', TYPO3_version);
 			}
 
 			$langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
