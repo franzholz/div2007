@@ -44,7 +44,7 @@ class tx_div2007_store {
 	 * Storage of the currently used cObject
 	 * You set the cObject in your extension at the beginning.
 	 * Then you can fetch it in your functions from here if you call
-	 * $obj = t3lib_div::getUserObj('&tx_div2007_cobj');
+	 * $obj = tx_div2007_core::getUserObj('&tx_div2007_cobj');
 	 * $cObj = $obj->getCurrent();
 	 *
 	 * @param	array		$data	the record data that is rendered.

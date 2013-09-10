@@ -1,3 +1,9 @@
+10-09-13 Franz Holzinger  <franz@ttproducts.de>
+	* add class file tx_div2007_core for a TYPO3 version independant call to the former functions of t3lib_div and other t3lib classes
+	* modify class tx_div2007_div in order not to rely on t3lib_dv
+	* replace all calls to t3lib_div and other TYPO3 classes by the class tx_div2007_core
+	* new method initFE used for Ajax calls
+
 17-07-13 Franz Holzinger  <franz@ttproducts.de>
 	* fix bug in PHP 5.2 which does not recognize namespace class names like \TYPO3\CMS\Core\Utility\VersionNumberUtility
 
@@ -200,7 +206,7 @@
 
 08-08-21 Franz Holzinger  <contact@fholzinger.com>
 	* dummy class tx_div2007_cobj which extends tslib_cObj.
-	  Now you can use "$local_cObj = &t3lib_div::getUserObj('&tx_div2007_cobj');" to save time and memory.
+	  Now you can use "$local_cObj = &tx_div2007_core::getUserObj('&tx_div2007_cobj');" to save time and memory.
 
 08-06-20 Franz Holzinger  <contact@fholzinger.com>
 	* store the $conf for the language_base object to allow _LOCAL_LANG language override in setup

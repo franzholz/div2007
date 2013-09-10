@@ -58,7 +58,7 @@ class tx_div2007_parameters extends tx_div2007_object {
 	 */
 	public function tx_div2007_parameters ($controller) {
 		parent::tx_div2007_object($controller);
-		$this->setArray(t3lib_div::_GPmerged($controller->getDesignator()));
+		$this->setArray(tx_div2007_div::_GPmerged($controller->getDesignator()));
 		// Initialize the cHash system if there are parameters available
 		if ($GLOBALS['TSFE'] && count($parameters)) {
 			$GLOBALS['TSFE']->reqCHash();

@@ -326,10 +326,10 @@ class tx_div2007_alpha5 {
 	 */
 	static public function classParam_fh001 ($class, $addClasses = '', $prefixId = '') {
 		$output = '';
-		foreach (t3lib_div::trimExplode(',', $class) as $v) {
+		foreach (tx_div2007_core::trimExplode(',', $class) as $v) {
 			$output .= ' ' . self::getClassName_fh001($v, $prefixId);
 		}
-		foreach (t3lib_div::trimExplode(',', $addClasses) as $v) {
+		foreach (tx_div2007_core::trimExplode(',', $addClasses) as $v) {
 			$output .= ' ' . $v;
 		}
 		return ' class="' . trim($output) . '"';
@@ -348,10 +348,10 @@ class tx_div2007_alpha5 {
 	 */
 	static public function classParam_fh002 ($class, $addClasses = '', $prefixId = '', $bAddPrefixTx = FALSE) {
 		$output = '';
-		foreach (t3lib_div::trimExplode(',', $class) as $v) {
+		foreach (tx_div2007_core::trimExplode(',', $class) as $v) {
 			$output .= ' ' . self::getClassName_fh002($v, $prefixId, $bAddPrefixTx);
 		}
-		foreach (t3lib_div::trimExplode(',', $addClasses) as $v) {
+		foreach (tx_div2007_core::trimExplode(',', $addClasses) as $v) {
 			$output .= ' ' . $v;
 		}
 		return ' class="' . trim($output) . '"';
@@ -382,7 +382,7 @@ class tx_div2007_alpha5 {
 		$conf['useCacheHash'] = $pObject->bUSER_INT_obj ? 0 : $cache;
 		$conf['no_cache'] = $pObject->bUSER_INT_obj ? 0 : !$cache;
 		$conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
-		$conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . t3lib_div::implodeArrayForUrl('', $urlParameters, '', TRUE) . $pObject->moreParams;
+		$conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . tx_div2007_core::implodeArrayForUrl('', $urlParameters, '', TRUE) . $pObject->moreParams;
 		return $cObj->typoLink($str, $conf);
 	}
 
@@ -416,7 +416,7 @@ class tx_div2007_alpha5 {
 		if (is_array($pObject->ctrlVars) && is_array($overruleCtrlVars) && !$clearAnyway) {
 			$ctrlVars = $pObject->ctrlVars;
 			unset($ctrlVars['DATA']);
-			$overruleCtrlVars = t3lib_div::array_merge_recursive_overrule($ctrlVars, $overruleCtrlVars);
+			$overruleCtrlVars = tx_div2007_core::array_merge_recursive_overrule($ctrlVars, $overruleCtrlVars);
 			if ($pObject->bAutoCacheEn) {
 				$cache = self::autoCache_fh001($pObject, $overruleCtrlVars);
 			}
@@ -476,7 +476,7 @@ class tx_div2007_alpha5 {
 
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'] .= t3lib_div::implodeArrayForUrl('', $urlParameters);
+					$conf['additionalParams'] .= tx_div2007_core::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
 				$conf['additionalParams'] .= $urlParameters;
@@ -606,17 +606,7 @@ class tx_div2007_alpha5 {
 		$alternativeLabel = '',
 		$hsc = FALSE
 	) {
-		$typoVersion = '';
-
-		if (method_exists($langObj, 'getTypoVersion')) {
-			$typoVersion = $langObj->getTypoVersion();
-		} else {
-			$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
-			$typoVersion =
-				method_exists('t3lib_div', 'int_from_ver') ?
-					t3lib_div::int_from_ver(TYPO3_version) :
-					call_user_func($className . '::convertVersionNumberToInteger', TYPO3_version);
-		}
+		$typoVersion = tx_div2007_core::getTypoVersion();
 
 		if ($typoVersion >= 4006000) {
 
@@ -766,17 +756,7 @@ class tx_div2007_alpha5 {
 		$overwrite = TRUE
 	) {
 		if (is_object($langObj)) {
-			$typoVersion = '';
-
-			if (method_exists($langObj, 'getTypoVersion')) {
-				$typoVersion = $langObj->getTypoVersion();
-			} else {
-				$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
-				$typoVersion =
-					method_exists('t3lib_div', 'int_from_ver') ?
-						t3lib_div::int_from_ver(TYPO3_version) :
-						call_user_func($className . '::convertVersionNumberToInteger', TYPO3_version);
-			}
+			$typoVersion = tx_div2007_core::getTypoVersion();
 
 			$langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
 
@@ -786,7 +766,7 @@ class tx_div2007_alpha5 {
 				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
 				// Read the strings in the required charset (since TYPO3 4.2)
-			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, $GLOBALS['TSFE']->renderCharset);
+			$tempLOCAL_LANG = tx_div2007_core::readLLfile($basePath, $langObj->LLkey, $GLOBALS['TSFE']->renderCharset);
 
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -803,7 +783,7 @@ class tx_div2007_alpha5 {
 			}
 
 			if ($langObj->altLLkey) {
-				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->altLLkey, $GLOBALS['TSFE']->renderCharset);
+				$tempLOCAL_LANG = tx_div2007_core::readLLfile($basePath, $langObj->altLLkey, $GLOBALS['TSFE']->renderCharset);
 
 				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -957,17 +937,9 @@ class tx_div2007_alpha5 {
 			// Initializing variables:
 		$pointer = intval($pObject->ctrlVars[$pointerName]);
 		$count = intval($pObject->internal['resCount']);
-		$limit = (
-			class_exists('t3lib_utility_Math') ?
-				t3lib_utility_Math::forceIntegerInRange($pObject->internal['limit'], 1, 1000) :
-				t3lib_div::intInRange($pObject->internal['limit'], 1, 1000)
-			);
+		$limit = tx_div2007_core::intInRange($pObject->internal['limit'], 1, 1000);
 		$totalPages = ceil($count/$limit);
-		$maxPages = (
-			class_exists('t3lib_utility_Math') ?
-				t3lib_utility_Math::forceIntegerInRange($pObject->internal['maxPages'], 1, 100) :
-				t3lib_div::intInRange($pObject->internal['maxPages'], 1, 100)
-			);
+		$maxPages = tx_div2007_core::intInRange($pObject->internal['maxPages'], 1, 100);
 		$bUseCache = self::autoCache_fh001($pObject, $pObject->ctrlVars);
 
 			// $showResultCount determines how the results of the pagerowser will be shown.
@@ -987,11 +959,7 @@ class tx_div2007_alpha5 {
 				$pagefloat = ceil(($maxPages - 1)/2);
 			} else {
 				// pagefloat set as integer. 0 = left, value >= $pObject->internal['maxPages'] = right
-				$pagefloat = (
-					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::forceIntegerInRange($pObject->internal['pagefloat'], -1, $maxPages-1) :
-						t3lib_div::intInRange($pObject->internal['pagefloat'], -1, $maxPages-1)
-				);
+				$pagefloat = tx_div2007_core::intInRange($pObject->internal['pagefloat'], -1, $maxPages-1);
 			}
 		} else {
 			$pagefloat = -1; // pagefloat disabled
@@ -1046,11 +1014,7 @@ class tx_div2007_alpha5 {
 				$firstPage = max(0, $lastPage - $maxPages);
 			} else {
 				$firstPage = 0;
-				$lastPage = (
-					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::forceIntegerInRange($totalPages, 1, $maxPages) :
-						t3lib_div::intInRange($totalPages, 1, $maxPages)
-				);
+				$lastPage = tx_div2007_core::intInRange($totalPages, 1, $maxPages);
 			}
 			$links=array();
 
@@ -1210,17 +1174,9 @@ class tx_div2007_alpha5 {
 			// Initializing variables:
 		$pointer = intval($pObject->ctrlVars[$pointerName]);
 		$count = intval($pObject->internal['resCount']);
-		$limit = (
-			class_exists('t3lib_utility_Math') ?
-				t3lib_utility_Math::forceIntegerInRange($pObject->internal['limit'], 1, 1000) :
-				t3lib_div::intInRange($pObject->internal['limit'], 1, 1000)
-		);
+		$limit = tx_div2007_core::intInRange($pObject->internal['limit'], 1, 1000);
 		$totalPages = ceil($count/$limit);
-		$maxPages = (
-			class_exists('t3lib_utility_Math') ?
-				t3lib_utility_Math::forceIntegerInRange($pObject->internal['maxPages'], 1, 100) :
-				t3lib_div::intInRange($pObject->internal['maxPages'], 1, 100)
-		);
+		$maxPages = tx_div2007_core::intInRange($pObject->internal['maxPages'], 1, 100);
 		$bUseCache = self::autoCache_fh001($pObject, $pObject->ctrlVars);
 
 			// $showResultCount determines how the results of the pagerowser will be shown.
@@ -1240,11 +1196,7 @@ class tx_div2007_alpha5 {
 				$pagefloat = ceil(($maxPages - 1)/2);
 			} else {
 				// pagefloat set as integer. 0 = left, value >= $pObject->internal['maxPages'] = right
-				$pagefloat = (
-					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::forceIntegerInRange($pObject->internal['pagefloat'], -1, $maxPages-1) :
-						t3lib_div::intInRange($pObject->internal['pagefloat'], -1, $maxPages-1)
-				);
+				$pagefloat = tx_div2007_core::intInRange($pObject->internal['pagefloat'], -1, $maxPages-1);
 			}
 		} else {
 			$pagefloat = -1; // pagefloat disabled
@@ -1299,11 +1251,7 @@ class tx_div2007_alpha5 {
 				$firstPage = max(0,$lastPage-$maxPages);
 			} else {
 				$firstPage = 0;
-				$lastPage = (
-					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::forceIntegerInRange($totalPages, 1, $maxPages) :
-						t3lib_div::intInRange($totalPages, 1, $maxPages)
-				);
+				$lastPage = tx_div2007_core::intInRange($totalPages, 1, $maxPages);
 			}
 			$links=array();
 
@@ -1426,7 +1374,7 @@ class tx_div2007_alpha5 {
 	/* $imageCode is the result of a call $this->cObj->IMAGE(...) */
 	static public function fixImageCodeAbsRefPrefix (&$imageCode) {
 		if ($GLOBALS['TSFE']->absRefPrefix == '') {
-			$absRefPrefix = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+			$absRefPrefix = tx_div2007_core::getIndpEnv('TYPO3_SITE_URL');
 			$fixImgCode = str_replace('index.php', $absRefPrefix . 'index.php', $imageCode);
 			$fixImgCode = str_replace('src="', 'src="' . $absRefPrefix, $fixImgCode);
 			$fixImgCode = str_replace('"uploads/', '"' . $absRefPrefix . 'uploads/', $fixImgCode);
@@ -1443,7 +1391,7 @@ class tx_div2007_alpha5 {
 			$absRefPrefix = $GLOBALS['TSFE']->absRefPrefix;
 		} else {
 			$bSetAbsRefPrefix = TRUE;
-			$absRefPrefix = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+			$absRefPrefix = tx_div2007_core::getIndpEnv('TYPO3_SITE_URL');
 		}
 
 		if ($domain != '') {
@@ -1520,6 +1468,125 @@ class tx_div2007_alpha5 {
 		}
 
 		return $csConvObj;
+	}
+
+
+	static public function initFE () {
+
+		/** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
+		$TSFE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+			'TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
+			$TYPO3_CONF_VARS,
+			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('id'),
+			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('type'),
+			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('no_cache'),
+			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('cHash'),
+			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('jumpurl'),
+			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('MP'),
+			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('RDCT')
+		);
+
+		if ($TYPO3_CONF_VARS['FE']['pageUnavailable_force']
+			&& !\TYPO3\CMS\Core\Utility\GeneralUtility::cmpIP(
+				\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR'),
+				$TYPO3_CONF_VARS['SYS']['devIPmask'])
+		) {
+			$TSFE->pageUnavailableAndExit('This page is temporarily unavailable.');
+		}
+
+		$TSFE->connectToDB();
+		$TSFE->sendRedirect();
+
+		// Output compression
+		// Remove any output produced until now
+		ob_clean();
+		if ($TYPO3_CONF_VARS['FE']['compressionLevel'] && extension_loaded('zlib')) {
+			if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($TYPO3_CONF_VARS['FE']['compressionLevel'])) {
+				// Prevent errors if ini_set() is unavailable (safe mode)
+				@ini_set('zlib.output_compression_level', $TYPO3_CONF_VARS['FE']['compressionLevel']);
+			}
+			ob_start(array(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Utility\\CompressionUtility'), 'compressionOutputHandler'));
+		}
+
+		// FE_USER
+		$TT->push('Front End user initialized', '');
+		/** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
+		$TSFE->initFEuser();
+		$TT->pull();
+
+		// BE_USER
+		/** @var $BE_USER \TYPO3\CMS\Backend\FrontendBackendUserAuthentication */
+		$BE_USER = $TSFE->initializeBackendUser();
+
+		// Process the ID, type and other parameters
+		// After this point we have an array, $page in TSFE, which is the page-record of the current page, $id
+		$TT->push('Process ID', '');
+		// Initialize admin panel since simulation settings are required here:
+		if ($TSFE->isBackendUserLoggedIn()) {
+			$BE_USER->initializeAdminPanel();
+			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtensionTables(TRUE);
+		} else {
+			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
+		}
+		$TSFE->checkAlternativeIdMethods();
+		$TSFE->clear_preview();
+		$TSFE->determineId();
+		// Now, if there is a backend user logged in and he has NO access to this page, then re-evaluate the id shown!
+		if ($TSFE->isBackendUserLoggedIn() && (!$BE_USER->extPageReadAccess($TSFE->page) || \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('ADMCMD_noBeUser'))) {
+			// \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('ADMCMD_noBeUser') is placed here because
+			// \TYPO3\CMS\Version\Hook\PreviewHook might need to know if a backend user is logged in!
+			// Remove user
+			unset($BE_USER);
+			$TSFE->beUserLogin = 0;
+			// Re-evaluate the page-id.
+			$TSFE->checkAlternativeIdMethods();
+			$TSFE->clear_preview();
+			$TSFE->determineId();
+		}
+		$TSFE->makeCacheHash();
+		$TT->pull();
+
+		// Admin Panel & Frontend editing
+		if ($TSFE->isBackendUserLoggedIn()) {
+			$BE_USER->initializeFrontendEdit();
+			if ($BE_USER->adminPanel instanceof \TYPO3\CMS\Frontend\View\AdminPanelView) {
+				\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->initializeLanguageObject();
+			}
+			if ($BE_USER->frontendEdit instanceof \TYPO3\CMS\Core\FrontendEditing\FrontendEditingController) {
+				$BE_USER->frontendEdit->initConfigOptions();
+			}
+		}
+
+		// Starts the template
+		$TT->push('Start Template', '');
+		$TSFE->initTemplate();
+		$TT->pull();
+		// Get from cache
+		$TT->push('Get Page from cache', '');
+		$TSFE->getFromCache();
+		$TT->pull();
+		// Get config if not already gotten
+		// After this, we should have a valid config-array ready
+		$TSFE->getConfigArray();
+		// Convert POST data to internal "renderCharset" if different from the metaCharset
+		$TSFE->convPOSTCharset();
+		// Setting language and locale
+		$TT->push('Setting language and locale', '');
+		$TSFE->settingLanguage();
+		$TSFE->settingLocale();
+		$TT->pull();
+
+		// Hook for end-of-frontend
+		$TSFE->hook_eofe();
+		// Finish timetracking
+		$TT->pull();
+		// Check memory usage
+		\TYPO3\CMS\Core\Utility\MonitorUtility::peakMemoryUsage();
+
+		// Debugging Output
+		if (isset($error) && is_object($error) && @is_callable(array($error, 'debugOutput'))) {
+			$error->debugOutput();
+		}
 	}
 }
 

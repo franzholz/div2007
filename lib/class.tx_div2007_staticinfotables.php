@@ -63,7 +63,7 @@ class tx_div2007_staticinfotables {
 	 * Returns a label field for the current language
 	 *
 	 * @param	string		table name
-	 * @param	boolean		If set (default) the TCA definition of the table should be loaded with t3lib_div::loadTCA(). It will be needed to set it to false if you call this function from inside of tca.php
+	 * @param	boolean		If set (default) the TCA definition of the table should be loaded with tx_div2007_core::loadTCA(). It will be needed to set it to false if you call this function from inside of tca.php
 	 * @param	string		language to be used
 	 * @param	boolean		If set, we are looking for the "local" title field
 	 * @return	string		field name
@@ -78,15 +78,14 @@ class tx_div2007_staticinfotables {
 		}
 
 		if (!is_object($csConvObj)) {
-			include_once(PATH_t3lib . 'class.t3lib_cs.php');
 			// The object may not exist yet, so we need to create it now.
-			$csConvObj = t3lib_div::makeInstance('t3lib_cs');
+			$csConvObj = tx_div2007_core::makeInstance('t3lib_cs');
 		}
 
 		$labelFields = array();
 		if($table && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'])) {
 			if ($loadTCA)	{
-				t3lib_div::loadTCA($table);
+				tx_div2007_core::loadTCA($table);
 
 					// get all extending TCAs
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['extendingTCA']))	{
@@ -121,9 +120,7 @@ class tx_div2007_staticinfotables {
 	static public function isoCodeType ($isoCode) {
 		$type = '';
 			// t3lib_utility_Math was introduced in TYPO3 4.6
-		$isoCodeAsInteger = class_exists('t3lib_utility_Math')
-			? t3lib_utility_Math::canBeInterpretedAsInteger($isoCode)
-			: t3lib_div::testInt($isoCode);
+		$isoCodeAsInteger = tx_div2007_core::testInt($isoCode);
 		if ($isoCodeAsInteger) {
 			$type = 'nr';
 		} elseif (strlen($isoCode) == 2) {
@@ -142,7 +139,7 @@ class tx_div2007_staticinfotables {
 	 *
 	 * @param	string		table name
 	 * @param	string		iso code
-	 * @param	boolean		If set (default) the TCA definition of the table should be loaded with t3lib_div::loadTCA(). It will be needed to set it to FALSE if you call this function from inside of tca.php
+	 * @param	boolean		If set (default) the TCA definition of the table should be loaded with tx_div2007_core::loadTCA(). It will be needed to set it to FALSE if you call this function from inside of tca.php
 	 * @param	integer		index in the table's isocode_field array in the global variable
 	 * @return	string		field name
 	 */
@@ -152,7 +149,7 @@ class tx_div2007_staticinfotables {
 
 		if ($isoCode && $table && (($isoCodeField = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['isocode_field'][$index]) != '')) {
 			if ($bLoadTCA) {
-				t3lib_div::loadTCA($table);
+				tx_div2007_core::loadTCA($table);
 			}
 			$type = self::isoCodeType($isoCode);
 			$isoCodeField = str_replace ('##', $type, $isoCodeField);
@@ -639,9 +636,9 @@ class tx_div2007_staticinfotables {
 		//Merge all ext_keys
 		if (is_array($ext_keys)) {
 			foreach ($ext_keys as $_EXTKEY) {
-				if (t3lib_extMgm::isLoaded($_EXTKEY)) {
+				if (tx_div2007_core::isLoaded($_EXTKEY)) {
 					//Include the ext_table
-					include(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
+					include(tx_div2007_core::extPath($_EXTKEY) . 'ext_tables.php');
 				}
 			}
 		}

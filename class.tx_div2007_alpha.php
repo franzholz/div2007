@@ -153,8 +153,8 @@ class tx_div2007_alpha {
 
 		$rc = '';
 		if (!isset($TCA[$theTable]['columns'])) {
-			t3lib_div::loadTCA($theTable);
-			t3lib_div::loadTCA($foreignTable);
+			tx_div2007_core::loadTCA($theTable);
+			tx_div2007_core::loadTCA($foreignTable);
 		}
 
 		if (isset($TCA[$theTable]['columns']) && is_array($TCA[$theTable]['columns'])) {
@@ -187,7 +187,7 @@ class tx_div2007_alpha {
 		global $TCA;
 
 		$foreign_table = $fieldValue['config'][$prefix . 'foreign_table'];
-		t3lib_div::loadTCA($foreign_table);
+		tx_div2007_core::loadTCA($foreign_table);
 		$rootLevel = $TCA[$foreign_table]['ctrl']['rootLevel'];
 
 		$fTWHERE = $fieldValue['config'][$prefix . 'foreign_table_where'];
@@ -320,7 +320,7 @@ class tx_div2007_alpha {
 
 			// ext-script
 		if (TYPO3_extTableDef_script) {
-			include (PATH_typo3conf.TYPO3_extTableDef_script);
+			include (PATH_typo3conf . TYPO3_extTableDef_script);
 		}
 	}
 
@@ -538,7 +538,7 @@ class tx_div2007_alpha {
 			}
 				// php or xml as source: In any case the charset will be that of the system language.
 				// However, this function guarantees only return output for default language plus the specified language (which is different from how 3.7.0 dealt with it)
-			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, $TSFE->renderCharset);
+			$tempLOCAL_LANG = tx_div2007_core::readLLfile($basePath, $langObj->LLkey, $TSFE->renderCharset);
 
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -554,7 +554,7 @@ class tx_div2007_alpha {
 				$langObj->LOCAL_LANG = $tempLOCAL_LANG;
 			}
 			if ($langObj->altLLkey) {
-				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$langObj->altLLkey,$TSFE->renderCharset);
+				$tempLOCAL_LANG = tx_div2007_core::readLLfile($basePath,$langObj->altLLkey,$TSFE->renderCharset);
 
 				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -863,7 +863,7 @@ class tx_div2007_alpha {
 			}
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'].= t3lib_div::implodeArrayForUrl('', $urlParameters);
+					$conf['additionalParams'].= tx_div2007_core::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
 				$conf['additionalParams'] .= $urlParameters;
@@ -909,7 +909,7 @@ class tx_div2007_alpha {
 			}
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'] .= t3lib_div::implodeArrayForUrl('', $urlParameters);
+					$conf['additionalParams'] .= tx_div2007_core::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
 				$conf['additionalParams'] .= $urlParameters;
@@ -1336,13 +1336,13 @@ class tx_div2007_alpha {
 		$results_at_a_time = (
 			class_exists('t3lib_utility_Math') ?
 				t3lib_utility_Math::forceIntegerInRange($pObject->internal['results_at_a_time'], 1, 1000) :
-				t3lib_div::intInRange($pObject->internal['results_at_a_time'], 1, 1000)
+				tx_div2007_core::intInRange($pObject->internal['results_at_a_time'], 1, 1000)
 		);
 		$totalPages = ceil($count/$results_at_a_time);
 		$maxPages = (
 			class_exists('t3lib_utility_Math') ?
 				t3lib_utility_Math::forceIntegerInRange($pObject->internal['maxPages'], 1, 100) :
-				t3lib_div::intInRange($pObject->internal['maxPages'], 1, 100)
+				tx_div2007_core::intInRange($pObject->internal['maxPages'], 1, 100)
 		);
 		$pi_isOnlyFields = $pObject->pi_isOnlyFields($pObject->pi_isOnlyFields);
 
@@ -1366,7 +1366,7 @@ class tx_div2007_alpha {
 				$pagefloat = (
 					class_exists('t3lib_utility_Math') ?
 						t3lib_utility_Math::forceIntegerInRange($pObject->internal['pagefloat'], -1, $maxPages - 1) :
-						t3lib_div::intInRange($pObject->internal['pagefloat'], -1, $maxPages - 1)
+						tx_div2007_core::intInRange($pObject->internal['pagefloat'], -1, $maxPages - 1)
 				);
 			}
 		} else {
@@ -1408,7 +1408,7 @@ class tx_div2007_alpha {
 				$lastPage = (
 					class_exists('t3lib_utility_Math') ?
 						t3lib_utility_Math::forceIntegerInRange($totalPages, 1, $maxPages) :
-						t3lib_div::intInRange($totalPages, 1, $maxPages)
+						tx_div2007_core::intInRange($totalPages, 1, $maxPages)
 				);
 			}
 			$links = array();
@@ -1513,35 +1513,23 @@ class tx_div2007_alpha {
 	public function initFE () {
 		global $TT, $TSFE;
 
-		// *********************
-		// Libraries included
-		// *********************
-		$TT->push('Include Frontend libraries','');
-		require_once(PATH_tslib . 'class.tslib_fe.php');
-		require_once(PATH_t3lib . 'class.t3lib_page.php');
-		require_once(PATH_t3lib . 'class.t3lib_userauth.php');
-		require_once(PATH_tslib . 'class.tslib_feuserauth.php');
-		require_once(PATH_t3lib . 'class.t3lib_tstemplate.php');
-		require_once(PATH_t3lib . 'class.t3lib_cs.php');
-		$TT->pull();
-
 		// ***********************************
 		// Create $TSFE object (TSFE = TypoScript Front End)
 		// Connecting to database
 		// ***********************************
-		$TSFE = t3lib_div::makeInstance('tslib_fe',
+		$TSFE = tx_div2007_core::makeInstance('tslib_fe',
 			$TYPO3_CONF_VARS,
-			t3lib_div::_GP('id'),
-			t3lib_div::_GP('type'),
-			t3lib_div::_GP('no_cache'),
-			t3lib_div::_GP('cHash'),
-			t3lib_div::_GP('jumpurl'),
-			t3lib_div::_GP('MP'),
-			t3lib_div::_GP('RDCT')
+			tx_div2007_core::_GP('id'),
+			tx_div2007_core::_GP('type'),
+			tx_div2007_core::_GP('no_cache'),
+			tx_div2007_core::_GP('cHash'),
+			tx_div2007_core::_GP('jumpurl'),
+			tx_div2007_core::_GP('MP'),
+			tx_div2007_core::_GP('RDCT')
 		);
 
 		if($TYPO3_CONF_VARS['FE']['pageUnavailable_force'] &&
-			!t3lib_div::cmpIP(t3lib_div::getIndpEnv('REMOTE_ADDR'), $TYPO3_CONF_VARS['SYS']['devIPmask'])) {
+			!tx_div2007_core::cmpIP(tx_div2007_core::getIndpEnv('REMOTE_ADDR'), $TYPO3_CONF_VARS['SYS']['devIPmask'])) {
 			$TSFE->pageUnavailableAndExit('This page is temporarily unavailable.');
 		}
 
@@ -1549,13 +1537,6 @@ class tx_div2007_alpha {
 
 		if ($TSFE->RDCT) {
 			$TSFE->sendRedirect();
-		}
-
-		// *******************
-		// output compression
-		// *******************
-		if ($GLOBALS['TYPO3_CONF_VARS']['FE']['compressionLevel']) {
-			require_once(PATH_t3lib . 'class.gzip_encode.php');
 		}
 
 		// *********

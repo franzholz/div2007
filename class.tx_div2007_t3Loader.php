@@ -86,19 +86,19 @@ class tx_div2007_t3Loader {
 	/**
 	 * Load a t3 class and make an instance
 	 *
-	 * Returns ux_ extension class if any by make use of t3lib_div::makeInstance
+	 * Returns ux_ extension class if any by make use of tx_div2007_core::makeInstance
 	 *
 	 * @param	string		classname
 	 * @param	string		extension key that varies from classnames
 	 * @param	string		prefix of classname
 	 * @param	string		ending of classname
 	 * @return	object		instance of the class or false if it fails
-	 * @see		t3lib_div::makeInstance
+	 * @see		tx_div2007_core::makeInstance
 	 * @see		load()
 	 */
 	function makeInstance ($class, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
 		if(tx_div2007_t3Loader::load($class, $alternativeKey, $prefix, $suffix)) {
-			return t3lib_div::makeInstance($class); // includes ux_ classes
+			return tx_div2007_core::makeInstance($class); // includes ux_ classes
 		} else {
 			return false;
 		}
@@ -177,7 +177,7 @@ class tx_div2007_t3Loader {
 			}
 
 			// if an alternative Key is given use that
-			$ext = t3lib_extMgm::extPath($key);
+			$ext = tx_div2007_core::extPath($key);
 
 			// First we try ABOVE last directory (dir and last may be empty)
 			// ext(/dir)/last

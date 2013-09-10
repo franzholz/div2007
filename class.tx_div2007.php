@@ -47,7 +47,7 @@
  * This is a library that results of the work of the Extension Coordination Team (ECT).
  *
  * In this class we collect diverse static functions that are usefull for extension development,
- * but that didn't made their way into t3lib_div. A part of the functions are peer functions
+ * but that didn't made their way into tx_div2007_core. A part of the functions are peer functions
  * to classes of the extension lib.
  *
  * <b>Contribute your own functions</b>
@@ -298,7 +298,7 @@ class tx_div2007 {
 		static $cObject;
 		if(!is_object($cObject))
 		  require_once(PATH_tslib.'class.tslib_content.php');
-			$cObject = t3lib_div::makeInstance('tslib_cObj');
+			$cObject = tx_div2007_core::makeInstance('tslib_cObj');
 		return	$cObject;
 	}
 
@@ -321,7 +321,7 @@ class tx_div2007 {
 		ob_end_clean();
 		if(!isset($tce)) {
 			static $tce; // Singleton.
-			$tce = t3lib_div::makeInstance('t3lib_tcemain');
+			$tce = tx_div2007_core::makeInstance('t3lib_tcemain');
 			$tce->stripslashes_value = 0;
 		}
 		return $tce;
@@ -519,7 +519,7 @@ class tx_div2007 {
 	/**
 	 * Load the class file and make an instance of the class
 	 *
-	 * This is an extension to t3lib_div::makeInstance(). The advantage
+	 * This is an extension to tx_div2007_core::makeInstance(). The advantage
 	 * is that it tries to autoload the file wich in combination
 	 * with the shorter notation simplyfies the generation of objects.
 	 *
