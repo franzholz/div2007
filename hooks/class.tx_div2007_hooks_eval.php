@@ -27,7 +27,7 @@
  * @author     Franz Holzinger <franz@ttproducts.de>
  * @copyright  2008-2012 Franz Holzinger
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version    SVN: $Id:$
+ * @version    SVN: $Id$
  * @since      0.1
  */
 
