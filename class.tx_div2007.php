@@ -177,7 +177,7 @@ class tx_div2007 {
 		// Format subdirectory first to '.../' or ''
 		preg_match('/^\/?(.*)\/?$/', $subdirectory, $matches);
 		$subdirectory = strlen($matches[1]) ? $matches[1] . '/' : '';
-		$path = t3lib_extMgm::extPath($extensionKey) . $subdirectory;
+		$path = tx_div2007_core::extPath($extensionKey) . $subdirectory;
 		if(is_dir($path)) {
 			$handle = opendir($path);
 			while($entry = readdir($handle)) {
@@ -510,7 +510,7 @@ class tx_div2007 {
 			for($i = 0; $i < sizeof($ext_keys); $i++){
 				//Include the ext_table
 				$_EXTKEY = $ext_keys[$i];
-				include(t3lib_extMgm::extPath($ext_keys[$i]) . 'ext_tables.php');
+				include(tx_div2007_core::extPath($ext_keys[$i]) . 'ext_tables.php');
 			}
 		}
 	}
@@ -550,7 +550,7 @@ class tx_div2007 {
 	public function resolvePathWithExtPrefix ($path) {
 		if(substr($path, 0, 4) == 'EXT:') {
 			list($extKey, $local) = explode('/', substr($path, 4), 2);
-			if(t3lib_extMgm::isLoaded($extKey)) {
+			if(tx_div2007_core::isLoaded($extKey)) {
 				$path = self::getSiteRelativeExtensionPath($extKey) . $local;
 			}
 		}

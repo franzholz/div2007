@@ -247,7 +247,7 @@ class tx_div2007_alpha {
 
 		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $this->cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
 			// Markers and substitution:
-		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
+		$markerArray['###PATH###'] = tx_div2007_core::siteRelPath($extKey);
 		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
 		$rc = $langObj->cObj->substituteMarkerArray($helpTemplate, $markerArray);
@@ -283,7 +283,7 @@ class tx_div2007_alpha {
 		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
 			// Markers and substitution:
 
-		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
+		$markerArray['###PATH###'] = tx_div2007_core::siteRelPath($extKey);
 		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
 		$rc = $cObj->substituteMarkerArray($helpTemplate, $markerArray);
@@ -311,9 +311,9 @@ class tx_div2007_alpha {
 
 			foreach ($ext_keys as $_EXTKEY) {
 
-				if (t3lib_extMgm::isLoaded($_EXTKEY)) {
+				if (tx_div2007_core::isLoaded($_EXTKEY)) {
 					//Include the ext_table
-					include(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
+					include(tx_div2007_core::extPath($_EXTKEY) . 'ext_tables.php');
 				}
 			}
 		}
@@ -334,8 +334,8 @@ class tx_div2007_alpha {
 	function getExtensionInfo_fh001 ($extKey) {
 		$rc = '';
 
-		if (t3lib_extMgm::isLoaded($extKey)) {
-			$path = t3lib_extMgm::extPath($extKey);
+		if (tx_div2007_core::isLoaded($extKey)) {
+			$path = tx_div2007_core::extPath($extKey);
 
 			$file = $path.'/ext_emconf.php';
 			if (@is_file($file)) {
@@ -382,7 +382,7 @@ class tx_div2007_alpha {
 		$result = '';
 
 		if (!$path) {
-			$path = t3lib_extMgm::extPath($extKey);
+			$path = tx_div2007_core::extPath($extKey);
 		}
 
 		if (is_dir($path)) {
@@ -534,7 +534,7 @@ class tx_div2007_alpha {
 			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' || substr($langFile, 0, 9) === 'fileadmin') {
 				$basePath = $langFile;
 			} else {
-				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
+				$basePath = tx_div2007_core::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
 				// php or xml as source: In any case the charset will be that of the system language.
 				// However, this function guarantees only return output for default language plus the specified language (which is different from how 3.7.0 dealt with it)
@@ -633,8 +633,8 @@ class tx_div2007_alpha {
 		$restStr = trim(substr($input, 4));
 		$extPrfx = '';
 		if (!strcmp(substr($restStr, 0, 4), 'EXT:')) {
-			$restStr = trim(substr($restStr,4));
-			$extPrfx='EXT:';
+			$restStr = trim(substr($restStr, 4));
+			$extPrfx = 'EXT:';
 		}
 		$parts = explode(':', $restStr);
 		return ($parts[1]);
@@ -1333,17 +1333,9 @@ class tx_div2007_alpha {
 			// Initializing variables:
 		$pointer = intval($pObject->piVars[$pointerName]);
 		$count = intval($pObject->internal['res_count']);
-		$results_at_a_time = (
-			class_exists('t3lib_utility_Math') ?
-				t3lib_utility_Math::forceIntegerInRange($pObject->internal['results_at_a_time'], 1, 1000) :
-				tx_div2007_core::intInRange($pObject->internal['results_at_a_time'], 1, 1000)
-		);
+		$results_at_a_time = tx_div2007_core::intInRange($pObject->internal['results_at_a_time'], 1, 1000);
 		$totalPages = ceil($count/$results_at_a_time);
-		$maxPages = (
-			class_exists('t3lib_utility_Math') ?
-				t3lib_utility_Math::forceIntegerInRange($pObject->internal['maxPages'], 1, 100) :
-				tx_div2007_core::intInRange($pObject->internal['maxPages'], 1, 100)
-		);
+		$maxPages = tx_div2007_core::intInRange($pObject->internal['maxPages'], 1, 100);
 		$pi_isOnlyFields = $pObject->pi_isOnlyFields($pObject->pi_isOnlyFields);
 
 			// $showResultCount determines how the results of the pagerowser will be shown.
@@ -1363,11 +1355,7 @@ class tx_div2007_alpha {
 				$pagefloat = ceil(($maxPages - 1)/2);
 			} else {
 				// pagefloat set as integer. 0 = left, value >= $pObject->internal['maxPages'] = right
-				$pagefloat = (
-					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::forceIntegerInRange($pObject->internal['pagefloat'], -1, $maxPages - 1) :
-						tx_div2007_core::intInRange($pObject->internal['pagefloat'], -1, $maxPages - 1)
-				);
+				$pagefloat = tx_div2007_core::intInRange($pObject->internal['pagefloat'], -1, $maxPages - 1);
 			}
 		} else {
 			$pagefloat = -1; // pagefloat disabled
@@ -1405,11 +1393,7 @@ class tx_div2007_alpha {
 				$firstPage = max(0, $lastPage - $maxPages);
 			} else {
 				$firstPage = 0;
-				$lastPage = (
-					class_exists('t3lib_utility_Math') ?
-						t3lib_utility_Math::forceIntegerInRange($totalPages, 1, $maxPages) :
-						tx_div2007_core::intInRange($totalPages, 1, $maxPages)
-				);
+				$lastPage = tx_div2007_core::intInRange($totalPages, 1, $maxPages);
 			}
 			$links = array();
 

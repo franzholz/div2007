@@ -351,6 +351,24 @@ class tx_div2007_core {
 		return $result;
 	}
 
+	static public function explodeUrl2Array($string, $multidim = FALSE) {
+		$result = FALSE;
+		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+		if (
+			class_exists($callingClassName) &&
+			method_exists($callingClassName, 'explodeUrl2Array')
+		) {
+			$result = call_user_func($callingClassName . '::explodeUrl2Array', $string, $multidim);
+		} else if (
+			class_exists('t3lib_div') &&
+			method_exists('t3lib_div', 'explodeUrl2Array')
+		) {
+			$result = t3lib_div::explodeUrl2Array($string, $multidim);
+		}
+
+		return $result;
+	}
+
 	static public function getIndpEnv ($getEnvName) {
 		$result = FALSE;
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
@@ -531,9 +549,28 @@ class tx_div2007_core {
 			$result = call_user_func($callingClassName . '::slashJS', $string, $extended, $char);
 		} else if (
 			class_exists('t3lib_div') &&
-			method_exists('t3lib_div', 'slashJS', $string, $extended, $char)
+			method_exists('t3lib_div', 'slashJS')
 		) {
-			$result = t3lib_div::slashJS($theInt);
+			$result = t3lib_div::slashJS($string, $extended, $char);
+		}
+
+		return $result;
+	}
+
+	static public function validEmail($email) {
+		$result = FALSE;
+		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+
+		if (
+			class_exists($callingClassName) &&
+			method_exists($callingClassName, 'validEmail')
+		) {
+			$result = call_user_func($callingClassName . '::validEmail', $email);
+		} else if (
+			class_exists('t3lib_div') &&
+			method_exists('t3lib_div', 'validEmail')
+		) {
+			$result = t3lib_div::validEmail($email);
 		}
 
 		return $result;
@@ -852,6 +889,26 @@ class tx_div2007_core {
 	}
 
 
+	### TS parser object
+	public function newTsParser () {
+		$useClassName = '';
+		$callingClassName = '\\TYPO3\\CMS\\Core\\TypoScript\\Parser\\TypoScriptParser';
+
+		if (
+			class_exists($callingClassName)
+		) {
+			$useClassName = $callingClassName;
+		} else if (
+			class_exists('t3lib_tsparser')
+		) {
+			$useClassName = 't3lib_tsparser';
+		}
+
+		$result = self::makeInstance($useClassName);
+		return $result;
+	}
+
+
 	### Mail object
 	public function newMailMessage () {
 
@@ -939,6 +996,89 @@ class tx_div2007_core {
 		}
 	}
 
+	### BACKEND
+
+	### Backend Utility
+
+	static public function getTCAtypes ($table, $rec, $useFieldNameAsKey = 0) {
+		$useClassName = '';
+		$callingClassName = '\\TYPO3\\CMS\\Backend\\Utility\\BackendUtility';
+
+		if (
+			class_exists($callingClassName)
+		) {
+			$useClassName = $callingClassName;
+		} else if (
+			class_exists('t3lib_BEfunc')
+		) {
+			$useClassName = 't3lib_BEfunc';
+		}
+
+		if (method_exists($useClassName, 'getTCAtypes')) {
+
+			call_user_func($useClassName . '::getTCAtypes', $table, $rec, $useFieldNameAsKey);
+		}
+	}
+
+	static public function getRecord ($table, $uid, $fields = '*', $where = '', $useDeleteClause = TRUE) {
+		$useClassName = '';
+		$callingClassName = '\\TYPO3\\CMS\\Backend\\Utility\\BackendUtility';
+
+		if (
+			class_exists($callingClassName)
+		) {
+			$useClassName = $callingClassName;
+		} else if (
+			class_exists('t3lib_BEfunc')
+		) {
+			$useClassName = 't3lib_BEfunc';
+		}
+
+		if (method_exists($useClassName, 'getRecord')) {
+
+			call_user_func($useClassName . '::getRecord', $table, $uid, $fields, $where, $useDeleteClause);
+		}
+	}
+
+	static public function deleteClause ($table, $tableAlias = '') {
+		$useClassName = '';
+		$callingClassName = '\\TYPO3\\CMS\\Backend\\Utility\\BackendUtility';
+
+		if (
+			class_exists($callingClassName)
+		) {
+			$useClassName = $callingClassName;
+		} else if (
+			class_exists('t3lib_BEfunc')
+		) {
+			$useClassName = 't3lib_BEfunc';
+		}
+
+		if (method_exists($useClassName, 'deleteClause')) {
+
+			call_user_func($useClassName . '::deleteClause', $table, $tableAlias);
+		}
+	}
+
+	static public function getTCEFORM_TSconfig ($table, $row) {
+		$useClassName = '';
+		$callingClassName = '\\TYPO3\\CMS\\Backend\\Utility\\BackendUtility';
+
+		if (
+			class_exists($callingClassName)
+		) {
+			$useClassName = $callingClassName;
+		} else if (
+			class_exists('t3lib_BEfunc')
+		) {
+			$useClassName = 't3lib_BEfunc';
+		}
+
+		if (method_exists($useClassName, 'getTCEFORM_TSconfig')) {
+
+			call_user_func($useClassName . '::getTCEFORM_TSconfig', $table, $row);
+		}
+	}
 }
 
 ?>

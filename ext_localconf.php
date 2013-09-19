@@ -11,7 +11,7 @@ if (!defined ('DIV2007_EXTkey')) { // deprecated
 }
 
 if (!defined ('PATH_BE_div2007')) {
-	define('PATH_BE_div2007', t3lib_extMgm::extPath(DIV2007_EXT));
+	define('PATH_BE_div2007', tx_div2007_core::extPath(DIV2007_EXT));
 }
 
 

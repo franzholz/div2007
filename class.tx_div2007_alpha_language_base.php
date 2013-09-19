@@ -77,7 +77,6 @@ class tx_div2007_alpha_language_base {
 		$this->conf = $conf;
 		$this->scriptRelPath = $scriptRelPath;
 
-		$className = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
 		$this->typoVersion = tx_div2007_core::getTypoVersion();
 	}
 

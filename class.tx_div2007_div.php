@@ -1042,9 +1042,9 @@ final class tx_div2007_div {
 	 */
 	public static function modifyHTMLColor($color, $R, $G, $B) {
 			// This takes a hex-color (# included!) and adds $R, $G and $B to the HTML-color (format: #xxxxxx) and returns the new color
-		$nR = t3lib_utility_Math::forceIntegerInRange(hexdec(substr($color, 1, 2)) + $R, 0, 255);
-		$nG = t3lib_utility_Math::forceIntegerInRange(hexdec(substr($color, 3, 2)) + $G, 0, 255);
-		$nB = t3lib_utility_Math::forceIntegerInRange(hexdec(substr($color, 5, 2)) + $B, 0, 255);
+		$nR = tx_div2007_core::intInRange(hexdec(substr($color, 1, 2)) + $R, 0, 255);
+		$nG = tx_div2007_core::intInRange(hexdec(substr($color, 3, 2)) + $G, 0, 255);
+		$nB = tx_div2007_core::intInRange(hexdec(substr($color, 5, 2)) + $B, 0, 255);
 		return '#' .
 				substr('0' . dechex($nR), -2) .
 				substr('0' . dechex($nG), -2) .
@@ -1071,7 +1071,7 @@ final class tx_div2007_div {
 	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::canBeInterpretedAsInteger() instead
 	 */
 	public static function testInt($var) {
-		return t3lib_utility_Math::canBeInterpretedAsInteger($var);
+		return tx_div2007_core::testInt($var);
 	}
 
 	/**
@@ -3826,8 +3826,8 @@ final class tx_div2007_div {
 		if (substr($filename, 0, 4) == 'EXT:') { // extension
 			list($extKey, $local) = explode('/', substr($filename, 4), 2);
 			$filename = '';
-			if (strcmp($extKey, '') && t3lib_extMgm::isLoaded($extKey) && strcmp($local, '')) {
-				$filename = t3lib_extMgm::extPath($extKey) . $local;
+			if (strcmp($extKey, '') && tx_div2007_core::isLoaded($extKey) && strcmp($local, '')) {
+				$filename = tx_div2007_core::extPath($extKey) . $local;
 			}
 		} elseif (!self::isAbsPath($filename)) { // relative. Prepended with $relPathPrefix
 			$filename = $relPathPrefix . $filename;
@@ -4977,7 +4977,7 @@ final class tx_div2007_div {
 			'requestedExcludeServiceKeys' => $excludeServiceKeys,
 		);
 
-		while ($info = t3lib_extMgm::findService($serviceType, $serviceSubType, $excludeServiceKeys)) {
+		while ($info = tx_div2007_core::findService($serviceType, $serviceSubType, $excludeServiceKeys)) {
 
 				// provide information about requested service to service object
 			$info = array_merge($info, $requestInfo);
@@ -5020,7 +5020,7 @@ final class tx_div2007_div {
 				}
 			}
 				// deactivate the service
-			t3lib_extMgm::deactivateService($info['serviceType'], $info['serviceKey']);
+			tx_div2007_core::deactivateService($info['serviceType'], $info['serviceKey']);
 		}
 		return $error;
 	}
@@ -5371,7 +5371,7 @@ final class tx_div2007_div {
 	 * @return void
 	 */
 	public static function sysLog($msg, $extKey, $severity = 0) {
-		$severity = t3lib_utility_Math::forceIntegerInRange($severity, 0, 4);
+		$severity = tx_div2007_core::intInRange($severity, 0, 4);
 
 			// is message worth logging?
 		if (intval($GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLogLevel']) > $severity) {

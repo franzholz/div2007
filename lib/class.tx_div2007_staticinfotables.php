@@ -324,7 +324,7 @@ class tx_div2007_staticinfotables {
 			if (is_object($TSFE)) {
 				$enableFields = $TSFE->sys_page->enableFields($table);
 			} else {
-				$enableFields = t3lib_BEfunc::deleteClause($table);
+				$enableFields = tx_div2007_core::deleteClause($table);
 			}
 
 			$res = $TYPO3_DB->exec_SELECTquery(
@@ -358,7 +358,7 @@ class tx_div2007_staticinfotables {
 	 */
 	static public function replaceMarkersInSQL ($sql, $table, $row) {
 
-		$TSconfig = t3lib_BEfunc::getTCEFORM_TSconfig($table, $row);
+		$TSconfig = tx_div2007_core::getTCEFORM_TSconfig($table, $row);
 
 		/* Replace references to specific fields with value of that field */
 		if (strstr($sql,'###REC_FIELD_')) {
@@ -470,7 +470,7 @@ class tx_div2007_staticinfotables {
 			$orderBy = $titleFields[0];
 
 			if(!$config['itemsProcFunc_config']['hotlistOnly']) {
-				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($fields, $table, '1=1' . $where . t3lib_BEfunc::deleteClause($table), '', $orderBy);
+				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($fields, $table, '1=1' . $where . tx_div2007_core::deleteClause($table), '', $orderBy);
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 					foreach ($titleFields as $titleField) {
 						if ($row[$titleField]) {
@@ -510,7 +510,7 @@ class tx_div2007_staticinfotables {
 				$fields[$indexField] = $indexField;
 				$fields['uid'] = 'uid';
 
-				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(implode(',', $fields), $table, $indexField . '=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($indexValue, $table) . t3lib_BEfunc::deleteClause($table));
+				$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(implode(',', $fields), $table, $indexField . '=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($indexValue, $table) . tx_div2007_core::deleteClause($table));
 				if ($res !== FALSE) {
 					if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 						$uid = $row['uid'];
@@ -532,7 +532,7 @@ class tx_div2007_staticinfotables {
 							'uid_local=' . $uid .
 								' AND application=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($app, 'tx_staticinfotables_hotlist') .
 								' AND tablenames=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($table, 'tx_staticinfotables_hotlist') .
-								t3lib_BEfunc::deleteClause('tx_staticinfotables_hotlist'),
+								tx_div2007_core::deleteClause('tx_staticinfotables_hotlist'),
 							$newRow
 						)
 					)

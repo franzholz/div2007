@@ -294,7 +294,7 @@ class tx_div2007_alpha5 {
 	 * @return	string		The combined class name (with the correct prefix)
 	 * @see pi_getClassName()
 	 */
-	public static function getClassName_fh001 ($class, $prefixId = '') {
+	static public function getClassName_fh001 ($class, $prefixId = '') {
 		return str_replace('_', '-', $prefixId) . ($prefixId ? '-' : '') . $class;
 	}
 
@@ -307,7 +307,7 @@ class tx_div2007_alpha5 {
 	 * @return	string		The combined class name (with the correct prefix)
 	 * @see pi_getClassName()
 	 */
-	public static function getClassName_fh002 ($class, $prefixId = '', $bAddPrefixTx = FALSE) {
+	static public function getClassName_fh002 ($class, $prefixId = '', $bAddPrefixTx = FALSE) {
 		if ($bAddPrefixTx && $prefixId != '' && strpos($prefixId, 'tx_') !== 0) {
 			$prefixId = 'tx_' . $prefixId;
 		}
@@ -675,7 +675,7 @@ class tx_div2007_alpha5 {
 	 * @param	string		input: if set then this language is used if possible. output: the used language
 	 * @param	string		Alternative string to return IF no value is found set for the key, neither for the local language nor the default.
 	 * @param	boolean		If TRUE, the output label is passed through htmlspecialchars()
-	 * @return	string		The value from LOCAL_LANG.
+	 * @return	string		The value from LOCAL_LANG. FALSE in error case
 	 */
 	static public function getLL_fh003 (
 		$langObj,
@@ -684,53 +684,57 @@ class tx_div2007_alpha5 {
 		$alternativeLabel = '',
 		$hsc = FALSE
 	) {
-		if (
-			$usedLang != '' &&
-			$langObj->LOCAL_LANG[$usedLang][$key][0]['target'] != ''
-		) {
-				// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-			if ($langObj->LOCAL_LANG_charset[$usedLang][$key] != '') {
-				$word = $GLOBALS['TSFE']->csConv(
-					$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
-					$langObj->LOCAL_LANG_charset[$usedLang][$key]
-				);
-			} else {
+		$output = FALSE;
+
+		if (is_object($langObj)) {
+			if (
+				$usedLang != '' &&
+				$langObj->LOCAL_LANG[$usedLang][$key][0]['target'] != ''
+			) {
+					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
+				if ($langObj->LOCAL_LANG_charset[$usedLang][$key] != '') {
+					$word = $GLOBALS['TSFE']->csConv(
+						$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
+						$langObj->LOCAL_LANG_charset[$usedLang][$key]
+					);
+				} else {
+					$word = $langObj->LOCAL_LANG[$usedLang][$key][0]['target'];
+				}
+			} else if ($langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'] != '') {
+				$usedLang = $langObj->LLkey;
+
+					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
+				if ($langObj->LOCAL_LANG_charset[$usedLang][$key] != '') {
+					$word = $GLOBALS['TSFE']->csConv(
+						$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
+						$langObj->LOCAL_LANG_charset[$usedLang][$key]
+					);
+				} else {
+					$word = $langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'];
+				}
+			} elseif ($langObj->altLLkey && $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'] != '') {
+				$usedLang = $langObj->altLLkey;
+
+					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
+				if (isset($langObj->LOCAL_LANG_charset[$usedLang][$key])) {
+					$word = $GLOBALS['TSFE']->csConv(
+						$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
+						$langObj->LOCAL_LANG_charset[$usedLang][$key]
+					);
+				} else {
+					$word = $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'];
+				}
+			} elseif ($langObj->LOCAL_LANG['default'][$key][0]['target'] != '') {
+				$usedLang = 'default';
+					// Get default translation (without charset conversion, english)
 				$word = $langObj->LOCAL_LANG[$usedLang][$key][0]['target'];
-			}
-		} else if ($langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'] != '') {
-			$usedLang = $langObj->LLkey;
-
-				// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-			if ($langObj->LOCAL_LANG_charset[$usedLang][$key] != '') {
-				$word = $GLOBALS['TSFE']->csConv(
-					$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
-					$langObj->LOCAL_LANG_charset[$usedLang][$key]
-				);
 			} else {
-				$word = $langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'];
+					// Return alternative string or empty
+				$word = (isset($langObj->LLtestPrefixAlt)) ? $langObj->LLtestPrefixAlt . $alternativeLabel : $alternativeLabel;
 			}
-		} elseif ($langObj->altLLkey && $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'] != '') {
-			$usedLang = $langObj->altLLkey;
 
-				// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-			if (isset($langObj->LOCAL_LANG_charset[$usedLang][$key])) {
-				$word = $GLOBALS['TSFE']->csConv(
-					$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
-					$langObj->LOCAL_LANG_charset[$usedLang][$key]
-				);
-			} else {
-				$word = $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'];
-			}
-		} elseif ($langObj->LOCAL_LANG['default'][$key][0]['target'] != '') {
-			$usedLang = 'default';
-				// Get default translation (without charset conversion, english)
-			$word = $langObj->LOCAL_LANG[$usedLang][$key][0]['target'];
-		} else {
-				// Return alternative string or empty
-			$word = (isset($langObj->LLtestPrefixAlt)) ? $langObj->LLtestPrefixAlt . $alternativeLabel : $alternativeLabel;
+			$output = (isset($langObj->LLtestPrefix)) ? $langObj->LLtestPrefix . $word : $word;
 		}
-
-		$output = (isset($langObj->LLtestPrefix)) ? $langObj->LLtestPrefix . $word : $word;
 
 		if ($hsc) {
 			$output = htmlspecialchars($output);
@@ -748,31 +752,34 @@ class tx_div2007_alpha5 {
 	 * @param	object		tx_div2007_alpha_language_base or a tslib_pibase object
 	 * @param	string		language file to load
 	 * @param	boolean		If TRUE, then former language items can be overwritten from the new file
-	 * @return	void
+	 * @return	boolean
 	 */
 	static public function loadLL_fh002 (
 		$langObj,
 		$langFileParam = '',
 		$overwrite = TRUE
 	) {
+		$result = FALSE;
+
 		if (is_object($langObj)) {
 			$typoVersion = tx_div2007_core::getTypoVersion();
-
 			$langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
 
 			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' ||  substr($langFile, 0, 9) === 'fileadmin') {
 				$basePath = $langFile;
 			} else {
-				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
+				$basePath = tx_div2007_core::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
+
 				// Read the strings in the required charset (since TYPO3 4.2)
 			$tempLOCAL_LANG = tx_div2007_core::readLLfile($basePath, $langObj->LLkey, $GLOBALS['TSFE']->renderCharset);
 
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
 					if (is_array($tempLOCAL_LANG[$langKey])) {
+
 						if ($overwrite) {
-							$langObj->LOCAL_LANG[$langKey] = array_merge($langObj->LOCAL_LANG[$langKey],$tempLOCAL_LANG[$langKey]);
+							$langObj->LOCAL_LANG[$langKey] = array_merge($langObj->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
 						} else {
 							$langObj->LOCAL_LANG[$langKey] = array_merge($tempLOCAL_LANG[$langKey], $langObj->LOCAL_LANG[$langKey]);
 						}
@@ -805,7 +812,6 @@ class tx_div2007_alpha5 {
 			$confLL = $langObj->conf['_LOCAL_LANG.'];
 
 			if (is_array($confLL)) {
-
 				foreach ($confLL as $languageKey => $languageArray) {
 					if (is_array($languageArray)) {
 						$languageKey = substr($languageKey, 0, -1);
@@ -878,10 +884,13 @@ class tx_div2007_alpha5 {
 				}
 			}
 			$langObj->LOCAL_LANG_loaded = 1;
+			$result = TRUE;
 		} else {
 			$output = 'error in call of tx_div2007_alpha::loadLL_fh002: parameter $langObj is not an object';
 			debug($output, '$output'); // keep this
 		}
+
+		return $result;
 	}
 
 
@@ -915,7 +924,7 @@ class tx_div2007_alpha5 {
 	 * @param	array		Additional query string to be passed as parameters to the links
 	 * @return	string		Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
 	 */
-	function &list_browseresults_fh002 (
+	static public function &list_browseresults_fh002 (
 		$pObject,
 		$langObj,
 		$cObj,
