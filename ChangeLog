@@ -1,3 +1,6 @@
+23-09-13 Franz Holzinger  <franz@ttproducts.de>
+	* add Classes/Utility folder and the classes ExtensionUtility and TableUtility needed for calls from inside of namespace classes
+
 19-09-13 Franz Holzinger  <franz@ttproducts.de>
 	* add class file tx_div2007_core for a TYPO3 version independant call to the most frequently used former functions of t3lib_div and other t3lib classes
 	* modify class tx_div2007_div in order not to rely on t3lib_dv

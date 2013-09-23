@@ -25,5 +25,7 @@ return array(
 	'tx_div2007_spl_arrayobject' => $extensionPath . 'spl/class.tx_div2007_spl_arrayObject.php',
 	'tx_div2007_staticinfotables' => $extensionPath . 'lib/class.tx_div2007_staticinfotables.php',
 	'tx_div2007_store' => $extensionPath . 'class.tx_div2007_store.php',
+	'JambageCom\\Div2007\\Utility\\TableUtility' => $extensionPath . 'Classes/Utility/TableUtility.php',
+	'JambageCom\\Div2007\\Utility\\ExtensionUtility' => $extensionPath . 'Classes/Utility/ExtensionUtility.php',
 );
 ?>
