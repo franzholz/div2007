@@ -112,7 +112,7 @@ class tx_div2007_configurations extends tx_div2007_object {
 		if (is_array($xmlOrArray)) {
 			$array = $xmlOrArray;
 		} else {
-			$array = tx_div2007_core::xml2array($xmlOrArray);
+			$array = t3lib_div::xml2array($xmlOrArray);
 		}
 		$data = $array['data'];
 		//

@@ -81,7 +81,7 @@ class tx_div2007_ff {
 			}
 			else{
 				//if false, it means it is *still* a string to convert in an array
-				self::$flexForm = tx_div2007_core::xml2array($flexForm);
+				self::$flexForm = t3lib_div::xml2array($flexForm);
 			}
 		}
 		else{

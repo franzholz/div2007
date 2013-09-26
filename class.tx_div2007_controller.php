@@ -45,10 +45,10 @@
  * Controllers of this kind can be used as plugin. Plugins are called from TS Setup
  * in the typical plugin position <samp> tt_content.list.20.pluginKey </samp>.
  *
- * The pluginKey is defined by the function tx_div2007_core::addPlugin() within the file ext_tables.php
+ * The pluginKey is defined by the function t3lib_extMgm::addPlugin() within the file ext_tables.php
  * as second element of the array that is handled as first parameter to the function:
  *
- *    <samp>tx_div2007_core::addPlugin(array(pluginLabel,pluginKey), list_type)</samp>
+ *    <samp>t3lib_extMgm::addPlugin(array(pluginLabel,pluginKey), list_type)</samp>
  *
  * Just like tslib::pi_base() you can also use this controller as content element
  * or as simpel USER_(INT) called from typoScript.

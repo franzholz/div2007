@@ -158,7 +158,7 @@ class tx_div2007_selfAwareness {
 	 */
 	public function findCObject () {
 		if(!$this->cObjectSingleton) {
-			$this->cObjectSingleton = tx_div2007_core::makeInstance('tslib_cObj');
+			$this->cObjectSingleton = t3lib_div::makeInstance('tslib_cObj');
 		}
 		return	$this->cObjectSingleton;
 	}
@@ -226,7 +226,7 @@ class tx_div2007_selfAwareness {
 		   preg_match('/^user_([^_]+)/', get_class($this), $matches)) {
 			$candidate = $matches[1];
 			if($candidate != 'lib') {
-				$keys = tx_div2007_core::trimExplode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
+				$keys = t3lib_div::trimExplode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
 				foreach($keys as $key) {
 					if($candidate == str_replace('_', '', $key)) {
 						return $key;
@@ -244,10 +244,10 @@ class tx_div2007_selfAwareness {
 	 * Find the absolute path of this extension.
 	 *
 	 * @return	string		path to the extension
-	 * @see		tx_div2007_core::extPath()
+	 * @see		t3lib_extMgm::extPath()
 	 */
 	public function getExtensionPath () {
-		return tx_div2007_core::extPath($this->getExtensionKey());
+		return t3lib_extMgm::extPath($this->getExtensionKey());
 	}
 
 	/**

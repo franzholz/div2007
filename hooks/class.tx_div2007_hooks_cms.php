@@ -54,7 +54,7 @@ class tx_div2007_hooks_cms {
 	public function pmDrawItem ($params, $pObj) {
 		if (
 			$this->extKey != '' &&
-			tx_div2007_core::isLoaded($this->extKey) &&
+			t3lib_extMgm::isLoaded($this->extKey) &&
 			in_array(
 				intval($pObj->pageRecord['doktype']),
 				array(1, 2, 5)

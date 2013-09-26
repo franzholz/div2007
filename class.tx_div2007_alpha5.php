@@ -326,10 +326,10 @@ class tx_div2007_alpha5 {
 	 */
 	static public function classParam_fh001 ($class, $addClasses = '', $prefixId = '') {
 		$output = '';
-		foreach (tx_div2007_core::trimExplode(',', $class) as $v) {
+		foreach (t3lib_div::trimExplode(',', $class) as $v) {
 			$output .= ' ' . self::getClassName_fh001($v, $prefixId);
 		}
-		foreach (tx_div2007_core::trimExplode(',', $addClasses) as $v) {
+		foreach (t3lib_div::trimExplode(',', $addClasses) as $v) {
 			$output .= ' ' . $v;
 		}
 		return ' class="' . trim($output) . '"';
@@ -348,10 +348,10 @@ class tx_div2007_alpha5 {
 	 */
 	static public function classParam_fh002 ($class, $addClasses = '', $prefixId = '', $bAddPrefixTx = FALSE) {
 		$output = '';
-		foreach (tx_div2007_core::trimExplode(',', $class) as $v) {
+		foreach (t3lib_div::trimExplode(',', $class) as $v) {
 			$output .= ' ' . self::getClassName_fh002($v, $prefixId, $bAddPrefixTx);
 		}
-		foreach (tx_div2007_core::trimExplode(',', $addClasses) as $v) {
+		foreach (t3lib_div::trimExplode(',', $addClasses) as $v) {
 			$output .= ' ' . $v;
 		}
 		return ' class="' . trim($output) . '"';
@@ -382,7 +382,7 @@ class tx_div2007_alpha5 {
 		$conf['useCacheHash'] = $pObject->bUSER_INT_obj ? 0 : $cache;
 		$conf['no_cache'] = $pObject->bUSER_INT_obj ? 0 : !$cache;
 		$conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
-		$conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . tx_div2007_core::implodeArrayForUrl('', $urlParameters, '', TRUE) . $pObject->moreParams;
+		$conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . t3lib_div::implodeArrayForUrl('', $urlParameters, '', TRUE) . $pObject->moreParams;
 		return $cObj->typoLink($str, $conf);
 	}
 
@@ -416,7 +416,7 @@ class tx_div2007_alpha5 {
 		if (is_array($pObject->ctrlVars) && is_array($overruleCtrlVars) && !$clearAnyway) {
 			$ctrlVars = $pObject->ctrlVars;
 			unset($ctrlVars['DATA']);
-			$overruleCtrlVars = tx_div2007_core::array_merge_recursive_overrule($ctrlVars, $overruleCtrlVars);
+			$overruleCtrlVars = t3lib_div::array_merge_recursive_overrule($ctrlVars, $overruleCtrlVars);
 			if ($pObject->bAutoCacheEn) {
 				$cache = self::autoCache_fh001($pObject, $overruleCtrlVars);
 			}
@@ -476,7 +476,7 @@ class tx_div2007_alpha5 {
 
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'] .= tx_div2007_core::implodeArrayForUrl('', $urlParameters);
+					$conf['additionalParams'] .= t3lib_div::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
 				$conf['additionalParams'] .= $urlParameters;
@@ -768,11 +768,11 @@ class tx_div2007_alpha5 {
 			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' ||  substr($langFile, 0, 9) === 'fileadmin') {
 				$basePath = $langFile;
 			} else {
-				$basePath = tx_div2007_core::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
+				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
 
 				// Read the strings in the required charset (since TYPO3 4.2)
-			$tempLOCAL_LANG = tx_div2007_core::readLLfile($basePath, $langObj->LLkey, $GLOBALS['TSFE']->renderCharset);
+			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, $GLOBALS['TSFE']->renderCharset);
 
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -790,7 +790,7 @@ class tx_div2007_alpha5 {
 			}
 
 			if ($langObj->altLLkey) {
-				$tempLOCAL_LANG = tx_div2007_core::readLLfile($basePath, $langObj->altLLkey, $GLOBALS['TSFE']->renderCharset);
+				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->altLLkey, $GLOBALS['TSFE']->renderCharset);
 
 				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -1383,7 +1383,7 @@ class tx_div2007_alpha5 {
 	/* $imageCode is the result of a call $this->cObj->IMAGE(...) */
 	static public function fixImageCodeAbsRefPrefix (&$imageCode) {
 		if ($GLOBALS['TSFE']->absRefPrefix == '') {
-			$absRefPrefix = tx_div2007_core::getIndpEnv('TYPO3_SITE_URL');
+			$absRefPrefix = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
 			$fixImgCode = str_replace('index.php', $absRefPrefix . 'index.php', $imageCode);
 			$fixImgCode = str_replace('src="', 'src="' . $absRefPrefix, $fixImgCode);
 			$fixImgCode = str_replace('"uploads/', '"' . $absRefPrefix . 'uploads/', $fixImgCode);
@@ -1400,7 +1400,7 @@ class tx_div2007_alpha5 {
 			$absRefPrefix = $GLOBALS['TSFE']->absRefPrefix;
 		} else {
 			$bSetAbsRefPrefix = TRUE;
-			$absRefPrefix = tx_div2007_core::getIndpEnv('TYPO3_SITE_URL');
+			$absRefPrefix = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
 		}
 
 		if ($domain != '') {

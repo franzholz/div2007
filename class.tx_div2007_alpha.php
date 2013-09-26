@@ -153,8 +153,8 @@ class tx_div2007_alpha {
 
 		$rc = '';
 		if (!isset($TCA[$theTable]['columns'])) {
-			tx_div2007_core::loadTCA($theTable);
-			tx_div2007_core::loadTCA($foreignTable);
+			t3lib_div::loadTCA($theTable);
+			t3lib_div::loadTCA($foreignTable);
 		}
 
 		if (isset($TCA[$theTable]['columns']) && is_array($TCA[$theTable]['columns'])) {
@@ -187,7 +187,7 @@ class tx_div2007_alpha {
 		global $TCA;
 
 		$foreign_table = $fieldValue['config'][$prefix . 'foreign_table'];
-		tx_div2007_core::loadTCA($foreign_table);
+		t3lib_div::loadTCA($foreign_table);
 		$rootLevel = $TCA[$foreign_table]['ctrl']['rootLevel'];
 
 		$fTWHERE = $fieldValue['config'][$prefix . 'foreign_table_where'];
@@ -247,7 +247,7 @@ class tx_div2007_alpha {
 
 		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $this->cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
 			// Markers and substitution:
-		$markerArray['###PATH###'] = tx_div2007_core::siteRelPath($extKey);
+		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
 		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
 		$rc = $langObj->cObj->substituteMarkerArray($helpTemplate, $markerArray);
@@ -283,7 +283,7 @@ class tx_div2007_alpha {
 		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
 			// Markers and substitution:
 
-		$markerArray['###PATH###'] = tx_div2007_core::siteRelPath($extKey);
+		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
 		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
 		$rc = $cObj->substituteMarkerArray($helpTemplate, $markerArray);
@@ -311,9 +311,9 @@ class tx_div2007_alpha {
 
 			foreach ($ext_keys as $_EXTKEY) {
 
-				if (tx_div2007_core::isLoaded($_EXTKEY)) {
+				if (t3lib_extMgm::isLoaded($_EXTKEY)) {
 					//Include the ext_table
-					include(tx_div2007_core::extPath($_EXTKEY) . 'ext_tables.php');
+					include(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
 				}
 			}
 		}
@@ -334,8 +334,8 @@ class tx_div2007_alpha {
 	function getExtensionInfo_fh001 ($extKey) {
 		$rc = '';
 
-		if (tx_div2007_core::isLoaded($extKey)) {
-			$path = tx_div2007_core::extPath($extKey);
+		if (t3lib_extMgm::isLoaded($extKey)) {
+			$path = t3lib_extMgm::extPath($extKey);
 
 			$file = $path.'/ext_emconf.php';
 			if (@is_file($file)) {
@@ -382,7 +382,7 @@ class tx_div2007_alpha {
 		$result = '';
 
 		if (!$path) {
-			$path = tx_div2007_core::extPath($extKey);
+			$path = t3lib_extMgm::extPath($extKey);
 		}
 
 		if (is_dir($path)) {
@@ -534,11 +534,11 @@ class tx_div2007_alpha {
 			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' || substr($langFile, 0, 9) === 'fileadmin') {
 				$basePath = $langFile;
 			} else {
-				$basePath = tx_div2007_core::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
+				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
 				// php or xml as source: In any case the charset will be that of the system language.
 				// However, this function guarantees only return output for default language plus the specified language (which is different from how 3.7.0 dealt with it)
-			$tempLOCAL_LANG = tx_div2007_core::readLLfile($basePath, $langObj->LLkey, $TSFE->renderCharset);
+			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, $TSFE->renderCharset);
 
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -554,7 +554,7 @@ class tx_div2007_alpha {
 				$langObj->LOCAL_LANG = $tempLOCAL_LANG;
 			}
 			if ($langObj->altLLkey) {
-				$tempLOCAL_LANG = tx_div2007_core::readLLfile($basePath,$langObj->altLLkey,$TSFE->renderCharset);
+				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$langObj->altLLkey,$TSFE->renderCharset);
 
 				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -863,7 +863,7 @@ class tx_div2007_alpha {
 			}
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'].= tx_div2007_core::implodeArrayForUrl('', $urlParameters);
+					$conf['additionalParams'].= t3lib_div::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
 				$conf['additionalParams'] .= $urlParameters;
@@ -909,7 +909,7 @@ class tx_div2007_alpha {
 			}
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'] .= tx_div2007_core::implodeArrayForUrl('', $urlParameters);
+					$conf['additionalParams'] .= t3lib_div::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
 				$conf['additionalParams'] .= $urlParameters;
@@ -1501,19 +1501,19 @@ class tx_div2007_alpha {
 		// Create $TSFE object (TSFE = TypoScript Front End)
 		// Connecting to database
 		// ***********************************
-		$TSFE = tx_div2007_core::makeInstance('tslib_fe',
+		$TSFE = t3lib_div::makeInstance('tslib_fe',
 			$TYPO3_CONF_VARS,
-			tx_div2007_core::_GP('id'),
-			tx_div2007_core::_GP('type'),
-			tx_div2007_core::_GP('no_cache'),
-			tx_div2007_core::_GP('cHash'),
-			tx_div2007_core::_GP('jumpurl'),
-			tx_div2007_core::_GP('MP'),
-			tx_div2007_core::_GP('RDCT')
+			t3lib_div::_GP('id'),
+			t3lib_div::_GP('type'),
+			t3lib_div::_GP('no_cache'),
+			t3lib_div::_GP('cHash'),
+			t3lib_div::_GP('jumpurl'),
+			t3lib_div::_GP('MP'),
+			t3lib_div::_GP('RDCT')
 		);
 
 		if($TYPO3_CONF_VARS['FE']['pageUnavailable_force'] &&
-			!tx_div2007_core::cmpIP(tx_div2007_core::getIndpEnv('REMOTE_ADDR'), $TYPO3_CONF_VARS['SYS']['devIPmask'])) {
+			!t3lib_div::cmpIP(t3lib_div::getIndpEnv('REMOTE_ADDR'), $TYPO3_CONF_VARS['SYS']['devIPmask'])) {
 			$TSFE->pageUnavailableAndExit('This page is temporarily unavailable.');
 		}
 

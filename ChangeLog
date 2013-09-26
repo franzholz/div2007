@@ -1,3 +1,6 @@
+26-09-13 Franz Holzinger  <franz@ttproducts.de>
+	* Remove replacement of the t3lib_div and t3lib_extMgm classes from tx_div2007_core, because they are available under TYPO3 6.2 as alias inside of GeneralUtility and ExtensionManagementUtility.
+
 23-09-13 Franz Holzinger  <franz@ttproducts.de>
 	* add Classes/Utility folder and the classes ExtensionUtility and TableUtility needed for calls from inside of namespace classes
 

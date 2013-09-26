@@ -115,7 +115,7 @@ class tx_div2007_email {
 			}
 
 			if (!is_array($toEMail)) {
-				$emailArray = tx_div2007_core::trimExplode(',', $toEMail);
+				$emailArray = t3lib_div::trimExplode(',', $toEMail);
 				$toEMail = array();
 				foreach ($emailArray as $email) {
 					$toEMail[] = $email;
@@ -164,7 +164,7 @@ class tx_div2007_email {
 				$toEMail = tx_div2007_alpha5::slashName($name) . ' <' . $email . '>';
 			}
 
-			$mail = tx_div2007_core::makeInstance('t3lib_htmlmail');
+			$mail = t3lib_div::makeInstance('t3lib_htmlmail');
 			$mail->start();
 			$mail->mailer = 'TYPO3 HTMLMail';
 			// $mail->useBase64(); TODO
@@ -205,7 +205,7 @@ class tx_div2007_email {
 
 			if ($HTMLContent) {
 				$mail->theParts['HTMLContent']['content'] = $HTMLContent;
-				$mail->theParts['HTMLContent']['path'] = tx_div2007_core::getIndpEnv('TYPO3_REQUEST_HOST') . '/';
+				$mail->theParts['HTMLContent']['path'] = t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST') . '/';
 				$mail->extractMediaLinks();
 				$mail->extractHyperLinks();
 				$mail->fetchHTMLMedia();
@@ -254,7 +254,7 @@ class tx_div2007_email {
 			is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$hookVar])
 		) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$hookVar] as $classRef) {
-				$hookObj= tx_div2007_core::getUserObj($classRef);
+				$hookObj= t3lib_div::getUserObj($classRef);
 				if (method_exists($hookObj, 'init')) {
 					$hookObj->init($mail);
 				}

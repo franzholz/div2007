@@ -47,7 +47,7 @@
  * This is a library that results of the work of the Extension Coordination Team (ECT).
  *
  * In this class we collect diverse static functions that are usefull for extension development,
- * but that didn't made their way into tx_div2007_core. A part of the functions are peer functions
+ * but that didn't made their way into t3lib_div. A part of the functions are peer functions
  * to classes of the extension lib.
  *
  * <b>Contribute your own functions</b>
@@ -177,7 +177,7 @@ class tx_div2007 {
 		// Format subdirectory first to '.../' or ''
 		preg_match('/^\/?(.*)\/?$/', $subdirectory, $matches);
 		$subdirectory = strlen($matches[1]) ? $matches[1] . '/' : '';
-		$path = tx_div2007_core::extPath($extensionKey) . $subdirectory;
+		$path = t3lib_extMgm::extPath($extensionKey) . $subdirectory;
 		if(is_dir($path)) {
 			$handle = opendir($path);
 			while($entry = readdir($handle)) {
@@ -298,7 +298,7 @@ class tx_div2007 {
 		static $cObject;
 		if(!is_object($cObject))
 		  require_once(PATH_tslib.'class.tslib_content.php');
-			$cObject = tx_div2007_core::makeInstance('tslib_cObj');
+			$cObject = t3lib_div::makeInstance('tslib_cObj');
 		return	$cObject;
 	}
 
@@ -321,7 +321,7 @@ class tx_div2007 {
 		ob_end_clean();
 		if(!isset($tce)) {
 			static $tce; // Singleton.
-			$tce = tx_div2007_core::makeInstance('t3lib_tcemain');
+			$tce = t3lib_div::makeInstance('t3lib_tcemain');
 			$tce->stripslashes_value = 0;
 		}
 		return $tce;
@@ -510,7 +510,7 @@ class tx_div2007 {
 			for($i = 0; $i < sizeof($ext_keys); $i++){
 				//Include the ext_table
 				$_EXTKEY = $ext_keys[$i];
-				include(tx_div2007_core::extPath($ext_keys[$i]) . 'ext_tables.php');
+				include(t3lib_extMgm::extPath($ext_keys[$i]) . 'ext_tables.php');
 			}
 		}
 	}
@@ -519,7 +519,7 @@ class tx_div2007 {
 	/**
 	 * Load the class file and make an instance of the class
 	 *
-	 * This is an extension to tx_div2007_core::makeInstance(). The advantage
+	 * This is an extension to t3lib_div::makeInstance(). The advantage
 	 * is that it tries to autoload the file wich in combination
 	 * with the shorter notation simplyfies the generation of objects.
 	 *
@@ -550,7 +550,7 @@ class tx_div2007 {
 	public function resolvePathWithExtPrefix ($path) {
 		if(substr($path, 0, 4) == 'EXT:') {
 			list($extKey, $local) = explode('/', substr($path, 4), 2);
-			if(tx_div2007_core::isLoaded($extKey)) {
+			if(t3lib_extMgm::isLoaded($extKey)) {
 				$path = self::getSiteRelativeExtensionPath($extKey) . $local;
 			}
 		}
