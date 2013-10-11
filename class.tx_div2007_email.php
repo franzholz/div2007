@@ -77,6 +77,66 @@ class tx_div2007_email {
 		$hookVar = '',
 		$defaultSubject = ''
 	) {
+		if (!is_array($toEMail)) {
+			$emailArray = t3lib_div::trimExplode(',', $toEMail);
+			$toEMail = array();
+			foreach ($emailArray as $email) {
+				$toEMail[] = $email;
+			}
+		}
+
+		if (is_array($toEMail) && count($toEMail)) {
+			$emailArray = $toEMail;
+			$errorEmailArray = array();
+			foreach ($toEMail as $k => $v) {
+				if (
+					(
+						!is_numeric($k) &&
+						!t3lib_div::validEmail($k)
+					) &&
+					(
+						$v == '' ||
+						!t3lib_div::validEmail($v)
+					)
+				) {
+					unset($emailArray[$k]);
+					$errorEmailArray[$k] = $v;
+				}
+			}
+			$toEMail = $emailArray;
+
+			if (
+				count($errorEmailArray)
+			) {
+				foreach ($errorEmailArray as $k => $v) {
+					$email = $k;
+					if (is_numeric($k)) {
+						$email = $v;
+					}
+
+					debug ('t3lib_div::sendMail invalid email address: to "'. $email . '"'); // keep this
+				}
+			}
+
+			if (
+				!count($toEMail)
+			) {
+				debug ('t3lib_div::sendMail exited with error 1'); // keep this
+				return FALSE;
+			}
+		} else {
+				debug ('t3lib_div::sendMail exited with error 2'); // keep this
+			return FALSE;
+		}
+
+		if (
+			!t3lib_div::validEmail($fromEMail)
+		) {
+			debug ('t3lib_div::sendMail invalid email address: from "' . $fromEMail . '"'); // keep this
+			debug ('t3lib_div::sendMail exited with error 3'); // keep this
+			return FALSE;
+		}
+
 		$result = TRUE;
 		$fromName = str_replace('"', '\'', $fromName);
 		$fromNameSlashed = tx_div2007_alpha5::slashName($fromName);
@@ -112,14 +172,6 @@ class tx_div2007_email {
 		) {
 			if (preg_match('#[/\(\)\\<>,;:@\.\]\[]#', $fromName)) {
 				$fromName = '"' . $fromName . '"';
-			}
-
-			if (!is_array($toEMail)) {
-				$emailArray = t3lib_div::trimExplode(',', $toEMail);
-				$toEMail = array();
-				foreach ($emailArray as $email) {
-					$toEMail[] = $email;
-				}
 			}
 
 			$mail = tx_div2007_core::newMailMessage();
@@ -160,8 +212,17 @@ class tx_div2007_email {
 			$fromName = tx_div2007_alpha5::slashName($fromName);
 
 			if (is_array($toEMail)) {
-				list($email, $name) = each($toEMail);
-				$toEMail = tx_div2007_alpha5::slashName($name) . ' <' . $email . '>';
+				$emailArray = array();
+				foreach($toEMail as $k => $v) {
+					if (!is_numeric($k) && $v != '') {
+						$emailArray[] = tx_div2007_alpha5::slashName($v) . ' <' . $k . '>';
+					} else if (is_numeric($k)) {
+						$emailArray[] = $v;
+					} else {
+						$emailArray[] = $k;
+					}
+				}
+				$toEMail = implode(',', $emailArray);
 			}
 
 			$mail = t3lib_div::makeInstance('t3lib_htmlmail');

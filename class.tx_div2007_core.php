@@ -137,6 +137,7 @@ class tx_div2007_core {
 		return $result;
 	}
 
+
 	### HTML parser object
 	public function newHtmlParser () {
 		$useClassName = '';
@@ -221,7 +222,6 @@ class tx_div2007_core {
 
 
 	### Debug Utility
-
 	static public function debug ($var = '', $header = '', $group = 'Debug') {
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\DebugUtility';
 
@@ -267,7 +267,6 @@ class tx_div2007_core {
 	### BACKEND
 
 	### Backend Utility
-
 	static public function getTCAtypes ($table, $rec, $useFieldNameAsKey = 0) {
 		$useClassName = '';
 		$callingClassName = '\\TYPO3\\CMS\\Backend\\Utility\\BackendUtility';

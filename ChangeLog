@@ -1,3 +1,6 @@
+11-10-13 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug in call of the email validation of tx_div2007_email::sendMail
+
 26-09-13 Franz Holzinger  <franz@ttproducts.de>
 	* Remove replacement of the t3lib_div and t3lib_extMgm classes from tx_div2007_core, because they are available under TYPO3 6.2 as alias inside of GeneralUtility and ExtensionManagementUtility.
 
