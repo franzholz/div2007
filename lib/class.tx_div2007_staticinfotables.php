@@ -68,8 +68,10 @@ class tx_div2007_staticinfotables {
 	 * @param	boolean		If set, we are looking for the "local" title field
 	 * @return	string		field name
 	 */
-	static public function getTCAlabelField ($table, $loadTCA = TRUE, $lang = '', $local = FALSE) {
+	static public function getTCAlabelField ($table, $bLoadTCA = TRUE, $lang = '', $local = FALSE) {
 		global $TCA, $LANG, $TSFE;
+
+		$typoVersion = tx_div2007_core::getTypoVersion();
 
 		if (is_object($LANG)) {
 			$csConvObj = $LANG->csConvObj;
@@ -84,7 +86,7 @@ class tx_div2007_staticinfotables {
 
 		$labelFields = array();
 		if($table && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'])) {
-			if ($loadTCA)	{
+			if ($bLoadTCA && $typoVersion < 6002000) {
 				t3lib_div::loadTCA($table);
 
 					// get all extending TCAs
@@ -100,7 +102,7 @@ class tx_div2007_staticinfotables {
 				if ($local) {
 					$labelField = str_replace ('##', 'local', $field);
 				} else {
-					$labelField = str_replace ('##', $csConvObj->conv_case('utf-8', $lang,'toLower'), $field);
+					$labelField = str_replace ('##', $csConvObj->conv_case('utf-8', $lang, 'toLower'), $field);
 				}
 				if (is_array($TCA[$table]['columns'][$labelField])) {
 					$labelFields[] = $labelField;
@@ -110,7 +112,6 @@ class tx_div2007_staticinfotables {
 		return $labelFields;
 	}
 
-
 	/**
 	 * Returns the type of an iso code: nr, 2, 3
 	 *
@@ -119,7 +120,6 @@ class tx_div2007_staticinfotables {
 	 */
 	static public function isoCodeType ($isoCode) {
 		$type = '';
-			// t3lib_utility_Math was introduced in TYPO3 4.6
 		$isoCodeAsInteger = tx_div2007_core::testInt($isoCode);
 		if ($isoCodeAsInteger) {
 			$type = 'nr';
@@ -145,20 +145,28 @@ class tx_div2007_staticinfotables {
 	 */
 	static public function getIsoCodeField ($table, $isoCode, $bLoadTCA = TRUE, $index = 0) {
 		global $TCA;
-		$rc = FALSE;
+		$result = FALSE;
 
-		if ($isoCode && $table && (($isoCodeField = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['isocode_field'][$index]) != '')) {
-			if ($bLoadTCA) {
-				t3lib_div::loadTCA($table);
-			}
-			$type = self::isoCodeType($isoCode);
-			$isoCodeField = str_replace ('##', $type, $isoCodeField);
+		if (
+			$isoCode &&
+			$table
+		) {
+			$isoCodeField = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['isocode_field'][$index];
+			$typoVersion = tx_div2007_core::getTypoVersion();
 
-			if (is_array($TCA[$table]['columns'][$isoCodeField])) {
-				$rc = $isoCodeField;
+			if ($isoCodeField != '') {
+				if ($bLoadTCA && $typoVersion < 6002000) {
+					t3lib_div::loadTCA($table);
+				}
+				$type = self::isoCodeType($isoCode);
+				$isoCodeField = str_replace ('##', $type, $isoCodeField);
+
+				if (is_array($TCA[$table]['columns'][$isoCodeField])) {
+					$result = $isoCodeField;
+				}
 			}
 		}
-		return $rc;
+		return $result;
 	}
 
 
@@ -169,8 +177,8 @@ class tx_div2007_staticinfotables {
 	 * @param	boolean		If set (default) the TCA definition of the table should be loaded
 	 * @return	string		field name
 	 */
-	static public function getTCAsortField ($table, $loadTCA = TRUE) {
-		$labelFields = self::getTCAlabelField($table, $loadTCA);
+	static public function getTCAsortField ($table, $bLoadTCA = TRUE) {
+		$labelFields = self::getTCAlabelField($table, $bLoadTCA);
 
 		return $labelFields[0];
 	}
@@ -232,14 +240,14 @@ class tx_div2007_staticinfotables {
 	static public function getCurrentSystemLanguage ($where = '') {
 		global $LANG, $TSFE, $TYPO3_DB;
 
-		$rc = array();
+		$result = array();
 
 		if (is_object($LANG)) {
 			$langCodeT3 = $LANG->lang;
 		} elseif (is_object($TSFE)) {
 			$langCodeT3 = $TSFE->lang;
 		} else {
-			return $rc;
+			return $result;
 		}
 
 		$res = $TYPO3_DB->exec_SELECTquery(
@@ -249,11 +257,11 @@ class tx_div2007_staticinfotables {
 				$where
 			);
 		while($row = $TYPO3_DB->sql_fetch_assoc($res)) {
-			$rc[$row['uid']] = $row;
+			$result[$row['uid']] = $row;
 		}
 
 		$TYPO3_DB->sql_free_result($res);
-		return $rc;
+		return $result;
 	}
 
 
@@ -362,8 +370,8 @@ class tx_div2007_staticinfotables {
 
 		/* Replace references to specific fields with value of that field */
 		if (strstr($sql,'###REC_FIELD_')) {
-			$sql_parts = explode('###REC_FIELD_',$sql);
-			while(list($kk,$vv)=each($sql_parts)) {
+			$sql_parts = explode('###REC_FIELD_', $sql);
+			foreach($sql_parts as $kk => $vv) {
 				if ($kk) {
 					$sql_subpart = explode('###',$vv,2);
 					$sql_parts[$kk]=$TSconfig['_THIS_ROW'][$sql_subpart[0]] . $sql_subpart[1];
@@ -564,15 +572,21 @@ class tx_div2007_staticinfotables {
 	 * @return	array		Array of rows of country records
 	 */
 	static public function fetchCountries ($country, $iso2 = '', $iso3 = '', $isonr = '') {
-		global $TYPO3_DB;
+		global $TYPO3_DB,$TCA;
 
-		$rcArray = array();
+		$resultArray = array();
 		$where = '';
 
 		$table = 'static_countries';
-		if ($country != '') {
+		if ($country != '')	{
 			$value = $TYPO3_DB->fullQuoteStr(trim('%' . $country . '%'), $table);
-			$where = 'cn_official_name_local LIKE ' . $value . ' OR cn_official_name_en LIKE ' . $value . ' OR cn_short_local LIKE ' . $value;
+			$where = 'cn_official_name_local LIKE '. $value . ' OR cn_official_name_en LIKE ' . $value;
+
+			foreach ($TCA[$table]['columns'] as $fieldname => $fieldArray) {
+				if (strpos($fieldname, 'cn_short_') === 0) {
+					$where .= ' OR ' . $fieldname . ' LIKE ' . $value;
+				}
+			}
 		}
 
 		if ($isonr != '') {
@@ -592,12 +606,12 @@ class tx_div2007_staticinfotables {
 
 			if ($res)	{
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-					$rcArray[] = $row;
+					$resultArray[] = $row;
 				}
 			}
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
-		return $rcArray;
+		return $resultArray;
 	}
 
 
@@ -633,17 +647,20 @@ class tx_div2007_staticinfotables {
 	static public function loadTcaAdditions ($ext_keys) {
 		global $_EXTKEY, $TCA;
 
-		//Merge all ext_keys
-		if (is_array($ext_keys)) {
-			foreach ($ext_keys as $_EXTKEY) {
-				if (t3lib_extMgm::isLoaded($_EXTKEY)) {
-					//Include the ext_table
-					include(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
+		$typoVersion = tx_div2007_core::getTypoVersion();
+
+		if ($typoVersion < 6002000) {
+			//Merge all ext_keys
+			if (is_array($ext_keys)) {
+				foreach ($ext_keys as $_EXTKEY) {
+					if (t3lib_extMgm::isLoaded($_EXTKEY)) {
+						//Include the ext_table
+						include(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
+					}
 				}
 			}
 		}
 	}
 }
-
 
 ?>

@@ -1,3 +1,9 @@
+29-10-13 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug with call of static_info_tables: consider the cn_short_local for selected country in the transactor API
+	* make the check for the TYPO3 version independant of the TYPO3 version
+	* do not include any ext_tables.php under TYPO3 6.2
+	* This extension runs under TYPO3 6.2
+
 11-10-13 Franz Holzinger  <franz@ttproducts.de>
 	* fix bug in call of the email validation of tx_div2007_email::sendMail
 

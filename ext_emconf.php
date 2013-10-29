@@ -7,10 +7,10 @@
 
 $EM_CONF[$_EXTKEY] = array (
   'title' => 'Static Methods since 2007',
-  'description' => 'This library is called by other extensions. It brings a modified t3lib_div of TYPO3 4.7.10',
+  'description' => 'This library is called by other extensions. It provides a modified t3lib_div of TYPO3 4.7.10',
   'category' => 'misc',
   'shy' => 0,
-  'version' => '1.0.3',
+  'version' => '1.1.0',
   'dependencies' => '',
   'conflicts' => '',
   'suggests' =>
@@ -40,7 +40,7 @@ $EM_CONF[$_EXTKEY] = array (
     'depends' =>
     array (
       'php' => '5.2.0-5.4.99',
-      'typo3' => '4.5.0-6.1.99',
+      'typo3' => '4.5.0-6.2.99',
     ),
     'conflicts' =>
     array (
