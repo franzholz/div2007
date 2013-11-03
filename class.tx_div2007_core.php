@@ -65,6 +65,7 @@ class tx_div2007_core {
 		return $result;
 	}
 
+
 	### Mathematical functions
 	public static function testInt ($var) {
 		$result = FALSE;
@@ -244,24 +245,27 @@ class tx_div2007_core {
 	}
 
 	static public function debugTrail () {
+		$result = FALSE;
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\DebugUtility';
 
 		if (
 			class_exists($callingClassName) &&
 			method_exists($callingClassName, 'debugTrail')
 		) {
-			call_user_func($callingClassName . '::debugTrail');
+			$result = call_user_func($callingClassName . '::debugTrail');
 		} else if (
 			class_exists('t3lib_utility_Debug') &&
 			method_exists('t3lib_utility_Debug', 'debugTrail')
 		) {
-			t3lib_utility_Debug::debugTrail($var, $header, $group);
+			$result = t3lib_utility_Debug::debugTrail();
 		} else if (
 			class_exists('t3lib_div') &&
 			method_exists('t3lib_div', 'debugTrail')
 		) {
-			t3lib_div::debugTrail();
+			$result = t3lib_div::debugTrail();
 		}
+
+		return $result;
 	}
 
 	### BACKEND
@@ -269,6 +273,7 @@ class tx_div2007_core {
 	### Backend Utility
 	static public function getTCAtypes ($table, $rec, $useFieldNameAsKey = 0) {
 		$useClassName = '';
+		$result = FALSE;
 		$callingClassName = '\\TYPO3\\CMS\\Backend\\Utility\\BackendUtility';
 
 		if (
@@ -283,12 +288,15 @@ class tx_div2007_core {
 
 		if (method_exists($useClassName, 'getTCAtypes')) {
 
-			call_user_func($useClassName . '::getTCAtypes', $table, $rec, $useFieldNameAsKey);
+			$result = call_user_func($useClassName . '::getTCAtypes', $table, $rec, $useFieldNameAsKey);
 		}
+
+		return $result;
 	}
 
 	static public function getRecord ($table, $uid, $fields = '*', $where = '', $useDeleteClause = TRUE) {
 		$useClassName = '';
+		$result = FALSE;
 		$callingClassName = '\\TYPO3\\CMS\\Backend\\Utility\\BackendUtility';
 
 		if (
@@ -303,12 +311,15 @@ class tx_div2007_core {
 
 		if (method_exists($useClassName, 'getRecord')) {
 
-			call_user_func($useClassName . '::getRecord', $table, $uid, $fields, $where, $useDeleteClause);
+			$result = call_user_func($useClassName . '::getRecord', $table, $uid, $fields, $where, $useDeleteClause);
 		}
+
+		return $result;
 	}
 
 	static public function deleteClause ($table, $tableAlias = '') {
 		$useClassName = '';
+		$result = FALSE;
 		$callingClassName = '\\TYPO3\\CMS\\Backend\\Utility\\BackendUtility';
 
 		if (
@@ -323,12 +334,15 @@ class tx_div2007_core {
 
 		if (method_exists($useClassName, 'deleteClause')) {
 
-			call_user_func($useClassName . '::deleteClause', $table, $tableAlias);
+			$result = call_user_func($useClassName . '::deleteClause', $table, $tableAlias);
 		}
+
+		return $result;
 	}
 
 	static public function getTCEFORM_TSconfig ($table, $row) {
 		$useClassName = '';
+		$result = FALSE;
 		$callingClassName = '\\TYPO3\\CMS\\Backend\\Utility\\BackendUtility';
 
 		if (
@@ -343,8 +357,10 @@ class tx_div2007_core {
 
 		if (method_exists($useClassName, 'getTCEFORM_TSconfig')) {
 
-			call_user_func($useClassName . '::getTCEFORM_TSconfig', $table, $row);
+			$result = call_user_func($useClassName . '::getTCEFORM_TSconfig', $table, $row);
 		}
+
+		return $result;
 	}
 }
 

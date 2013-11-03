@@ -1,3 +1,6 @@
+03-11-13 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug: add missing return values to some functions of tx_div2007_core
+
 29-10-13 Franz Holzinger  <franz@ttproducts.de>
 	* fix bug with call of static_info_tables: consider the cn_short_local for selected country in the transactor API
 	* make the check for the TYPO3 version independant of the TYPO3 version
