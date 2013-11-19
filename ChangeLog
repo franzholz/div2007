@@ -1,3 +1,6 @@
+19-11-13 Franz Holzinger  <franz@ttproducts.de>
+	* fix bug with reading of a locallang file
+
 03-11-13 Franz Holzinger  <franz@ttproducts.de>
 	* fix bug: add missing return values to some functions of tx_div2007_core
 

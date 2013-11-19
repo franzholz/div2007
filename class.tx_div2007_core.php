@@ -31,7 +31,7 @@
  *
  * $Id$
  *
- * class tslib_cObj	All main TypoScript features, rendering of content objects (cObjects). This class is the backbone of TypoScript Template rendering.
+ * class tslib_cObj All main TypoScript features, rendering of content objects (cObjects). This class is the backbone of TypoScript Template rendering.
  *
  * @package    TYPO3
  * @subpackage div2007

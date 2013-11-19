@@ -4613,7 +4613,7 @@ final class tx_div2007_div {
 			if ($errorMode == 2) {
 				throw new InvalidArgumentException($errorMsg, 1294585864);
 			} elseif (!$errorMode) {
-				debug($errorMsg, 'tx_div2007_div::callUserFunction');
+				debug($errorMsg, 'tx_div2007_div::callUserFunction'); // keep this
 			}
 			return FALSE;
 		}
@@ -4654,7 +4654,7 @@ final class tx_div2007_div {
 					if ($errorMode == 2) {
 						throw new InvalidArgumentException($errorMsg, 1294585865);
 					} elseif (!$errorMode) {
-						debug($errorMsg, 'tx_div2007_div::callUserFunction');
+						debug($errorMsg, 'tx_div2007_div::callUserFunction'); // keep this
 					}
 				}
 			} else {
@@ -4662,7 +4662,7 @@ final class tx_div2007_div {
 				if ($errorMode == 2) {
 					throw new InvalidArgumentException($errorMsg, 1294585866);
 				} elseif (!$errorMode) {
-					debug($errorMsg, 'tx_div2007_div::callUserFunction');
+					debug($errorMsg, 'tx_div2007_div::callUserFunction'); // keep this
 				}
 			}
 		} else { // Function
@@ -4673,7 +4673,7 @@ final class tx_div2007_div {
 				if ($errorMode == 2) {
 					throw new InvalidArgumentException($errorMsg, 1294585867);
 				} elseif (!$errorMode) {
-					debug($errorMsg, 'tx_div2007_div::callUserFunction');
+					debug($errorMsg, 'tx_div2007_div::callUserFunction'); // keep this
 				}
 			}
 		}
@@ -4718,7 +4718,7 @@ final class tx_div2007_div {
 				// Check prefix is valid:
 			if ($checkPrefix && !self::hasValidClassPrefix($class, array($checkPrefix))) {
 				if (!$silent) {
-					debug("Class '" . $class . "' was not prepended with '" . $checkPrefix . "'", 'tx_div2007_div::getUserObj');
+					debug("Class '" . $class . "' was not prepended with '" . $checkPrefix . "'", 'tx_div2007_div::getUserObj'); // keep this
 				}
 				return FALSE;
 			}
@@ -4735,7 +4735,7 @@ final class tx_div2007_div {
 				return $classObj;
 			} else {
 				if (!$silent) {
-					debug("<strong>ERROR:</strong> No class named: " . $class, 'tx_div2007_div::getUserObj');
+					debug("<strong>ERROR:</strong> No class named: " . $class, 'tx_div2007_div::getUserObj'); // keep this
 				}
 			}
 		}

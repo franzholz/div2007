@@ -643,13 +643,22 @@ class tx_div2007_alpha5 {
 				$word = (isset($langObj->LLtestPrefixAlt)) ? $langObj->LLtestPrefixAlt . $alternativeLabel : $alternativeLabel;
 			}
 		} else {
-			if (isset($langObj->LOCAL_LANG[$langObj->LLkey][$key])) {
+			if ($langObj->LOCAL_LANG[$langObj->LLkey][$key] != '') {
 				$usedLang = $langObj->LLkey;
-				$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$usedLang][$key], $langObj->LOCAL_LANG_charset[$usedLang][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
-			} elseif ($langObj->altLLkey && isset($langObj->LOCAL_LANG[$langObj->altLLkey][$key])) {
+				$word = $GLOBALS['TSFE']->csConv(
+					$langObj->LOCAL_LANG[$usedLang][$key],
+					$langObj->LOCAL_LANG_charset[$usedLang][$key]
+				);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
+			} elseif (
+				$langObj->altLLkey &&
+				$langObj->LOCAL_LANG[$langObj->altLLkey][$key] != ''
+			) {
 				$usedLang = $langObj->altLLkey;
-				$word = $GLOBALS['TSFE']->csConv($langObj->LOCAL_LANG[$usedLang][$key], $langObj->LOCAL_LANG_charset[$usedLang][$key]);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
-			} elseif (isset($langObj->LOCAL_LANG['default'][$key])) {
+				$word = $GLOBALS['TSFE']->csConv(
+					$langObj->LOCAL_LANG[$usedLang][$key],
+					$langObj->LOCAL_LANG_charset[$usedLang][$key]
+				);	// The "from" charset is normally empty and thus it will convert from the charset of the system language, but if it is set (see ->pi_loadLL()) it will be used.
+			} elseif ($langObj->LOCAL_LANG['default'][$key] != '') {
 				$usedLang = 'default';
 				$word = $langObj->LOCAL_LANG[$usedLang][$key];	// No charset conversion because default is English and thereby ASCII
 			} else {
@@ -667,6 +676,7 @@ class tx_div2007_alpha5 {
 	}
 
 	/**
+	 * Attention: only for TYPO3 versions above 4.6
 	 * Returns the localized label of the LOCAL_LANG key, $key used since TYPO3 4.6
 	 * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->LLtestPrefixAlt and ->LLtestPrefix
 	 *
@@ -685,59 +695,76 @@ class tx_div2007_alpha5 {
 		$hsc = FALSE
 	) {
 		$output = FALSE;
+		$typoVersion = tx_div2007_core::getTypoVersion();
 
-		if (is_object($langObj)) {
-			if (
-				$usedLang != '' &&
-				$langObj->LOCAL_LANG[$usedLang][$key][0]['target'] != ''
-			) {
-					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-				if ($langObj->LOCAL_LANG_charset[$usedLang][$key] != '') {
-					$word = $GLOBALS['TSFE']->csConv(
-						$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
-						$langObj->LOCAL_LANG_charset[$usedLang][$key]
-					);
-				} else {
+		if ($typoVersion >= 4006000) {
+
+			if (is_object($langObj)) {
+
+				if (
+					$usedLang != '' &&
+					is_array($langObj->LOCAL_LANG[$usedLang][$key][0]) &&
+					$langObj->LOCAL_LANG[$usedLang][$key][0]['target'] != ''
+				) {
+						// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
+					if ($langObj->LOCAL_LANG_charset[$usedLang][$key] != '') {
+						$word = $GLOBALS['TSFE']->csConv(
+							$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
+							$langObj->LOCAL_LANG_charset[$usedLang][$key]
+						);
+					} else {
+						$word = $langObj->LOCAL_LANG[$usedLang][$key][0]['target'];
+					}
+				} else if (
+					$langObj->LLkey != '' &&
+					is_array($langObj->LOCAL_LANG[$langObj->LLkey][$key][0]) &&
+					$langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'] != ''
+				) {
+					$usedLang = $langObj->LLkey;
+
+						// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
+					if ($langObj->LOCAL_LANG_charset[$usedLang][$key] != '') {
+						$word = $GLOBALS['TSFE']->csConv(
+							$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
+							$langObj->LOCAL_LANG_charset[$usedLang][$key]
+						);
+					} else {
+						$word = $langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'];
+					}
+				} elseif (
+					$langObj->altLLkey &&
+					is_array($langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]) &&
+					$langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'] != ''
+				) {
+					$usedLang = $langObj->altLLkey;
+
+						// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
+					if (isset($langObj->LOCAL_LANG_charset[$usedLang][$key])) {
+						$word = $GLOBALS['TSFE']->csConv(
+							$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
+							$langObj->LOCAL_LANG_charset[$usedLang][$key]
+						);
+					} else {
+						$word = $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'];
+					}
+				} elseif (
+					is_array($langObj->LOCAL_LANG['default'][$key][0]) &&
+					$langObj->LOCAL_LANG['default'][$key][0]['target'] != ''
+				) {
+					$usedLang = 'default';
+						// Get default translation (without charset conversion, english)
 					$word = $langObj->LOCAL_LANG[$usedLang][$key][0]['target'];
-				}
-			} else if ($langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'] != '') {
-				$usedLang = $langObj->LLkey;
-
-					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-				if ($langObj->LOCAL_LANG_charset[$usedLang][$key] != '') {
-					$word = $GLOBALS['TSFE']->csConv(
-						$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
-						$langObj->LOCAL_LANG_charset[$usedLang][$key]
-					);
 				} else {
-					$word = $langObj->LOCAL_LANG[$langObj->LLkey][$key][0]['target'];
+						// Return alternative string or empty
+					$word = (isset($langObj->LLtestPrefixAlt)) ? $langObj->LLtestPrefixAlt . $alternativeLabel : $alternativeLabel;
 				}
-			} elseif ($langObj->altLLkey && $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'] != '') {
-				$usedLang = $langObj->altLLkey;
 
-					// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-				if (isset($langObj->LOCAL_LANG_charset[$usedLang][$key])) {
-					$word = $GLOBALS['TSFE']->csConv(
-						$langObj->LOCAL_LANG[$usedLang][$key][0]['target'],
-						$langObj->LOCAL_LANG_charset[$usedLang][$key]
-					);
-				} else {
-					$word = $langObj->LOCAL_LANG[$langObj->altLLkey][$key][0]['target'];
-				}
-			} elseif ($langObj->LOCAL_LANG['default'][$key][0]['target'] != '') {
-				$usedLang = 'default';
-					// Get default translation (without charset conversion, english)
-				$word = $langObj->LOCAL_LANG[$usedLang][$key][0]['target'];
-			} else {
-					// Return alternative string or empty
-				$word = (isset($langObj->LLtestPrefixAlt)) ? $langObj->LLtestPrefixAlt . $alternativeLabel : $alternativeLabel;
+				$output = (isset($langObj->LLtestPrefix)) ? $langObj->LLtestPrefix . $word : $word;
 			}
 
-			$output = (isset($langObj->LLtestPrefix)) ? $langObj->LLtestPrefix . $word : $word;
-		}
-
-		if ($hsc) {
-			$output = htmlspecialchars($output);
+			if ($hsc) {
+				$output = htmlspecialchars($output);
+			}
 		}
 
 		return $output;
@@ -790,15 +817,22 @@ class tx_div2007_alpha5 {
 			}
 
 			if ($langObj->altLLkey) {
-				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->altLLkey, $GLOBALS['TSFE']->renderCharset);
+				$tempLOCAL_LANG =
+					t3lib_div::readLLfile(
+						$basePath,
+						$langObj->altLLkey,
+						$GLOBALS['TSFE']->renderCharset
+					);
 
 				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
 						if (is_array($tempLOCAL_LANG[$langKey])) {
 							if ($overwrite) {
-								$langObj->LOCAL_LANG[$langKey] = array_merge($langObj->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
+								$langObj->LOCAL_LANG[$langKey] =
+									array_merge($langObj->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
 							} else {
-								$langObj->LOCAL_LANG[$langKey] = array_merge($tempLOCAL_LANG[$langKey], $langObj->LOCAL_LANG[$langKey]);
+								$langObj->LOCAL_LANG[$langKey] =
+									array_merge($tempLOCAL_LANG[$langKey], $langObj->LOCAL_LANG[$langKey]);
 							}
 						}
 					}
