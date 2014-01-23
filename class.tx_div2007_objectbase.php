@@ -89,7 +89,7 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @param	mixed		controller or data array or data object
 	 * @return	void
 	 */
-	public function tx_div2007_objectBase ($parameter1 = null, $parameter2 = null) {
+	public function __construct($parameter1 = null, $parameter2 = null) {
 
 		$this->_iterator = new tx_div2007_spl_arrayIterator();
 		if(method_exists($this, 'preset')) {

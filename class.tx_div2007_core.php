@@ -39,8 +39,34 @@
  */
 
 
-
 class tx_div2007_core {
+	/**
+	 * Fields that are considered as system.
+	 *
+	 * @var array
+	 */
+	static protected $systemFields = array(
+		'uid',
+		'pid',
+		'tstamp',
+		'crdate',
+		'deleted',
+		'hidden',
+		'starttime',
+		'endtime',
+		'sys_language_uid',
+		'l18n_parent',
+		'l18n_diffsource',
+		't3ver_oid',
+		't3ver_id',
+		't3ver_wsid',
+		't3ver_label',
+		't3ver_state',
+		't3ver_stage',
+		't3ver_count',
+		't3ver_tstamp',
+		't3_origuid',
+	);
 
 	static public function getTypoVersion () {
 		$result = FALSE;
@@ -67,7 +93,7 @@ class tx_div2007_core {
 
 
 	### Mathematical functions
-	public static function testInt ($var) {
+	static public function testInt ($var) {
 		$result = FALSE;
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\MathUtility';
 
@@ -91,7 +117,7 @@ class tx_div2007_core {
 		return $result;
 	}
 
-	public static function intInRange ($theInt, $min, $max = 2000000000, $zeroValue = 0) {
+	static public function intInRange ($theInt, $min, $max = 2000000000, $zeroValue = 0) {
 		$result = FALSE;
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\MathUtility';
 
@@ -114,7 +140,7 @@ class tx_div2007_core {
 		return $result;
 	}
 
-	public static function intval_positive ($theInt) {
+	static public function intval_positive ($theInt) {
 		$result = FALSE;
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\MathUtility';
 
@@ -140,7 +166,7 @@ class tx_div2007_core {
 
 
 	### HTML parser object
-	public function newHtmlParser () {
+	static public function newHtmlParser () {
 		$useClassName = '';
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Html\\HtmlParser';
 
@@ -160,7 +186,7 @@ class tx_div2007_core {
 
 
 	### TS parser object
-	public function newTsParser () {
+	static public function newTsParser () {
 		$useClassName = '';
 		$callingClassName = '\\TYPO3\\CMS\\Core\\TypoScript\\Parser\\TypoScriptParser';
 
@@ -180,7 +206,7 @@ class tx_div2007_core {
 
 
 	### Mail object
-	public function newMailMessage () {
+	static public function newMailMessage () {
 
 		$useClassName = '';
 		$callingClassName = '\\TYPO3\\CMS\\Mail\\MailMessage';
@@ -358,6 +384,33 @@ class tx_div2007_core {
 		if (method_exists($useClassName, 'getTCEFORM_TSconfig')) {
 
 			$result = call_user_func($useClassName . '::getTCEFORM_TSconfig', $table, $row);
+		}
+
+		return $result;
+	}
+
+
+	### SQL
+
+	/**
+	 * @return array
+	 */
+	static public function getSystemFields () {
+		return self::$systemFields;
+	}
+
+	/**
+	 * Returns an array containing the regular field names.
+	 *
+	 * @return array
+	 */
+	static public function getFields ($table) {
+		$result = FALSE;
+
+		if (is_array($GLOBALS['TCA'][$table]['columns'])) {
+			$tcaFields = array_keys($GLOBALS['TCA'][$table]['columns']);
+			$systemFields = self::getSystemFields();
+			$result = array_diff($tcaFields, $systemFields);
 		}
 
 		return $result;

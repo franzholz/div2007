@@ -1,3 +1,8 @@
+
+23-01-14 Franz Holzinger  <franz@ttproducts.de>
+	* add tx_div2007_core::getSystemFields taken from TYPO3\CMS\Vidi\Tca\TcaService
+	* fix bug for static_info_tables: selectItemsTCA must be able to change the paramters
+
 19-11-13 Franz Holzinger  <franz@ttproducts.de>
 	* fix bug with reading of a locallang file
 

@@ -77,7 +77,7 @@ class tx_div2007_email {
 		$hookVar = '',
 		$defaultSubject = ''
 	) {
-		if (!is_array($toEMail)) {
+		if (!is_array($toEMail) && trim($toEMail)) {
 			$emailArray = t3lib_div::trimExplode(',', $toEMail);
 			$toEMail = array();
 			foreach ($emailArray as $email) {

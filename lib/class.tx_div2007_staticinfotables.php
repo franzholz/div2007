@@ -406,7 +406,7 @@ class tx_div2007_staticinfotables {
 	 * @param	array		itemsProcFunc data array:
 	 * @return	void		The $items array may have been modified
 	 */
-	static public function selectItemsTCA ($params) {
+	static public function selectItemsTCA (&$params) {
 		global $TCA;
 
 		$where = '';
