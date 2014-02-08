@@ -1,3 +1,6 @@
+08-02-14 Franz Holzinger  <franz@ttproducts.de>
+	* bug fix: no usage of PackageManager before TYPO3 6.2
+	* bug fix: allow PHP 5.2 for tx_div2007_alpha5::initFE
 
 23-01-14 Franz Holzinger  <franz@ttproducts.de>
 	* add tx_div2007_core::getSystemFields taken from TYPO3\CMS\Vidi\Tca\TcaService

@@ -1,7 +1,5 @@
 <?php
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 /***************************************************************
 *  Copyright notice
 *
@@ -386,17 +384,29 @@ class tx_div2007 {
 	 * @return	boolean		is the key valid?
 	 */
 	public function getValidKey ($rawKey) {
-
 		$result = FALSE;
+
 		$rawKey = str_replace('_', '', $rawKey);
-		$packageManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Package\\PackageManager');
-		foreach ($packageManager->getActivePackages() as $package) {
-			$packageKey = $package->getPackageKey();
-			if (
-				str_replace('_', '', $packageKey) == $rawKey
-			) {
-				$result =  $packageKey;
-				break;
+		$uKeys = array_keys(self::getGlobal('TYPO3_LOADED_EXT'));
+		if (isset($uKeys) && is_array($uKeys)) {
+			foreach($uKeys as $uKey) {
+				if (
+					str_replace('_', '', $uKey) == $rawKey
+				) {
+					$result =  $uKey;
+					break;
+				}
+			}
+		} else {
+			$packageManager = t3lib_div::makeInstance('TYPO3\\CMS\\Core\\Package\\PackageManager');
+			foreach ($packageManager->getActivePackages() as $package) {
+				$packageKey = $package->getPackageKey();
+				if (
+					str_replace('_', '', $packageKey) == $rawKey
+				) {
+					$result =  $packageKey;
+					break;
+				}
 			}
 		}
 

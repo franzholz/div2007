@@ -1515,23 +1515,26 @@ class tx_div2007_alpha5 {
 
 
 	static public function initFE () {
+		global $TYPO3_CONF_VARS, $TSFE, $TT, $BE_USER, $error;
 
+		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
 		/** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
-		$TSFE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+		$result = call_user_func(
+			$callingClassName . '::makeInstance',
 			'TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
 			$TYPO3_CONF_VARS,
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('id'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('type'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('no_cache'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('cHash'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('jumpurl'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('MP'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('RDCT')
+			call_user_func($callingClassName . '::_GP', 'id'),
+			call_user_func($callingClassName . '::_GP', 'type'),
+			call_user_func($callingClassName . '::_GP', 'no_cache'),
+			call_user_func($callingClassName . '::_GP', 'cHash'),
+			call_user_func($callingClassName . '::_GP', 'jumpurl'),
+			call_user_func($callingClassName . '::_GP', 'MP'),
+			call_user_func($callingClassName . '::_GP', 'RDCT')
 		);
 
 		if ($TYPO3_CONF_VARS['FE']['pageUnavailable_force']
-			&& !\TYPO3\CMS\Core\Utility\GeneralUtility::cmpIP(
-				\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR'),
+			&& !call_user_func($callingClassName . '::cmpIP',
+				call_user_func($callingClassName . '::getIndpEnv', 'REMOTE_ADDR'),
 				$TYPO3_CONF_VARS['SYS']['devIPmask'])
 		) {
 			$TSFE->pageUnavailableAndExit('This page is temporarily unavailable.');
@@ -1544,11 +1547,14 @@ class tx_div2007_alpha5 {
 		// Remove any output produced until now
 		ob_clean();
 		if ($TYPO3_CONF_VARS['FE']['compressionLevel'] && extension_loaded('zlib')) {
-			if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($TYPO3_CONF_VARS['FE']['compressionLevel'])) {
+			$callingClassName2 = '\\TYPO3\\CMS\\Core\\Utility\\MathUtility';
+			if (call_user_func($callingClassName2 . '::canBeInterpretedAsInteger', $TYPO3_CONF_VARS['FE']['compressionLevel'])) {
 				// Prevent errors if ini_set() is unavailable (safe mode)
 				@ini_set('zlib.output_compression_level', $TYPO3_CONF_VARS['FE']['compressionLevel']);
 			}
-			ob_start(array(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Utility\\CompressionUtility'), 'compressionOutputHandler'));
+			ob_start(
+				array(call_user_func($callingClassName . '::makeInstance', 'TYPO3\\CMS\\Frontend\\Utility\\CompressionUtility'), 'compressionOutputHandler')
+			);
 		}
 
 		// FE_USER
@@ -1565,17 +1571,25 @@ class tx_div2007_alpha5 {
 		// After this point we have an array, $page in TSFE, which is the page-record of the current page, $id
 		$TT->push('Process ID', '');
 		// Initialize admin panel since simulation settings are required here:
+		$callingClassName3 = '\\TYPO3\\CMS\\Core\\Core\\Bootstrap';
+		$bootStrap = call_user_func($callingClassName3 . '::getInstance');
 		if ($TSFE->isBackendUserLoggedIn()) {
 			$BE_USER->initializeAdminPanel();
-			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtensionTables(TRUE);
+			$bootStrap->loadExtensionTables(TRUE);
 		} else {
-			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
+			$bootStrap->loadCachedTca();
 		}
 		$TSFE->checkAlternativeIdMethods();
 		$TSFE->clear_preview();
 		$TSFE->determineId();
 		// Now, if there is a backend user logged in and he has NO access to this page, then re-evaluate the id shown!
-		if ($TSFE->isBackendUserLoggedIn() && (!$BE_USER->extPageReadAccess($TSFE->page) || \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('ADMCMD_noBeUser'))) {
+		if (
+			$TSFE->isBackendUserLoggedIn() &&
+			(
+				!$BE_USER->extPageReadAccess($TSFE->page) ||
+				call_user_func($callingClassName . '::_GP', 'ADMCMD_noBeUser')
+			)
+		) {
 			// \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('ADMCMD_noBeUser') is placed here because
 			// \TYPO3\CMS\Version\Hook\PreviewHook might need to know if a backend user is logged in!
 			// Remove user
@@ -1592,10 +1606,12 @@ class tx_div2007_alpha5 {
 		// Admin Panel & Frontend editing
 		if ($TSFE->isBackendUserLoggedIn()) {
 			$BE_USER->initializeFrontendEdit();
-			if ($BE_USER->adminPanel instanceof \TYPO3\CMS\Frontend\View\AdminPanelView) {
-				\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->initializeLanguageObject();
+			$className1 = '\\TYPO3\\CMS\\Frontend\\View\\AdminPanelView';
+			if ($BE_USER->adminPanel instanceof $className1) {
+				$bootStrap->initializeLanguageObject();
 			}
-			if ($BE_USER->frontendEdit instanceof \TYPO3\CMS\Core\FrontendEditing\FrontendEditingController) {
+			$className2 = '\\TYPO3\\CMS\\Core\\FrontendEditing\\FrontendEditingController';
+			if ($BE_USER->frontendEdit instanceof $className2) {
 				$BE_USER->frontendEdit->initConfigOptions();
 			}
 		}
@@ -1624,7 +1640,8 @@ class tx_div2007_alpha5 {
 		// Finish timetracking
 		$TT->pull();
 		// Check memory usage
-		\TYPO3\CMS\Core\Utility\MonitorUtility::peakMemoryUsage();
+		$callingClassName4 = '\\TYPO3\\CMS\\Core\\Utility\\MonitorUtility';
+		call_user_func($callingClassName4 . '::peakMemoryUsage');
 
 		// Debugging Output
 		if (isset($error) && is_object($error) && @is_callable(array($error, 'debugOutput'))) {
