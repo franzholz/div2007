@@ -77,6 +77,8 @@ class tx_div2007_email {
 		$hookVar = '',
 		$defaultSubject = ''
 	) {
+		$result = TRUE;
+
 		if (!is_array($toEMail) && trim($toEMail)) {
 			$emailArray = t3lib_div::trimExplode(',', $toEMail);
 			$toEMail = array();
@@ -137,7 +139,6 @@ class tx_div2007_email {
 			return FALSE;
 		}
 
-		$result = TRUE;
 		$fromName = str_replace('"', '\'', $fromName);
 		$fromNameSlashed = tx_div2007_alpha5::slashName($fromName);
 
@@ -159,6 +160,7 @@ class tx_div2007_email {
 		}
 
 		$typo3Version = tx_div2007_core::getTypoVersion();
+debug ($typo3Version, '$typo3Version');
 
 		if (
 			$typo3Version >= 4007000 ||
@@ -167,7 +169,10 @@ class tx_div2007_email {
 				is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
 				isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
 				is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
-				array_search('t3lib_mail_SwiftMailerAdapter', $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) !== FALSE
+				array_search(
+					't3lib_mail_SwiftMailerAdapter',
+					$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']
+				) !== FALSE
 			)
 		) {
 			if (preg_match('#[/\(\)\\<>,;:@\.\]\[]#', $fromName)) {
@@ -302,6 +307,8 @@ class tx_div2007_email {
 			$mail->setRecipient(explode(',', $toEMail));
 		} else {
 			$result = FALSE;
+			debug ('t3lib_div::sendMail exited with error 4'); // keep this
+debug ($result, '$result');
 		}
 
 		if (
@@ -337,6 +344,11 @@ class tx_div2007_email {
 						$hookVar,
 						$result
 					);
+
+					if ($result === FALSE) {
+						debug ('t3lib_div::sendMail exited with error 5'); // keep this
+						break;
+					}
 				}
 			}
 		}

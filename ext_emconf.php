@@ -10,7 +10,7 @@ $EM_CONF[$_EXTKEY] = array (
   'description' => 'This library is called by other extensions. It provides a modified t3lib_div of TYPO3 4.7.10',
   'category' => 'misc',
   'shy' => 0,
-  'version' => '1.1.3',
+  'version' => '1.1.5',
   'dependencies' => '',
   'conflicts' => '',
   'suggests' => '',
@@ -37,7 +37,7 @@ $EM_CONF[$_EXTKEY] = array (
   array (
     'depends' =>
     array (
-      'php' => '5.2.0-5.4.99',
+      'php' => '5.2.0-5.5.99',
       'typo3' => '4.5.0-6.2.99',
     ),
     'conflicts' =>

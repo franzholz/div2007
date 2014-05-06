@@ -1,3 +1,9 @@
+06-05-14 Franz Holzinger  <franz@ttproducts.de>
+	* do not use t3lib_div::requireOnce inside of loadTcaAdditions_fh002 because the global variable $_EXTKEY is not global there
+
+09-04-14 Franz Holzinger  <franz@ttproducts.de>
+	* support for PHP 5.5
+
 08-02-14 Franz Holzinger  <franz@ttproducts.de>
 	* bug fix: no usage of PackageManager before TYPO3 6.2
 	* bug fix: allow PHP 5.2 for tx_div2007_alpha5::initFE

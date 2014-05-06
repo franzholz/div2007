@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2012 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2014 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -44,7 +44,7 @@
  * @since      0.1
  */
 
-require_once (PATH_BE_div2007 . 'class.tx_div2007_ff.php');
+// require_once (PATH_BE_div2007 . 'class.tx_div2007_ff.php');
 
 class tx_div2007_alpha5 {
 
@@ -1647,6 +1647,491 @@ class tx_div2007_alpha5 {
 		if (isset($error) && is_object($error) && @is_callable(array($error, 'debugOutput'))) {
 			$error->debugOutput();
 		}
+	}
+
+
+	/**
+	 * Gets information for an extension, eg. version and most-recently-edited-script
+	 *
+	 * @param	string		Extension key
+	 * @param	string		predefined path ... needed if you have the extension in another place
+	 * @return	array		Information array (unless an error occured)
+	 */
+	static public function getExtensionInfo_fh003 ($extKey, $path = '') {
+		$result = '';
+
+		if (!$path) {
+			$path = t3lib_extMgm::extPath($extKey);
+		}
+
+		if (is_dir($path)) {
+			$file = $path . 'ext_emconf.php';
+
+			if (@is_file($file)) {
+				$_EXTKEY = $extKey;
+				$EM_CONF = array();
+				include($file);
+
+				$eInfo = array();
+				$fieldArray = array(
+					'author',
+					'author_company',
+					'author_email',
+					'category',
+					'constraints',
+					'description',
+					'lastuploaddate',
+					'reviewstate',
+					'state',
+					'title',
+					'version',
+					'CGLcompliance',
+					'CGLcompliance_note'
+				);
+				$extConf = $EM_CONF[$extKey];
+
+				if (isset($extConf) && is_array($extConf)) {
+					foreach ($extConf as $field => $value) {
+						if (in_array($field, $fieldArray)) {
+							$eInfo[$field] = $value;
+						}
+					}
+
+					foreach ($fieldArray as $field) {
+						// Info from emconf:
+						$eInfo[$field] = $extConf[$field];
+					}
+
+					if (is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
+						$eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
+					} else {
+						$eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
+					}
+					$filesHash = unserialize($extConf['_md5_values_when_last_written']);
+					$eInfo['manual'] = @is_file($path . '/doc/manual.sxw');
+					$result = $eInfo;
+				} else {
+					$result = 'ERROR: The array $EM_CONF is wrong in file: ' . $file;
+				}
+			} else {
+				$result = 'ERROR: No emconf.php file: ' . $file;
+			}
+		} else {
+			$result = 'ERROR: Path not found: ' . $path;
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Get External CObjects
+	 * @param	object		tx_div2007_alpha_language_base object
+	 * @param	string		Configuration Key
+	 */
+	static public function getExternalCObject_fh003 (
+		$pOb,
+		$mConfKey
+	) {
+		$result = '';
+
+		if (
+			$pOb->conf[$mConfKey] &&
+			$pOb->conf[$mConfKey . '.']
+		) {
+			$pOb->cObj->regObj = $pOb;
+			$result = $pOb->cObj->cObjGetSingle(
+				$pOb->conf[$mConfKey],
+				$pOb->conf[$mConfKey . '.'],
+				'/' . $mConfKey . '/'
+			) .
+			'';
+		}
+		return $result;
+	}
+
+
+
+		/**
+	 * Wraps the input string in a <div> tag with the class attribute set to the prefixId.
+	 * All content returned from your plugins should be returned through this function so all content from your plugin is encapsulated in a <div>-tag nicely identifying the content of your plugin.
+	 *
+	 * @param	string		HTML content to wrap in the div-tags with the "main class" of the plugin
+	 * @return	string		HTML content wrapped, ready to return to the parent object.
+	 * @see pi_wrapInBaseClass()
+	 */
+	static public function wrapInBaseClass_fh002 (
+		$str,
+		$prefixId,
+		$extKey
+	) {
+		$content = '<div class="' . str_replace('_','-',$prefixId) . '">
+		' . $str . '
+	</div>
+	';
+
+		if(!$GLOBALS['TSFE']->config['config']['disablePrefixComment']) {
+			$content = '
+
+
+	<!--
+
+		BEGIN: Content of extension "' . $extKey . '", plugin "' . $prefixId . '"
+
+	-->
+	' . $content . '
+	<!-- END: Content of extension "' . $extKey . '", plugin "' . $prefixId . '" -->
+
+	';
+		}
+
+		return $content;
+	}
+
+
+
+	/**
+	* Invokes a user process
+	*
+	* @param object $pObject: the name of the parent object
+	* @param array  $conf:    the base TypoScript setup
+	* @param array  $mConfKey: the configuration array of the user process
+	* @param array  $passVar: the array of variables to be passed to the user process
+	* @return array the updated array of passed variables
+	*/
+	static public function userProcess_fh002 (
+		$pObject,
+		$conf,
+		$mConfKey,
+		$passVar
+	) {
+		if (
+			isset($conf) &&
+			is_array($conf) &&
+			$conf[$mConfKey]
+		) {
+			$funcConf = $conf[$mConfKey . '.'];
+			$funcConf['parentObj'] = $pObject;
+			$passVar = $GLOBALS['TSFE']->cObj->callUserFunction(
+				$conf[$mConfKey],
+				$funcConf,
+				$passVar
+			);
+		}
+		return $passVar;
+	} // userProcess
+
+
+	/**
+	 * run function from external cObject
+	 * @param	object		tx_div2007_alpha_language_base object
+	 */
+	static public function load_noLinkExtCobj_fh002 ($langObj) {
+		if (
+			$langObj->conf['externalProcessing_final'] ||
+			is_array($langObj->conf['externalProcessing_final.'])
+		) {	// If there is given another cObject for the final order confirmation template!
+			$langObj->externalCObject =
+				self::getExternalCObject_fh003(
+					$langObj,
+					'externalProcessing_final'
+				);
+		}
+	} // load_noLinkExtCobj
+
+
+	/**
+	 * Returns the help page with a mini guide how to setup the extension
+	 *
+	 * example:
+	 * 	$content .= tx_fhlibrary_view::displayHelpPage($this->cObj->fileResource('EXT:'.TT_PRODUCTS_EXTkey.'/template/products_help.tmpl'));
+	 * 	unset($this->errorMessage);
+	 *
+	 * @param	object		tx_div2007_alpha_language_base
+	 * @param	object		cObj
+	 * @param	string		HTML template content
+	 * @param	string		extension key
+	 * @param	string		error message for the marker ###ERROR_MESSAGE###
+	 * @param	string		CODE of plugin
+	 *
+	 * @return	string		HTML to display the help page
+	 * @access	public
+	 *
+	 */
+	static public function displayHelpPage_fh003 (
+		$langObj,
+		$cObj,
+		$helpTemplate,
+		$extKey,
+		$errorMessage = '',
+		$theCode = ''
+	) {
+			// Get language version
+		$helpTemplate_lang='';
+		if ($langObj->LLkey) {
+			$helpTemplate_lang =
+				$cObj->getSubpart(
+					$helpTemplate,
+					'###TEMPLATE_' . $langObj->LLkey . '###'
+				);
+		}
+
+		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
+			// Markers and substitution:
+
+		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
+		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
+		$markerArray['###CODE###'] = $theCode;
+		$rc = $cObj->substituteMarkerArray($helpTemplate, $markerArray);
+		return $rc;
+	}
+
+
+	/**
+	 * Returns the values from the setup field or the field of the flexform converted into the value
+	 * The default value will be used if no return value would be available.
+	 * This can be used fine to get the CODE values or the display mode dependant if flexforms are used or not.
+	 * And all others fields of the flexforms can be read.
+	 *
+	 * example:
+	 * 	$config['code'] = tx_div2007_alpha::getSetupOrFFvalue_fh003(
+	 *					$cObj,
+	 * 					$this->conf['code'],
+	 * 					$this->conf['code.'],
+	 * 					$this->conf['defaultCode'],
+	 * 					$this->cObj->data['pi_flexform'],
+	 * 					'display_mode',
+	 * 					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][TT_PRODUCTS_EXTkey]['useFlexforms']);
+	 *
+	 * You have to call $this->pi_initPIflexForm(); before you call this method!
+	 * @param	object		tx_div2007_alpha_language_base object
+	 * @param	string		TypoScript configuration
+	 * @param	string		extended TypoScript configuration
+	 * @param	string		default value to use if the result would be empty
+	 * @param	boolean		if flexforms are used or not
+	 * @param	string		name of the flexform which has been used in ext_tables.php
+	 * 						$TCA['tt_content']['types']['list']['subtypes_addlist']['5']='pi_flexform';
+	 * @return	string		name of the field to look for in the flexform
+	 * @access	public
+	 *
+	 */
+	static public function getSetupOrFFvalue_fh004 (
+		$cObj,
+		$code,
+		$codeExt,
+		$defaultCode,
+		$T3FlexForm_array,
+		$fieldName = 'display_mode',
+		$bUseFlexforms = TRUE,
+		$sheet = 'sDEF',
+		$lang = 'lDEF',
+		$value = 'vDEF'
+	) {
+		$rc = '';
+		if (is_object($cObj)) {
+			if (empty($code)) {
+				if ($bUseFlexforms) {
+					// Converting flexform data into array:
+					$rc = tx_div2007_ff::get($T3FlexForm_array, $fieldName, $sheet, $lang, $value);
+				} else {
+					$rc = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
+				}
+				if (empty($rc)) {
+					$rc = strtoupper($defaultCode);
+				}
+			} else {
+				$rc = $code;
+			}
+		} else {
+			$rc = 'error in call of tx_div2007_alpha::getSetupOrFFvalue_fh003: parameter $cObj is not an object';
+			debug ($rc, '$rc'); // keep this
+		}
+		return $rc;
+	}
+
+
+	/* loadTcaAdditions($ext_keys)
+	*
+	* Your extension may depend on fields that are added by other
+	* extensios. For reasons of performance parts of the TCA are only
+	* loaded on demand. To ensure that the extended TCA is loaded for
+	* the extensions you depend on or which extend your extension by
+	* hooks, you shall apply this function.
+	*
+	* @param array     extension keys which have TCA additions to load
+	*/
+	static public function loadTcaAdditions_fh002 ($ext_keys) {
+		global $_EXTKEY, $TCA;
+
+		$typoVersion = tx_div2007_core::getTypoVersion();
+
+		if ($typoVersion < '6002000') {
+			$loadTcaAdditions = TRUE;
+
+			debug ($ext_keys, '$ext_keys');
+			//Merge all ext_keys
+			if (is_array($ext_keys)) {
+
+				foreach ($ext_keys as $_EXTKEY) {
+
+					if (t3lib_extMgm::isLoaded($_EXTKEY)) {
+					debug ($_EXTKEY, '$_EXTKEY');
+						//Include the ext_table
+						require_once(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
+					}
+				}
+			}
+
+				// ext-script
+			if (TYPO3_extTableDef_script) {
+				require_once(PATH_typo3conf . TYPO3_extTableDef_script);
+			}
+		}
+	}
+
+
+	/**
+	 * This is the original pi_RTEcssText from tslib_pibase
+	 * Will process the input string with the parseFunc function from tslib_cObj based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
+	 * This is useful for rendering of content in RTE fields where the transformation mode is set to "ts_css" or so.
+	 * Notice that this requires the use of "css_styled_content" to work right.
+	 *
+	 * @param	object		cOject of class tslib_cObj
+	 * @param	string		The input text string to process
+	 * @return	string		The processed string
+	 * @see tslib_cObj::parseFunc()
+	 */
+	static public function RTEcssText ($cObj, $str) {
+		$parseFunc = $GLOBALS['TSFE']->tmpl->setup['lib.']['parseFunc_RTE.'];
+		if (is_array($parseFunc)) {
+			$str = $cObj->parseFunc($str, $parseFunc);
+		}
+		return $str;
+	}
+
+
+	/**
+	 * Split Label function for front-end applications.
+	 *
+	 * @param	string		Key string. Accepts the "LLL:" prefix.
+	 * @return	string		Label value, if any.
+	 */
+	static public function sL_fh002 ($input) {
+		$restStr = trim(substr($input, 4));
+		$extPrfx = '';
+		if (!strcmp(substr($restStr, 0, 4), 'EXT:')) {
+			$restStr = trim(substr($restStr, 4));
+			$extPrfx = 'EXT:';
+		}
+		$parts = explode(':', $restStr);
+		return ($parts[1]);
+	}
+
+
+	/**
+	 * Returns a class-name prefixed with $this->prefixId and with all underscores substituted to dashes (-)
+	 * this is an initial state, not yet finished! Therefore the debug lines have been left.
+	 *
+	 * @param	string		The class name (or the END of it since it will be prefixed by $prefixId.'-')
+	 * @param	string		$prefixId
+	 * @return	string		The combined class name (with the correct prefix)
+	 */
+	static public function unserialize_fh002 (
+		$str,
+		$bErrorCheck = TRUE
+	) {
+		$rc = FALSE;
+
+		$codeArray = array('a', 's');
+		$len = strlen($str);
+		$depth = 0;
+		$mode = 'c';
+		$i = 0;
+		$errorOffset = -1;
+		$controlArray = array();
+		$controlCount = array();
+		$controlData = array();
+		$controlIndex = 0;
+		while ($i < $len) {
+			$ch = $str{$i};
+			$i++;
+			$next = $str{$i};
+			if ($next == ':') {
+				$i++;
+				$paramPos = strpos($str, ':', $i);
+				$param1 = substr($str, $i, $paramPos - $i);
+				if ($param1 != '') {
+					$i = $paramPos + 1;
+					switch ($ch) {
+						case 'a':
+							if (isset($var)) {
+							} else {
+								$var = array();
+							}
+							if ($str{$i} == '{') {
+								$i++;
+								$controlIndex++;
+								$controlArray[$controlIndex] = $ch;
+								$controlData[$controlIndex] = array('param' => $param1);
+								$controlCount[$controlIndex] = 0;
+							} else {
+								$errorOffset = $i;
+							}
+						break;
+						case 's':
+							if (isset($var)) {
+								if ($str{$i} == '"') {
+									$i++;
+									$param2 = substr($str, $i, $param1);
+									$fixPos = strpos($param2, '";');
+									if ($fixPos !== FALSE && in_array($param2{$fixPos + 2}, $codeArray)) {
+										$i += $fixPos; // fix wrong string length if it is really shorter now
+										$param2 = substr($param2, 0, $fixPos);
+									} else {
+										$i += $param1;
+									}
+
+									if ($str{$i} == '"' && $str{$i + 1} == ';') {
+										$i += 2;
+										if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k']=='' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
+											$controlData[$controlIndex]['k'] = $param2;
+											continue;
+										}
+									}
+
+									if ($controlArray[$controlIndex] == 'a' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'] && isset($controlData[$controlIndex]['k']))	{
+										$controlCount[$controlIndex]++;
+										$var[$controlData[$controlIndex]['k']] = $param2;
+										$controlData[$controlIndex]['k']='';
+									}
+								}
+							} else {
+								$var = '';
+							}
+
+						break;
+						default:
+							$errorOffset = $i;
+						break;
+					}
+				} else {
+					$errorOffset = $i;
+				}
+			} else {
+				$errorOffset = $i;
+			}
+			if ($errorOffset >= 0) {
+					if ($bErrorCheck) {
+						trigger_error('unserialize_fh002(): Error at offset ' . $errorOffset . ' of ' . $len . ' bytes \'' . substr($str, $errorOffset, 12) . '\'', E_USER_NOTICE);
+						$rc = FALSE;
+					}
+				break;
+			}
+		}
+		if (isset($var) && (!$bErrorCheck || $errorOffset == 0)) {
+			$rc = $var;
+		}
+		return $rc;
 	}
 }
 

@@ -28,9 +28,11 @@
 
 
 /**
+ * deprecated
+ *
  * Collection of static functions to work in cooperation with the extension lib (lib/div)
  *
- * PHP version 5
+ * PHP version 5 (formerly PHP 4)
  *
  * @package    TYPO3
  * @subpackage div2007
@@ -1233,9 +1235,6 @@ class tx_div2007_alpha {
 	} // load_noLinkExtCobj
 
 
-	/**
-	 * Calls user function
-	 */
 	/**
 	* Invokes a user process
 	*

@@ -98,7 +98,7 @@ class ExtensionUtility {
 					$result = 'ERROR: The array $EM_CONF is wrong in file: ' . $file;
 				}
 			} else {
-				$result = 'ERROR: No emconf.php file: ' . $file;
+				$result = 'ERROR: No ext_emconf.php file: ' . $file;
 			}
 		} else {
 			$result = 'ERROR: Path not found: ' . $path;
