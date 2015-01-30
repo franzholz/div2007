@@ -116,26 +116,26 @@ class tx_div2007_email {
 						$email = $v;
 					}
 
-					debug ('t3lib_div::sendMail invalid email address: to "'. $email . '"'); // keep this
+					debug ('tx_div2007_email::sendMail invalid email address: to "'. $email . '"'); // keep this
 				}
 			}
 
 			if (
 				!count($toEMail)
 			) {
-				debug ('t3lib_div::sendMail exited with error 1'); // keep this
+				debug ('tx_div2007_email::sendMail exited with error 1'); // keep this
 				return FALSE;
 			}
 		} else {
-				debug ('t3lib_div::sendMail exited with error 2'); // keep this
+				debug ('tx_div2007_email::sendMail exited with error 2'); // keep this
 			return FALSE;
 		}
 
 		if (
 			!t3lib_div::validEmail($fromEMail)
 		) {
-			debug ('t3lib_div::sendMail invalid email address: from "' . $fromEMail . '"'); // keep this
-			debug ('t3lib_div::sendMail exited with error 3'); // keep this
+			debug ('tx_div2007_email::sendMail invalid email address: from "' . $fromEMail . '"'); // keep this
+			debug ('tx_div2007_email::sendMail exited with error 3'); // keep this
 			return FALSE;
 		}
 
@@ -160,7 +160,6 @@ class tx_div2007_email {
 		}
 
 		$typo3Version = tx_div2007_core::getTypoVersion();
-debug ($typo3Version, '$typo3Version');
 
 		if (
 			$typo3Version >= 4007000 ||
@@ -307,8 +306,7 @@ debug ($typo3Version, '$typo3Version');
 			$mail->setRecipient(explode(',', $toEMail));
 		} else {
 			$result = FALSE;
-			debug ('t3lib_div::sendMail exited with error 4'); // keep this
-debug ($result, '$result');
+			debug ('tx_div2007_email::sendMail exited with error 4'); // keep this
 		}
 
 		if (
@@ -346,7 +344,7 @@ debug ($result, '$result');
 					);
 
 					if ($result === FALSE) {
-						debug ('t3lib_div::sendMail exited with error 5'); // keep this
+						debug ('tx_div2007_email::sendMail exited with error 5'); // keep this
 						break;
 					}
 				}

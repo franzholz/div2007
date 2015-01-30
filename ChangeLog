@@ -1,3 +1,8 @@
+30-01-15 Franz Holzinger  <franz@ttproducts.de>
+	* add more functions to the table utility class
+	* add function enableFields
+	* use uppercase PHP constants like PATH_BE_DIV2007
+
 06-05-14 Franz Holzinger  <franz@ttproducts.de>
 	* do not use t3lib_div::requireOnce inside of loadTcaAdditions_fh002 because the global variable $_EXTKEY is not global there
 

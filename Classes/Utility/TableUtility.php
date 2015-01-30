@@ -6,7 +6,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2013 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2014 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -85,6 +85,151 @@ class TableUtility {
 
 		return $fTWHERE;
 	}
+
+
+	/**
+	 * Returns the "AND NOT deleted" clause for the tablename given IF $GLOBALS['TCA'] configuration points to such a field.
+	 *
+	 * @param	string		Tablename
+	 * @return	string
+	 * @see enableFields()
+	 */
+	static public function deleteClause($table) {
+		if (!strcmp($table, 'pages')) { // Hardcode for pages because TCA might not be loaded yet (early frontend initialization)
+			return ' AND pages.deleted=0';
+		} else {
+			return $GLOBALS['TCA'][$table]['ctrl']['delete'] ? ' AND ' . $table . '.' . $GLOBALS['TCA'][$table]['ctrl']['delete'] . '=0' : '';
+		}
+	}
+
+	/**
+	 * Creating where-clause for checking group access to elements in enableFields function
+	 *
+	 * @param	string		Field with group list
+	 * @param	string		Table name
+	 * @return	string		AND sql-clause
+	 * @see enableFields()
+	 */
+	static public function getMultipleGroupsWhereClause($field, $table) {
+		$memberGroups = t3lib_div::intExplode(',', $GLOBALS['TSFE']->gr_list);
+		$orChecks = array();
+		$orChecks[] = $field . '=\'\''; // If the field is empty, then OK
+		$orChecks[] = $field . ' IS NULL'; // If the field is NULL, then OK
+		$orChecks[] = $field . '=\'0\''; // If the field contsains zero, then OK
+
+		foreach ($memberGroups as $value) {
+			$orChecks[] = $GLOBALS['TYPO3_DB']->listQuery($field, $value, $table);
+		}
+
+		return ' AND (' . implode(' OR ', $orChecks) . ')';
+	}
+
+	/**
+	 * Returns a part of a WHERE clause which will filter out records with start/end times or hidden/fe_groups fields set to values that should de-select them according to the current time, preview settings or user login. Definitely a frontend function.
+	 * Is using the $GLOBALS['TCA'] arrays "ctrl" part where the key "enablefields" determines for each table which of these features applies to that table.
+	 *
+	 * @param	string		Table name found in the $GLOBALS['TCA'] array
+	 * @param	integer		If $show_hidden is set (0/1), any hidden-fields in records are ignored. NOTICE: If you call this function, consider what to do with the show_hidden parameter. Maybe it should be set? See tslib_cObj->enableFields where it's implemented correctly.
+	 * @param	array		Array you can pass where keys can be "disabled", "starttime", "endtime", "fe_group" (keys from "enablefields" in TCA) and if set they will make sure that part of the clause is not added. Thus disables the specific part of the clause. For previewing etc.
+	 * @param	boolean		If set, enableFields will be applied regardless of any versioning preview settings which might otherwise disable enableFields
+	 * @return	string		The clause starting like " AND ...=... AND ...=..."
+	 * @see tslib_cObj::enableFields(), deleteClause()
+	 */
+	static public function enableFields($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = FALSE) {
+		if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
+			$show_hidden = $table == 'pages' ? $GLOBALS['TSFE']->showHiddenPage : $GLOBALS['TSFE']->showHiddenRecords;
+		}
+		if ($show_hidden == -1) {
+			$show_hidden = 0;
+		} // If show_hidden was not changed during the previous evaluation, do it here.
+
+		$ctrl = $GLOBALS['TCA'][$table]['ctrl'];
+		$query = '';
+		if (is_array($ctrl)) {
+
+				// Delete field check:
+			if ($ctrl['delete']) {
+				$query .= ' AND ' . $table . '.' . $ctrl['delete'] . '=0';
+			}
+
+				// Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
+			if ($ctrl['versioningWS'] && $noVersionPreview) {
+				$query .= ' AND ' . $table . '.t3ver_state<=0 AND ' . $table . '.pid<>-1'; // Shadow state for new items MUST be ignored!
+			}
+
+				// Enable fields:
+			if (is_array($ctrl['enablecolumns'])) {
+				if (!$ctrl['versioningWS'] || $noVersionPreview) { // In case of versioning-preview, enableFields are ignored (checked in versionOL())
+					if ($ctrl['enablecolumns']['disabled'] && !$show_hidden && !$ignore_array['disabled']) {
+						$field = $table . '.' . $ctrl['enablecolumns']['disabled'];
+						$query .= ' AND ' . $field . '=0';
+					}
+					if ($ctrl['enablecolumns']['starttime'] && !$ignore_array['starttime']) {
+						$field = $table . '.' . $ctrl['enablecolumns']['starttime'];
+						$query .= ' AND ' . $field . '<=' . $GLOBALS['SIM_ACCESS_TIME'];
+					}
+					if ($ctrl['enablecolumns']['endtime'] && !$ignore_array['endtime']) {
+						$field = $table . '.' . $ctrl['enablecolumns']['endtime'];
+						$query .= ' AND (' . $field . '=0 OR ' . $field . '>' . $GLOBALS['SIM_ACCESS_TIME'] . ')';
+					}
+					if ($ctrl['enablecolumns']['fe_group'] && !$ignore_array['fe_group']) {
+						$field = $table . '.' . $ctrl['enablecolumns']['fe_group'];
+						$query .= self::getMultipleGroupsWhereClause($field, $table);
+					}
+
+						// Call hook functions for additional enableColumns
+						// It is used by the extension ingmar_accessctrl which enables assigning more than one usergroup to content and page records
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'])) {
+						$_params = array(
+							'table' => $table,
+							'show_hidden' => $show_hidden,
+							'ignore_array' => $ignore_array,
+							'ctrl' => $ctrl
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'] as $_funcRef) {
+							$query .= t3lib_div::callUserFunction($_funcRef, $_params, 'TableUtility');
+						}
+					}
+				}
+			}
+		} else {
+			throw new InvalidArgumentException(
+				'There is no entry in the $TCA array for the table "' . $table .
+				'". This means that the function enableFields() is ' .
+				'called with an invalid table name as argument.',
+				1283790586
+			);
+		}
+
+		return $query;
+	}
+
+
+	/**
+	 * Removes Page UID numbers from the input array which are not available due to enableFields() or the list of bad doktype numbers ($this->checkPid_badDoktypeList)
+	 *
+	 * @param array $listArr Array of Page UID numbers for select and for which pages with enablefields and bad doktypes should be removed.
+	 * @return array Returns the array of remaining page UID numbers
+	 * @access private
+	 * @see getWhere(),checkPid()
+	 * @todo Define visibility
+	 */
+	static public function checkPidArray ($listArr) {
+		$outArr = array();
+		if (is_array($listArr) && count($listArr)) {
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . self::enableFields('pages') . ' AND doktype NOT IN (' . $this->checkPid_badDoktypeList . ')');
+			if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
+				$GLOBALS['TT']->setTSlogMessage($error . ': ' . $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery, 3);
+			} else {
+				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$outArr[] = $row['uid'];
+				}
+			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
+		}
+		return $outArr;
+	}
 }
+
 
 ?>

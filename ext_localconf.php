@@ -11,8 +11,12 @@ if (!defined ('DIV2007_EXTkey')) { // deprecated
 	define('DIV2007_EXTkey', 'div2007');
 }
 
-if (!defined ('PATH_BE_div2007')) {
+if (!defined ('PATH_BE_div2007')) { // deprecated
 	define('PATH_BE_div2007', t3lib_extMgm::extPath(DIV2007_EXT));
+}
+
+if (!defined ('PATH_BE_DIV2007')) {
+	define('PATH_BE_DIV2007', t3lib_extMgm::extPath(DIV2007_EXT));
 }
 
 if (!defined ('STATIC_INFO_TABLES_EXT')) {
