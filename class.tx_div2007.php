@@ -549,11 +549,7 @@ class tx_div2007 {
 	 * @see     tx_div2007_loader
 	 */
 	static public function makeInstance ($className) {
-		$instance = FALSE;
-		if(!is_object($instance)) {
-			require_once(PATH_BE_div2007 . 'class.tx_div2007_t3Loader.php');
-			$instance = tx_div2007_t3Loader::makeInstance($className);
-		}
+		$instance = t3lib_div::makeInstance($className);
 		if(!is_object($instance)) {
 			return FALSE;
 		} else {

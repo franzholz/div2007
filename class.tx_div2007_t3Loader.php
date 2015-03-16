@@ -39,7 +39,7 @@
  * @since      0.1
  */
 
-require_once(PATH_BE_div2007 . 'class.tx_div2007.php');
+// require_once(PATH_BE_div2007 . 'class.tx_div2007.php');
 
 /**
  * Collection of functions to load t3 classes and instanciate them.
@@ -76,7 +76,7 @@ class tx_div2007_t3Loader {
 	function load ($minimalInformation, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
 		$path = tx_div2007_t3Loader::_find($minimalInformation, $alternativeKey, $prefix, $suffix);
 		if($path) {
-			require_once($path);
+// 			require_once($path);
 			return TRUE;
 		} else {
 			return FALSE;
@@ -97,7 +97,7 @@ class tx_div2007_t3Loader {
 	 * @see		load()
 	 */
 	function makeInstance ($class, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
-		if(tx_div2007_t3Loader::load($class, $alternativeKey, $prefix, $suffix)) {
+		if(class_exists($class)) {
 			return t3lib_div::makeInstance($class); // includes ux_ classes
 		} else {
 			return false;

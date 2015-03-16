@@ -239,7 +239,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	public function _buildController ($controllerAndAction) {
 		list($controllerName, $action) = $controllerAndAction;
 		$this->action = $action;
-		$controller = tx_div2007::makeInstance($controllerName);
+		$controller = t3lib_div::makeInstance($controllerName);
 		// Set all values to the new controller
 		foreach(array_keys(get_class_vars(get_class($this))) as $key) {
 			$controller->$key = $this->$key;
@@ -278,7 +278,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	 * @access	protected
 	 */
 	public function _createConfigurations ($configurationArray) {
-		$object = tx_div2007::makeInstance($this->configurationsClassName);
+		$object = t3lib_div::makeInstance($this->configurationsClassName);
 		$object->controller($this);
 		$object->setTypoScriptConfiguration($configurationArray);
 		if(is_object($this->cObj)) {
@@ -294,7 +294,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	 * @access	protected
 	 */
 	public function _createContext () {
-		$object = tx_div2007::makeInstance($this->contextClassName);
+		$object = t3lib_div::makeInstance($this->contextClassName);
 		$object->controller($this);
 		if(is_object($this->cObj)) {
 			$object->setContentObject($this->cObj);
@@ -309,7 +309,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	 * @access	protected
 	 */
 	public function _createParameters () {
-		$classObject = tx_div2007::makeInstance($this->parametersClassName, $this);
+		$classObject = t3lib_div::makeInstance($this->parametersClassName, $this);
 		return $classObject;
 	}
 

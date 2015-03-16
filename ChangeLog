@@ -1,3 +1,7 @@
+16-03-15 Franz Holzinger  <franz@ttproducts.de>
+	* more classes from extension lib: tx_div2007_viewBase, tx_div2007_link, tx_div2007_phpTemplateEngine
+	* Do not use makeInstance and autoloading from div2007 any further
+
 30-01-15 Franz Holzinger  <franz@ttproducts.de>
 	* add more functions to the table utility class
 	* add function enableFields

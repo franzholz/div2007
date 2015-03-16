@@ -90,7 +90,6 @@ class tx_div2007_objectBase extends tx_div2007_selfAwareness {
 	 * @return	void
 	 */
 	public function __construct($parameter1 = null, $parameter2 = null) {
-
 		$this->_iterator = new tx_div2007_spl_arrayIterator();
 		if(method_exists($this, 'preset')) {
 			$this->preset();
