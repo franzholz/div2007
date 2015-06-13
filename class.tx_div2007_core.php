@@ -294,6 +294,7 @@ class tx_div2007_core {
 		return $result;
 	}
 
+
 	### BACKEND
 
 	### Backend Utility
@@ -386,6 +387,45 @@ class tx_div2007_core {
 			$result = call_user_func($useClassName . '::getTCEFORM_TSconfig', $table, $row);
 		}
 
+		return $result;
+	}
+
+
+	### TYPO3 SPECIFIC FUNCTIONS
+
+	static public function calculateCacheHash (array $params) {
+		$useClassName = '';
+		$result = FALSE;
+		$callingClassName = '\\TYPO3\\CMS\\Frontend\\Page\\CacheHashCalculator';
+		if (
+			class_exists($callingClassName)
+		) {
+			$useClassName = substr($callingClassName, 1);
+		} else if (
+			class_exists('t3lib_cacheHash')
+		) {
+			$useClassName = 't3lib_cacheHash';
+		}
+
+		if (method_exists($useClassName, 'calculateCacheHash')) {
+
+			$result = call_user_func($useClassName . '::calculateCacheHash', $params);
+		}
+
+		return $result;
+	}
+
+	static public function generateHash (array $params, $limit = 20) {
+		$result = FALSE;
+		$typoVersion = self::getTypoVersion();
+
+		if ($typoVersion < 4007000) {
+			$regHash_array = t3lib_div::cHashParams(t3lib_div::implodeArrayForUrl('', $params));
+			$result = t3lib_div::shortMD5(serialize($regHash_array), $limit);
+		} else {
+			$regHash_calc = self::calculateCacheHash($params);
+			$result = substr($regHash_calc, 0, $limit);
+		}
 		return $result;
 	}
 

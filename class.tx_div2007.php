@@ -225,7 +225,8 @@ class tx_div2007 {
 	 * @return	void
 	 */
 	static public function clearAllCaches () {
-		require_once(PATH_t3lib.'class.t3lib_tcemain.php');
+		$pathT3lib = PATH_site . 't3lib/';
+		require_once($pathT3lib . 'class.t3lib_tcemain.php');
 		$tce = new t3lib_tcemain();
 		$tce->admin = TRUE;
 		$tce->clear_cacheCmd('all');
@@ -316,9 +317,10 @@ class tx_div2007 {
 	static public function findTce () {
 		global $BE_USER, $TCA, $PAGES_TYPES, $ICON_TYPES, $LANG_GENERAL_LABELS, $TBE_STYLES, $TBE_MODULES, $FILEICONS;
 		ob_start();
-		require(PATH_t3lib.'stddb/tables.php');
-		require(PATH_t3lib.'stddb/load_ext_tables.php');
-		require_once(PATH_t3lib.'class.t3lib_tcemain.php');
+		$pathT3lib = PATH_site . 't3lib/';
+		require($pathT3lib . 'stddb/tables.php');
+		require($pathT3lib . 'stddb/load_ext_tables.php');
+		require_once($pathT3lib . 'class.t3lib_tcemain.php');
 		ob_end_clean();
 		if(!isset($tce)) {
 			static $tce; // Singleton.

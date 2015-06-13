@@ -1,3 +1,9 @@
+13-06-15 Franz Holzinger  <franz@ttproducts.de>
+	* Change the TSConfig for the TCA markers ###PAGE_TSCONFIG_ID### and ###PAGE_TSCONFIG_IDLIST### in order to use the page id of the current page if unset.
+	* add method calculateCacheHash by a call to t3lib_cacheHash or CacheHashCalculator
+	* set TYPO3 version range to 7.2.99
+	* add method generateHash from extension agency
+
 16-03-15 Franz Holzinger  <franz@ttproducts.de>
 	* more classes from extension lib: tx_div2007_viewBase, tx_div2007_link, tx_div2007_phpTemplateEngine
 	* Do not use makeInstance and autoloading from div2007 any further

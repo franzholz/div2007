@@ -4492,7 +4492,8 @@ final class tx_div2007_div {
 				$dcf = $tca['ctrl']['dynamicConfigFile'];
 				if ($dcf) {
 					if (!strcmp(substr($dcf, 0, 6), 'T3LIB:')) {
-						include(PATH_t3lib . 'stddb/' . substr($dcf, 6));
+						$pathT3lib = PATH_site . 't3lib/';
+						include($pathT3lib . 'stddb/' . substr($dcf, 6));
 					} elseif (self::isAbsPath($dcf) && @is_file($dcf)) { // Absolute path...
 						include($dcf);
 					} else {
@@ -5502,7 +5503,8 @@ final class tx_div2007_div {
 		if (stripos($log, 'file') !== FALSE) {
 				// In case lock is acquired before autoloader was defined:
 			if (class_exists('t3lib_lock') === FALSE) {
-				require_once PATH_t3lib . 'class.t3lib_lock.php';
+				$pathT3lib = PATH_site . 't3lib/';
+				require_once $pathT3lib . 'class.t3lib_lock.php';
 			}
 				// write a longer message to the deprecation log
 			$destination = self::getDeprecationLogFileName();
