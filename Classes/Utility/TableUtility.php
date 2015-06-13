@@ -27,7 +27,7 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 
 /**
- * table functions.
+ * table functions. Require TYPO3 6.2
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
  * $Id$
@@ -47,11 +47,12 @@ class TableUtility {
 	 * @see t3lib_transferData::renderRecord(), t3lib_TCEforms::foreignTable()
 	 */
 	static public function foreign_table_where_query ($fieldValue, $field = '', $TSconfig = array(), $prefix = '') {
-		global $TCA;
-
 		$foreign_table = $fieldValue['config'][$prefix . 'foreign_table'];
-		\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($foreign_table);
-		$rootLevel = $TCA[$foreign_table]['ctrl']['rootLevel'];
+		$typoVersion = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
+		if ($typoVersion < '6002000') {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($foreign_table);
+		}
+		$rootLevel = $GLOBALS['TCA'][$foreign_table]['ctrl']['rootLevel'];
 
 		$fTWHERE = $fieldValue['config'][$prefix . 'foreign_table_where'];
 
@@ -60,13 +61,14 @@ class TableUtility {
 			foreach($fTWHERE_parts as $kk => $vv) {
 				if ($kk) {
 					$fTWHERE_subpart = explode('###', $vv, 2);
-					$fTWHERE_parts[$kk] = $TSconfig['_THIS_ROW'][$fTWHERE_subpart[0]].$fTWHERE_subpart[1];
+					$fTWHERE_parts[$kk] = $TSconfig['_THIS_ROW'][$fTWHERE_subpart[0]] . $fTWHERE_subpart[1];
 				}
 			}
 			$fTWHERE = implode('', $fTWHERE_parts);
 		}
 
-		$fTWHERE = str_replace('###CURRENT_PID###', intval($TSconfig['_CURRENT_PID']), $fTWHERE);
+		$currentPid = intval($TSconfig['_CURRENT_PID']);
+		$fTWHERE = str_replace('###CURRENT_PID###', $currentPid, $fTWHERE);
 		$fTWHERE = str_replace('###THIS_UID###', intval($TSconfig['_THIS_UID']), $fTWHERE);
 		$fTWHERE = str_replace('###THIS_CID###', intval($TSconfig['_THIS_CID']), $fTWHERE);
 		$fTWHERE = str_replace('###STORAGE_PID###', intval($TSconfig['_STORAGE_PID']), $fTWHERE);
@@ -78,11 +80,10 @@ class TableUtility {
 
 			$fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', $GLOBALS['TYPO3_DB']->quoteStr($TSconfig[$field]['PAGE_TSCONFIG_STR'], $foreign_table), $fTWHERE);
 		} else {
-			$fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', 0, $fTWHERE);
-			$fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', 0, $fTWHERE);
-			$fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', 0, $fTWHERE);
+			$fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', $currentPid, $fTWHERE);
+			$fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', $currentPid, $fTWHERE);
+			$fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', '', $fTWHERE);
 		}
-
 		return $fTWHERE;
 	}
 

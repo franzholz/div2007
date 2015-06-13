@@ -415,6 +415,16 @@ class tx_div2007_core {
 		return $result;
 	}
 
+	/**
+	* generates a hash value out of a string array.
+	*
+	* Checks the configuration and substitutes defaults for missing values.
+	*
+	* @param array $params parameter strings
+	* @return bool/string hash string if initialization was successful, FALSE otherwise
+	* @see tx_myext_class:anotherFunc()
+	*/
+
 	static public function generateHash (array $params, $limit = 20) {
 		$result = FALSE;
 		$typoVersion = self::getTypoVersion();
