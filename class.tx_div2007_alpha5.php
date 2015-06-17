@@ -414,9 +414,10 @@ class tx_div2007_alpha5 {
 		if (is_array($pObject->ctrlVars) && is_array($overruleCtrlVars) && !$clearAnyway) {
 			$ctrlVars = $pObject->ctrlVars;
 			unset($ctrlVars['DATA']);
-			$overruleCtrlVars = t3lib_div::array_merge_recursive_overrule($ctrlVars, $overruleCtrlVars);
+			$overruledCtrlVars = $ctrlVars;
+			tx_div2007_core::mergeRecursiveWithOverrule($overruledCtrlVars, $overruleCtrlVars);
 			if ($pObject->bAutoCacheEn) {
-				$cache = self::autoCache_fh001($pObject, $overruleCtrlVars);
+				$cache = self::autoCache_fh001($pObject, $overruledCtrlVars);
 			}
 		}
 		$res =
@@ -425,7 +426,7 @@ class tx_div2007_alpha5 {
 				$cObj,
 				$str,
 				array(
-					$prefixId => $overruleCtrlVars
+					$prefixId => $overruledCtrlVars
 				),
 				$cache,
 				$altPageId

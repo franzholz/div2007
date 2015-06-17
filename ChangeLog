@@ -1,3 +1,7 @@
+17-06-15 Franz Holzinger  <franz@ttproducts.de>
+	* Add file class.tx_div2007_core_php53.php for functions which must never be visible to PHP before 5.3 because of PHP error messages.
+	* add method mergeRecursiveWithOverrule::mergeRecursiveWithOverrule
+
 13-06-15 Franz Holzinger  <franz@ttproducts.de>
 	* Change the TSConfig for the TCA markers ###PAGE_TSCONFIG_ID### and ###PAGE_TSCONFIG_IDLIST### in order to use the page id of the current page if unset.
 	* add method calculateCacheHash by a call to t3lib_cacheHash or CacheHashCalculator

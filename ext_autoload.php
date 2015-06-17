@@ -11,6 +11,7 @@ return array(
 	'tx_div2007_context' => $extensionPath . 'class.tx_div2007_context.php',
 	'tx_div2007_controller' => $extensionPath . 'class.tx_div2007_controller.php',
 	'tx_div2007_core' => $extensionPath . 'class.tx_div2007_core.php',
+	'tx_div2007_core_php53' => $extensionPath . 'class.tx_div2007_core_php53.php',
 	'tx_div2007_div' => $extensionPath . 'class.tx_div2007_div.php',
 	'tx_div2007_email' => $extensionPath . 'class.tx_div2007_email.php',
 	'tx_div2007_error' => $extensionPath . 'class.tx_div2007_error.php',

@@ -372,9 +372,9 @@ class tx_div2007_link{
 		$this->overruledParameters = is_array($this->overruledParameters) ?
 			$this->overruledParameters : array();
 		unset($this->overruledParameters['DATA']);
-		$parameters
-			= t3lib_div::array_merge_recursive_overrule($this->overruledParameters,
-					$this->parameters);
+		$parameters = $this->overruledParameters;
+		tx_div2007_core::mergeRecursiveWithOverrule($parameters, $this->parameters);
+
 		foreach((array) $parameters as $key => $value) {
 			if(!is_array($value)) {   // TODO handle arrays
 				if($this->designatorString) {

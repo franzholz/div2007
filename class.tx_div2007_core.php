@@ -439,6 +439,35 @@ class tx_div2007_core {
 		return $result;
 	}
 
+	/**
+	 * Merges two arrays recursively and "binary safe" (integer keys are
+	 * overridden as well), overruling similar values in the original array
+	 * with the values of the overrule array.
+	 * In case of identical keys, ie. keeping the values of the overrule array.
+	 *
+	 * This method takes the original array by reference for speed optimization with large arrays
+	 *
+	 * The differences to the existing PHP function array_merge_recursive() are:
+	 *  * Keys of the original array can be unset via the overrule array. ($enableUnsetFeature)
+	 *  * Much more control over what is actually merged. ($addKeys, $includeEmptyValues)
+	 *  * Elements or the original array get overwritten if the same key is present in the overrule array.
+	 *
+	 * @param array $original Original array. It will be *modified* by this method and contains the result afterwards!
+	 * @param array $overrule Overrule array, overruling the original array
+	 * @param boolean $addKeys If set to FALSE, keys that are NOT found in $original will not be set. Thus only existing value can/will be overruled from overrule array.
+	 * @param boolean $includeEmptyValues If set, values from $overrule will overrule if they are empty or zero.
+	 * @param boolean $enableUnsetFeature If set, special values "__UNSET" can be used in the overrule array in order to unset array keys in the original array.
+	 * @return boolean TRUE if the TYPO3 call to mergeRecursiveWithOverrule has been executed
+	 */
+	static public function mergeRecursiveWithOverrule (array &$original, array $overrule, $addKeys = TRUE, $includeEmptyValues = TRUE, $enableUnsetFeature = TRUE) {
+		$result = TRUE;
+		if (version_compare(phpversion(), '5.3.0', '<')) {
+			$original = t3lib_div::array_merge_recursive_overrule($original, $overrule, !$notAddKeys, $includeEmptyValues, $enableUnsetFeature);
+		} else {
+			$result = tx_div2007_core_php53::mergeRecursiveWithOverrule($original, $overrule, $addKeys, $includeEmptyValues, $enableUnsetFeature);
+		}
+		return $result;
+	}
 
 	### SQL
 
