@@ -1,3 +1,7 @@
+24-07-15 Franz Holzinger  <franz@ttproducts.de>
+	* tested under TYPO3 7.4.0
+	* improve the verification of the Swift Mailer if the email has been sent. Debug the unsent recipients.
+
 17-06-15 Franz Holzinger  <franz@ttproducts.de>
 	* Add file class.tx_div2007_core_php53.php for functions which must never be visible to PHP before 5.3 because of PHP error messages.
 	* add method tx_div2007_core::mergeRecursiveWithOverrule

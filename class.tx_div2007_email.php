@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2013 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2015 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -358,10 +358,20 @@ class tx_div2007_email {
 		) {
 			$mailClass = get_class($mail);
 
-			if (method_exists($mail, 'sendTheMail')) {
+			if (
+				method_exists($mail, 'send') &&
+				method_exists($mail, 'isSent')
+			) {
+				$mail->send();
+				$result = $mail->isSent();
+				if (!$result) {
+					debug ('tx_div2007_email::sendMail exited with error 6'); // keep this
+					debug ('tx_div2007_email::sendMail undelivered: ', implode(',', $mail->getFailedRecipients())); // keep this
+				}
+			} elseif (method_exists($mail, 'sendTheMail')) {
 				$mail->sendTheMail();
 			} else {
-				$mail->send();
+				$result = FALSE;
 			}
 		}
 
