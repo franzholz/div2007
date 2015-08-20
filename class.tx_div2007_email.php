@@ -159,10 +159,8 @@ class tx_div2007_email {
 			}
 		}
 
-		$typo3Version = tx_div2007_core::getTypoVersion();
-
 		if (
-			$typo3Version >= 4007000 ||
+			version_compare(TYPO3_version, '4.7.0', '>=') ||
 			(
 				isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
 				is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
@@ -174,7 +172,10 @@ class tx_div2007_email {
 				) !== FALSE
 			)
 		) {
-			if (preg_match('#[/\(\)\\<>,;:@\.\]\[]#', $fromName)) {
+			if (
+				version_compare(TYPO3_version, '6.0.0', '<') &&
+				preg_match('#[/\(\)\\<>,;:@\.\]\[]#', $fromName)
+			) {
 				$fromName = '"' . $fromName . '"';
 			}
 

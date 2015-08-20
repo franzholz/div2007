@@ -1,3 +1,6 @@
+20-08-15 Franz Holzinger  <franz@ttproducts.de>
+	* bug fix: Do not enclose the sender name of an email in double quotes in any case. This would lead to lost and returned emails in the case of German umlauts. This happens under TYPO3 6.2.
+
 24-07-15 Franz Holzinger  <franz@ttproducts.de>
 	* tested under TYPO3 7.4.0
 	* improve the verification of the Swift Mailer if the email has been sent. Debug the unsent recipients.
