@@ -1,3 +1,6 @@
+17-09-15 Franz Holzinger  <franz@ttproducts.de>
+	* bug fix: add the static keyword to the function calls of tx_div2007_ff
+
 20-08-15 Franz Holzinger  <franz@ttproducts.de>
 	* bug fix: Do not enclose the sender name of an email in double quotes in any case. This would lead to lost and returned emails in the case of German umlauts. This happens under TYPO3 6.2.
 
