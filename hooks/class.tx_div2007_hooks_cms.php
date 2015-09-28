@@ -64,7 +64,7 @@ class tx_div2007_hooks_cms {
 
 		if (
 			$this->extKey != '' &&
-			call_user_func($callingClassName . '::isLoaded', ($this->extKey) &&
+			call_user_func($callingClassName . '::isLoaded', ($this->extKey)) &&
 			in_array(
 				intval($pObj->pageRecord['doktype']),
 				array(1, 2, 5)
