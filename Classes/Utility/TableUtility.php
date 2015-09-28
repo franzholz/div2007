@@ -6,7 +6,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2014 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2015 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,12 +27,40 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 
 /**
- * table functions. Require TYPO3 6.2
+ * table functions. It requires TYPO3 6.2
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
  * $Id$
  */
 class TableUtility {
+
+	/**
+	 * Fields that are considered as system.
+	 *
+	 * @var array
+	 */
+	static protected $systemFields = array(
+		'uid',
+		'pid',
+		'tstamp',
+		'crdate',
+		'deleted',
+		'hidden',
+		'starttime',
+		'endtime',
+		'sys_language_uid',
+		'l18n_parent',
+		'l18n_diffsource',
+		't3ver_oid',
+		't3ver_id',
+		't3ver_wsid',
+		't3ver_label',
+		't3ver_state',
+		't3ver_stage',
+		't3ver_count',
+		't3ver_tstamp',
+		't3_origuid',
+	);
 
 	/**
 	 * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
@@ -95,7 +123,7 @@ class TableUtility {
 	 * @return	string
 	 * @see enableFields()
 	 */
-	static public function deleteClause($table) {
+	static public function deleteClause ($table) {
 		if (!strcmp($table, 'pages')) { // Hardcode for pages because TCA might not be loaded yet (early frontend initialization)
 			return ' AND pages.deleted=0';
 		} else {
@@ -111,7 +139,7 @@ class TableUtility {
 	 * @return	string		AND sql-clause
 	 * @see enableFields()
 	 */
-	static public function getMultipleGroupsWhereClause($field, $table) {
+	static public function getMultipleGroupsWhereClause ($field, $table) {
 		$memberGroups = t3lib_div::intExplode(',', $GLOBALS['TSFE']->gr_list);
 		$orChecks = array();
 		$orChecks[] = $field . '=\'\''; // If the field is empty, then OK
@@ -136,7 +164,7 @@ class TableUtility {
 	 * @return	string		The clause starting like " AND ...=... AND ...=..."
 	 * @see tslib_cObj::enableFields(), deleteClause()
 	 */
-	static public function enableFields($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = FALSE) {
+	static public function enableFields ($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = FALSE) {
 		if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
 			$show_hidden = $table == 'pages' ? $GLOBALS['TSFE']->showHiddenPage : $GLOBALS['TSFE']->showHiddenRecords;
 		}
@@ -230,7 +258,38 @@ class TableUtility {
 		}
 		return $outArr;
 	}
+
+
+	/**
+	 * @return array
+	 */
+	static public function getSystemFields () {
+		return self::$systemFields;
+	}
+
+
+	/**
+	 * Returns an array containing the regular field names.
+	 *
+	 * @return array
+	 */
+	static public function getFields ($table, $prefix = FALSE) {
+		$result = FALSE;
+
+		if (is_array($GLOBALS['TCA'][$table]['columns'])) {
+			$tcaFields = array_keys($GLOBALS['TCA'][$table]['columns']);
+			$systemFields = self::getSystemFields();
+			$result = array_diff($tcaFields, $systemFields);
+			if ($prefix) {
+				$prefixArray = array();
+				foreach ($result as $key => $value) {
+					$prefixArray[] = $table . '.' . $value;
+				}
+				$result = $prefixArray;
+			}
+		}
+
+		return $result;
+	}
 }
 
-
-?>

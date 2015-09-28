@@ -52,9 +52,19 @@ class tx_div2007_hooks_cms {
 	 */
 
 	public function pmDrawItem ($params, $pObj) {
+		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+
+		if (
+			class_exists($callingClassName)
+		) {
+			// nothing
+		} else {
+			$callingClassName = 't3lib_extMgm';
+		}
+
 		if (
 			$this->extKey != '' &&
-			t3lib_extMgm::isLoaded($this->extKey) &&
+			call_user_func($callingClassName . '::isLoaded', ($this->extKey) &&
 			in_array(
 				intval($pObj->pageRecord['doktype']),
 				array(1, 2, 5)
@@ -75,4 +85,3 @@ class tx_div2007_hooks_cms {
 	}
 }
 
-?>

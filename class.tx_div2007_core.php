@@ -209,7 +209,7 @@ class tx_div2007_core {
 	static public function newMailMessage () {
 
 		$useClassName = '';
-		$callingClassName = '\\TYPO3\\CMS\\Mail\\MailMessage';
+		$callingClassName = '\\TYPO3\\CMS\\Core\\Mail\\MailMessage';
 
 		if (
 			class_exists($callingClassName)
@@ -472,6 +472,7 @@ class tx_div2007_core {
 	### SQL
 
 	/**
+	 * deprecated. Use getSystemFields from the class TableUtility
 	 * @return array
 	 */
 	static public function getSystemFields () {
@@ -480,6 +481,7 @@ class tx_div2007_core {
 
 	/**
 	 * Returns an array containing the regular field names.
+	 * deprecated. Use getFields from the class TableUtility
 	 *
 	 * @return array
 	 */
@@ -493,6 +495,29 @@ class tx_div2007_core {
 		}
 
 		return $result;
+	}
+
+
+	### TYPO3 7
+
+	/**
+	 * Call this method under TYPO3 7.x to get backwards compatibility by defining the former class names of TYPO3 6 and 4
+	 * @return void
+	 */
+	static public function activateCompatibility6 () {
+		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+
+		if (
+			version_compare(TYPO3_version, '7.0.0', '>=') &&
+			class_exists($callingClassName) &&
+			!call_user_func($callingClassName . '::isLoaded', 'compatibility6') &&
+			!class_exists('t3lib_div') &&
+			!class_exists('tslib_cObj')
+		) {
+			$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+			$object = call_user_func($callingClassName . '::getUserObj', 'tx_div2007_compatibility6');
+// 			$object->test();
+		}
 	}
 }
 

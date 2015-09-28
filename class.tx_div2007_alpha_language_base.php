@@ -63,12 +63,14 @@ class tx_div2007_alpha_language_base {
 
 
 	public function init ($cObj, $extKey, $conf, $scriptRelPath) {
-		global $TSFE;
 
-		if ($TSFE->config['config']['language']) {
-			$this->LLkey = $TSFE->config['config']['language'];
-			if ($TSFE->config['config']['language_alt']) {
-				$this->altLLkey = $TSFE->config['config']['language_alt'];
+		if (
+			isset($GLOBALS['TSFE']->config['config']) &&
+			isset($GLOBALS['TSFE']->config['config']['language'])
+		) {
+			$this->LLkey = $GLOBALS['TSFE']->config['config']['language'];
+			if ($GLOBALS['TSFE']->config['config']['language_alt']) {
+				$this->altLLkey = $GLOBALS['TSFE']->config['config']['language_alt'];
 			}
 		}
 

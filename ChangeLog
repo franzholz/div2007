@@ -1,3 +1,7 @@
+28-09-15 Franz Holzinger  <franz@ttproducts.de>
+	* bug fix: path to class MailMessage misses the Core folder
+	* add class file tx_div2007_compatibility6.php to add basic class of TYPO3 7.4 to make extension compatible to TYPO3 6.2 and 4.5
+
 17-09-15 Franz Holzinger  <franz@ttproducts.de>
 	* bug fix: add the static keyword to the function calls of tx_div2007_ff
 

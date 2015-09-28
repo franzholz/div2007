@@ -1,5 +1,16 @@
 <?php
-$extensionPath = t3lib_extMgm::extPath('div2007');
+$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+
+if (
+	class_exists($callingClassName) &&
+	method_exists($callingClassName, 'extPath')
+) {
+	// nothing
+} else {
+	$callingClassName = 't3lib_extMgm';
+}
+
+$extensionPath = call_user_func($callingClassName . '::extPath', 'div2007');
 return array(
 	'tx_div2007' => $extensionPath . 'class.tx_div2007.php',
 	'tx_div2007_alpha' => $extensionPath . 'class.tx_div2007_alpha.php',
@@ -7,6 +18,7 @@ return array(
 	'tx_div2007_alpha_browse_base' => $extensionPath . 'class.tx_div2007_alpha_browse_base.php',
 	'tx_div2007_alpha_language_base' => $extensionPath . 'class.tx_div2007_alpha_language_base.php',
 	'tx_div2007_cobj' => $extensionPath . 'class.tx_div2007_cobj.php',
+	'tx_div2007_compatibility6' => $extensionPath . 'class.tx_div2007_compatibility6.php',
 	'tx_div2007_configurations' => $extensionPath . 'class.tx_div2007_configurations.php',
 	'tx_div2007_context' => $extensionPath . 'class.tx_div2007_context.php',
 	'tx_div2007_controller' => $extensionPath . 'class.tx_div2007_controller.php',
@@ -32,4 +44,3 @@ return array(
 	'JambageCom\\Div2007\\Utility\\TableUtility' => $extensionPath . 'Classes/Utility/TableUtility.php',
 	'JambageCom\\Div2007\\Utility\\ExtensionUtility' => $extensionPath . 'Classes/Utility/ExtensionUtility.php',
 );
-?>
