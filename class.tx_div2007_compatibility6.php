@@ -46,6 +46,12 @@ class tslib_pibase extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {}
 
 class t3lib_extMgm extends \TYPO3\CMS\Core\Utility\ExtensionManagementUtility {}
 
+
+if (TYPO3_MODE == 'BE') {
+	class t3lib_extobjbase extends TYPO3\CMS\Backend\Module\AbstractFunctionModule {}
+}
+
+
 class tx_div2007_compatibility6 {
 	public function test () {
 		debug ($tmp, 'tx_div2007_compatibility6::test');
