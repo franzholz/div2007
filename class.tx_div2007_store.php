@@ -51,8 +51,15 @@ class tx_div2007_store {
 	 * @param	string		$table	the table that the data record is from.
 	 * @return	void
 	 */
-	public function setCobj(tslib_cObj $cObject) {
-		$this->cObj = $cObject;
+	public function setCobj($cObject) {
+
+		$className = 'TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer';
+		if (
+			$cObject instanceof tslib_cObj ||
+			$cObject instanceof $className
+		) {
+			$this->cObj = $cObject;
+		} else throw exception ('wrong instance ' . get_class($cObject));
 	}
 
 	public function getCobj() {

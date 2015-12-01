@@ -1,3 +1,6 @@
+01-12-15 Franz Holzinger  <franz@ttproducts.de>
+	* add class StaticInfoUtility for the extension static_info_tables
+
 17-10-15 Franz Holzinger  <franz@ttproducts.de>
 	* bug fix: wrong parameter 3 in call of array_merge_recursive_overrule under PHP 5.2
 

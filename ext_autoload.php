@@ -43,4 +43,5 @@ return array(
 	'tx_div2007_viewBase' => $extensionPath . 'class.tx_div2007_viewBase.php',
 	'JambageCom\\Div2007\\Utility\\TableUtility' => $extensionPath . 'Classes/Utility/TableUtility.php',
 	'JambageCom\\Div2007\\Utility\\ExtensionUtility' => $extensionPath . 'Classes/Utility/ExtensionUtility.php',
+	'JambageCom\\Div2007\\Utility\\StaticInfoTablesUtility' => $extensionPath . 'Classes/Utility/StaticInfoTablesUtility.php',
 );

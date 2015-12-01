@@ -52,9 +52,10 @@ if (TYPO3_MODE == 'BE') {
 }
 
 
+// empty class which does nothing:
 class tx_div2007_compatibility6 {
 	public function test () {
-		debug ($tmp, 'tx_div2007_compatibility6::test');
+		debug ($tmp, 'tx_div2007_compatibility6::test'); // keep this
 	}
 }
 
