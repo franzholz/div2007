@@ -462,7 +462,7 @@ class tx_div2007_core {
 	static public function mergeRecursiveWithOverrule (array &$original, array $overrule, $addKeys = TRUE, $includeEmptyValues = TRUE, $enableUnsetFeature = TRUE) {
 		$result = TRUE;
 		if (
-			version_compare(TYPO3_version, '6.0.0', '<') ||
+			version_compare(TYPO3_version, '6.1.0', '<') ||
 			version_compare(phpversion(), '5.3.0', '<')
 		) {
 			$original = t3lib_div::array_merge_recursive_overrule($original, $overrule, !$addKeys, $includeEmptyValues, $enableUnsetFeature);
