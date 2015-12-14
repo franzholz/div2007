@@ -1,3 +1,5 @@
+14-12-15 Franz Holzinger  <franz@ttproducts.de>
+	* new feature: FrontendUtility used by Ajax to initialize the Frontend for an eID parameter call
 
 09-12-15 Franz Holzinger  <franz@ttproducts.de>
 	* bugfix: mergeRecursiveWithOverrule must also be executed under TYPO3 before 6.0.0
