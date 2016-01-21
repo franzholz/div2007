@@ -315,7 +315,7 @@ class tx_div2007_alpha {
 
 				if (t3lib_extMgm::isLoaded($_EXTKEY)) {
 					//Include the ext_table
-					include(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
+					include_once(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
 				}
 			}
 		}
@@ -343,7 +343,7 @@ class tx_div2007_alpha {
 			if (@is_file($file)) {
 				$_EXTKEY = $extKey;
 				$EM_CONF = array();
-				include($file);
+				include_once($file);
 
 				$eInfo = array();
 					// Info from emconf:
@@ -393,7 +393,7 @@ class tx_div2007_alpha {
 			if (@is_file($file)) {
 				$_EXTKEY = $extKey;
 				$EM_CONF = array();
-				include($file);
+				include_once($file);
 
 				$eInfo = array();
 				$fieldArray = array(

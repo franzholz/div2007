@@ -515,7 +515,8 @@ class tx_div2007_core {
 			class_exists($callingClassName) &&
 			!call_user_func($callingClassName . '::isLoaded', 'compatibility6') &&
 			!class_exists('t3lib_div') &&
-			!class_exists('tslib_cObj')
+			!class_exists('tslib_cObj') &&
+			!class_exists('t3lib_extMgm')
 		) {
 			$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
 			$object = call_user_func($callingClassName . '::getUserObj', 'tx_div2007_compatibility6');

@@ -54,7 +54,7 @@ class ExtensionUtility {
 			if (@is_file($file)) {
 				$_EXTKEY = $extKey;
 				$EM_CONF = array();
-				include($file);
+				include_once($file);
 
 				$eInfo = array();
 				$fieldArray = array(

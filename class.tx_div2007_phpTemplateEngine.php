@@ -106,7 +106,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 			? $this->controller->configurations->get($configurationKeyOrFileName) : $configurationKeyOrFileName;
 		$path .= substr($path, -4, 4) == '.php' ? '' :  '.php';                  // Append .php ending if missing.
 		ob_start();                                                              // Run the template ...
-		include($path);
+		include_once($path);
 		$out = ob_get_clean();                                                   // ... and catch the result.
 		$this->set('_content', $out);                                            // Used i.e. by the tranlator.
 		return $out;

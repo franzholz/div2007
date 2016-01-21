@@ -655,7 +655,7 @@ class tx_div2007_staticinfotables {
 				foreach ($ext_keys as $_EXTKEY) {
 					if (t3lib_extMgm::isLoaded($_EXTKEY)) {
 						//Include the ext_table
-						include(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
+						include_once(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
 					}
 				}
 			}

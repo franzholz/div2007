@@ -48,6 +48,8 @@ class t3lib_extMgm extends \TYPO3\CMS\Core\Utility\ExtensionManagementUtility {}
 
 class tslib_fe extends \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController {}
 
+class t3lib_parsehtml extends \TYPO3\CMS\Core\Html\HtmlParser {}
+
 
 if (TYPO3_MODE == 'BE') {
 	class t3lib_extobjbase extends TYPO3\CMS\Backend\Module\AbstractFunctionModule {}

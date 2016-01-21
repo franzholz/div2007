@@ -1667,7 +1667,7 @@ class tx_div2007_alpha5 {
 			if (@is_file($file)) {
 				$_EXTKEY = $extKey;
 				$EM_CONF = array();
-				include($file);
+				include_once($file);
 
 				$eInfo = array();
 				$fieldArray = array(

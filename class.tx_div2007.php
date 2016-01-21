@@ -148,7 +148,7 @@ class tx_div2007 {
 	 * This function is a workaround for the __autoload() function from PHP5.
 	 * - Limitation: Doesn't work for "intra extension inheritance". (see below)
 	 * - Disadvantage: All classfiles are required, even if not used.
-	 * - Advantage: It doesn't require the same __autolod pattern for all extensions.
+	 * - Advantage: It doesn't require the same __autoload pattern for all extensions.
 	 * - Alternative: tx_div2007::load() to require on demand.
 	 *
 	 * Usage example:
@@ -318,8 +318,8 @@ class tx_div2007 {
 		global $BE_USER, $TCA, $PAGES_TYPES, $ICON_TYPES, $LANG_GENERAL_LABELS, $TBE_STYLES, $TBE_MODULES, $FILEICONS;
 		ob_start();
 		$pathT3lib = PATH_site . 't3lib/';
-		require($pathT3lib . 'stddb/tables.php');
-		require($pathT3lib . 'stddb/load_ext_tables.php');
+		require_once($pathT3lib . 'stddb/tables.php');
+		require_once($pathT3lib . 'stddb/load_ext_tables.php');
 		require_once($pathT3lib . 'class.t3lib_tcemain.php');
 		ob_end_clean();
 		if(!isset($tce)) {
@@ -533,7 +533,7 @@ class tx_div2007 {
 			for($i = 0; $i < sizeof($ext_keys); $i++){
 				//Include the ext_table
 				$_EXTKEY = $ext_keys[$i];
-				include(t3lib_extMgm::extPath($ext_keys[$i]) . 'ext_tables.php');
+				include_once(t3lib_extMgm::extPath($ext_keys[$i]) . 'ext_tables.php');
 			}
 		}
 	}
