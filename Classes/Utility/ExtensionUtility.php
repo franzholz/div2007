@@ -6,7 +6,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2013 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2016 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -75,15 +75,11 @@ class ExtensionUtility {
 				$extConf = $EM_CONF[$extKey];
 
 				if (isset($extConf) && is_array($extConf)) {
-					foreach ($extConf as $field => $value) {
-						if (in_array($field, $fieldArray)) {
-							$eInfo[$field] = $value;
-						}
-					}
-
 					foreach ($fieldArray as $field) {
 						// Info from emconf:
-						$eInfo[$field] = $extConf[$field];
+						if (isset($extConf[$field])) {
+							$eInfo[$field] = $extConf[$field];
+						}
 					}
 
 					if (is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
@@ -92,7 +88,9 @@ class ExtensionUtility {
 						$eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
 					}
 					$filesHash = unserialize($extConf['_md5_values_when_last_written']);
-					$eInfo['manual'] = @is_file($path . '/doc/manual.sxw');
+					$eInfo['manual'] =
+						@is_file($path . '/doc/manual.sxw') ||
+						@is_file($path . '/Documentation/Index.rst');
 					$result = $eInfo;
 				} else {
 					$result = 'ERROR: The array $EM_CONF is wrong in file: ' . $file;
@@ -106,6 +104,5 @@ class ExtensionUtility {
 
 		return $result;
 	}
-
 }
 

@@ -1,3 +1,8 @@
+
+06-02-16 Franz Holzinger  <franz@ttproducts.de>
+	* bug fix for TYPO3 6.1: mergeRecursiveWithOverrule is not available in the class ArrayUtility
+	* bug fix for PHP Warning: Illegal string offset version in php file after call to getExtensionInfo
+
 21-01-16 Franz Holzinger  <franz@ttproducts.de>
 	* bug fix for TYPO3 7: replace include by include_once
 

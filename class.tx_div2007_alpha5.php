@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2014 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2016 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -381,7 +381,8 @@ class tx_div2007_alpha5 {
 		$conf['no_cache'] = $pObject->bUSER_INT_obj ? 0 : !$cache;
 		$conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
 		$conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . t3lib_div::implodeArrayForUrl('', $urlParameters, '', TRUE) . $pObject->moreParams;
-		return $cObj->typoLink($str, $conf);
+		$result = $cObj->typoLink($str, $conf);
+		return $result;
 	}
 
 
@@ -415,12 +416,13 @@ class tx_div2007_alpha5 {
 			$ctrlVars = $pObject->ctrlVars;
 			unset($ctrlVars['DATA']);
 			$overruledCtrlVars = $ctrlVars;
-			tx_div2007_core::mergeRecursiveWithOverrule($overruledCtrlVars, $overruleCtrlVars);
+			$merged = tx_div2007_core::mergeRecursiveWithOverrule($overruledCtrlVars, $overruleCtrlVars);
 			if ($pObject->bAutoCacheEn) {
 				$cache = self::autoCache_fh001($pObject, $overruledCtrlVars);
 			}
 		}
-		$res =
+
+		$result =
 			self::linkTP(
 				$pObject,
 				$cObj,
@@ -431,7 +433,7 @@ class tx_div2007_alpha5 {
 				$cache,
 				$altPageId
 			);
-		return $res;
+		return $result;
 	}
 
 
@@ -784,6 +786,16 @@ class tx_div2007_alpha5 {
 		$overwrite = TRUE
 	) {
 		$result = FALSE;
+		$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+
+		if (
+			class_exists($emClass) &&
+			method_exists($emClass, 'extPath')
+		) {
+			// nothing
+		} else {
+			$emClass = 't3lib_extMgm';
+		}
 
 		if (is_object($langObj)) {
 			$typoVersion = tx_div2007_core::getTypoVersion();
@@ -792,7 +804,8 @@ class tx_div2007_alpha5 {
 			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' ||  substr($langFile, 0, 9) === 'fileadmin') {
 				$basePath = $langFile;
 			} else {
-				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
+				$basePath = call_user_func($emClass . '::extPath', $langObj->extKey) .
+					($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
 
 				// Read the strings in the required charset (since TYPO3 4.2)
@@ -1658,7 +1671,17 @@ class tx_div2007_alpha5 {
 		$result = '';
 
 		if (!$path) {
-			$path = t3lib_extMgm::extPath($extKey);
+			$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+
+			if (
+				class_exists($emClass) &&
+				method_exists($emClass, 'extPath')
+			) {
+				// nothing
+			} else {
+				$emClass = 't3lib_extMgm';
+			}
+			$path = call_user_func($emClass . '::extPath', $extKey);
 		}
 
 		if (is_dir($path)) {
@@ -1688,15 +1711,11 @@ class tx_div2007_alpha5 {
 				$extConf = $EM_CONF[$extKey];
 
 				if (isset($extConf) && is_array($extConf)) {
-					foreach ($extConf as $field => $value) {
-						if (in_array($field, $fieldArray)) {
-							$eInfo[$field] = $value;
-						}
-					}
-
 					foreach ($fieldArray as $field) {
-						// Info from emconf:
-						$eInfo[$field] = $extConf[$field];
+						if (isset($extConf[$field])) {
+							// Info from emconf:
+							$eInfo[$field] = $extConf[$field];
+						}
 					}
 
 					if (is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
@@ -1705,7 +1724,9 @@ class tx_div2007_alpha5 {
 						$eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
 					}
 					$filesHash = unserialize($extConf['_md5_values_when_last_written']);
-					$eInfo['manual'] = @is_file($path . '/doc/manual.sxw');
+					$eInfo['manual'] =
+						@is_file($path . '/doc/manual.sxw') ||
+						@is_file($path . '/Documentation/Index.rst');
 					$result = $eInfo;
 				} else {
 					$result = 'ERROR: The array $EM_CONF is wrong in file: ' . $file;
@@ -1863,6 +1884,17 @@ class tx_div2007_alpha5 {
 		$errorMessage = '',
 		$theCode = ''
 	) {
+		$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+
+		if (
+			class_exists($emClass) &&
+			method_exists($emClass, 'extPath')
+		) {
+			// nothing
+		} else {
+			$emClass = 't3lib_extMgm';
+		}
+
 			// Get language version
 		$helpTemplate_lang='';
 		if ($langObj->LLkey) {
@@ -1876,7 +1908,7 @@ class tx_div2007_alpha5 {
 		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
 			// Markers and substitution:
 
-		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
+		$markerArray['###PATH###'] = call_user_func($emClass . '::siteRelPath', $extKey);
 		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
 		$rc = $cObj->substituteMarkerArray($helpTemplate, $markerArray);

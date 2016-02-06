@@ -1,16 +1,18 @@
 <?php
-$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
 
 if (
-	class_exists($callingClassName) &&
-	method_exists($callingClassName, 'extPath')
+	class_exists($emClass) &&
+	method_exists($emClass, 'extPath')
 ) {
 	// nothing
 } else {
-	$callingClassName = 't3lib_extMgm';
+	$emClass = 't3lib_extMgm';
 }
 
-$extensionPath = call_user_func($callingClassName . '::extPath', 'div2007');
+$key = 'div2007';
+$extensionPath = call_user_func($emClass . '::extPath', $key, $script);
+
 return array(
 	'tx_div2007' => $extensionPath . 'class.tx_div2007.php',
 	'tx_div2007_alpha' => $extensionPath . 'class.tx_div2007_alpha.php',
