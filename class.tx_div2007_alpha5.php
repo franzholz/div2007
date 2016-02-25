@@ -1690,7 +1690,7 @@ class tx_div2007_alpha5 {
 			if (@is_file($file)) {
 				$_EXTKEY = $extKey;
 				$EM_CONF = array();
-				include_once($file);
+				include($file);
 
 				$eInfo = array();
 				$fieldArray = array(
@@ -1718,7 +1718,10 @@ class tx_div2007_alpha5 {
 						}
 					}
 
-					if (is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
+					if (
+						is_array($extConf['constraints']) &&
+						is_array($EM_CONF[$extKey]['constraints']['depends'])
+					) {
 						$eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
 					} else {
 						$eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
@@ -1732,7 +1735,7 @@ class tx_div2007_alpha5 {
 					$result = 'ERROR: The array $EM_CONF is wrong in file: ' . $file;
 				}
 			} else {
-				$result = 'ERROR: No emconf.php file: ' . $file;
+				$result = 'ERROR: No file ext_emconf.php could be found: ' . $file;
 			}
 		} else {
 			$result = 'ERROR: Path not found: ' . $path;

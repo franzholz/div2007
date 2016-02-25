@@ -343,7 +343,7 @@ class tx_div2007_alpha {
 			if (@is_file($file)) {
 				$_EXTKEY = $extKey;
 				$EM_CONF = array();
-				include_once($file);
+				include($file);
 
 				$eInfo = array();
 					// Info from emconf:
@@ -393,7 +393,7 @@ class tx_div2007_alpha {
 			if (@is_file($file)) {
 				$_EXTKEY = $extKey;
 				$EM_CONF = array();
-				include_once($file);
+				include($file);
 
 				$eInfo = array();
 				$fieldArray = array(
