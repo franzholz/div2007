@@ -1,4 +1,7 @@
 14-03-16 Franz Holzinger  <franz@ttproducts.de>
+	* bug fix for PHP Warning: Illegal string offset version. getExtensionInfo must use include instead of include_once
+
+14-03-16 Franz Holzinger  <franz@ttproducts.de>
 	* bug fix: Do not use the Div2007 namespace for InvalidArgumentException and t3lib_div
 	* new feature: enableFields set $noVersionPreview default to TRUE
 

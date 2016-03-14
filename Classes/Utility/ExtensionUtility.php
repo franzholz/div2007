@@ -30,7 +30,6 @@ namespace JambageCom\Div2007\Utility;
  * extension functions.
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
- * $Id$
  */
 class ExtensionUtility {
 
@@ -54,7 +53,7 @@ class ExtensionUtility {
 			if (@is_file($file)) {
 				$_EXTKEY = $extKey;
 				$EM_CONF = array();
-				include_once($file);
+				include($file);
 
 				$eInfo = array();
 				$fieldArray = array(
@@ -82,7 +81,9 @@ class ExtensionUtility {
 						}
 					}
 
-					if (is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
+					if (
+						is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])
+					) {
 						$eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
 					} else {
 						$eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
