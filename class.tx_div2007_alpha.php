@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2012 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2016 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -40,7 +40,7 @@
  * @author     Elmar Hinz <elmar.hinz@team-red.net>
  * @author     Franz Holzinger <franz@ttproducts.de>
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version    SVN: $Id$
+ * @version    SVN: $Id: class.tx_div2007_alpha.php 342 2016-02-25 15:03:54Z franzholz $
  * @since      0.1
  */
 

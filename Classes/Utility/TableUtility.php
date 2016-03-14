@@ -30,7 +30,7 @@ namespace JambageCom\Div2007\Utility;
  * table functions. It requires TYPO3 6.2
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
- * $Id$
+ * $Id: TableUtility.php 305 2015-09-28 12:00:26Z franzholz $
  */
 class TableUtility {
 
@@ -140,7 +140,7 @@ class TableUtility {
 	 * @see enableFields()
 	 */
 	static public function getMultipleGroupsWhereClause ($field, $table) {
-		$memberGroups = t3lib_div::intExplode(',', $GLOBALS['TSFE']->gr_list);
+		$memberGroups = \t3lib_div::intExplode(',', $GLOBALS['TSFE']->gr_list);
 		$orChecks = array();
 		$orChecks[] = $field . '=\'\''; // If the field is empty, then OK
 		$orChecks[] = $field . ' IS NULL'; // If the field is NULL, then OK
@@ -164,7 +164,7 @@ class TableUtility {
 	 * @return	string		The clause starting like " AND ...=... AND ...=..."
 	 * @see tslib_cObj::enableFields(), deleteClause()
 	 */
-	static public function enableFields ($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = FALSE) {
+	static public function enableFields ($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = TRUE) {
 		if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
 			$show_hidden = $table == 'pages' ? $GLOBALS['TSFE']->showHiddenPage : $GLOBALS['TSFE']->showHiddenRecords;
 		}
@@ -189,19 +189,32 @@ class TableUtility {
 				// Enable fields:
 			if (is_array($ctrl['enablecolumns'])) {
 				if (!$ctrl['versioningWS'] || $noVersionPreview) { // In case of versioning-preview, enableFields are ignored (checked in versionOL())
-					if ($ctrl['enablecolumns']['disabled'] && !$show_hidden && !$ignore_array['disabled']) {
+					if (
+						$ctrl['enablecolumns']['disabled'] &&
+						!$show_hidden &&
+						!$ignore_array['disabled']
+					) {
 						$field = $table . '.' . $ctrl['enablecolumns']['disabled'];
 						$query .= ' AND ' . $field . '=0';
 					}
-					if ($ctrl['enablecolumns']['starttime'] && !$ignore_array['starttime']) {
+					if (
+						$ctrl['enablecolumns']['starttime'] &&
+						!$ignore_array['starttime']
+					) {
 						$field = $table . '.' . $ctrl['enablecolumns']['starttime'];
 						$query .= ' AND ' . $field . '<=' . $GLOBALS['SIM_ACCESS_TIME'];
 					}
-					if ($ctrl['enablecolumns']['endtime'] && !$ignore_array['endtime']) {
+					if (
+						$ctrl['enablecolumns']['endtime'] &&
+						!$ignore_array['endtime']
+					) {
 						$field = $table . '.' . $ctrl['enablecolumns']['endtime'];
 						$query .= ' AND (' . $field . '=0 OR ' . $field . '>' . $GLOBALS['SIM_ACCESS_TIME'] . ')';
 					}
-					if ($ctrl['enablecolumns']['fe_group'] && !$ignore_array['fe_group']) {
+					if (
+						$ctrl['enablecolumns']['fe_group'] &&
+						!$ignore_array['fe_group']
+					) {
 						$field = $table . '.' . $ctrl['enablecolumns']['fe_group'];
 						$query .= self::getMultipleGroupsWhereClause($field, $table);
 					}
@@ -216,13 +229,13 @@ class TableUtility {
 							'ctrl' => $ctrl
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'] as $_funcRef) {
-							$query .= t3lib_div::callUserFunction($_funcRef, $_params, 'TableUtility');
+							$query .= \t3lib_div::callUserFunction($_funcRef, $_params, 'TableUtility');
 						}
 					}
 				}
 			}
 		} else {
-			throw new InvalidArgumentException(
+			throw new \InvalidArgumentException(
 				'There is no entry in the $TCA array for the table "' . $table .
 				'". This means that the function enableFields() is ' .
 				'called with an invalid table name as argument.',
