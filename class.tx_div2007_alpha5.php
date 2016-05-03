@@ -1528,7 +1528,7 @@ class tx_div2007_alpha5 {
 
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
 		/** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
-		$result = call_user_func(
+		$TSFE = call_user_func(
 			$callingClassName . '::makeInstance',
 			'TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
 			$TYPO3_CONF_VARS,
