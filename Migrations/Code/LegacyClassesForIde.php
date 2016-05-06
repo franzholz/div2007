@@ -1,5 +1,4 @@
 <?php
-die('Access denied');
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -15,11 +14,6 @@ class Tx_About_Domain_Model_Extension extends \TYPO3\CMS\About\Domain\Model\Exte
  * @deprecated since 6.0 will be removed in 7.0
  */
 class Tx_About_Domain_Repository_ExtensionRepository extends \TYPO3\CMS\About\Domain\Repository\ExtensionRepository {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_About_ViewHelpers_SkinImageViewHelper extends \TYPO3\CMS\About\ViewHelpers\SkinImageViewHelper {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -70,11 +64,6 @@ abstract class t3lib_contextmenu_AbstractDataProvider extends \TYPO3\CMS\Backend
  * @deprecated since 6.0 will be removed in 7.0
  */
 class t3lib_contextmenu_Action extends \TYPO3\CMS\Backend\ContextMenu\ContextMenuAction {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_formmail extends \TYPO3\CMS\Frontend\Controller\DataSubmissionController {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -204,11 +193,6 @@ class SC_db_new extends \TYPO3\CMS\Backend\Controller\NewRecordController {}
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class SC_alt_doc_nodoc extends \TYPO3\CMS\Backend\Controller\NoDocumentsOpenController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class SC_db_layout extends \TYPO3\CMS\Backend\Controller\PageLayoutController {}
 
 /**
@@ -239,11 +223,6 @@ class SC_wizard_edit extends \TYPO3\CMS\Backend\Controller\Wizard\EditController
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class SC_wizard_forms extends \TYPO3\CMS\Backend\Controller\Wizard\FormsController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class SC_wizard_list extends \TYPO3\CMS\Backend\Controller\Wizard\ListController {}
 
 /**
@@ -255,61 +234,6 @@ class SC_wizard_rte extends \TYPO3\CMS\Backend\Controller\Wizard\RteController {
  * @deprecated since 6.0 will be removed in 7.0
  */
 class SC_wizard_table extends \TYPO3\CMS\Backend\Controller\Wizard\TableController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_transferData extends \TYPO3\CMS\Backend\Form\DataPreprocessor {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_TCEforms_inline extends \TYPO3\CMS\Backend\Form\Element\InlineElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-interface t3lib_tceformsInlineHook extends \TYPO3\CMS\Backend\Form\Element\InlineElementHookInterface {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_TCEforms_FE extends \TYPO3\CMS\Backend\Form\FrontendFormEngine {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-interface t3lib_TCEforms_dbFileIconsHook extends \TYPO3\CMS\Backend\Form\DatabaseFileIconsHookInterface {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_TCEforms_Suggest_DefaultReceiver extends \TYPO3\CMS\Backend\Form\Element\SuggestDefaultReceiver {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_TCEforms_Suggest extends \TYPO3\CMS\Backend\Form\Element\SuggestElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_TCEforms_Tree extends \TYPO3\CMS\Backend\Form\Element\TreeElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_TCEforms_ValueSlider extends \TYPO3\CMS\Backend\Form\Element\ValueSlider {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_TCEforms_Flexforms extends \TYPO3\CMS\Backend\Form\FlexFormsHelper {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_TCEforms extends \TYPO3\CMS\Backend\Form\FormEngine {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -369,16 +293,6 @@ interface t3lib_localRecordListGetTableHook extends \TYPO3\CMS\Backend\RecordLis
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-abstract class t3lib_rteapi extends \TYPO3\CMS\Backend\Rte\AbstractRte {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class extDirect_dataProvider_BackendLiveSearch extends \TYPO3\CMS\Backend\Search\LiveSearch\ExtDirect\LiveSearchDataProvider {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class t3lib_search_liveSearch extends \TYPO3\CMS\Backend\Search\LiveSearch\LiveSearch {}
 
 /**
@@ -419,57 +333,12 @@ class t3lib_SpriteManager extends \TYPO3\CMS\Backend\Sprite\SpriteManager {}
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class bigDoc extends \TYPO3\CMS\Backend\Template\BigDocumentTemplate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class template extends \TYPO3\CMS\Backend\Template\DocumentTemplate {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class frontendDoc extends \TYPO3\CMS\Backend\Template\FrontendDocumentTemplate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class mediumDoc extends \TYPO3\CMS\Backend\Template\MediumDocumentTemplate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class smallDoc extends \TYPO3\CMS\Backend\Template\SmallDocumentTemplate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class noDoc extends \TYPO3\CMS\Backend\Template\StandardDocumentTemplate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 interface backend_cacheActionsHook extends \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class ClearCacheMenu extends \TYPO3\CMS\Backend\Toolbar\ClearCacheToolbarItem {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class LiveSearch extends \TYPO3\CMS\Backend\Toolbar\LiveSearchToolbarItem {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class ShortcutMenu extends \TYPO3\CMS\Backend\Toolbar\ShortcutToolbarItem {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-interface backend_toolbarItem extends \TYPO3\CMS\Backend\Toolbar\ToolbarItemHookInterface {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -619,11 +488,6 @@ class t3lib_pageTree extends \TYPO3\CMS\Backend\Tree\View\PageTreeView {}
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class extDirect_DataProvider_BackendUserSettings extends \TYPO3\CMS\Backend\User\ExtDirect\BackendUserSettingsDataProvider {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class t3lib_BEfunc extends \TYPO3\CMS\Backend\Utility\BackendUtility {}
 
 /**
@@ -694,22 +558,12 @@ class t3lib_cli extends \TYPO3\CMS\Core\Controller\CommandLineController {}
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class extDirect_DataProvider_ContextHelp extends \TYPO3\CMS\ContextHelp\ExtDirect\ContextHelpDataProvider {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 abstract class t3lib_userAuth extends \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
 class t3lib_beUserAuth extends \TYPO3\CMS\Core\Authentication\BackendUserAuthentication {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_autoloader extends \TYPO3\CMS\Core\Core\ClassLoader {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -769,11 +623,6 @@ class t3lib_cache_backend_DbBackend extends \TYPO3\CMS\Core\Cache\Backend\Typo3D
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class t3lib_cache extends \TYPO3\CMS\Core\Cache\Cache {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class t3lib_cache_Factory extends \TYPO3\CMS\Core\Cache\CacheFactory {}
 
 /**
@@ -785,11 +634,6 @@ class t3lib_cache_Manager extends \TYPO3\CMS\Core\Cache\CacheManager {}
  * @deprecated since 6.0 will be removed in 7.0
  */
 class t3lib_cache_Exception extends \TYPO3\CMS\Core\Cache\Exception {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_cache_exception_ClassAlreadyLoaded extends \TYPO3\CMS\Core\Cache\Exception\ClassAlreadyLoadedException {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -954,11 +798,6 @@ class t3lib_softrefproc extends \TYPO3\CMS\Core\Database\SoftReferenceIndex {}
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class t3lib_sqlparser extends \TYPO3\CMS\Core\Database\SqlParser {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 interface t3lib_extTables_PostProcessingHook extends \TYPO3\CMS\Core\Database\TableConfigurationPostProcessingHookInterface {}
 
 /**
@@ -975,11 +814,6 @@ interface t3lib_TCEmain_checkModifyAccessListHook extends \TYPO3\CMS\Core\DataHa
  * @deprecated since 6.0 will be removed in 7.0
  */
 interface t3lib_TCEmain_processUploadHook extends \TYPO3\CMS\Core\DataHandling\DataHandlerProcessUploadHookInterface {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-interface t3lib_browseLinksHook extends \TYPO3\CMS\Core\ElementBrowser\ElementBrowserHookInterface {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -1229,11 +1063,6 @@ class t3lib_mail_Rfc822AddressesParser extends \TYPO3\CMS\Core\Mail\Rfc822Addres
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class t3lib_mail_SwiftMailerAdapter extends \TYPO3\CMS\Core\Mail\SwiftMailerAdapter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 abstract class t3lib_message_AbstractMessage extends \TYPO3\CMS\Core\Messaging\AbstractMessage {}
 
 /**
@@ -1425,11 +1254,6 @@ class t3lib_utility_PhpOptions extends \TYPO3\CMS\Core\Utility\PhpOptionsUtility
  * @deprecated since 6.0 will be removed in 7.0
  */
 class t3lib_utility_VersionNumber extends \TYPO3\CMS\Core\Utility\VersionNumberUtility {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class SC_view_help extends \TYPO3\CMS\Cshmanual\Controller\HelpModuleController {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -1729,17 +1553,7 @@ class Tx_Extbase_MVC_Controller_Argument extends \TYPO3\CMS\Extbase\Mvc\Controll
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class Tx_Extbase_MVC_Controller_ArgumentError extends \TYPO3\CMS\Extbase\Mvc\Controller\ArgumentError {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class Tx_Extbase_MVC_Controller_Arguments extends \TYPO3\CMS\Extbase\Mvc\Controller\Arguments {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Extbase_MVC_Controller_ArgumentsValidator extends \TYPO3\CMS\Extbase\Mvc\Controller\ArgumentsValidator {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -1765,11 +1579,6 @@ interface Tx_Extbase_MVC_Controller_ControllerInterface extends \TYPO3\CMS\Extba
  * @deprecated since 6.0 will be removed in 7.0
  */
 class Tx_Extbase_MVC_Controller_Exception_RequiredArgumentMissingException extends \TYPO3\CMS\Extbase\Mvc\Controller\Exception\RequiredArgumentMissingException {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Extbase_MVC_Controller_FlashMessages extends \TYPO3\CMS\Extbase\Mvc\Controller\FlashMessageContainer {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -2189,11 +1998,6 @@ class Tx_Extbase_Persistence_Generic_Exception_InconsistentQuerySettings extends
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class Tx_Extbase_Persistence_IdentityMap extends \TYPO3\CMS\Extbase\Persistence\Generic\IdentityMap {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class Tx_Extbase_Persistence_LazyLoadingProxy extends \TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy {}
 
 /**
@@ -2289,11 +2093,6 @@ interface Tx_Extbase_Persistence_QOM_ConstraintInterface extends \TYPO3\CMS\Extb
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class Tx_Extbase_Persistence_QOM_DynamicOperand extends \TYPO3\CMS\Extbase\Persistence\Generic\Qom\DynamicOperand {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 interface Tx_Extbase_Persistence_QOM_DynamicOperandInterface extends \TYPO3\CMS\Extbase\Persistence\Generic\Qom\DynamicOperandInterface {}
 
 /**
@@ -2354,11 +2153,6 @@ interface Tx_Extbase_Persistence_QOM_NotInterface extends \TYPO3\CMS\Extbase\Per
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class Tx_Extbase_Persistence_QOM_Operand extends \TYPO3\CMS\Extbase\Persistence\Generic\Qom\Operand {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 interface Tx_Extbase_Persistence_QOM_OperandInterface extends \TYPO3\CMS\Extbase\Persistence\Generic\Qom\OperandInterface {}
 
 /**
@@ -2389,17 +2183,7 @@ interface Tx_Extbase_Persistence_QOM_PropertyValueInterface extends \TYPO3\CMS\E
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-interface Tx_Extbase_Persistence_QOM_QueryObjectModelConstantsInterface extends \TYPO3\CMS\Extbase\Persistence\Generic\Qom\QueryObjectModelConstantsInterface {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class Tx_Extbase_Persistence_QOM_QueryObjectModelFactory extends \TYPO3\CMS\Extbase\Persistence\Generic\Qom\QueryObjectModelFactory {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-interface Tx_Extbase_Persistence_QOM_QueryObjectModelFactoryInterface extends \TYPO3\CMS\Extbase\Persistence\Generic\Qom\QueryObjectModelFactoryInterface {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -2420,11 +2204,6 @@ interface Tx_Extbase_Persistence_QOM_SourceInterface extends \TYPO3\CMS\Extbase\
  * @deprecated since 6.0 will be removed in 7.0
  */
 class Tx_Extbase_Persistence_QOM_Statement extends \TYPO3\CMS\Extbase\Persistence\Generic\Qom\Statement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Extbase_Persistence_QOM_StaticOperand extends \TYPO3\CMS\Extbase\Persistence\Generic\Qom\StaticOperand {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -2585,16 +2364,6 @@ class Tx_Extbase_Property_Exception_TargetNotFoundException extends \TYPO3\CMS\E
  * @deprecated since 6.0 will be removed in 7.0
  */
 class Tx_Extbase_Property_Exception_TypeConverterException extends \TYPO3\CMS\Extbase\Property\Exception\TypeConverterException {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Extbase_Property_Mapper extends \TYPO3\CMS\Extbase\Property\Mapper {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Extbase_Property_MappingResults extends \TYPO3\CMS\Extbase\Property\MappingResults {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -2779,11 +2548,6 @@ class Tx_Extbase_Scheduler_TaskExecutor extends \TYPO3\CMS\Extbase\Scheduler\Tas
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class Tx_Extbase_Security_Channel_RequestHashService extends \TYPO3\CMS\Extbase\Security\Channel\RequestHashService {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class Tx_Extbase_Security_Cryptography_HashService extends \TYPO3\CMS\Extbase\Security\Cryptography\HashService {}
 
 /**
@@ -2829,11 +2593,6 @@ class Tx_Extbase_Service_FlexFormService extends \TYPO3\CMS\Extbase\Service\Flex
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class Tx_Extbase_Service_TypeHandlingService extends \TYPO3\CMS\Extbase\Service\TypeHandlingService {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class Tx_Extbase_Service_TypoScriptService extends \TYPO3\CMS\Extbase\Service\TypoScriptService {}
 
 /**
@@ -2845,11 +2604,6 @@ class Tx_Extbase_SignalSlot_Dispatcher extends \TYPO3\CMS\Extbase\SignalSlot\Dis
  * @deprecated since 6.0 will be removed in 7.0
  */
 class Tx_Extbase_SignalSlot_Exception_InvalidSlotException extends \TYPO3\CMS\Extbase\SignalSlot\Exception\InvalidSlotException {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Extbase_Tests_Unit_BaseTestCase extends \TYPO3\CMS\Core\Tests\UnitTestCase {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -2919,17 +2673,7 @@ class Tx_Extbase_Validation_Exception_NoValidatorFound extends \TYPO3\CMS\Extbas
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class Tx_Extbase_Validation_PropertyError extends \TYPO3\CMS\Extbase\Validation\PropertyError {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 abstract class Tx_Extbase_Validation_Validator_AbstractCompositeValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractCompositeValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class Tx_Extbase_Validation_Validator_AbstractObjectValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractObjectValidator {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -3035,11 +2779,6 @@ class Tx_Extbase_Validation_ValidatorResolver extends \TYPO3\CMS\Extbase\Validat
  * @deprecated since 6.0 will be removed in 7.0
  */
 class tx_em_Tasks_UpdateExtensionList extends \TYPO3\CMS\Extensionmanager\Task\UpdateExtensionListTask {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_extrapagecmoptions extends \TYPO3\CMS\ExtraPageCmOptions\ExtraPageContextMenuOptions {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -3150,11 +2889,6 @@ interface Tx_Fluid_Core_Parser_SyntaxTree_NodeInterface extends \TYPO3\CMS\Fluid
  * @deprecated since 6.0 will be removed in 7.0
  */
 class Tx_Fluid_Core_Parser_SyntaxTree_ObjectAccessorNode extends \TYPO3\CMS\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-interface Tx_Fluid_Core_Parser_SyntaxTree_RenderingContextAwareInterface extends \TYPO3\CMS\Fluid\Core\Parser\SyntaxTree\RenderingContextAwareInterface {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -3494,11 +3228,6 @@ class Tx_Fluid_ViewHelpers_Form_CheckboxViewHelper extends \TYPO3\CMS\Fluid\View
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class Tx_Fluid_ViewHelpers_Form_ErrorsViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Form\ErrorsViewHelper {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class Tx_Fluid_ViewHelpers_Form_HiddenViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Form\HiddenViewHelper {}
 
 /**
@@ -3769,11 +3498,6 @@ class Tx_Fluid_ViewHelpers_Widget_UriViewHelper extends \TYPO3\CMS\Fluid\ViewHel
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_form_Controller_Form extends \TYPO3\CMS\Form\Controller\FormController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tx_form_Controller_Wizard extends \TYPO3\CMS\Form\Controller\WizardController {}
 
 /**
@@ -3784,312 +3508,7 @@ class tx_form_Domain_Factory_JsonToTyposcript extends \TYPO3\CMS\Form\Domain\Fac
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_form_Domain_Factory_Typoscript extends \TYPO3\CMS\Form\Domain\Factory\TypoScriptFactory {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tx_form_Domain_Model_Additional_Abstract extends \TYPO3\CMS\Form\Domain\Model\Additional\AbstractAdditionalElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Additional_Additional extends \TYPO3\CMS\Form\Domain\Model\Additional\AdditionalAdditionalElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Additional_Error extends \TYPO3\CMS\Form\Domain\Model\Additional\ErrorAdditionalElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Additional_Label extends \TYPO3\CMS\Form\Domain\Model\Additional\LabelAdditionalElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Additional_Legend extends \TYPO3\CMS\Form\Domain\Model\Additional\LegendAdditionalElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Additional_Mandatory extends \TYPO3\CMS\Form\Domain\Model\Additional\MandatoryAdditionalElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tx_form_Domain_Model_Attributes_Abstract extends \TYPO3\CMS\Form\Domain\Model\Attribute\AbstractAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Accept extends \TYPO3\CMS\Form\Domain\Model\Attribute\AcceptAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Acceptcharset extends \TYPO3\CMS\Form\Domain\Model\Attribute\AcceptCharsetAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Accesskey extends \TYPO3\CMS\Form\Domain\Model\Attribute\AccesskeyAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Action extends \TYPO3\CMS\Form\Domain\Model\Attribute\ActionAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Alt extends \TYPO3\CMS\Form\Domain\Model\Attribute\AltAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Attributes extends \TYPO3\CMS\Form\Domain\Model\Attribute\AttributesAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Checked extends \TYPO3\CMS\Form\Domain\Model\Attribute\CheckedAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Class extends \TYPO3\CMS\Form\Domain\Model\Attribute\ClassAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Cols extends \TYPO3\CMS\Form\Domain\Model\Attribute\ColsAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Dir extends \TYPO3\CMS\Form\Domain\Model\Attribute\DirAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Disabled extends \TYPO3\CMS\Form\Domain\Model\Attribute\DisabledAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Enctype extends \TYPO3\CMS\Form\Domain\Model\Attribute\EnctypeAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Id extends \TYPO3\CMS\Form\Domain\Model\Attribute\IdAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Label extends \TYPO3\CMS\Form\Domain\Model\Attribute\LabelAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Lang extends \TYPO3\CMS\Form\Domain\Model\Attribute\LangAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Maxlength extends \TYPO3\CMS\Form\Domain\Model\Attribute\MaxlengthAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Method extends \TYPO3\CMS\Form\Domain\Model\Attribute\MethodAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Multiple extends \TYPO3\CMS\Form\Domain\Model\Attribute\MultipleAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Name extends \TYPO3\CMS\Form\Domain\Model\Attribute\NameAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Readonly extends \TYPO3\CMS\Form\Domain\Model\Attribute\ReadonlyAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Rows extends \TYPO3\CMS\Form\Domain\Model\Attribute\RowsAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Selected extends \TYPO3\CMS\Form\Domain\Model\Attribute\SelectedAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Size extends \TYPO3\CMS\Form\Domain\Model\Attribute\SizeAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Src extends \TYPO3\CMS\Form\Domain\Model\Attribute\SrcAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Style extends \TYPO3\CMS\Form\Domain\Model\Attribute\StyleAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Tabindex extends \TYPO3\CMS\Form\Domain\Model\Attribute\TabindexAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Title extends \TYPO3\CMS\Form\Domain\Model\Attribute\TitleAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Type extends \TYPO3\CMS\Form\Domain\Model\Attribute\TypeAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Attributes_Value extends \TYPO3\CMS\Form\Domain\Model\Attribute\ValueAttribute {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tx_form_Domain_Model_Content extends \TYPO3\CMS\Form\Domain\Model\Content {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tx_form_Domain_Model_Element_Abstract extends \TYPO3\CMS\Form\Domain\Model\Element\AbstractElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tx_form_Domain_Model_Element_AbstractPlain extends \TYPO3\CMS\Form\Domain\Model\Element\AbstractPlainElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Button extends \TYPO3\CMS\Form\Domain\Model\Element\ButtonElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Checkbox extends \TYPO3\CMS\Form\Domain\Model\Element\CheckboxElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Checkboxgroup extends \TYPO3\CMS\Form\Domain\Model\Element\CheckboxGroupElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Container extends \TYPO3\CMS\Form\Domain\Model\Element\ContainerElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Content extends \TYPO3\CMS\Form\Domain\Model\Element\ContentElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Fieldset extends \TYPO3\CMS\Form\Domain\Model\Element\FieldsetElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Fileupload extends \TYPO3\CMS\Form\Domain\Model\Element\FileuploadElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Header extends \TYPO3\CMS\Form\Domain\Model\Element\HeaderElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Hidden extends \TYPO3\CMS\Form\Domain\Model\Element\HiddenElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Imagebutton extends \TYPO3\CMS\Form\Domain\Model\Element\ImagebuttonElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Optgroup extends \TYPO3\CMS\Form\Domain\Model\Element\OptgroupElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Option extends \TYPO3\CMS\Form\Domain\Model\Element\OptionElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Password extends \TYPO3\CMS\Form\Domain\Model\Element\PasswordElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Radio extends \TYPO3\CMS\Form\Domain\Model\Element\RadioElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Radiogroup extends \TYPO3\CMS\Form\Domain\Model\Element\RadioGroupElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Reset extends \TYPO3\CMS\Form\Domain\Model\Element\ResetElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Select extends \TYPO3\CMS\Form\Domain\Model\Element\SelectElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Submit extends \TYPO3\CMS\Form\Domain\Model\Element\SubmitElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Textarea extends \TYPO3\CMS\Form\Domain\Model\Element\TextareaElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Textblock extends \TYPO3\CMS\Form\Domain\Model\Element\TextblockElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Element_Textline extends \TYPO3\CMS\Form\Domain\Model\Element\TextlineElement {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_Domain_Model_Form extends \TYPO3\CMS\Form\Domain\Model\Form {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -4199,107 +3618,7 @@ class tx_form_Domain_Repository_Content extends \TYPO3\CMS\Form\Domain\Repositor
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_form_System_Elementcounter extends \TYPO3\CMS\Form\ElementCounter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Alphabetic extends \TYPO3\CMS\Form\Filter\AlphabeticFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Alphanumeric extends \TYPO3\CMS\Form\Filter\AlphanumericFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Currency extends \TYPO3\CMS\Form\Filter\CurrencyFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Digit extends \TYPO3\CMS\Form\Filter\DigitFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-interface tx_form_System_Filter_Interface extends \TYPO3\CMS\Form\Filter\FilterInterface {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Integer extends \TYPO3\CMS\Form\Filter\IntegerFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Lowercase extends \TYPO3\CMS\Form\Filter\LowerCaseFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Regexp extends \TYPO3\CMS\Form\Filter\RegExpFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Removexss extends \TYPO3\CMS\Form\Filter\RemoveXssFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Stripnewlines extends \TYPO3\CMS\Form\Filter\StripNewLinesFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Titlecase extends \TYPO3\CMS\Form\Filter\TitleCaseFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Trim extends \TYPO3\CMS\Form\Filter\TrimFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter_Uppercase extends \TYPO3\CMS\Form\Filter\UpperCaseFilter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Layout extends \TYPO3\CMS\Form\Layout {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Localization extends \TYPO3\CMS\Form\Localization {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Postprocessor_Mail extends \TYPO3\CMS\Form\PostProcess\MailPostProcessor {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Postprocessor extends \TYPO3\CMS\Form\PostProcess\PostProcessor {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 interface tx_form_System_Postprocessor_Interface extends \TYPO3\CMS\Form\PostProcess\PostProcessorInterface {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Request extends \TYPO3\CMS\Form\Request {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Filter extends \TYPO3\CMS\Form\Utility\FilterUtility {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -4310,536 +3629,6 @@ class tx_form_Common extends \TYPO3\CMS\Form\Utility\FormUtility {}
  * @deprecated since 6.0 will be removed in 7.0
  */
 class tx_form_Domain_Factory_TyposcriptToJson extends \TYPO3\CMS\Form\Utility\TypoScriptToJsonConverter {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate extends \TYPO3\CMS\Form\Utility\ValidatorUtility {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tx_form_System_Validate_Abstract extends \TYPO3\CMS\Form\Validation\AbstractValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Alphabetic extends \TYPO3\CMS\Form\Validation\AlphabeticValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Alphanumeric extends \TYPO3\CMS\Form\Validation\AlphanumericValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Between extends \TYPO3\CMS\Form\Validation\BetweenValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Date extends \TYPO3\CMS\Form\Validation\DateValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Digit extends \TYPO3\CMS\Form\Validation\DigitValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Email extends \TYPO3\CMS\Form\Validation\EmailValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Equals extends \TYPO3\CMS\Form\Validation\EqualsValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Fileallowedtypes extends \TYPO3\CMS\Form\Validation\FileAllowedTypesValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Filemaximumsize extends \TYPO3\CMS\Form\Validation\FileMaximumSizeValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Fileminimumsize extends \TYPO3\CMS\Form\Validation\FileMinimumSizeValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Float extends \TYPO3\CMS\Form\Validation\FloatValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Greaterthan extends \TYPO3\CMS\Form\Validation\GreaterThanValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Inarray extends \TYPO3\CMS\Form\Validation\InArrayValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Integer extends \TYPO3\CMS\Form\Validation\IntegerValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-interface tx_form_System_Validate_Interface extends \TYPO3\CMS\Form\Validation\ValidatorInterface {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Ip extends \TYPO3\CMS\Form\Validation\IpValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Length extends \TYPO3\CMS\Form\Validation\LengthValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Lessthan extends \TYPO3\CMS\Form\Validation\LessthanValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Regexp extends \TYPO3\CMS\Form\Validation\RegExpValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Required extends \TYPO3\CMS\Form\Validation\RequiredValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_System_Validate_Uri extends \TYPO3\CMS\Form\Validation\UriValidator {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Additional extends \TYPO3\CMS\Form\View\Confirmation\Additional\AdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Additional_Label extends \TYPO3\CMS\Form\View\Confirmation\Additional\LabelAdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Additional_Legend extends \TYPO3\CMS\Form\View\Confirmation\Additional\LegendAdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation extends \TYPO3\CMS\Form\View\Confirmation\ConfirmationView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tx_form_View_Confirmation_Element_Abstract extends \TYPO3\CMS\Form\View\Confirmation\Element\AbstractElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Checkbox extends \TYPO3\CMS\Form\View\Confirmation\Element\CheckboxElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Checkboxgroup extends \TYPO3\CMS\Form\View\Confirmation\Element\CheckboxGroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Container extends \TYPO3\CMS\Form\View\Confirmation\Element\ContainerElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Fieldset extends \TYPO3\CMS\Form\View\Confirmation\Element\FieldsetElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Fileupload extends \TYPO3\CMS\Form\View\Confirmation\Element\FileuploadElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Optgroup extends \TYPO3\CMS\Form\View\Confirmation\Element\OptgroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Option extends \TYPO3\CMS\Form\View\Confirmation\Element\OptionElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Radio extends \TYPO3\CMS\Form\View\Confirmation\Element\RadioElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Radiogroup extends \TYPO3\CMS\Form\View\Confirmation\Element\RadioGroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Select extends \TYPO3\CMS\Form\View\Confirmation\Element\SelectElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Textarea extends \TYPO3\CMS\Form\View\Confirmation\Element\TextareaElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Confirmation_Element_Textline extends \TYPO3\CMS\Form\View\Confirmation\Element\TextlineElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Additional extends \TYPO3\CMS\Form\View\Form\Additional\AdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Additional_Error extends \TYPO3\CMS\Form\View\Form\Additional\ErrorAdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Additional_Label extends \TYPO3\CMS\Form\View\Form\Additional\LabelAdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Additional_Legend extends \TYPO3\CMS\Form\View\Form\Additional\LegendAdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Additional_Mandatory extends \TYPO3\CMS\Form\View\Form\Additional\MandatoryAdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tx_form_View_Form_Element_Abstract extends \TYPO3\CMS\Form\View\Form\Element\AbstractElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Button extends \TYPO3\CMS\Form\View\Form\Element\ButtonElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Checkbox extends \TYPO3\CMS\Form\View\Form\Element\CheckboxElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Checkboxgroup extends \TYPO3\CMS\Form\View\Form\Element\CheckboxGroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Container extends \TYPO3\CMS\Form\View\Form\Element\ContainerElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Content extends \TYPO3\CMS\Form\View\Form\Element\ContentElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Fieldset extends \TYPO3\CMS\Form\View\Form\Element\FieldsetElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Fileupload extends \TYPO3\CMS\Form\View\Form\Element\FileuploadElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Header extends \TYPO3\CMS\Form\View\Form\Element\HeaderElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Hidden extends \TYPO3\CMS\Form\View\Form\Element\HiddenElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Imagebutton extends \TYPO3\CMS\Form\View\Form\Element\ImagebuttonElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Optgroup extends \TYPO3\CMS\Form\View\Form\Element\OptgroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Option extends \TYPO3\CMS\Form\View\Form\Element\OptionElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Password extends \TYPO3\CMS\Form\View\Form\Element\PasswordElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Radio extends \TYPO3\CMS\Form\View\Form\Element\RadioElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Radiogroup extends \TYPO3\CMS\Form\View\Form\Element\RadioGroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Reset extends \TYPO3\CMS\Form\View\Form\Element\ResetElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Select extends \TYPO3\CMS\Form\View\Form\Element\SelectElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Submit extends \TYPO3\CMS\Form\View\Form\Element\SubmitElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Textarea extends \TYPO3\CMS\Form\View\Form\Element\TextareaElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Textblock extends \TYPO3\CMS\Form\View\Form\Element\TextblockElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form_Element_Textline extends \TYPO3\CMS\Form\View\Form\Element\TextlineElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Form extends \TYPO3\CMS\Form\View\Form\FormView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Additional extends \TYPO3\CMS\Form\View\Mail\Html\Additional\AdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Additional_Label extends \TYPO3\CMS\Form\View\Mail\Html\Additional\LabelAdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Additional_Legend extends \TYPO3\CMS\Form\View\Mail\Html\Additional\LegendAdditionalElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tx_form_View_Mail_Html_Element_Abstract extends \TYPO3\CMS\Form\View\Mail\Html\Element\AbstractElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Checkbox extends \TYPO3\CMS\Form\View\Mail\Html\Element\CheckboxElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Checkboxgroup extends \TYPO3\CMS\Form\View\Mail\Html\Element\CheckboxGroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Container extends \TYPO3\CMS\Form\View\Mail\Html\Element\ContainerElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Fieldset extends \TYPO3\CMS\Form\View\Mail\Html\Element\FieldsetElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Fileupload extends \TYPO3\CMS\Form\View\Mail\Html\Element\FileuploadElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Hidden extends \TYPO3\CMS\Form\View\Mail\Html\Element\HiddenElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Optgroup extends \TYPO3\CMS\Form\View\Mail\Html\Element\OptgroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Option extends \TYPO3\CMS\Form\View\Mail\Html\Element\OptionElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Radio extends \TYPO3\CMS\Form\View\Mail\Html\Element\RadioElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Radiogroup extends \TYPO3\CMS\Form\View\Mail\Html\Element\RadioGroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Select extends \TYPO3\CMS\Form\View\Mail\Html\Element\SelectElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Textarea extends \TYPO3\CMS\Form\View\Mail\Html\Element\TextareaElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html_Element_Textline extends \TYPO3\CMS\Form\View\Mail\Html\Element\TextlineElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Html extends \TYPO3\CMS\Form\View\Mail\Html\HtmlView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail extends \TYPO3\CMS\Form\View\Mail\MailView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tx_form_View_Mail_Plain_Element_Abstract extends \TYPO3\CMS\Form\View\Mail\Plain\Element\AbstractElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Checkbox extends \TYPO3\CMS\Form\View\Mail\Plain\Element\CheckboxElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Checkboxgroup extends \TYPO3\CMS\Form\View\Mail\Plain\Element\CheckboxGroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Container extends \TYPO3\CMS\Form\View\Mail\Plain\Element\ContainerElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Fieldset extends \TYPO3\CMS\Form\View\Mail\Plain\Element\FieldsetElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Fileupload extends \TYPO3\CMS\Form\View\Mail\Plain\Element\FileuploadElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Hidden extends \TYPO3\CMS\Form\View\Mail\Plain\Element\HiddenElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Optgroup extends \TYPO3\CMS\Form\View\Mail\Plain\Element\OptgroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Option extends \TYPO3\CMS\Form\View\Mail\Plain\Element\OptionElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Radio extends \TYPO3\CMS\Form\View\Mail\Plain\Element\RadioElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Radiogroup extends \TYPO3\CMS\Form\View\Mail\Plain\Element\RadioGroupElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Select extends \TYPO3\CMS\Form\View\Mail\Plain\Element\SelectElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Textarea extends \TYPO3\CMS\Form\View\Mail\Plain\Element\TextareaElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain_Element_Textline extends \TYPO3\CMS\Form\View\Mail\Plain\Element\TextlineElementView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Mail_Plain extends \TYPO3\CMS\Form\View\Mail\Plain\PlainView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tx_form_View_Wizard_Abstract extends \TYPO3\CMS\Form\View\Wizard\AbstractWizardView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Wizard_Load extends \TYPO3\CMS\Form\View\Wizard\LoadWizardView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Wizard_Save extends \TYPO3\CMS\Form\View\Wizard\SaveWizardView {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_form_View_Wizard_Wizard extends \TYPO3\CMS\Form\View\Wizard\WizardView {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -4860,16 +3649,6 @@ abstract class tslib_content_Abstract extends \TYPO3\CMS\Frontend\ContentObject\
  * @deprecated since 6.0 will be removed in 7.0
  */
 class tslib_content_Case extends \TYPO3\CMS\Frontend\ContentObject\CaseContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_content_ClearGif extends \TYPO3\CMS\Frontend\ContentObject\ClearGifContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_content_Columns extends \TYPO3\CMS\Frontend\ContentObject\ColumnsContentObject {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -4924,11 +3703,6 @@ interface tslib_content_stdWrapHook extends \TYPO3\CMS\Frontend\ContentObject\Co
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tslib_content_ContentTable extends \TYPO3\CMS\Frontend\ContentObject\ContentTableContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tslib_content_EditPanel extends \TYPO3\CMS\Frontend\ContentObject\EditPanelContentObject {}
 
 /**
@@ -4949,27 +3723,12 @@ class tslib_content_Files extends \TYPO3\CMS\Frontend\ContentObject\FilesContent
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tslib_content_FlowPlayer extends \TYPO3\CMS\Frontend\ContentObject\FlowPlayerContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tslib_content_FluidTemplate extends \TYPO3\CMS\Frontend\ContentObject\FluidTemplateContentObject {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tslib_content_Form extends \TYPO3\CMS\Frontend\ContentObject\FormContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tslib_content_HierarchicalMenu extends \TYPO3\CMS\Frontend\ContentObject\HierarchicalMenuContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_content_HorizontalRuler extends \TYPO3\CMS\Frontend\ContentObject\HorizontalRulerContentObject {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -4984,17 +3743,8 @@ class tslib_content_ImageResource extends \TYPO3\CMS\Frontend\ContentObject\Imag
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tslib_content_ImageText extends \TYPO3\CMS\Frontend\ContentObject\ImageTextContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tslib_content_LoadRegister extends \TYPO3\CMS\Frontend\ContentObject\LoadRegisterContentObject {}
 
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_content_Media extends \TYPO3\CMS\Frontend\ContentObject\MediaContentObject {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -5026,25 +3776,6 @@ class tslib_jsmenu extends \TYPO3\CMS\Frontend\ContentObject\Menu\JavaScriptMenu
  */
 class tslib_tmenu extends \TYPO3\CMS\Frontend\ContentObject\Menu\TextMenuContentObject {}
 
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_content_Multimedia extends \TYPO3\CMS\Frontend\ContentObject\MultimediaContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_tableOffset extends \TYPO3\CMS\Frontend\ContentObject\OffsetTableContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_content_OffsetTable extends \TYPO3\CMS\Frontend\ContentObject\OffsetTableContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_content_QuicktimeObject extends \TYPO3\CMS\Frontend\ContentObject\QuicktimeObjectContentObject {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -5061,25 +3792,6 @@ class tslib_content_RestoreRegister extends \TYPO3\CMS\Frontend\ContentObject\Re
  */
 class tslib_content_ScalableVectorGraphics extends \TYPO3\CMS\Frontend\ContentObject\ScalableVectorGraphicsContentObject {}
 
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_search extends \TYPO3\CMS\Frontend\ContentObject\SearchResultContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_content_SearchResult extends \TYPO3\CMS\Frontend\ContentObject\SearchResultContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_content_ShockwaveFlashObject extends \TYPO3\CMS\Frontend\ContentObject\ShockwaveFlashObjectContentObject {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_controlTable extends \TYPO3\CMS\Frontend\ContentObject\TableRenderer {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -5149,21 +3861,6 @@ class tslib_gifBuilder extends \TYPO3\CMS\Frontend\Imaging\GifBuilder {}
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tslib_mediaWizardCoreProvider extends \TYPO3\CMS\Frontend\MediaWizard\MediaWizardProvider {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-interface tslib_mediaWizardProvider extends \TYPO3\CMS\Frontend\MediaWizard\MediaWizardProviderInterface {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_mediaWizardManager extends \TYPO3\CMS\Frontend\MediaWizard\MediaWizardProviderManager {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class t3lib_cacheHash extends \TYPO3\CMS\Frontend\Page\CacheHashCalculator {}
 
 /**
@@ -5229,11 +3926,6 @@ class SC_mod_web_func_index extends \TYPO3\CMS\Func\Controller\PageFunctionsCont
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_funcwizards_webfunc extends \TYPO3\CMS\FuncWizards\Controller\WebFunctionWizardsBaseController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tx_impexp_clickmenu extends \TYPO3\CMS\Impexp\Clickmenu {}
 
 /**
@@ -5249,27 +3941,7 @@ class tx_impexp extends \TYPO3\CMS\Impexp\ImportExport {}
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_impexp_localPageTree extends \TYPO3\CMS\Impexp\LocalPageTree {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tx_impexp_task extends \TYPO3\CMS\Impexp\Task\ImportExportTask {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_indexedsearch_modfunc1 extends \TYPO3\CMS\IndexedSearch\Controller\IndexedPagesController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_indexedsearch_modfunc2 extends \TYPO3\CMS\IndexedSearch\Controller\IndexingStatisticsController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class SC_mod_tools_isearch_index extends \TYPO3\CMS\IndexedSearch\Controller\ModuleController {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -5300,11 +3972,6 @@ class tx_indexedsearch_files extends \TYPO3\CMS\IndexedSearch\Hook\CrawlerFilesH
  * @deprecated since 6.0 will be removed in 7.0
  */
 class tx_indexedsearch_crawler extends \TYPO3\CMS\IndexedSearch\Hook\CrawlerHook {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_indexedsearch_mysql extends \TYPO3\CMS\IndexedSearch\Hook\MysqlFulltextIndexHook {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -5354,76 +4021,6 @@ class tx_infopagetsconfig_webinfo extends \TYPO3\CMS\InfoPagetsconfig\Controller
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_coreupdates_addflexformstoacl extends \TYPO3\CMS\Install\Updates\AddFlexFormsToAclUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_charsetDefaults extends \TYPO3\CMS\Install\Updates\CharsetDefaultsUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_compatversion extends \TYPO3\CMS\Install\Updates\CompatVersionUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_compressionlevel extends \TYPO3\CMS\Install\Updates\CompressionLevelUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_cscsplit extends \TYPO3\CMS\Install\Updates\CscSplitUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_flagsfromsprite extends \TYPO3\CMS\Install\Updates\FlagsFromSpriteUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_imagecols extends \TYPO3\CMS\Install\Updates\ImagecolsUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_imagelink extends \TYPO3\CMS\Install\Updates\ImagelinkUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_installsysexts extends \TYPO3\CMS\Install\Updates\InstallSysExtsUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_mediaFlexform extends \TYPO3\CMS\Install\Updates\MediaFlexformUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_mergeadvanced extends \TYPO3\CMS\Install\Updates\MergeAdvancedUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_migrateworkspaces extends \TYPO3\CMS\Install\Updates\MigrateWorkspacesUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_notinmenu extends \TYPO3\CMS\Install\Updates\NotInMenuUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_coreupdates_t3skin extends \TYPO3\CMS\Install\Updates\T3skinUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class Tx_Install_Service_BasicService extends \TYPO3\CMS\Install\Service\EnableFileService {}
 
 /**
@@ -5445,26 +4042,6 @@ class t3lib_install_Sql extends \TYPO3\CMS\Install\Service\SqlSchemaMigrationSer
  * @deprecated since 6.0 will be removed in 7.0
  */
 abstract class Tx_Install_Updates_Base extends \TYPO3\CMS\Install\Updates\AbstractUpdate {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Install_Updates_File_FilemountUpdateWizard extends \TYPO3\CMS\Install\Updates\FilemountUpdateWizard {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Install_Updates_File_InitUpdateWizard extends \TYPO3\CMS\Install\Updates\InitUpdateWizard {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Install_Updates_File_TceformsUpdateWizard extends \TYPO3\CMS\Install\Updates\TceformsUpdateWizard {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Install_Updates_File_TtContentUploadsUpdateWizard extends \TYPO3\CMS\Install\Updates\TtContentUploadsUpdateWizard {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -5599,66 +4176,6 @@ class SC_mod_tools_dbint_index extends \TYPO3\CMS\Lowlevel\View\DatabaseIntegrit
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_opendocs extends \TYPO3\CMS\Opendocs\Controller\OpendocsController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_openid_eID extends \TYPO3\CMS\Openid\OpenidEid {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_openid_mod_setup extends \TYPO3\CMS\Openid\OpenidModuleSetup {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_openid_return extends \TYPO3\CMS\Openid\OpenidReturn {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_openid_sv1 extends \TYPO3\CMS\Openid\OpenidService {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_openid_store extends \TYPO3\CMS\Openid\OpenidStore {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class SC_mod_web_perm_ajax extends \TYPO3\CMS\Perm\Controller\PermissionAjaxController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class SC_mod_web_perm_index extends \TYPO3\CMS\Perm\Controller\PermissionModuleController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class browse_links extends \TYPO3\CMS\Recordlist\Browser\ElementBrowser {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class SC_browse_links extends \TYPO3\CMS\Recordlist\Controller\ElementBrowserController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class SC_browser extends \TYPO3\CMS\Recordlist\Controller\ElementBrowserFramesetController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class SC_db_list extends \TYPO3\CMS\Recordlist\RecordList {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 abstract class recordList extends \TYPO3\CMS\Recordlist\RecordList\AbstractDatabaseRecordList {}
 
 /**
@@ -5764,11 +4281,6 @@ class tx_reports_tasks_SystemStatusUpdateTaskNotificationEmailField extends \TYP
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class Tx_Reports_ViewHelpers_ActionMenuItemViewHelper extends \TYPO3\CMS\Reports\ViewHelpers\ActionMenuItemViewHelper {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class Tx_Reports_ViewHelpers_IconViewHelper extends \TYPO3\CMS\Reports\ViewHelpers\IconViewHelper {}
 
 /**
@@ -5800,11 +4312,6 @@ class tx_rsaauth_backendwarnings extends \TYPO3\CMS\Rsaauth\BackendWarnings {}
  * @deprecated since 6.0 will be removed in 7.0
  */
 class tx_rsaauth_feloginhook extends \TYPO3\CMS\Rsaauth\Hook\FrontendLoginHook {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_rsaauth_loginformhook extends \TYPO3\CMS\Rsaauth\Hook\LoginFormHook {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -5844,27 +4351,12 @@ class tx_rsaauth_storagefactory extends \TYPO3\CMS\Rsaauth\Storage\StorageFactor
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_rtehtmlarea_browse_links extends \TYPO3\CMS\Rtehtmlarea\BrowseLinks {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_rtehtmlarea_parse_html extends \TYPO3\CMS\Rtehtmlarea\ContentParser {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tx_rtehtmlarea_SC_browse_links extends \TYPO3\CMS\Rtehtmlarea\Controller\BrowseLinksController {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
 class tx_rtehtmlarea_pi3 extends \TYPO3\CMS\Rtehtmlarea\Controller\CustomAttributeController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_rtehtmlarea_pi2 extends \TYPO3\CMS\Rtehtmlarea\Controller\FrontendRteController {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -5880,11 +4372,6 @@ class tx_rtehtmlarea_pi1 extends \TYPO3\CMS\Rtehtmlarea\Controller\SpellChecking
  * @deprecated since 6.0 will be removed in 7.0
  */
 class tx_rtehtmlarea_abouteditor extends \TYPO3\CMS\Rtehtmlarea\Extension\AboutEditor {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_rtehtmlarea_acronym extends \TYPO3\CMS\Rtehtmlarea\Extension\Acronym {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -6044,11 +4531,6 @@ class tx_rtehtmlarea_userelements extends \TYPO3\CMS\Rtehtmlarea\Extension\UserE
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_rtehtmlarea_folderTree extends \TYPO3\CMS\Rtehtmlarea\FolderTree {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tx_rtehtmlarea_deprecatedRteProperties extends \TYPO3\CMS\Rtehtmlarea\Hook\Install\DeprecatedRteProperties {}
 
 /**
@@ -6064,32 +4546,7 @@ class tx_rtehtmlarea_statusReport_conflictsCheck extends \TYPO3\CMS\Rtehtmlarea\
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_rtehtmlarea_image_folderTree extends \TYPO3\CMS\Rtehtmlarea\ImageFolderTree {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_rtehtmlarea_pageTree extends \TYPO3\CMS\Rtehtmlarea\PageTree {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tx_rtehtmlarea_api extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaApi {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_rtehtmlarea_base extends \TYPO3\CMS\Rtehtmlarea\RteHtmlAreaBase {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_rtehtmlarea_select_image extends \TYPO3\CMS\Rtehtmlarea\SelectImage {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_rtehtmlarea_user extends \TYPO3\CMS\Rtehtmlarea\User {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -6229,11 +4686,6 @@ class tx_scheduler_CachingFrameworkGarbageCollection extends \TYPO3\CMS\Schedule
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_scheduler_FileIndexing extends \TYPO3\CMS\Scheduler\Task\FileIndexingTask {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tx_scheduler_RecyclerGarbageCollection_AdditionalFieldProvider extends \TYPO3\CMS\Scheduler\Task\RecyclerGarbageCollectionAdditionalFieldProvider {}
 
 /**
@@ -6269,11 +4721,6 @@ class tx_sv_auth extends \TYPO3\CMS\Sv\AuthenticationService {}
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_sv_loginformhook extends \TYPO3\CMS\Sv\LoginFormHook {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tx_sv_reports_ServicesList extends \TYPO3\CMS\Sv\Report\ServicesListReport {}
 
 /**
@@ -6289,17 +4736,7 @@ class tx_sysaction_task extends \TYPO3\CMS\SysAction\ActionTask {}
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_sysactionToolbarMenu extends \TYPO3\CMS\SysAction\ActionToolbarMenu {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class tx_t3editor_codecompletion extends \TYPO3\CMS\T3editor\CodeCompletion {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_t3editor_tceforms_wizard extends \TYPO3\CMS\T3editor\FormWizard {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -6404,11 +4841,6 @@ class tx_version_tcemain extends \TYPO3\CMS\Version\Hook\DataHandlerHook {}
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
-class tx_version_iconworks extends \TYPO3\CMS\Version\Hook\IconUtilityHook {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
 class Tx_Version_Preview extends \TYPO3\CMS\Version\Hook\PreviewHook {}
 
 /**
@@ -6430,11 +4862,6 @@ class tx_version_gui extends \TYPO3\CMS\Version\View\VersionView {}
  * @deprecated since 6.0 will be removed in 7.0
  */
 class tx_wizardcrpages_webfunc_2 extends \TYPO3\CMS\WizardCrpages\Controller\CreatePagesWizardModuleFunctionController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_wizardsortpages_webfunc_2 extends \TYPO3\CMS\WizardSortPages\View\SortPagesWizardModuleFunction {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -6490,11 +4917,6 @@ class Tx_Workspaces_ExtDirect_PagetreeCollectionsProcessor extends \TYPO3\CMS\Wo
  * @deprecated since 6.0 will be removed in 7.0
  */
 class Tx_Workspaces_ExtDirect_ToolbarMenu extends \TYPO3\CMS\Workspaces\ExtDirect\ToolbarMenu {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class Tx_Workspaces_ExtDirect_WorkspaceSelectorToolbarItem extends \TYPO3\CMS\Workspaces\ExtDirect\WorkspaceSelectorToolbarItem {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
