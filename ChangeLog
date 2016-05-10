@@ -1,3 +1,6 @@
+10-05-16 Franz Holzinger  <franz@ttproducts.de>
+	 * bug fix: The classes defined in class.tx_div2007_compatibility6 must not be redefined in Migrations/Code/LegacyClassesForIde.php
+
 06-05-16 Franz Holzinger  <franz@ttproducts.de>
 	* bug fix: remove unfindable migration classes. remove "access denied" message from Migrations file
 

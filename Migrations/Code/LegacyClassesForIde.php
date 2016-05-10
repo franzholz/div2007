@@ -900,10 +900,12 @@ class t3lib_error_ProductionExceptionHandler extends \TYPO3\CMS\Core\Error\Produ
  */
 class t3lib_exception extends \TYPO3\CMS\Core\Exception {}
 
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_extMgm extends \TYPO3\CMS\Core\Utility\ExtensionManagementUtility {}
+if (!class_exists('t3lib_extMgm', FALSE)) {
+	/**
+	* @deprecated since 6.0 will be removed in 7.0
+	*/
+	class t3lib_extMgm extends \TYPO3\CMS\Core\Utility\ExtensionManagementUtility {}
+}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -940,10 +942,12 @@ class t3lib_formprotection_InstallToolFormProtection extends \TYPO3\CMS\Core\For
  */
 class t3lib_frontendedit extends \TYPO3\CMS\Core\FrontendEditing\FrontendEditingController {}
 
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_parsehtml extends \TYPO3\CMS\Core\Html\HtmlParser {}
+if (!class_exists('tslib_cObj', FALSE)) {
+	/**
+	* @deprecated since 6.0 will be removed in 7.0
+	*/
+	class t3lib_parsehtml extends \TYPO3\CMS\Core\Html\HtmlParser {}
+}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -1215,10 +1219,13 @@ class t3lib_extFileFunctions extends \TYPO3\CMS\Core\Utility\File\ExtendedFileUt
  */
 interface t3lib_extFileFunctions_processDataHook extends \TYPO3\CMS\Core\Utility\File\ExtendedFileUtilityProcessDataHookInterface {}
 
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_div extends \TYPO3\CMS\Core\Utility\GeneralUtility {}
+
+if (!class_exists('t3lib_div', FALSE)) {
+	/**
+	* @deprecated since 6.0 will be removed in 7.0
+	*/
+	class t3lib_div extends \TYPO3\CMS\Core\Utility\GeneralUtility {}
+}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -3690,10 +3697,12 @@ interface tslib_content_cObjGetSingleHook extends \TYPO3\CMS\Frontend\ContentObj
  */
 interface tslib_content_PostInitHook extends \TYPO3\CMS\Frontend\ContentObject\ContentObjectPostInitHookInterface {}
 
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_cObj extends \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer {}
+if (!class_exists('tslib_cObj', FALSE)) {
+	/**
+	* @deprecated since 6.0 will be removed in 7.0
+	*/
+	class tslib_cObj extends \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer {}
+}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -3833,10 +3842,12 @@ class SC_tslib_showpic extends \TYPO3\CMS\Frontend\Controller\ShowImageControlle
  */
 class tx_cms_webinfo_lang extends \TYPO3\CMS\Frontend\Controller\TranslationStatusController {}
 
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tslib_fe extends \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController {}
+if (!class_exists('tslib_fe', FALSE)) {
+	/**
+	* @deprecated since 6.0 will be removed in 7.0
+	*/
+	class tslib_fe extends \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController {}
+}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -3893,10 +3904,12 @@ interface t3lib_pageSelect_getPageOverlayHook extends \TYPO3\CMS\Frontend\Page\P
  */
 interface t3lib_pageSelect_getRecordOverlayHook extends \TYPO3\CMS\Frontend\Page\PageRepositoryGetRecordOverlayHookInterface {}
 
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-abstract class tslib_pibase extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {}
+if (!class_exists('tslib_pibase', FALSE)) {
+	/**
+	* @deprecated since 6.0 will be removed in 7.0
+	*/
+	abstract class tslib_pibase extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {}
+}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
