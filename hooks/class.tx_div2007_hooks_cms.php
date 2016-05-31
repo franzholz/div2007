@@ -29,8 +29,6 @@
  *
  * hook functions for the TYPO3 cms
  *
- * $Id$
- *
  * @author	Franz Holzinger <franz@ttproducts.de>
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3

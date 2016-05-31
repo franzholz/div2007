@@ -40,7 +40,6 @@
  * @author     Elmar Hinz <elmar.hinz@team-red.net>
  * @author     Franz Holzinger <franz@ttproducts.de>
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version    SVN: $Id: class.tx_div2007_alpha.php 342 2016-02-25 15:03:54Z franzholz $
  * @since      0.1
  */
 

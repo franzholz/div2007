@@ -29,8 +29,6 @@
  * It takes care of the differences between the TYPO3 versions 4.5 and 6.2.
  * See the TYPO3 core files for the descriptions of these functions.
  *
- * $Id$
- *
  * class tslib_cObj All main TypoScript features, rendering of content objects (cObjects). This class is the backbone of TypoScript Template rendering.
  *
  * @package    TYPO3

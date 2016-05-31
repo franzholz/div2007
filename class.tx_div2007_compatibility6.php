@@ -29,9 +29,6 @@
  * It takes care to declare the classes which are necessary for extensions which run under TYPO3 6.2
  * See the TYPO3 core files for the descriptions of these classes
  *
- * $Id$
- *
- *
  * @package    TYPO3
  * @subpackage div2007
  * @author	Franz Holzinger <franz@ttproducts.de>

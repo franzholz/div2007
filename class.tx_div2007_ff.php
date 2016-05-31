@@ -36,7 +36,6 @@
  * @author     Fabien Udriot <fudriot@omic.ch>
  * @copyright  2006-2007 Fabien Udriot
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version    SVN: $Id$
  * @since      0.1
  */
 

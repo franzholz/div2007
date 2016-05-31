@@ -30,8 +30,6 @@
  * interface for the language object
  * You can use a pibase object for it.
  *
- * $Id$
- *
  * @author  Kasper Skaarhoj <kasperYYYY@typo3.com>
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3

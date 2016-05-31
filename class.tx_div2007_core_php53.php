@@ -37,7 +37,6 @@
  * @author     Kasper Skårhøj <kasperYYYY@typo3.com>
  * @author     Franz Holzinger <franz@ttproducts.de>
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version    SVN: $Id$
  * @since      0.1
  */
 

@@ -28,7 +28,6 @@
  * @author     Elmar Hinz <elmar.hinz@team-red.net>
  * @copyright  2006-2007 Elmar Hinz
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @version    SVN: $Id$
  * @since      0.1
  */
 
@@ -104,4 +103,4 @@ class tx_div2007_spl_arrayIterator extends tx_div2007_spl_arrayObject {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/spl/class.tx_div2007_spl_arrayIterator.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/spl/class.tx_div2007_spl_arrayIterator.php']);
 }
-?>
+

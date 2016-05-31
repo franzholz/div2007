@@ -25,8 +25,6 @@
  * Misc functions to access the static info tables
  * This has been copied from class.self.php Version-2-3-2 $Id:55590
  *
- * $Id$
- *
  * @author	René Fritz <r.fritz@colorcube.de>
  * @package TYPO3
  */

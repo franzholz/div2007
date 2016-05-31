@@ -27,8 +27,6 @@
 /**
  * Contains classes for Content Rendering based on TypoScript Template configuration
  *
- * $Id$
- *
  * class tslib_cObj	All main TypoScript features, rendering of content objects (cObjects). This class is the backbone of TypoScript Template rendering.
  *
  * @package    TYPO3
