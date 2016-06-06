@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2012 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2016 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -58,6 +58,7 @@ class tx_div2007_alpha_language_base {
 	 */
 	public $conf = Array();
 	public $typoVersion;
+	private $hasBeenInitialized = FALSE;
 
 
 	public function init ($cObj, $extKey, $conf, $scriptRelPath) {
@@ -78,6 +79,7 @@ class tx_div2007_alpha_language_base {
 		$this->scriptRelPath = $scriptRelPath;
 
 		$this->typoVersion = tx_div2007_core::getTypoVersion();
+		$this->hasBeenInitialized = TRUE;
 	}
 
 	public function getLocallang () {
@@ -99,6 +101,10 @@ class tx_div2007_alpha_language_base {
 	public function getTypoVersion () {
 		return $this->typoVersion;
 	}
+
+	public function needsInit () {
+		return !$this->hasBeenInitialized;
+	}
 }
 
 
@@ -106,4 +112,3 @@ if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['
 	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_alpha_language_base.php']);
 }
 
-?>
