@@ -221,18 +221,33 @@ class tx_div2007_selfAwareness {
 	 * @return	string		extension key
 	 */
 	public function getExtensionKey () {
-		if(preg_match('/^tx_([^_]+)/', get_class($this), $matches) ||
-		   preg_match('/^user_([^_]+)/', get_class($this), $matches)) {
+		if(
+			preg_match('/^tx_([^_]+)/', get_class($this), $matches) ||
+			preg_match('/^user_([^_]+)/', get_class($this), $matches)
+		) {
 			$candidate = $matches[1];
-			if($candidate != 'lib') {
-				$keys = t3lib_div::trimExplode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
-				foreach($keys as $key) {
-					if($candidate == str_replace('_', '', $key)) {
-						return $key;
+			if ($candidate != 'lib') {
+				if ( // TYPO3 7.x
+					isset($GLOBALS['TYPO3_LOADED_EXT']) &&
+					is_array($GLOBALS['TYPO3_LOADED_EXT'])
+				) {
+					$loadedExtensionsArray = $GLOBALS['TYPO3_LOADED_EXT'];
+					foreach ($loadedExtensionsArray as $extensionKey => $extension) {
+						if($candidate == str_replace('_', '', $extensionKey)) {
+							return $extensionKey;
+						}
+					}
+				} else  {
+					$keys = t3lib_div::trimExplode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
+					foreach($keys as $extensionKey) {
+						if($candidate == str_replace('_', '', $extensionKey)) {
+							return $extensionKey;
+						}
 					}
 				}
 			}
 		}
+
 		if('error') {
 			$message .= 'No extension key could be found.' . chr(10);
 			$this->_die($message, __FILE__, __LINE__);

@@ -1,3 +1,6 @@
+09-06-16 Franz Holzinger  <franz@ttproducts.de>
+	 * bug fix for TYPO3 7: tx_div2007_selfAwareness::getExtensionKey must use $GLOBALS['TYPO3_LOADED_EXT'] instead of $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']
+
 31-05-16 Franz Holzinger  <franz@ttproducts.de>
 	 * Security issue TYPO3-EXT-SA-2016-015: Non-Persistent Cross-Site Scripting
 
