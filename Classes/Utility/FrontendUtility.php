@@ -2,11 +2,10 @@
 
 namespace JambageCom\Div2007\Utility;
 
-
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2015 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2016 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -26,6 +25,26 @@ namespace JambageCom\Div2007\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+
+/**
+ * front end functions.
+ *
+ * @author	Franz Holzinger <franz@ttproducts.de>
+ * @maintainer Franz Holzinger <franz@ttproducts.de>
+ * @package TYPO3
+ * @subpackage div2007
+ */
+
+
+class FrontendUtility {
+	static public function test () {
+		return TRUE;
+	}
+
 /**
  * This is the MAIN DOCUMENT of the TypoScript driven standard front-end (from
  * the "cms" extension)
@@ -41,34 +60,28 @@ namespace JambageCom\Div2007\Utility;
  * @author Kasper Skårhøj <kasperYYYY@typo3.com>
  */
 
-/**
- * extension functions.
- *
- * @author	Franz Holzinger <franz@ttproducts.de>
- * $Id$
- */
-class FrontendUtility {
-
-	public function init () {
+	static public function init () {
 		global $TT, $TSFE, $BE_USER;
 
 		/** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
-		$TSFE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+		$TSFE = GeneralUtility::makeInstance(
 			'TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
 			$TYPO3_CONF_VARS,
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('id'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('type'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('no_cache'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('cHash'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('jumpurl'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('MP'),
-			\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('RDCT')
+			GeneralUtility::_GP('id'),
+			GeneralUtility::_GP('type'),
+			GeneralUtility::_GP('no_cache'),
+			GeneralUtility::_GP('cHash'),
+			GeneralUtility::_GP('jumpurl'),
+			GeneralUtility::_GP('MP'),
+			GeneralUtility::_GP('RDCT')
 		);
 
-		if ($TYPO3_CONF_VARS['FE']['pageUnavailable_force']
-			&& !\TYPO3\CMS\Core\Utility\GeneralUtility::cmpIP(
-				\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR'),
-				$TYPO3_CONF_VARS['SYS']['devIPmask'])
+		if (
+			$TYPO3_CONF_VARS['FE']['pageUnavailable_force'] &&
+			!GeneralUtility::cmpIP(
+				GeneralUtility::getIndpEnv('REMOTE_ADDR'),
+				$TYPO3_CONF_VARS['SYS']['devIPmask']
+			)
 		) {
 			$TSFE->pageUnavailableAndExit('This page is temporarily unavailable.');
 		}
@@ -79,12 +92,15 @@ class FrontendUtility {
 		// Output compression
 		// Remove any output produced until now
 		ob_clean();
-		if ($TYPO3_CONF_VARS['FE']['compressionLevel'] && extension_loaded('zlib')) {
+		if (
+			$TYPO3_CONF_VARS['FE']['compressionLevel'] &&
+			extension_loaded('zlib')
+		) {
 			if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($TYPO3_CONF_VARS['FE']['compressionLevel'])) {
 				// Prevent errors if ini_set() is unavailable (safe mode)
 				@ini_set('zlib.output_compression_level', $TYPO3_CONF_VARS['FE']['compressionLevel']);
 			}
-			ob_start(array(\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Utility\\CompressionUtility'), 'compressionOutputHandler'));
+			ob_start(array(GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Utility\\CompressionUtility'), 'compressionOutputHandler'));
 		}
 
 		// FE_USER
@@ -117,7 +133,7 @@ class FrontendUtility {
 		// \TYPO3\CMS\Version\Hook\PreviewHook might need to know if a backend user is logged in.
 		if (
 			$TSFE->isBackendUserLoggedIn()
-			&& (!$BE_USER->extPageReadAccess($TSFE->page) || \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('ADMCMD_noBeUser'))
+			&& (!$BE_USER->extPageReadAccess($TSFE->page) || GeneralUtility::_GP('ADMCMD_noBeUser'))
 		) {
 			// Remove user
 			unset($BE_USER);
@@ -157,13 +173,78 @@ class FrontendUtility {
 		$TT->pull();
 
 		// Debugging Output
-		if (isset($error) && is_object($error) && @is_callable(array($error, 'debugOutput'))) {
+		if (
+			isset($error) &&
+			is_object($error) &&
+			@is_callable(array($error, 'debugOutput'))
+		) {
 			$error->debugOutput();
 		}
+
 		if (TYPO3_DLOG) {
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('END of div2007 FRONTEND session', 'cms', 0, array('_FLUSH' => TRUE));
+			GeneralUtility::devLog('END of div2007 FRONTEND session', 'cms', 0, array('_FLUSH' => TRUE));
 		}
 	}
-}
 
+	/**
+	 * Returns a JavaScript <script> section with some function calls to JavaScript functions from "typo3/js/jsfunc.updateform.js" (which is also included by setting a reference in $GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'])
+	 * The JavaScript codes simply transfers content into form fields of a form which is probably used for editing information by frontend users. Used by fe_adminLib.inc.
+	 *
+	 * @param array $dataArray Data array which values to load into the form fields from $formName (only field names found in $fieldList)
+	 * @param string $formName The form name
+	 * @param string $arrPrefix A prefix for the data array
+	 * @param string $fieldList The list of fields which are loaded
+	 * @param string $javascriptFilename relative path to the filename of the Javascript which can execute the update form
+	 * @return string
+	 * @access private
+	 * @see tx_agency_display::createScreen()
+	 */
+	static public function getUpdateJS (
+		$dataArray,
+		$formName,
+		$arrPrefix,
+		$fieldList,
+		$javascriptFilename = ''
+	) {
+		$JSPart = '';
+		$updateValues = GeneralUtility::trimExplode(',', $fieldList);
+		foreach ($updateValues as $fKey) {
+			$value = $dataArray[$fKey];
+			if (is_array($value)) {
+				foreach ($value as $Nvalue) {
+					$JSPart .= '
+	updateForm(\'' . $formName . '\',\'' . $arrPrefix . '[' . $fKey . '][]\',' . GeneralUtility::quoteJSvalue($Nvalue, TRUE) . ');';
+				}
+			} else {
+				$JSPart .= '
+	updateForm(\'' . $formName . '\',\'' . $arrPrefix . '[' . $fKey . ']\',' . GeneralUtility::quoteJSvalue($value, TRUE) . ');';
+			}
+		}
+		$JSPart = '<script type="text/javascript">
+	/*<![CDATA[*/ ' . $JSPart . '
+	/*]]>*/
+</script>
+';
+
+		if (empty($javascriptFilename)) {
+			$javascriptFilename =
+				ExtensionManagementUtility::siteRelPath('div2007') .
+				'Resources/Public/JavaScript/jsfunc.updateform.js';
+		} else {
+			$lookupFile = explode('?', $file);
+			$path = GeneralUtility::resolveBackPath(GeneralUtility::dirname(PATH_thisScript) . '/' . $lookupFile[0]);
+			if (!file_exists($path)) {
+				return FALSE;
+			}
+		}
+
+		$script =
+			'<script type="text/javascript" src="' .
+				$GLOBALS['TSFE']->absRefPrefix .
+				GeneralUtility::createVersionNumberedFilename($javascriptFilename) .
+			'"></script>';
+		$GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'] = $script;
+		return $JSPart;
+	}
+}
 

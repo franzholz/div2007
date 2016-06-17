@@ -31,14 +31,10 @@ namespace JambageCom\Div2007\Utility;
  *
  * functions for the TYPO3 extension static_info_tables
  *
- * $Id$
- *
  * @author Franz Holzinger <franz@ttproducts.de>
  * @maintainer Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
 
 class StaticInfoTablesUtility {

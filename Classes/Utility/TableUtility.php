@@ -30,8 +30,11 @@ namespace JambageCom\Div2007\Utility;
  * table functions. It requires TYPO3 6.2
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
- * $Id: TableUtility.php 305 2015-09-28 12:00:26Z franzholz $
+ * @maintainer Franz Holzinger <franz@ttproducts.de>
+ * @package TYPO3
+ * @subpackage div2007
  */
+
 class TableUtility {
 
 	/**

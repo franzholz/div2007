@@ -47,4 +47,6 @@ return array(
 	'JambageCom\\Div2007\\Utility\\ExtensionUtility' => $extensionPath . 'Classes/Utility/ExtensionUtility.php',
 	'JambageCom\\Div2007\\Utility\\FrontendUtility' => $extensionPath . 'Classes/Utility/FrontendUtility.php',
 	'JambageCom\\Div2007\\Utility\\StaticInfoTablesUtility' => $extensionPath . 'Classes/Utility/StaticInfoTablesUtility.php',
+	'JambageCom\\Div2007\\Utility\\TestUtility' => $extensionPath . 'Classes/Utility/TestUtility.php',
 );
+

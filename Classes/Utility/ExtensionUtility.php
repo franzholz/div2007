@@ -30,7 +30,11 @@ namespace JambageCom\Div2007\Utility;
  * extension functions.
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
+ * @maintainer Franz Holzinger <franz@ttproducts.de>
+ * @package TYPO3
+ * @subpackage div2007
  */
+
 class ExtensionUtility {
 
 	/**
@@ -82,7 +86,8 @@ class ExtensionUtility {
 					}
 
 					if (
-						is_array($extConf['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])
+						is_array($extConf['constraints']) &&
+						is_array($EM_CONF[$extKey]['constraints']['depends'])
 					) {
 						$eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
 					} else {
@@ -94,10 +99,10 @@ class ExtensionUtility {
 						@is_file($path . '/Documentation/Index.rst');
 					$result = $eInfo;
 				} else {
-					$result = 'ERROR: The array $EM_CONF is wrong in file: ' . $file;
+					$result = 'ERROR: $EM_CONF mismatch in file: ' . $file;
 				}
 			} else {
-				$result = 'ERROR: No ext_emconf.php file: ' . $file;
+				$result = 'ERROR: File ext_emconf.php does not exist: ' . $file;
 			}
 		} else {
 			$result = 'ERROR: Path not found: ' . $path;
