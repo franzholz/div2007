@@ -3,8 +3,6 @@
 /**
  * Renders a phpTemplate and fills data into it
  *
- * PHP versions 4 and 5
- *
  * Copyright (c) 2006-2007 Elmar Hinz
  *
  * LICENSE:
@@ -97,7 +95,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @param	  string    configuration key or filename of template file
 	 * @return  string    typically an (x)html string
 	 */
-	function render($configurationKeyOrFileName) {
+	public function render($configurationKeyOrFileName) {
 		$this->checkController(__FILE__, __LINE__);                              // The controller has to be set before.
 		$path = $this->getPathToTemplateDirectory();                             // Path can have the format EXT:path/.
 		$path .= substr($path, -1, 1) == '/' ? '': '/';                          // If missing, ad a ending slash to the path.
@@ -125,7 +123,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asDate()
 	 */
-	function printAsDate($key, $format = '') {
+	public function printAsDate($key, $format = '') {
 		print $this->asDate($key, $format);
 	}
 
@@ -143,7 +141,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asEmail()
 	 */
-	function printAsEmail($emailKey, $labelKey = null) {
+	public function printAsEmail($emailKey, $labelKey = null) {
 		print $this->asEmail($emailKey, $labelKey);
 	}
 
@@ -157,7 +155,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asFloat()
 	 */
-	function printAsFloat($key, $format = null) {
+	public function printAsFloat($key, $format = null) {
 		print $this->asFloat($key, $format);
 	}
 
@@ -170,7 +168,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asForm()
 	 */
-	function printAsForm($key) {
+	public function printAsForm($key) {
 		print $this->asForm($key);
 	}
 
@@ -183,7 +181,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asHtml()
 	 */
-	function printAsHtml($key) {
+	public function printAsHtml($key) {
 		print $this->asHtml($key);
 	}
 
@@ -194,7 +192,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asInteger()
 	 */
-	function printAsInteger($key) {
+	public function printAsInteger($key) {
 		print $this->asInteger($key, $format);
 	}
 
@@ -205,7 +203,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asRaw()
 	 */
-	function printAsRaw($key) {
+	public function printAsRaw($key) {
 		print $this->asRaw($key);
 	}
 
@@ -218,7 +216,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asRte()
 	 */
-	function printAsRte($key) {
+	public function printAsRte($key) {
 		print $this->asRte($key);
 	}
 
@@ -231,7 +229,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asText()
 	 */
-	function printAsText($key) {
+	public function printAsText($key) {
 		print $this->asText($key);
 	}
 
@@ -246,7 +244,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asTime()
 	 */
-	function printAsTime($key, $format = '') {
+	public function printAsTime($key, $format = '') {
 		print $this->asTime($key, $format);
 	}
 
@@ -264,7 +262,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @return	void
 	 * @see		asUrl()
 	 */
-	function printAsUrl($urlKey, $labelKey = null) {
+	public function printAsUrl($urlKey, $labelKey = null) {
 		print $this->asUrl($urlKey, $labelKey);
 	}
 
@@ -275,7 +273,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 * @param	string		key
 	 * @return	void
 	 */
-	function printErrorList($class = 'errors', $key = '_errorList') {
+	public function printErrorList($class = 'errors', $key = '_errorList') {
 		print $this->getErrorList($class, $key) ;
 	}
 
@@ -284,7 +282,7 @@ class tx_div2007_phpTemplateEngine extends tx_div2007_viewBase {
 	 *
 	 * @return	void
 	 */
-	function printHiddenFields() {
+	public function printHiddenFields() {
 		print $this->getHiddenFields();
 	}
 }

@@ -3,8 +3,6 @@
 /**
  * The class that controls request and response processing.
  *
- * PHP version 5
- *
  * Copyright (c) 2006-2011 Elmar Hinz
  *
  * LICENSE:

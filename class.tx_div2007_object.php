@@ -28,8 +28,6 @@
 /**
  * The pluripotent stem cell of div2007
  *
- * PHP version 5
- *
  * Copyright (c) 2006-2007 Elmar Hinz
  *
  * LICENSE:

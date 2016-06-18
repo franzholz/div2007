@@ -28,8 +28,6 @@
 /**
  * Collection of static functions for flexforms
  *
- * PHP version 5
- *
  *
  * @package    TYPO3
  * @subpackage div2007

@@ -3,8 +3,6 @@
 /**
  * Access to context values of the plugin
  *
- * PHP version 5
- *
  * Copyright (c) 2006-2011 Elmar Hinz
  *
  * LICENSE:

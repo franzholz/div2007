@@ -32,8 +32,6 @@
  *
  * Collection of static functions to work in cooperation with the extension lib (lib/div)
  *
- * PHP version 5 (formerly PHP 4)
- *
  * @package    TYPO3
  * @subpackage div2007
  * @author     Kasper Skårhøj <kasperYYYY@typo3.com>

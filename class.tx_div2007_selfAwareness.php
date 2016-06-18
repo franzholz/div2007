@@ -28,11 +28,9 @@
 /**
  * Provide some typical information for all objects of this library
  *
- * PHP version 5
+ * This class is the common root of all inheritance.
  *
- * This class is the common root of all inheritence.
- *
- * Provides functions to find extension key, designator, different pathes
+ * Provides functions to find the extension key, designator, different pathes
  * and some related informations. It contains tools for debugging.
  *
  * Depends on: nothing	<br>
@@ -277,7 +275,7 @@ class tx_div2007_selfAwareness {
 	 * @see		getExtensionKey()
 	 */
 	public function getExtensionPrefix () {
-		return 'tx_' . str_replace ('_','', $this->getExtensionKey());
+		return 'tx_' . str_replace ('_', '', $this->getExtensionKey());
 	}
 
 	/**

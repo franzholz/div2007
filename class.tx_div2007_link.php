@@ -3,8 +3,6 @@
 /**
  * This class is a wrapper around tslib_cObj::typoLink
  *
- * PHP versions 4 and 5
- *
  * Copyright (c) 2006-2007 Elmar Hinz
  *
  * LICENSE:
@@ -45,7 +43,7 @@
  * @package    TYPO3
  * @subpackage div2007
  */
-class tx_div2007_link{
+class tx_div2007_link {
 
 	var $tagAttributes = array();       // setting attributes for the tag in general
 	var $classString = '';              // tags class attribute
@@ -79,7 +77,7 @@ class tx_div2007_link{
 	 * @param	object		mock object for testing purpuses
 	 * @return	void
 	 */
-	function __construct($cObjectClass = 'tslib_cObj') {
+	public function __construct($cObjectClass = 'tslib_cObj') {
 		$this->cObject = t3lib_div::makeInstance($cObjectClass);
 	}
 
@@ -95,7 +93,7 @@ class tx_div2007_link{
 	 * @param	string		the anchor
 	 * @return	object		self
 	 */
-	function anchor($anchorString) {
+	public function anchor($anchorString) {
 		$this->anchorString = $anchorString;
 		return $this;
 	}
@@ -111,7 +109,7 @@ class tx_div2007_link{
 	 * @param	string		parameter array name
 	 * @return	object		self
 	 */
-	function designator($designatorString) {
+	public function designator($designatorString) {
 		$this->designatorString = $designatorString;
 		return $this;
 	}
@@ -122,7 +120,7 @@ class tx_div2007_link{
 	 * @param	string		id attribute
 	 * @return	object		self
 	 */
-	function idAttribute($idString) {
+	public function idAttribute($idString) {
 		$this->idString = $idString;
 		return $this;
 	}
@@ -133,7 +131,7 @@ class tx_div2007_link{
 	 * @param	string		class name
 	 * @return	object		self
 	 */
-	function classAttribute($classString) {
+	public function classAttribute($classString) {
 		$this->classString = $classString;
 		return $this;
 	}
@@ -147,7 +145,7 @@ class tx_div2007_link{
 	 * @see		TSref => typolink => parameter
 	 * @see		tslib_cObj::typoLink()
 	 */
-	function destination($destination) {
+	public function destination($destination) {
 		$this->destination = $destination;
 		return $this;
 	}
@@ -158,7 +156,7 @@ class tx_div2007_link{
 	 * @param	boolean		if true don't make a cHash, set no_cache=1
 	 * @return	object		self
 	 */
-	function noCache() {
+	public function noCache() {
 		$this->noCacheBoolean = true;
 		return $this;
 	}
@@ -169,7 +167,7 @@ class tx_div2007_link{
 	 * @param	boolean		if true don't make a cHash
 	 * @return	object		self
 	 */
-	function noHash() {
+	public function noHash() {
 		$this->noHashBoolean = true;
 		return $this;
 	}
@@ -183,7 +181,7 @@ class tx_div2007_link{
 	 * @param	boolean		if true don't parse through htmlspecialchars()
 	 * @return	object		self
 	 */
-	function label($labelString, $hasAlreadyHtmlSpecialChars = false) {
+	public function label($labelString, $hasAlreadyHtmlSpecialChars = false) {
 		$this->labelString = $labelString;
 		$this->labelHasAlreadyHtmlSpecialChars = $hasAlreadyHtmlSpecialChars;
 		return $this;
@@ -203,7 +201,7 @@ class tx_div2007_link{
 	 * @param	mixed		parameters
 	 * @return	object		self
 	 */
-	function overruled($overruledParameters = array()) {
+	public function overruled($overruledParameters = array()) {
 		if(is_object($overruledParameters)) {
 			$overruledParameters = $overruledParameters->getArrayCopy();
 		}
@@ -224,7 +222,7 @@ class tx_div2007_link{
 	 * @param	mixed		parameters
 	 * @return	object		self
 	 */
-	function parameters($parameters = array()) {
+	public function parameters($parameters = array()) {
 		if(is_object($parameters)) {
 			$parameters = $parameters->getArrayCopy();
 		}
@@ -244,7 +242,7 @@ class tx_div2007_link{
 	 * @param	array		key value pairs
 	 * @return	object		self
 	 */
-	function attributes($tagAttributes = array()) {
+	public function attributes($tagAttributes = array()) {
 		$this->tagAttributes = $tagAttributes;
 		return $this;
 	}
@@ -258,7 +256,7 @@ class tx_div2007_link{
 	 * @param	string		target attribute
 	 * @return	object		self
 	 */
-	function target($targetString) {
+	public function target($targetString) {
 		$this->targetAttribute($targetString);
 		return $this;
 	}
@@ -269,7 +267,7 @@ class tx_div2007_link{
 	 * @param	string		target attribute
 	 * @return	object		self
 	 */
-	function targetAttribute($targetString) {
+	public function targetAttribute($targetString) {
 		$this->targetString = $targetString;
 		return $this;
 	}
@@ -281,7 +279,7 @@ class tx_div2007_link{
 	 * @param	string		external target attribute
 	 * @return	object		self
 	 */
-	function externalTargetAttribute($targetString) {
+	public function externalTargetAttribute($targetString) {
 		$this->externalTargetString = $targetString;
 		return $this;
 	}
@@ -296,7 +294,7 @@ class tx_div2007_link{
 	 * @param	boolean		if true don't apply htmlspecialchars() again
 	 * @return	object		self
 	 */
-	function title($titleString, $hasAlreadyHtmlSpecialChars = false) {
+	public function title($titleString, $hasAlreadyHtmlSpecialChars = false) {
 		$this->titleAttribute($titleString, $hasAlreadyHtmlSpecialChars);
 		return $this;
 	}
@@ -308,7 +306,7 @@ class tx_div2007_link{
 	 * @param	boolean		if true don't apply htmlspecialchars() again
 	 * @return	object		self
 	 */
-	function titleAttribute($titleString, $hasAlreadyHtmlSpecialChars = false) {
+	public function titleAttribute($titleString, $hasAlreadyHtmlSpecialChars = false) {
 		$this->titleString = $titleString;
 		$this->titleHasAlreadyHtmlSpecialChars = $hasAlreadyHtmlSpecialChars;
 		return $this;
@@ -323,7 +321,7 @@ class tx_div2007_link{
 	 *
 	 * @return	string		the link tag
 	 */
-	function makeTag() {
+	public function makeTag() {
 		return $this->cObject->typolink(
 			$this->_makeLabel(),
 			$this->_makeConfig('tag')
@@ -336,7 +334,7 @@ class tx_div2007_link{
 	 * @param	boolean		set to true to run htmlspecialchars() on generated url
 	 * @return	string		the link url
 	 */
-	function makeUrl($applyHtmlspecialchars = TRUE) {
+	public function makeUrl($applyHtmlspecialchars = TRUE) {
 		$url = $this->cObject->typolink(null, $this->_makeConfig('url'));
 		return $applyHtmlspecialchars ? htmlspecialchars($url) : $url;
 	}
@@ -346,7 +344,7 @@ class tx_div2007_link{
 	 *
 	 * @return	void
 	 */
-	function redirect() {
+	public function redirect() {
 		session_write_close();
 		header('Location: ' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR')
 			. $this->cObject->typolink(null, $this->_makeConfig('url')));
@@ -364,7 +362,7 @@ class tx_div2007_link{
 	 * @return	array		the configuration
 	 * @access	private
 	 */
-	function _makeConfig($type) {
+	public function _makeConfig($type) {
 		$conf = Array();
 		$this->parameters = is_array($this->parameters) ?
 			$this->parameters : array();
@@ -435,7 +433,7 @@ class tx_div2007_link{
 	 * @return	string		the label
 	 * @access	private
 	 */
-	function _makeLabel() {
+	public function _makeLabel() {
 		return ($this->labelHasAlreadyHtmlSpecialChars) ? $this->labelString
 			: htmlspecialchars($this->labelString);
 	}

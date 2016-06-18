@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Base class for all views in tx_div
- *
- * PHP versions 4 and 5
+ * Base class for all views in tx_div2007
  *
  * Copyright (c) 2006-2007 Elmar Hinz
  *
@@ -32,7 +30,7 @@
  */
 
 /**
- * Base class for all views in tx_lib
+ * Base class for all views in tx_div2007
  *
  * Depends on: tx_div2007_object
  *
@@ -65,7 +63,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @param	string		path to the directory containing the php templates
 	 * @return	void
 	 */
-	function setPathToTemplateDirectory($pathToTemplateDirectory) {
+	public function setPathToTemplateDirectory($pathToTemplateDirectory) {
 		$this->pathToTemplateDirectory = t3lib_div::getFileAbsFileName($pathToTemplateDirectory);
 	}
 
@@ -83,7 +81,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @param	string		path to the directory containing the php templates
 	 * @return	void
 	 */
-	function getPathToTemplateDirectory() {
+	public function getPathToTemplateDirectory() {
 		$pathToTemplateDirectory = $this->pathToTemplateDirectory ?  $this->pathToTemplateDirectory :
 			$this->controller->configurations->get('pathToTemplateDirectory');
 		if(!$pathToTemplateDirectory)
@@ -110,7 +108,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @return  string    typically an (x)html string
 	 * @abstract
 	 */
-	function render($configurationKeyOrFileName) {
+	public function render($configurationKeyOrFileName) {
 		return '<p>Abstract function: render()</p>';
 	}
 
@@ -130,7 +128,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @return	string		human readable date string
 	 * @see		http://php.net/strftime
 	 */
-	function asDate($key, $format = null) {
+	public function asDate($key, $format = null) {
 		$format = $format ? $format : $this->controller->configurations->get($this->dateFormatKey);
 		if($format) {
 			return strftime($format, $this->get($key));
@@ -155,7 +153,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @see		tx_div2007_link
 	 * @see		asUrl()
 	 */
-	function asEmail($emailKey, $labelKey = null ) {
+	public function asEmail($emailKey, $labelKey = null ) {
 		return $this->asUrl($emailKey, $labelKey);
 	}
 
@@ -186,7 +184,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @return	string		human readable date string
 	 * @see		http://php.net/strftime
 	 */
-	function asFloat($key, $format = null) {
+	public function asFloat($key, $format = null) {
 		if(!$format && is_object($this->configuraton)) {
 			$format = $this->configurator->get($this->floatFormatKey);
 		}
@@ -211,7 +209,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @param	mixed		key of internal data array
 	 * @return	string		human readable date string
 	 */
-	function asForm($key) {
+	public function asForm($key) {
 		return htmlspecialchars($this->get($key));
 	}
 
@@ -229,7 +227,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @param	string		key of configurator for parseFunc setup
 	 * @return	mixed		parsed string
 	 */
-	function asHtml($key, $parseFuncKey = '') {
+	public function asHtml($key, $parseFuncKey = '') {
 		if(is_object($this->configurator)) {
 			$parseFuncKey = $parseFuncKey	? $parseFuncKey	: $this->parseFuncTextKey;
 			$parseFunc = $this->configurator->get($parseFuncKey);
@@ -252,7 +250,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @param	mixed		key of the internal data array
 	 * @return	integer		value assigned to the key
 	 */
-	function asInteger($key) {
+	public function asInteger($key) {
 		return (integer) $this->get($key);
 	}
 
@@ -265,7 +263,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @return	mixed		array of string assigned to the key
 	 * @see		get()
 	 */
-	function asRaw($key) {
+	public function asRaw($key) {
 		return $this->get($key);
 	}
 
@@ -283,7 +281,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @param	string		key of configurator for parseFunc setup
 	 * @return	mixed		parsed string
 	 */
-	function asRte($key, $parseFuncKey = '') {
+	public function asRte($key, $parseFuncKey = '') {
 		if(is_object($this->configurator)) {
 			$parseFuncKey = $parseFuncKey	? $parseFuncKey	: $this->parseFuncRteKey;
 			$parseFunc = $this->configurator->get($parseFuncKey);
@@ -313,7 +311,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @return	mixed		parsed string
 	 * @see		asHtml()
 	 */
-	function asText($key, $parseFuncKey = '') {
+	public function asText($key, $parseFuncKey = '') {
 		if(is_object($this->configurator)) {
 			$parseFuncKey = $parseFuncKey	? $parseFuncKey	: $this->parseFuncTextKey;
 			$parseFunc = $this->configurator->get($parseFuncKey);
@@ -341,7 +339,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @return	string		human readable date string
 	 * @see		http://php.net/strftime
 	 */
-	function asTime($key, $format = null) {
+	public function asTime($key, $format = null) {
 		if(!$format && is_object($this->configuraton)) {
 			$format = $this->configurator->get($this->timeFormatKey);
 		}
@@ -364,7 +362,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @return	string		the linktag
 	 * @see		tx_div2007_link
 	 */
-	function asUrl($urlKey, $labelKey = null ) {
+	public function asUrl($urlKey, $labelKey = null ) {
 		$link = tx_div::makeInstance('tx_div2007_link');
 		$link->destination($this->get($urlKey));
 		if($labelKey) {
@@ -379,7 +377,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @return	string		the captcha question
 	 * @see		tx_div2007_captcha
 	 */
-	function getCaptchaQuestion() {
+	public function getCaptchaQuestion() {
 		if(!$this->get('_captchaQuestion')) {
 			$this->_die('Please include a captcha class into the SPL chain and call createTest($id) before you can call it', __FILE__, __LINE__);
 		}
@@ -393,7 +391,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @return	string		typically an (x)html string
 	 * @see		tx_lib_captcha
 	 */
-	function getCaptchaInput($id = null) {
+	public function getCaptchaInput($id = null) {
 		if(!$this->get('_captchaInput')) {
 			$this->_die('Please include a captcha class into the SPL chain and call createTest($id) before you can call it', __FILE__, __LINE__);
 		}
@@ -407,7 +405,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * @param	string		key
 	 * @return	void
 	 */
-	function getErrorList($class = 'errors', $key = '_errorList') {
+	public function getErrorList($class = 'errors', $key = '_errorList') {
 		$errorList = (array) $this->get($key);
 		if(count($errorList)) {
 			foreach($errorList as $error) {
@@ -422,7 +420,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 *
 	 * @return	string		typically an (x)html string
 	 */
-	function getHiddenFields() {
+	public function getHiddenFields() {
 		$parameters = $this->getParameters();
 		return $parameters->toHiddenFields();
 	}

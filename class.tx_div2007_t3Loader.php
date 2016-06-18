@@ -28,8 +28,6 @@
 /**
  * Collection of functions to load t3 classes and instanciate them.
  *
- * PHP version 5
- *
  * @package    TYPO3
  * @subpackage div2007
  * @author     Elmar Hinz <elmar.hinz@team-red.net>
@@ -72,7 +70,7 @@ class tx_div2007_t3Loader {
 	 * @param	string		ending of classname
 	 * @return	boolean		TRUE if class was loaded
 	 */
-	function load ($minimalInformation, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
+	public function load ($minimalInformation, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
 		$path = tx_div2007_t3Loader::_find($minimalInformation, $alternativeKey, $prefix, $suffix);
 		if($path) {
 // 			require_once($path);
@@ -95,7 +93,7 @@ class tx_div2007_t3Loader {
 	 * @see		t3lib_div::makeInstance
 	 * @see		load()
 	 */
-	function makeInstance ($class, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
+	public function makeInstance ($class, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
 		if(class_exists($class)) {
 			return t3lib_div::makeInstance($class); // includes ux_ classes
 		} else {
@@ -119,7 +117,7 @@ class tx_div2007_t3Loader {
 	 * @return	string		the path, FALSE if invalid
 	 * @see		load()
 	 */
-	function _find ($minimalInformation, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
+	public function _find ($minimalInformation, $alternativeKey = '', $prefix = 'class.', $suffix = '.php') {
 		$info=trim($minimalInformation);
 		$path = '';
 		if(!$info) {

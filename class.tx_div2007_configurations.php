@@ -3,8 +3,6 @@
 /**
  * A class to load, transport and deliver the setup parameters.
  *
- * PHP version 5
- *
  * Copyright (c) 2006-2011 Elmar Hinz
  *
  * LICENSE:
@@ -78,7 +76,7 @@ class tx_div2007_configurations extends tx_div2007_object {
 	 * @param	array		direct setup input in form of a renderd TS array
 	 * @return	void
 	 */
-	function setTypoScriptConfiguration ($configuration) {
+	public function setTypoScriptConfiguration ($configuration) {
 		if(is_array($configuration['configurations.'])) {
 			$configuration = $configuration['configurations.'];
 		}
@@ -101,7 +99,7 @@ class tx_div2007_configurations extends tx_div2007_object {
 	 * @param	mixed		xml or rendered flexform array
 	 * @return	void
 	 */
-	function setFlexFormConfiguration ($xmlOrArray) {
+	public function setFlexFormConfiguration ($xmlOrArray) {
 		$languagePointer = 'lDEF'; // we don't support languages here for now
 		$valuePointer = 'vDEF'; // also hardcoded here
 		if (!$xmlOrArray) {
@@ -144,7 +142,7 @@ class tx_div2007_configurations extends tx_div2007_object {
 	 * @param	string		relative setupPath
 	 * @return	array|string
 	 */
-	function get ($pathKey) {
+	public function get ($pathKey) {
 		return $this->_queryArrayByPath($this->getArrayCopy(), $pathKey);
 	}
 
@@ -158,7 +156,7 @@ class tx_div2007_configurations extends tx_div2007_object {
 	 * @param	string		pattern used to split the result into an array
 	 * @return	array
 	 */
-	function getExploded ($pathKey, $pattern = '/[\s,]+/') {
+	public function getExploded ($pathKey, $pattern = '/[\s,]+/') {
 		return (array) preg_split($pattern, $this->get($pathKey));
 	}
 
@@ -188,7 +186,7 @@ class tx_div2007_configurations extends tx_div2007_object {
 	 * @param	string		key of of the wanted value
 	 * @return	array		wanted Hash (key-value-pairs)
 	 */
-	function queryHash ($pathKey, $keyName, $valueName) {
+	public function queryHash ($pathKey, $keyName, $valueName) {
 		$selection = $this->get($pathKey);
 		$array = array();
 		foreach($selection as $set) {
@@ -223,7 +221,7 @@ class tx_div2007_configurations extends tx_div2007_object {
 	 * @param	string		value of key
 	 * @return	array		wanted dataset
 	 */
-	function queryDataSet ($path, $key, $value) {
+	public function queryDataSet ($path, $key, $value) {
 		$selection = $this->get($path);
 		foreach($selection as $set) {
 			if ($set[$key] == $value) {
@@ -259,7 +257,7 @@ class tx_div2007_configurations extends tx_div2007_object {
 	 * @param	string		key of the wanted result value
 	 * @return	string		wanted value
 	 */
-	function queryData ($path, $key, $value, $wanted) {
+	public function queryData ($path, $key, $value, $wanted) {
 		$selection = $this->get($path);
 		foreach($selection as $set) {
 			if ($set[$key] == $value) {
@@ -280,7 +278,7 @@ class tx_div2007_configurations extends tx_div2007_object {
 	 * @return	array		...
 	 * @access	private
 	 */
-	function _queryArrayByPath ($array, $path) {
+	public function _queryArrayByPath ($array, $path) {
 		$pathArray = explode('.', trim($path));
 		for($i = 0; $i < count($pathArray); $i++) {
 			if ($i < (count($pathArray) -1 )) {

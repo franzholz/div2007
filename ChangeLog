@@ -1,3 +1,8 @@
+18-06-16 Franz Holzinger  <franz@ttproducts.de>
+	 * remove PHP 4 notifications
+	 * add the missing public scope qualifier to functions
+	 * modifications for the Coding Guidelines
+
 17-06-16 Franz Holzinger  <franz@ttproducts.de>
 	 * new feature: Add the function CONTENT Object getUpdateJS which has been removed in TYPO3 7 as FrontendUtility::getUpdateJS with a modification in order to use the HTML form id instead of the HTML form name as a parameter.
 	 * new feature: add a TestUtility for testing purposes of the right usage of namespaces
