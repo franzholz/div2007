@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2015 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2016 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -76,6 +76,14 @@ class tx_div2007_email {
 		$defaultSubject = ''
 	) {
 		$result = TRUE;
+
+		$charset = 'utf-8';
+		if (
+			isset($GLOBALS['TSFE']->renderCharset) &&
+			$GLOBALS['TSFE']->renderCharset != ''
+		) {
+			$charset = $GLOBALS['TSFE']->renderCharset;
+		}
 
 		if (!is_array($toEMail) && trim($toEMail)) {
 			$emailArray = t3lib_div::trimExplode(',', $toEMail);
@@ -182,8 +190,8 @@ class tx_div2007_email {
 				->setFrom(array($fromEMail => $fromName))
 				->setReturnPath($returnPath)
 				->setSubject($subject)
-				->setBody($HTMLContent, 'text/HTMLContent', $GLOBALS['TSFE']->renderCharset)
-				->addPart($PLAINContent, 'text/plain', $GLOBALS['TSFE']->renderCharset);
+				->setBody($HTMLContent, 'text/HTMLContent', $charset)
+				->addPart($PLAINContent, 'text/plain', $charset);
 
 			if ($replyTo) {
 				$mail->setReplyTo(array($replyTo => $fromEmail));
@@ -205,7 +213,7 @@ class tx_div2007_email {
 				// HTML
 			if (trim($HTMLContent)) {
 				$HTMLContent = self::embedMedia($mail, $HTMLContent);
-				$mail->setBody($HTMLContent, 'text/html', $GLOBALS['TSFE']->renderCharset);
+				$mail->setBody($HTMLContent, 'text/html', $charset);
 			}
 
 			if ($bcc != '') {

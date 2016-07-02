@@ -1,3 +1,6 @@
+02-07-16 Franz Holzinger  <franz@ttproducts.de>
+	 * Set the default charset for emails to utf-8 if config.renderCharset has not been set.
+
 18-06-16 Franz Holzinger  <franz@ttproducts.de>
 	 * remove PHP 4 notifications
 	 * add the missing public scope qualifier to functions
