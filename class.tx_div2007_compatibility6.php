@@ -47,12 +47,6 @@ class tslib_fe extends \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendControll
 
 class t3lib_parsehtml extends \TYPO3\CMS\Core\Html\HtmlParser {}
 
-
-if (TYPO3_MODE == 'BE') {
-	class t3lib_extobjbase extends TYPO3\CMS\Backend\Module\AbstractFunctionModule {}
-}
-
-
 // empty class which does nothing:
 class tx_div2007_compatibility6 {
 	public function test () {

@@ -1,3 +1,6 @@
+06-07-16 Franz Holzinger  <franz@ttproducts.de>
+	 * Bugfix: remove class t3lib_extobjbase from file class.tx_div2007_compatibility6.php due to redefinition error for LegacyClassesForIde.php
+
 02-07-16 Franz Holzinger  <franz@ttproducts.de>
 	 * Set the default charset for emails to utf-8 if config.renderCharset has not been set.
 
