@@ -1,3 +1,6 @@
+08-07-16 Franz Holzinger  <franz@ttproducts.de>
+	 * new feature: class TcaUtility to remove fields from the TCA of a table
+
 06-07-16 Franz Holzinger  <franz@ttproducts.de>
 	 * Bugfix: remove class t3lib_extobjbase from file class.tx_div2007_compatibility6.php due to redefinition error for LegacyClassesForIde.php
 
