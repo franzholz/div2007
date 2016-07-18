@@ -388,11 +388,11 @@ class tx_div2007_email {
 	/**
 	 * Embeds media into the mail message
 	 *
-	 * @param t3lib_mail_Message $mail: mail message
+	 * @param TYPO3\CMS\Core\Mail\MailMessage (TYPO3 4.x: t3lib_mail_Message) $mail: mail message
 	 * @param string $htmlContent: the HTML content of the message
 	 * @return string the subtituted HTML content
 	 */
-	static public function embedMedia (t3lib_mail_Message $mail, $htmlContent) {
+	static public function embedMedia ($mail, $htmlContent) {
 		$substitutedHtmlContent = $htmlContent;
 		$media = array();
 		$attribRegex = self::makeTagRegex(array('img', 'embed', 'audio', 'video'));

@@ -1,3 +1,6 @@
+19-07-16 Franz Holzinger  <franz@ttproducts.de>
+	 * bugfix: function embedMedia must also support the TYPO3 7.6.9 class TYPO3\CMS\Core\Mail\MailMessage
+
 08-07-16 Franz Holzinger  <franz@ttproducts.de>
 	 * new feature: class TcaUtility to remove fields from the TCA of a table
 
