@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2004-2013 René Fritz (r.fritz@colorcube.de)
+*  (c) 2004-2016 René Fritz (r.fritz@colorcube.de)
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -67,14 +67,13 @@ class tx_div2007_staticinfotables {
 	 * @return	string		field name
 	 */
 	static public function getTCAlabelField ($table, $bLoadTCA = TRUE, $lang = '', $local = FALSE) {
-		global $TCA, $LANG, $TSFE;
 
 		$typoVersion = tx_div2007_core::getTypoVersion();
 
-		if (is_object($LANG)) {
-			$csConvObj = $LANG->csConvObj;
-		} elseif (is_object($TSFE)) {
-			$csConvObj = $TSFE->csConvObj;
+		if (is_object($GLOBALS['LANG'])) {
+			$csConvObj = $GLOBALS['LANG']->csConvObj;
+		} elseif (is_object($GLOBALS['TSFE'])) {
+			$csConvObj = $GLOBALS['TSFE']->csConvObj;
 		}
 
 		if (!is_object($csConvObj)) {
@@ -102,7 +101,7 @@ class tx_div2007_staticinfotables {
 				} else {
 					$labelField = str_replace ('##', $csConvObj->conv_case('utf-8', $lang, 'toLower'), $field);
 				}
-				if (is_array($TCA[$table]['columns'][$labelField])) {
+				if (is_array($GLOBALS['TCA'][$table]['columns'][$labelField])) {
 					$labelFields[] = $labelField;
 				}
 			}
@@ -141,8 +140,7 @@ class tx_div2007_staticinfotables {
 	 * @param	integer		index in the table's isocode_field array in the global variable
 	 * @return	string		field name
 	 */
-	static public function getIsoCodeField ($table, $isoCode, $bLoadTCA = TRUE, $index = 0) {
-		global $TCA;
+	static public function getIsoCodeField ($table, $isoCode, $bLoadTCA = FALSE, $index = 0) {
 		$result = FALSE;
 
 		if (
@@ -159,7 +157,7 @@ class tx_div2007_staticinfotables {
 				$type = self::isoCodeType($isoCode);
 				$isoCodeField = str_replace ('##', $type, $isoCodeField);
 
-				if (is_array($TCA[$table]['columns'][$isoCodeField])) {
+				if (is_array($GLOBALS['TCA'][$table]['columns'][$isoCodeField])) {
 					$result = $isoCodeField;
 				}
 			}
@@ -236,29 +234,28 @@ class tx_div2007_staticinfotables {
 	 * @return	array		row in the sys_language table
 	 */
 	static public function getCurrentSystemLanguage ($where = '') {
-		global $LANG, $TSFE, $TYPO3_DB;
 
 		$result = array();
 
-		if (is_object($LANG)) {
-			$langCodeT3 = $LANG->lang;
-		} elseif (is_object($TSFE)) {
-			$langCodeT3 = $TSFE->lang;
+		if (is_object($GLOBALS['LANG'])) {
+			$langCodeT3 = $GLOBALS['LANG']->lang;
+		} elseif (is_object($GLOBALS['TSFE'])) {
+			$langCodeT3 = $GLOBALS['TSFE']->lang;
 		} else {
 			return $result;
 		}
 
-		$res = $TYPO3_DB->exec_SELECTquery(
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'sys_language.uid',
 			'sys_language LEFT JOIN static_languages ON sys_language.static_lang_isocode=static_languages.uid',
-			'static_languages.lg_typo3=' . $TYPO3_DB->fullQuoteStr($langCodeT3, 'static_languages').
+			'static_languages.lg_typo3=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($langCodeT3, 'static_languages').
 				$where
 			);
-		while($row = $TYPO3_DB->sql_fetch_assoc($res)) {
+		while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			$result[$row['uid']] = $row;
 		}
 
-		$TYPO3_DB->sql_free_result($res);
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $result;
 	}
 
@@ -270,25 +267,24 @@ class tx_div2007_staticinfotables {
 	 * @return	string	locale
 	 */
 	static public function getCollateLocale () {
-		global $LANG, $TSFE, $TYPO3_DB;
 
-		if (is_object($LANG)) {
-			$langCodeT3 = $LANG->lang;
-		} elseif (is_object($TSFE)) {
-			$langCodeT3 = $TSFE->lang;
+		if (is_object($GLOBALS['LANG'])) {
+			$langCodeT3 = $GLOBALS['LANG']->lang;
+		} elseif (is_object($GLOBALS['TSFE'])) {
+			$langCodeT3 = $GLOBALS['TSFE']->lang;
 		} else {
 			return 'C';
 		}
 
-		$res = $TYPO3_DB->exec_SELECTquery(
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'lg_collate_locale',
 			'static_languages',
-			'lg_typo3='.$TYPO3_DB->fullQuoteStr($langCodeT3, 'static_languages')
+			'lg_typo3='.$GLOBALS['TYPO3_DB']->fullQuoteStr($langCodeT3, 'static_languages')
 			);
-		while ($row = $TYPO3_DB->sql_fetch_assoc($res)) {
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 			$locale = $row['lg_collate_locale'];
 		}
-		$TYPO3_DB->sql_free_result($res);
+		$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		return $locale ? $locale : 'C';
 	}
 
@@ -303,7 +299,6 @@ class tx_div2007_staticinfotables {
 	 * @return	string		short title
 	 */
 	static public function getTitleFromIsoCode ($table, $isoCode, $lang = '', $local = FALSE) {
-		global $TSFE, $TYPO3_DB;
 
 		$title = '';
 		$titleFields = self::getTCAlabelField($table, TRUE, $lang, $local);
@@ -321,25 +316,25 @@ class tx_div2007_staticinfotables {
 			foreach ($isoCode as $index => $code) {
 				if ($code != '') {
 					$tmpField = self::getIsoCodeField($table, $code, TRUE, $index);
-					$tmpValue = $TYPO3_DB->fullQuoteStr($code, $table);
+					$tmpValue = $GLOBALS['TYPO3_DB']->fullQuoteStr($code, $table);
 					if ($tmpField && $tmpValue)	{
 						$whereClause .= ' AND ' . $table . '.' . $tmpField . ' = ' . $tmpValue;
 					}
 				}
 			}
-			if (is_object($TSFE)) {
-				$enableFields = $TSFE->sys_page->enableFields($table);
+			if (is_object($GLOBALS['TSFE'])) {
+				$enableFields = $GLOBALS['TSFE']->sys_page->enableFields($table);
 			} else {
 				$enableFields = tx_div2007_core::deleteClause($table);
 			}
 
-			$res = $TYPO3_DB->exec_SELECTquery(
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				$fields,
 				$table,
 				$whereClause . $enableFields
 			);
 
-			if ($row = $TYPO3_DB->sql_fetch_assoc($res)) {
+			if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				foreach ($titleFields as $titleField) {
 					if ($row[$titleField]) {
 						$title = $row[$titleField];
@@ -347,7 +342,7 @@ class tx_div2007_staticinfotables {
 					}
 				}
 			}
-			$TYPO3_DB->sql_free_result($res);
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
 		}
 
 		return $title;
@@ -405,8 +400,6 @@ class tx_div2007_staticinfotables {
 	 * @return	void		The $items array may have been modified
 	 */
 	static public function selectItemsTCA (&$params) {
-		global $TCA;
-
 		$where = '';
 		$config = &$params['config'];
 		$table = $config['itemsProcFunc_config']['table'];
@@ -570,17 +563,16 @@ class tx_div2007_staticinfotables {
 	 * @return	array		Array of rows of country records
 	 */
 	static public function fetchCountries ($country, $iso2 = '', $iso3 = '', $isonr = '') {
-		global $TYPO3_DB,$TCA;
 
 		$resultArray = array();
 		$where = '';
 
 		$table = 'static_countries';
 		if ($country != '')	{
-			$value = $TYPO3_DB->fullQuoteStr(trim('%' . $country . '%'), $table);
+			$value = $GLOBALS['TYPO3_DB']->fullQuoteStr(trim('%' . $country . '%'), $table);
 			$where = 'cn_official_name_local LIKE '. $value . ' OR cn_official_name_en LIKE ' . $value;
 
-			foreach ($TCA[$table]['columns'] as $fieldname => $fieldArray) {
+			foreach ($GLOBALS['TCA'][$table]['columns'] as $fieldname => $fieldArray) {
 				if (strpos($fieldname, 'cn_short_') === 0) {
 					$where .= ' OR ' . $fieldname . ' LIKE ' . $value;
 				}
@@ -588,19 +580,19 @@ class tx_div2007_staticinfotables {
 		}
 
 		if ($isonr != '') {
-			$where = 'cn_iso_nr=' . $TYPO3_DB->fullQuoteStr(trim($isonr), $table);
+			$where = 'cn_iso_nr=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(trim($isonr), $table);
 		}
 
 		if ($iso2 != '') {
-			$where = 'cn_iso_2=' . $TYPO3_DB->fullQuoteStr(trim($iso2), $table);
+			$where = 'cn_iso_2=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(trim($iso2), $table);
 		}
 
 		if ($iso3 !='') {
-			$where = 'cn_iso_3=' . $TYPO3_DB->fullQuoteStr(trim($iso3), $table);
+			$where = 'cn_iso_3=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(trim($iso3), $table);
 		}
 
 		if ($where != '') {
-			$res = $TYPO3_DB->exec_SELECTquery('*', $table, $where);
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $table, $where);
 
 			if ($res)	{
 				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
@@ -621,12 +613,11 @@ class tx_div2007_staticinfotables {
 	 * @return	string		The encoded value already quoted
 	 */
 	static public function quoteJSvalue ($value, $inScriptTags = FALSE) {
-		global $TSFE;
 
 		$value = addcslashes($value, '"' . chr(10) . chr(13));
 		if (!$inScriptTags) {
 
-			$charset = $TSFE->renderCharset;
+			$charset = $GLOBALS['TSFE']->renderCharset;
 			$value = htmlspecialchars($value, ENT_COMPAT, $charset);
 		}
 		return '"' . $value . '"';
@@ -643,11 +634,11 @@ class tx_div2007_staticinfotables {
 	 * @see div extension
 	 */
 	static public function loadTcaAdditions ($ext_keys) {
-		global $_EXTKEY, $TCA;
+		global $_EXTKEY;
 
-		$typoVersion = tx_div2007_core::getTypoVersion();
-
-		if ($typoVersion < 6002000) {
+		if (
+			version_compare(TYPO3_version, '6.2.0', '<')
+		) {
 			//Merge all ext_keys
 			if (is_array($ext_keys)) {
 				foreach ($ext_keys as $_EXTKEY) {
@@ -661,4 +652,3 @@ class tx_div2007_staticinfotables {
 	}
 }
 
-?>
