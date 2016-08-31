@@ -942,7 +942,7 @@ class t3lib_formprotection_InstallToolFormProtection extends \TYPO3\CMS\Core\For
  */
 class t3lib_frontendedit extends \TYPO3\CMS\Core\FrontendEditing\FrontendEditingController {}
 
-if (!class_exists('tslib_cObj', FALSE)) {
+if (!class_exists('t3lib_parsehtml', FALSE)) {
 	/**
 	* @deprecated since 6.0 will be removed in 7.0
 	*/
