@@ -53,7 +53,7 @@ class tx_div2007_alpha5 {
 	 * And all others fields of the flexforms can be read.
 	 *
 	 * example:
-	 * 	$config['code'] = tx_fhlibrary_flexform::getSetupOrFFvalue(
+	 * 	$config['code'] = tx_div2007_alpha5::getSetupOrFFvalue_fh002(
 	 *					$this->cObj,
 	 * 					$this->conf['code'],
 	 * 					$this->conf['code.'],
@@ -1784,14 +1784,13 @@ class tx_div2007_alpha5 {
 		$prefixId,
 		$extKey
 	) {
-		$content = '<div class="' . str_replace('_','-',$prefixId) . '">
+		$content = '<div class="' . str_replace('_', '-', $prefixId) . '">
 		' . $str . '
 	</div>
 	';
 
 		if(!$GLOBALS['TSFE']->config['config']['disablePrefixComment']) {
 			$content = '
-
 
 	<!--
 
@@ -1863,7 +1862,7 @@ class tx_div2007_alpha5 {
 	 * Returns the help page with a mini guide how to setup the extension
 	 *
 	 * example:
-	 * 	$content .= tx_fhlibrary_view::displayHelpPage($this->cObj->fileResource('EXT:'.TT_PRODUCTS_EXTkey.'/template/products_help.tmpl'));
+	 * 	$content .= tx_div2007_alpha5::displayHelpPage($this->cObj->fileResource('EXT:myextension/template/help.tmpl'));
 	 * 	unset($this->errorMessage);
 	 *
 	 * @param	object		tx_div2007_alpha_language_base
@@ -1924,7 +1923,7 @@ class tx_div2007_alpha5 {
 	 * And all others fields of the flexforms can be read.
 	 *
 	 * example:
-	 * 	$config['code'] = tx_div2007_alpha::getSetupOrFFvalue_fh003(
+	 * 	$config['code'] = tx_div2007_alpha5::getSetupOrFFvalue_fh004(
 	 *					$cObj,
 	 * 					$this->conf['code'],
 	 * 					$this->conf['code.'],
@@ -1973,7 +1972,7 @@ class tx_div2007_alpha5 {
 				$rc = $code;
 			}
 		} else {
-			$rc = 'error in call of tx_div2007_alpha::getSetupOrFFvalue_fh003: parameter $cObj is not an object';
+			$rc = 'error in call of tx_div2007_alpha::getSetupOrFFvalue_fh004: parameter $cObj is not an object';
 			debug ($rc, '$rc'); // keep this
 		}
 		return $rc;

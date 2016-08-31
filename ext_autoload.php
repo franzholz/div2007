@@ -46,8 +46,11 @@ return array(
 	'JambageCom\\Div2007\\Utility\\TableUtility' => $extensionPath . 'Classes/Utility/TableUtility.php',
 	'JambageCom\\Div2007\\Utility\\ExtensionUtility' => $extensionPath . 'Classes/Utility/ExtensionUtility.php',
 	'JambageCom\\Div2007\\Utility\\FrontendUtility' => $extensionPath . 'Classes/Utility/FrontendUtility.php',
+	'JambageCom\\Div2007\\Utility\\MailUtility' => $extensionPath . 'Classes/Utility/MailUtility.php',
 	'JambageCom\\Div2007\\Utility\\StaticInfoTablesUtility' => $extensionPath . 'Classes/Utility/StaticInfoTablesUtility.php',
 	'JambageCom\\Div2007\\Utility\\TcaUtility' => $extensionPath . 'Classes/Utility/TcaUtility.php',
 	'JambageCom\\Div2007\\Utility\\TestUtility' => $extensionPath . 'Classes/Utility/TestUtility.php',
+	'JambageCom\\Div2007\\Utility\\XmlElement' => $extensionPath . 'Classes/Utility/XmlElement.php',
+	'JambageCom\\Div2007\\Utility\\XmlUtility' => $extensionPath . 'Classes/Utility/XmlUtility.php',
 );
 

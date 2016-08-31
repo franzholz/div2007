@@ -1,3 +1,6 @@
+31-08-16 Franz Holzinger  <franz@ttproducts.de>
+	 * feature: Add new class MailUtility.php which needs TYPO3 6.2 and bases on the code from class.tx_div2007_email
+
 19-07-16 Franz Holzinger  <franz@ttproducts.de>
 	 * bugfix: function embedMedia must also support the TYPO3 7.6.9 class TYPO3\CMS\Core\Mail\MailMessage
 
