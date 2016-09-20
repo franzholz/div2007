@@ -795,7 +795,11 @@ class tx_div2007_alpha5 {
 			$emClass = 't3lib_extMgm';
 		}
 
-		if (is_object($langObj)) {
+		if (
+			is_object($langObj) &&
+			isset($langObj->LOCAL_LANG) &&
+			is_array($langObj->LOCAL_LANG)
+		) {
 			$typoVersion = tx_div2007_core::getTypoVersion();
 			$langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
 
@@ -2269,4 +2273,3 @@ if (defined('TYPO3_MODE') && $GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['
 	include_once($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['XCLASS']['ext/div2007/class.tx_div2007_alpha5.php']);
 }
 
-?>

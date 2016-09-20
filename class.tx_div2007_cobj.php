@@ -41,4 +41,3 @@ class tx_div2007_cobj extends tslib_cObj {
 }
 
 
-?>

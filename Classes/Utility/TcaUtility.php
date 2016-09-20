@@ -36,8 +36,8 @@ namespace JambageCom\Div2007\Utility;
  * @subpackage div2007
  */
 
-class TcaUtility {
 
+class TcaUtility {
 
 	/**
 	 * removes fields from the TCA of a table
@@ -84,11 +84,13 @@ class TcaUtility {
 							foreach ($showItemArray as $k2 => $showItem) {
 								$showItem = trim($showItem);
 								foreach ($fieldArray as $field) {
-									if (strpos($showItem, $field) === 0) {
+									if (
+										strpos($showItem, $field) === 0
+									) {
 										$length = strlen($field);
 										if (
-											strlen($showItem) == $length
-											|| substr($showItem, $length, 1) == ';'
+											strlen($showItem) == $length ||
+											substr($showItem, $length, 1) == ';'
 										) {
 											unset($showItemArray[$k2]);
 										}
@@ -102,7 +104,6 @@ class TcaUtility {
 			}
 		}
 	}
-
 }
 
 

@@ -6,7 +6,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2015 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2016 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -239,7 +239,7 @@ class TableUtility {
 			}
 		} else {
 			throw new \InvalidArgumentException(
-				'There is no entry in the $TCA array for the table "' . $table .
+				'There is no entry in the $GLOBALS[\'TCA\'] array for the table "' . $table .
 				'". This means that the function enableFields() is ' .
 				'called with an invalid table name as argument.',
 				1283790586

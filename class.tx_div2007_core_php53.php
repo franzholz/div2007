@@ -78,4 +78,3 @@ class tx_div2007_core_php53 {
 	}
 }
 
-?>

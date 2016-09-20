@@ -2,6 +2,7 @@
 
 namespace JambageCom\Div2007\Utility;
 
+
 /***************************************************************
 *  Copyright notice
 *
@@ -195,8 +196,8 @@ class FrontendUtility {
 	 * @param string $arrPrefix A prefix for the data array
 	 * @param string $fieldList The list of fields which are loaded
 	 * @param string $javascriptFilename relative path to the filename of the Javascript which can execute the update form
-	 * @return string
-	 * @access private
+	 * @return string containing the update Javascript
+	 * @access public
 	 * @see tx_agency_display::createScreen()
 	 */
 	static public function getUpdateJS (
@@ -206,6 +207,7 @@ class FrontendUtility {
 		$fieldList,
 		$javascriptFilename = ''
 	) {
+		$result = FALSE;
 		$JSPart = '';
 		$updateValues = GeneralUtility::trimExplode(',', $fieldList);
 		foreach ($updateValues as $fKey) {
@@ -226,25 +228,211 @@ class FrontendUtility {
 </script>
 ';
 
-		if (empty($javascriptFilename)) {
-			$javascriptFilename =
-				ExtensionManagementUtility::siteRelPath('div2007') .
-				'Resources/Public/JavaScript/jsfunc.updateform.js';
-		} else {
-			$lookupFile = explode('?', $file);
-			$path = GeneralUtility::resolveBackPath(GeneralUtility::dirname(PATH_thisScript) . '/' . $lookupFile[0]);
-			if (!file_exists($path)) {
-				return FALSE;
-			}
+		if (
+			self::determineJavascriptFilename(
+				$javascriptFilename,
+				'jsfunc.updateform.js'
+			)
+		) {
+			self::addJavascriptFile($javascriptFilename, 'JSincludeFormupdate');
+			$result = $JSPart;
 		}
+
+		return $result;
+	}
+
+
+	static public function addJavascriptFile ($filename, $key) {
 
 		$script =
 			'<script type="text/javascript" src="' .
 				$GLOBALS['TSFE']->absRefPrefix .
-				GeneralUtility::createVersionNumberedFilename($javascriptFilename) .
+				GeneralUtility::createVersionNumberedFilename($filename) .
 			'"></script>';
-		$GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'] = $script;
-		return $JSPart;
+		$GLOBALS['TSFE']->additionalHeaderData[$key] = $script;
 	}
+
+
+	static public function addCssFile ($filename, $key) {
+		$GLOBALS['TSFE']->additionalHeaderData[$key] =
+			'<link rel="stylesheet" href="' .
+			$GLOBALS['TSFE']->absRefPrefix .
+			GeneralUtility::createVersionNumberedFilename($filename) . '" type="text/css" />';
+	}
+
+
+	static public function determineJavascriptFilename (
+		&$javascriptFilename,
+		$defaultBasename
+	) {
+		$result = self::determineFilename (
+			$javascriptFilename,
+			$defaultBasename,
+			'Resources/Public/JavaScript/'
+		);
+
+		return $result;
+	}
+
+
+	static public function determineCssFilename (
+		&$javascriptFilename,
+		$defaultBasename
+	) {
+		$result = self::determineFilename (
+			$javascriptFilename,
+			$defaultBasename,
+			'Resources/Public/Css/'
+		);
+
+		return $result;
+	}
+
+
+	static public function determineFilename (
+		&$filename,
+		$defaultBasename,
+		$defaultPath
+	) {
+		$result = FALSE;
+		$path = '';
+
+		if (empty($filename)) {
+			$filename =
+				ExtensionManagementUtility::siteRelPath(DIV2007_EXT) .
+				$defaultPath . $defaultBasename;
+		}
+
+		$lookupFile = explode('?', $filename);
+		$path =
+			GeneralUtility::resolveBackPath(
+				GeneralUtility::dirname(
+					PATH_thisScript
+				) .
+				'/' .
+				$lookupFile[0]
+			);
+
+		if (file_exists($path)) {
+			$result = TRUE;
+		}
+
+		return $result;
+	}
+
+
+	static public function addTab (
+		$templateCode,
+		&$markerArray,
+		&$subpartArray,
+		&$wrappedSubpartArray,
+		$keyPrefix = '',
+		$javascriptFilename = '',
+		$cssFilename = ''
+	) {
+		$result = FALSE;
+		preg_match_all('/###(TAB_.*)###/', $templateCode, $treffer);
+		$internalMarkerArray = array();
+		if (
+			isset($treffer) &&
+			is_array($treffer) &&
+			isset($treffer['0'])
+		) {
+			$internalMarkerArray = array_unique($treffer['0']);
+		}
+
+		$headerCounter = 0;
+		$boxCounter = 0;
+		foreach ($internalMarkerArray as $marker) {
+			if (strpos($marker, '###TAB_HEADER_' . ($headerCounter + 1)) === 0) {
+				$headerCounter++;
+			}
+			if (strpos($marker, '###TAB_BOX_' . ($boxCounter + 1)) === 0) {
+				$boxCounter++;
+			}
+		}
+
+		if (
+			$headerCounter == $boxCounter &&
+			self::determineJavascriptFilename(
+				$javascriptFilename,
+				'jsfunc.tab.js'
+			)
+		) {
+			self::addJavascriptFile($javascriptFilename, $keyPrefix . 'JSincludeTab');
+			$markerArray['###TAB_OPEN_JS###'] =
+'<script type="text/javascript">
+		openTab(1); // open Tab 1
+</script>';
+
+			if (
+				self::determineCssFilename(
+					$cssFilename,
+					'tab.css'
+				)
+			) {
+				self::addCssFile($cssFilename, $keyPrefix . 'CSSincludeTab');
+				$result = TRUE;
+				$wrappedSubpartArray['###TAB_MENU###'] =
+					array(
+						'<div id="tabmenu" class="tabmenu">',
+						'</div>'
+					);
+
+				for ($i = 1; $i <= $headerCounter; $i++) {
+					$wrappedSubpartArray['###TAB_HEADER_' . $i . '###'] =
+						array(
+							'<div id="tab_top_' . $i . '" class="tab_top_active" onclick="javascript:openTab(' . $i . ');">',
+							'</div>'
+						);
+					$wrappedSubpartArray['###TAB_BOX_' . $i . '###'] =
+						array(
+							'<div id="tab_box_' . $i . '" class="tab_box">',
+							'</div>'
+						);
+				}
+			}
+		} else {
+			$markerArray['###TAB_OPEN_JS###'] = '';
+			$subpartArray['###TAB_MENU###'] = '';
+			for ($i = 1; $i <= $headerCounter; $i++) {
+				$subpartArray['###TAB_HEADER_' . $i . '###'] = '';
+			}
+			for ($i = 1; $i <= $boxCounter; $i++) {
+				$subpartArray['###TAB_BOX_' . $i . '###'] = '';
+			}
+		}
+
+		return $result;
+
+	}
+
+
+	static public function getContentObjectRendererClassname () {
+		$useClassName = FALSE;
+		$callingClassName = '\\TYPO3\\CMS\\Frontend\\ContentObject\\ContentObjectRenderer';
+
+		if (
+			class_exists($callingClassName)
+		) {
+			$useClassName = substr($callingClassName, 1);
+		} else if (
+			class_exists('tslib_cObj')
+		) {
+			$useClassName = 'tslib_cObj';
+		}
+
+		return $useClassName;
+	}
+
+
+	static public function getContentObjectRenderer ($row = array()) {
+		$className = self::getContentObjectRendererClassname();
+		$cObj = \t3lib_div::makeInstance($className);	// Local cObj.
+		$cObj->start(array());
+
+		return $cObj;
+	}
+
 }
 

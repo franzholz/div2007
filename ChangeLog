@@ -1,5 +1,9 @@
+20-09-16 Franz Holzinger  <franz@ttproducts.de>
+	 * feature: Add a tab API addTab to the FrontendUtility. It bases on the files tab.css and jsfunc.tab.js. Use the subpart markers ###TAB_HEADER_1###, ... ###TAB_HEADER_n### and ###TAB_BOX_1###, ... ###TAB_BOX_n### inside of the subpart marker ###TAB_MENU### to generate your tab menu.
+	 * feature: Add a sys_category Sytem Category utility
+
 31-08-16 Franz Holzinger  <franz@ttproducts.de>
-	 * feature: Add new class MailUtility.php which needs TYPO3 6.2 and bases on the code from class.tx_div2007_email
+	 * feature: Add new file MailUtility.php which needs TYPO3 6.2 and bases on the code from class.tx_div2007_email.php
 
 19-07-16 Franz Holzinger  <franz@ttproducts.de>
 	 * bugfix: function embedMedia must also support the TYPO3 7.6.9 class TYPO3\CMS\Core\Mail\MailMessage
