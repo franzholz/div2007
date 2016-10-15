@@ -860,6 +860,7 @@ class tx_div2007_alpha5 {
 			if (is_array($confLL)) {
 				foreach ($confLL as $languageKey => $languageArray) {
 					if (is_array($languageArray)) {
+						$langObj->LOCAL_LANG[$languageKey] = array();
 						$languageKey = substr($languageKey, 0, -1);
 						$charset = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];
 
@@ -871,6 +872,8 @@ class tx_div2007_alpha5 {
 
 							// Remove the dot after the language key
 						foreach ($languageArray as $labelKey => $labelValue) {
+							$langObj->LOCAL_LANG[$languageKey][$labelKey] = array();
+
 							if (is_array($labelValue)) {
 								foreach ($labelValue as $labelKey2 => $labelValue2) {
 									if (is_array($labelValue2)) {
