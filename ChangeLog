@@ -1,3 +1,6 @@
+20-10-16 Franz Holzinger  <franz@ttproducts.de>
+	* bugfix for PHP 7: Non-static method TYPO3\\CMS\\Frontend\\Page\\CacheHashCalculator::calculateCacheHash() should not be called statically
+
 20-09-16 Franz Holzinger  <franz@ttproducts.de>
 	 * feature: Add a tab API addTab to the FrontendUtility. It bases on the files tab.css and jsfunc.tab.js. Use the subpart markers ###TAB_HEADER_1###, ... ###TAB_HEADER_n### and ###TAB_BOX_1###, ... ###TAB_BOX_n### inside of the subpart marker ###TAB_MENU### to generate your tab menu.
 	 * feature: Add a sys_category Sytem Category utility

@@ -399,15 +399,17 @@ class tx_div2007_core {
 			class_exists($callingClassName)
 		) {
 			$useClassName = substr($callingClassName, 1);
+			$cacheHash = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($useClassName);
+			$result = $cacheHash->calculateCacheHash($params);
 		} else if (
 			class_exists('t3lib_cacheHash')
 		) {
-			$useClassName = 't3lib_cacheHash';
-		}
-
-		if (method_exists($useClassName, 'calculateCacheHash')) {
-
-			$result = call_user_func($useClassName . '::calculateCacheHash', $params);
+			$cacheHash = t3lib_div::makeInstance('t3lib_cacheHash');
+			$result = $cacheHash->calculateCacheHash($params);
+		} else if (
+			class_exists('t3lib_div')
+		) {
+			$result = t3lib_div::cHashParams($params);
 		}
 
 		return $result;
