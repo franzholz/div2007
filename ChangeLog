@@ -1,3 +1,7 @@
+04-11-16 Franz Holzinger  <franz@ttproducts.de>
+	 * feature: Add new file PhpUtility.php which has a method to make a syntax check on a PHP code. This is needed if you use the eval function.
+	 * add the function getForeignTableInfo to the TableUtility.php. This is needed for IRRE mm tables.
+
 20-10-16 Franz Holzinger  <franz@ttproducts.de>
 	* bugfix for PHP 7: Non-static method TYPO3\\CMS\\Frontend\\Page\\CacheHashCalculator::calculateCacheHash() should not be called statically
 

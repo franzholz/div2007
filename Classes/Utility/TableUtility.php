@@ -307,5 +307,79 @@ class TableUtility {
 
 		return $result;
 	}
+
+
+	/**
+	 * Returns informations about the table and foreign table
+	 * This is used by various tables.
+	 *
+	 * @param	string		name of the table
+	 * @param	string		field of the table
+	 *
+	 * @return	array		infos about the table and foreign table:
+					table         ... name of the table
+					foreign_table ... name of the foreign table
+					foreign_table_field ... name of the field which contains the table name of the first table
+					mmtable       ... name of the mm table
+					foreign_field ... name of the field in the mm table which joins with
+					                  the foreign table
+	 * @access	public
+	 *
+	 */
+	static public function getForeignTableInfo ($tablename, $fieldname) {
+		$result = array();
+		if (
+			$tablename != '' &&
+			$fieldname != '' &&
+			isset($GLOBALS['TCA'][$tablename]['columns'][$fieldname]) &&
+			isset($GLOBALS['TCA'][$tablename]['columns'][$fieldname]['config'])
+		) {
+			$tableConf = $GLOBALS['TCA'][$tablename]['columns'][$fieldname]['config'];
+			$localFieldname = '';
+			$foreignFieldname = '';
+			$foreignTableFieldname = '';
+			$foreignTable = '';
+			$mmTablename = '';
+			$mmTableConf = '';
+
+			$type = $tableConf['type'];
+			if ($type == 'group') {
+				$type = 'select';
+			}
+
+			if ($type == 'inline') {
+				$mmTablename = $tableConf['foreign_table'];
+				$localFieldname = $tableConf['foreign_field'];
+				$foreignFieldname = $tableConf['foreign_selector'];
+				$foreignTableFieldname = $tableConf['foreign_table_field'];
+			} else if (
+				$type == 'select' &&
+				isset($tableConf['MM'])
+			) {
+				$mmTablename = $tableConf['MM'];
+				$localFieldname = 'uid_local';
+				$foreignFieldname = 'uid_foreign';
+			}
+
+			if ($foreignFieldname != '') {
+				$mmTableConf = $GLOBALS['TCA'][$mmTablename]['columns'][$foreignFieldname]['config'];
+			}
+
+			if ($type == 'inline' && is_array($mmTableConf)) {
+				$foreignTable = $mmTableConf['foreign_table'];
+			} else if ($type == 'select') {
+				$foreignTable = $tableConf['foreign_table'];
+			}
+
+			$result['table'] = $tablename;
+			$result['foreign_table'] = $foreignTable;
+			$result['foreign_table_field'] = $foreignTableFieldname;
+			$result['mmtable'] = $mmTablename;
+			$result['local_field'] = $localFieldname;
+			$result['foreign_field'] = $foreignFieldname;
+		}
+		return $result;
+	}
+
 }
 
