@@ -409,7 +409,7 @@ class tx_div2007_core {
 		} else if (
 			class_exists('t3lib_div')
 		) {
-			$result = t3lib_div::cHashParams($params);
+			$result = t3lib_div::cHashParams(implode('&', $params));
 		}
 
 		return $result;

@@ -1,3 +1,6 @@
+16-11-16 Franz Holzinger  <franz@ttproducts.de>
+	* bugfix: t3lib_div::cHashParams needs a parameter string and not an array as parameter
+
 04-11-16 Franz Holzinger  <franz@ttproducts.de>
 	 * feature: Add new file PhpUtility.php which has a method to make a syntax check on a PHP code. This is needed if you use the eval function.
 	 * add the function getForeignTableInfo to the TableUtility.php. This is needed for IRRE mm tables.
