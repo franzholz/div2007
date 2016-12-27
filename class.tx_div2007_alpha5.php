@@ -803,7 +803,11 @@ class tx_div2007_alpha5 {
 			$typoVersion = tx_div2007_core::getTypoVersion();
 			$langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
 
-			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' ||  substr($langFile, 0, 9) === 'fileadmin') {
+			if (
+				substr($langFile, 0, 4) === 'EXT:' ||
+				substr($langFile, 0, 5) === 'typo3' ||
+				substr($langFile, 0, 9) === 'fileadmin'
+			) {
 				$basePath = $langFile;
 			} else {
 				$basePath = call_user_func($emClass . '::extPath', $langObj->extKey) .
@@ -811,7 +815,12 @@ class tx_div2007_alpha5 {
 			}
 
 				// Read the strings in the required charset (since TYPO3 4.2)
-			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, $GLOBALS['TSFE']->renderCharset);
+			$tempLOCAL_LANG =
+				t3lib_div::readLLfile(
+					$basePath,
+					$langObj->LLkey,
+					$GLOBALS['TSFE']->renderCharset
+				);
 
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -860,7 +869,9 @@ class tx_div2007_alpha5 {
 			if (is_array($confLL)) {
 				foreach ($confLL as $languageKey => $languageArray) {
 					if (is_array($languageArray)) {
-						$langObj->LOCAL_LANG[$languageKey] = array();
+						if (!isset($langObj->LOCAL_LANG[$languageKey])) {
+							$langObj->LOCAL_LANG[$languageKey] = array();
+						}
 						$languageKey = substr($languageKey, 0, -1);
 						$charset = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];
 
@@ -872,7 +883,9 @@ class tx_div2007_alpha5 {
 
 							// Remove the dot after the language key
 						foreach ($languageArray as $labelKey => $labelValue) {
-							$langObj->LOCAL_LANG[$languageKey][$labelKey] = array();
+							if (!isset($langObj->LOCAL_LANG[$languageKey][$labelKey])) {
+								$langObj->LOCAL_LANG[$languageKey][$labelKey] = array();
+							}
 
 							if (is_array($labelValue)) {
 								foreach ($labelValue as $labelKey2 => $labelValue2) {

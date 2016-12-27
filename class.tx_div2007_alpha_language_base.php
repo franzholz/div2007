@@ -41,8 +41,8 @@
 
 class tx_div2007_alpha_language_base {
 	public $cObj;
-	public $LOCAL_LANG = Array();		// Local Language content
-	public $LOCAL_LANG_charset = Array();	// Local Language content charset for individual labels (overriding)
+	public $LOCAL_LANG = array();		// Local Language content
+	public $LOCAL_LANG_charset = array();	// Local Language content charset for individual labels (overriding)
 	public $LOCAL_LANG_loaded = 0;		// Flag that tells if the locallang file has been fetch (or tried to be fetched) already.
 	public $LLkey = 'default';		// Pointer to the language to use.
 	public $altLLkey = '';			// Pointer to alternative fall-back language to use.
@@ -56,7 +56,7 @@ class tx_div2007_alpha_language_base {
 	 * $conf[LOCAL_LANG][_key_] is reserved for Local Language overrides.
 	 * $conf[userFunc] / $conf[includeLibs]  reserved for setting up the USER / USER_INT object. See TSref
 	 */
-	public $conf = Array();
+	public $conf = array();
 	public $typoVersion;
 	private $hasBeenInitialized = FALSE;
 

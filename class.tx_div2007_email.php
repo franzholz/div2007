@@ -76,7 +76,6 @@ class tx_div2007_email {
 		$defaultSubject = ''
 	) {
 		$result = TRUE;
-
 		$charset = 'utf-8';
 		if (
 			isset($GLOBALS['TSFE']->renderCharset) &&
@@ -372,8 +371,8 @@ class tx_div2007_email {
 				$mail->send();
 				$result = $mail->isSent();
 				if (!$result) {
-					debug ('tx_div2007_email::sendMail exited with error 6'); // keep this
-					debug ('tx_div2007_email::sendMail undelivered: ', implode(',', $mail->getFailedRecipients())); // keep this
+					debug('tx_div2007_email::sendMail exited with error 6'); // keep this
+					debug('tx_div2007_email::sendMail undelivered: ', implode(',', $mail->getFailedRecipients())); // keep this
 				}
 			} elseif (method_exists($mail, 'sendTheMail')) {
 				$mail->sendTheMail();

@@ -45,6 +45,7 @@ return array(
 	'tx_div2007_viewBase' => $extensionPath . 'class.tx_div2007_viewBase.php',
 	'JambageCom\\Div2007\\Utility\\TableUtility' => $extensionPath . 'Classes/Utility/TableUtility.php',
 	'JambageCom\\Div2007\\Utility\\ExtensionUtility' => $extensionPath . 'Classes/Utility/ExtensionUtility.php',
+	'JambageCom\\Div2007\\Utility\\FileAbstractionUtility' => $extensionPath . 'Classes/Utility/FileAbstractionUtility.php',
 	'JambageCom\\Div2007\\Utility\\FrontendUtility' => $extensionPath . 'Classes/Utility/FrontendUtility.php',
 	'JambageCom\\Div2007\\Utility\\MailUtility' => $extensionPath . 'Classes/Utility/MailUtility.php',
 	'JambageCom\\Div2007\\Utility\\PhpUtility' => $extensionPath . 'Classes/Utility/PhpUtility.php',
