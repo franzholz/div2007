@@ -6,7 +6,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2016 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2017 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -429,7 +429,7 @@ class FrontendUtility {
 	static public function getContentObjectRenderer ($row = array()) {
 		$className = self::getContentObjectRendererClassname();
 		$cObj = \t3lib_div::makeInstance($className);	// Local cObj.
-		$cObj->start(array());
+		$cObj->start($row);
 
 		return $cObj;
 	}
