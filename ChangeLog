@@ -1,3 +1,8 @@
+
+
+04-03-17 Franz Holzinger  <franz@ttproducts.de>
+    * add method getLanguage to tx_div2007_alpha_language_base. This fetches the config.language setup.
+
 27-12-16 Franz Holzinger  <franz@ttproducts.de>
 	* bugfix: function loadLL_fh002 must not delete existing LOCAL_LANG entries if parts are overridden by a LOCAL_LANG setup
 	* new feature: add a class FileAbstractionUtility.php for the File Abstraction Layer

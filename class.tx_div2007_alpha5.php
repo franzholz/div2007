@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2016 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2017 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -1009,7 +1009,7 @@ class tx_div2007_alpha5 {
 		$pointer = intval($pObject->ctrlVars[$pointerName]);
 		$count = intval($pObject->internal['resCount']);
 		$limit = tx_div2007_core::intInRange($pObject->internal['limit'], 1, 1000);
-		$totalPages = ceil($count/$limit);
+		$totalPages = ceil($count / $limit);
 		$maxPages = tx_div2007_core::intInRange($pObject->internal['maxPages'], 1, 100);
 		$bUseCache = self::autoCache_fh001($pObject, $pObject->ctrlVars);
 
@@ -1027,7 +1027,7 @@ class tx_div2007_alpha5 {
 
 		if (isset($pObject->internal['pagefloat'])) {
 			if (strtoupper($pObject->internal['pagefloat']) == 'CENTER') {
-				$pagefloat = ceil(($maxPages - 1)/2);
+				$pagefloat = ceil(($maxPages - 1) / 2);
 			} else {
 				// pagefloat set as integer. 0 = left, value >= $pObject->internal['maxPages'] = right
 				$pagefloat = tx_div2007_core::intInRange($pObject->internal['pagefloat'], -1, $maxPages-1);
@@ -1112,7 +1112,7 @@ class tx_div2007_alpha5 {
 				$pageText = '';
 				if ($pObject->internal['showRange']) {
 					$pageText = (($a * $limit) + 1) . '-' . min($count, (($a + 1) * $limit));
-				} else if ($totalPages > 1)	{
+				} else if ($totalPages > 1) {
 					if ($wrapper['browseTextWrap'])	{
 						if ($pointer == $a) { // current page
 							$pageText = $cObj->wrap(($a + 1), $wrapper['activeBrowseTextWrap']);
@@ -1141,12 +1141,12 @@ class tx_div2007_alpha5 {
 				if ($pointer == $totalPages-1) { // Link to next page
 					$links[] = $cObj->wrap($nextText, $wrapper['disabledLinkWrap']);
 				} else {
-					$linkArray[$pointerName] = $pointer+1;
+					$linkArray[$pointerName] = $pointer + 1;
 					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $nextText, $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				}
 			}
 			if ($bShowFirstLast) { // Link to last page
-				if ($pointer < $totalPages-1) {
+				if ($pointer < $totalPages - 1) {
 					$linkArray[$pointerName] = $totalPages-1;
 					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, tx_div2007_alpha::getLL($langObj, 'list_browseresults_last', 'Last >>', $hscText), $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				} else {
@@ -1264,10 +1264,10 @@ class tx_div2007_alpha5 {
 
 		if (isset($pObject->internal['pagefloat'])) {
 			if (strtoupper($pObject->internal['pagefloat']) == 'CENTER') {
-				$pagefloat = ceil(($maxPages - 1)/2);
+				$pagefloat = ceil(($maxPages - 1) / 2);
 			} else {
 				// pagefloat set as integer. 0 = left, value >= $pObject->internal['maxPages'] = right
-				$pagefloat = tx_div2007_core::intInRange($pObject->internal['pagefloat'], -1, $maxPages-1);
+				$pagefloat = tx_div2007_core::intInRange($pObject->internal['pagefloat'], -1, $maxPages - 1);
 			}
 		} else {
 			$pagefloat = -1; // pagefloat disabled
@@ -1287,7 +1287,7 @@ class tx_div2007_alpha5 {
 			$wrapper['disabledLinkWrap'] = '<td nowrap="nowrap"><p>|</p></td>';
 			$wrapper['inactiveLinkWrap'] = '<td nowrap="nowrap"><p>|</p></td>';
 			$wrapper['activeLinkWrap'] = '<td' . self::classParam_fh001('browsebox-SCell', '', $prefixId) . ' nowrap="nowrap"><p>|</p></td>';
-			$wrapper['browseLinksWrap'] = trim('<table '.$browseParams).'><tr>|</tr></table>';
+			$wrapper['browseLinksWrap'] = trim('<table ' . $browseParams) . '><tr>|</tr></table>';
 		}
 
 		if (is_array($pObject->internal['image']) && $pObject->internal['image']['path']) {
@@ -1318,24 +1318,24 @@ class tx_div2007_alpha5 {
 
 		if ($showResultCount != 2) { //show pagebrowser
 			if ($pagefloat > -1) {
-				$lastPage = min($totalPages,max($pointer+1 + $pagefloat,$maxPages));
-				$firstPage = max(0,$lastPage-$maxPages);
+				$lastPage = min($totalPages, max($pointer + 1 + $pagefloat, $maxPages));
+				$firstPage = max(0, $lastPage - $maxPages);
 			} else {
 				$firstPage = 0;
 				$lastPage = tx_div2007_core::intInRange($totalPages, 1, $maxPages);
 			}
-			$links=array();
+			$links = array();
 
 				// Make browse-table/links:
 			if ($bShowFirstLast) { // Link to first page
-				if ($pointer>0) {
+				if ($pointer > 0) {
 					$linkArray[$pointerName] = null;
 					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, self::getLL_fh002($langObj, 'list_browseresults_first', $usedLang, '<< First', $hscText), $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				} else {
 					$links[] = $cObj->wrap(self::getLL_fh002($langObj, 'list_browseresults_first', $usedLang, '<< First', $hscText), $wrapper['disabledLinkWrap']);
 				}
 			}
-			if ($alwaysPrev>=0) { // Link to previous page
+			if ($alwaysPrev >= 0) { // Link to previous page
 				$previousText = self::getLL_fh002($langObj, 'list_browseresults_prev', $usedLang, '< Previous', $hscText);
 				if ($pointer > 0) {
 					$linkArray[$pointerName] = ($pointer - 1 ? $pointer - 1 : '');
@@ -1352,12 +1352,12 @@ class tx_div2007_alpha5 {
 				} else if ($totalPages > 1) {
 					if ($wrapper['browseTextWrap']) {
 						if ($pointer == $a) { // current page
-							$pageText = $cObj->wrap(($a+1),$wrapper['activeBrowseTextWrap']);
+							$pageText = $cObj->wrap(($a + 1), $wrapper['activeBrowseTextWrap']);
 						} else {
-							$pageText = $cObj->wrap(($a+1),$wrapper['browseTextWrap']);
+							$pageText = $cObj->wrap(($a + 1), $wrapper['browseTextWrap']);
 						}
 					} else {
-						$pageText = trim(self::getLL_fh002($langObj, 'list_browseresults_page', $usedLang, 'Page', $hscText)) . ' ' . ($a+1);
+						$pageText = trim(self::getLL_fh002($langObj, 'list_browseresults_page', $usedLang, 'Page', $hscText)) . ' ' . ($a + 1);
 					}
 				}
 				if ($pointer == $a) { // current page
@@ -1373,13 +1373,13 @@ class tx_div2007_alpha5 {
 					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $pageText, $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				}
 			}
-			if ($pointer < $totalPages-1 || $bShowFirstLast) {
+			if ($pointer < $totalPages - 1 || $bShowFirstLast) {
 				$nextText = self::getLL_fh002($langObj, 'list_browseresults_next', $usedLang, 'Next >', $hscText);
-				if ($pointer==$totalPages-1) { // Link to next page
-					$links[]=$cObj->wrap($nextText,$wrapper['disabledLinkWrap']);
+				if ($pointer == $totalPages - 1) { // Link to next page
+					$links[] = $cObj->wrap($nextText, $wrapper['disabledLinkWrap']);
 				} else {
 					$linkArray[$pointerName] = $pointer + 1;
-					$links[]=$cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $nextText, $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
+					$links[] = $cObj->wrap(self::linkTP_keepCtrlVars($pObject, $cObj, $prefixId, $nextText, $linkArray, $bUseCache), $wrapper['inactiveLinkWrap']);
 				}
 			}
 			if ($bShowFirstLast) { // Link to last page
@@ -2140,7 +2140,7 @@ class tx_div2007_alpha5 {
 
 									if ($str{$i} == '"' && $str{$i + 1} == ';') {
 										$i += 2;
-										if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k']=='' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
+										if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k'] == '' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
 											$controlData[$controlIndex]['k'] = $param2;
 											continue;
 										}
@@ -2149,7 +2149,7 @@ class tx_div2007_alpha5 {
 									if ($controlArray[$controlIndex] == 'a' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'] && isset($controlData[$controlIndex]['k']))	{
 										$controlCount[$controlIndex]++;
 										$var[$controlData[$controlIndex]['k']] = $param2;
-										$controlData[$controlIndex]['k']='';
+										$controlData[$controlIndex]['k'] = '';
 									}
 								}
 							} else {

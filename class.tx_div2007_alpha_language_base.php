@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2016 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -105,6 +105,23 @@ class tx_div2007_alpha_language_base {
 	public function needsInit () {
 		return !$this->hasBeenInitialized;
 	}
+
+    public function getLanguage () {
+
+        $result = 'default';
+
+        if (
+            isset($GLOBALS['TSFE']->config) &&
+            is_array($GLOBALS['TSFE']->config) &&
+            isset($GLOBALS['TSFE']->config['config']) &&
+            is_array($GLOBALS['TSFE']->config['config'])
+        ) {
+            $result = $GLOBALS['TSFE']->config['config']['language'];
+        }
+
+        return $result;
+    }
+
 }
 
 
