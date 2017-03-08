@@ -1,4 +1,8 @@
-
+08-03-17  Franz Holzinger  <franz@ttproducts.de>
+    * bugfix in linkTP_keepCtrlVars: the pivars must be overruled for a link even if they did not exist before
+    * adapted method list_browseresults_fh004
+    * add method getLanguage to tx_div2007_alpha_language_base
+    * add files to Git:    ControlUtility.php, MailUtility.php, XmlElement.php, XmlUtility.php
 
 04-03-17 Franz Holzinger  <franz@ttproducts.de>
     * add method getLanguage to tx_div2007_alpha_language_base. This fetches the config.language setup.
