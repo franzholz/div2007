@@ -83,7 +83,7 @@ class MailUtility {
 			return FALSE;
 		}
 
-		$charset = 'utf-8';
+		$charset = 'UTF-8';
 		if (
 			isset($GLOBALS['TSFE']->renderCharset) &&
 			$GLOBALS['TSFE']->renderCharset != ''

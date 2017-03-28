@@ -537,7 +537,7 @@ class tx_div2007_alpha {
 			}
 				// php or xml as source: In any case the charset will be that of the system language.
 				// However, this function guarantees only return output for default language plus the specified language (which is different from how 3.7.0 dealt with it)
-			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, $TSFE->renderCharset);
+			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, 'UTF-8');
 
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -553,7 +553,7 @@ class tx_div2007_alpha {
 				$langObj->LOCAL_LANG = $tempLOCAL_LANG;
 			}
 			if ($langObj->altLLkey) {
-				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$langObj->altLLkey,$TSFE->renderCharset);
+				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->altLLkey, 'UTF-8');
 
 				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {

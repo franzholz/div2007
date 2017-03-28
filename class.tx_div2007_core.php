@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2016 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -66,6 +66,11 @@ class tx_div2007_core {
 		't3_origuid',
 	);
 
+    /**
+    * Returns an integer format of the current three part version number, eg '4.12.3' -> 4012003
+    * return
+    *  int Integer version of version number (where each part can count to 999)
+    **/
 	static public function getTypoVersion () {
 		$result = FALSE;
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
@@ -399,7 +404,9 @@ class tx_div2007_core {
 			class_exists($callingClassName)
 		) {
 			$useClassName = substr($callingClassName, 1);
-			$cacheHash = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($useClassName);
+            $callingClassName2 = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+            $useClassName2 = substr($callingClassName2, 1);
+            $cacheHash = call_user_func($useClassName2 . '::makeInstance', $useClassName);
 			$result = $cacheHash->calculateCacheHash($params);
 		} else if (
 			class_exists('t3lib_cacheHash')
@@ -519,9 +526,98 @@ class tx_div2007_core {
 			!class_exists('t3lib_extMgm')
 		) {
 			$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
-			$object = call_user_func($callingClassName . '::getUserObj', 'tx_div2007_compatibility6');
-// 			$object->test();
+            $useClassName = substr($callingClassName, 1);
+			$object = call_user_func($useClassName . '::getUserObj', 'tx_div2007_compatibility6');
 		}
 	}
+
+    ### $GLOBALS['TSFE']
+
+    /**
+     * Converts the charset of the input string if applicable.
+     * The "to" charset is determined by the currently used charset for the page which is "utf-8" by default or set by $GLOBALS['TSFE']->config['config']['renderCharset']
+     * Only if there is a difference between the two charsets will a conversion be made
+     * The conversion is done real-time - no caching for performance at this point!
+     *
+     * @param string $str String to convert charset for
+     * @param string $from Optional "from" charset.
+     * @return string Output string, converted if needed.
+     * @see CharsetConverter
+     */
+    static public function csConv ($str, $from = '')
+    {
+        $converterClassName = '\\TYPO3\\CMS\\Core\\Charset\\CharsetConverter';
+        $result = '';
+
+        if (
+            $from &&
+            version_compare(TYPO3_version, '8.0.0', '>=') &&
+            class_exists($converterClassName)
+        ) {
+            $useConverterClassName = substr($converterClassName, 1);
+
+            $callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+            $useClassName = substr($callingClassName, 1);
+            /** @var \TYPO3\CMS\Core\Charset\CharsetConverter $charsetConverter */
+            $charsetConverter = call_user_func($useClassName . '::makeInstance', $useConverterClassName);
+
+            $result = $charsetConverter->conv($str, $charsetConverter->parse_charset($from), 'utf-8');
+
+            if (!$result) {
+                $result = $str;
+            }
+        } else {
+            $result = $GLOBALS['TSFE']->csConv($str, $from);
+        }
+
+        return $result;
+    }
+
+
+        /**
+     * Returns TRUE if the current TYPO3 version (or compatibility version) is compatible to the input version
+     * Notice that this function compares branches, not versions (4.0.1 would be > 4.0.0 although they use the same compat_version)
+     *
+     * @param string $verNumberStr Minimum branch number required (format x.y / e.g. "4.0" NOT "4.0.0"!)
+     * @return bool Returns TRUE if this setup is compatible with the provided version number
+     * @todo Still needs a function to convert versions to branches
+     */
+    static public function compat_version ($verNumberStr)
+    {
+        $result = FALSE;
+        $useClassName = '';
+
+        $callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+
+        if (
+            version_compare(TYPO3_version, '8.0.0', '>=')
+        ) {
+            $callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
+            $useClassName = substr($callingClassName, 1);
+            $result =
+                call_user_func($useClassName . '::convertVersionNumberToInteger', TYPO3_branch) >=
+                call_user_func($useClassName . '::convertVersionNumberToInteger', $verNumberStr);
+
+            $useClassName = '';
+        } else if (
+            class_exists($callingClassName) &&
+            method_exists($callingClassName, 'compat_version')
+        ) {
+            $useClassName = substr($callingClassName, 1);
+        } else if (
+            class_exists('t3lib_BEfunc')
+        ) {
+            $useClassName = 't3lib_BEfunc';
+        }
+
+        if (
+            $useClassName &&
+            method_exists($callingClassName, 'compat_version')
+        ) {
+            $result = call_user_func($useClassName . '::compat_version', $verNumberStr);
+        }
+
+        return $result;
+    }
 }
 

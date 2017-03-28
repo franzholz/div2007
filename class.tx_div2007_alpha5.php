@@ -692,7 +692,8 @@ class tx_div2007_alpha5 {
 	 * Returns the localized label of the LOCAL_LANG key, $key used since TYPO3 4.6
 	 * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->LLtestPrefixAlt and ->LLtestPrefix
 	 *
-	 * @param	object		tx_div2007_alpha_language_base or a tslib_pibase object
+	 * @param	object		\JambageCom\Div2007\Base\LocalisationBase or
+	 *                     tx_div2007_alpha_language_base or a tslib_pibase object
 	 * @param	string		The key from the LOCAL_LANG array for which to return the value.
 	 * @param	string		input: if set then this language is used if possible. output: the used language
 	 * @param	string		Alternative string to return IF no value is found set for the key, neither for the local language nor the default.
@@ -829,13 +830,28 @@ class tx_div2007_alpha5 {
 					($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
 
-				// Read the strings in the required charset (since TYPO3 4.2)
-			$tempLOCAL_LANG =
-				t3lib_div::readLLfile(
-					$basePath,
-					$langObj->LLkey,
-					$GLOBALS['TSFE']->renderCharset
-				);
+
+            if ($typoVersion >= 7004000) {
+
+                $callingClassName = '\\TYPO3\\CMS\\Core\\Localization\\LocalizationFactory';
+                $useClassName = substr($callingClassName, 1);
+
+                /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
+                $languageFactory = t3lib_div::makeInstance($useClassName);
+                $tempLOCAL_LANG = $languageFactory->getParsedData(
+                    $basePath,
+                    $langObj->LLkey,
+                    'UTF-8'
+                );
+            } else {
+                    // Read the strings in the required charset (since TYPO3 4.2)
+                $tempLOCAL_LANG =
+                    t3lib_div::readLLfile(
+                        $basePath,
+                        $langObj->LLkey,
+                        $GLOBALS['TSFE']->renderCharset
+                    );
+            }
 
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -851,13 +867,17 @@ class tx_div2007_alpha5 {
 			} else {
 				$langObj->LOCAL_LANG = $tempLOCAL_LANG;
 			}
+			$charset = 'UTF-8';
+			if ($typoVersion <= 6000000) {
+                $charset = $GLOBALS['TSFE']->renderCharset;
+			}
 
 			if ($langObj->altLLkey) {
 				$tempLOCAL_LANG =
 					t3lib_div::readLLfile(
 						$basePath,
 						$langObj->altLLkey,
-						$GLOBALS['TSFE']->renderCharset
+						$charset
 					);
 
 				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {

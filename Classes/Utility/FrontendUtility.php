@@ -426,10 +426,19 @@ class FrontendUtility {
 	}
 
 
-	static public function getContentObjectRenderer ($row = array()) {
+    /**
+     * Class constructor.
+     * Well, it has to be called manually since it is not a real constructor function.
+     * Call this function which is making an instance of the class, and pass to it a database record and the tablename from where the record is from. That will then become the "current" record loaded into memory and accessed by the .fields property found in eg. stdWrap.
+     *
+     * @param array $data The record data that is rendered.
+     * @param string $table The table that the data record is from.
+     * @return void
+     */
+	static public function getContentObjectRenderer ($data = array(), $table = '') {
 		$className = self::getContentObjectRendererClassname();
 		$cObj = \t3lib_div::makeInstance($className);	// Local cObj.
-		$cObj->start($row);
+		$cObj->start($data, $table);
 
 		return $cObj;
 	}

@@ -38,7 +38,7 @@
  */
 
 
-class tx_div2007_hooks_cms {
+class tx_div2007_hooks_cms implements t3lib_Singleton {
 	public $extKey = '';	// extension key must be overridden
 
 	/**

@@ -3,6 +3,66 @@
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
+interface t3lib_Singleton extends \TYPO3\CMS\Core\SingletonInterface {}
+
+
+if (!class_exists('t3lib_div', FALSE)) {
+    /**
+    * @deprecated since 6.0 will be removed in 7.0
+    */
+    class t3lib_div extends \TYPO3\CMS\Core\Utility\GeneralUtility {}
+}
+
+/**
+ * @deprecated since 6.0 will be removed in 7.0
+ */
+class t3lib_utility_Http extends \TYPO3\CMS\Core\Utility\HttpUtility {}
+
+/**
+ * @deprecated since 6.0 will be removed in 7.0
+ */
+class t3lib_utility_Mail extends \TYPO3\CMS\Core\Utility\MailUtility {}
+
+/**
+ * @deprecated since 6.0 will be removed in 7.0
+ */
+class t3lib_utility_Math extends \TYPO3\CMS\Core\Utility\MathUtility {}
+
+/**
+ * @deprecated since 6.0 will be removed in 7.0
+ */
+class t3lib_utility_Monitor extends \TYPO3\CMS\Core\Utility\MonitorUtility {}
+
+/**
+ * @deprecated since 6.0 will be removed in 7.0
+ */
+class t3lib_utility_Path extends \TYPO3\CMS\Core\Utility\PathUtility {}
+
+/**
+ * @deprecated since 6.0 will be removed in 7.0
+ */
+class t3lib_utility_PhpOptions extends \TYPO3\CMS\Core\Utility\PhpOptionsUtility {}
+
+/**
+ * @deprecated since 6.0 will be removed in 7.0
+ */
+class t3lib_utility_VersionNumber extends \TYPO3\CMS\Core\Utility\VersionNumberUtility {}
+
+/**
+ * @deprecated since 6.0 will be removed in 7.0
+ */
+class tx_cssstyledcontent_pi1 extends \TYPO3\CMS\CssStyledContent\Controller\CssStyledContentController {}
+
+
+if (version_compare(TYPO3_version, '8.0.0', '>=')) {
+
+    return;
+}
+
+
+/**
+ * @deprecated since 6.0 will be removed in 7.0
+ */
 class Tx_About_Controller_AboutController extends \TYPO3\CMS\About\Controller\AboutController {}
 
 /**
@@ -1109,10 +1169,6 @@ class t3lib_Compressor extends \TYPO3\CMS\Core\Resource\ResourceCompressor {}
  */
 abstract class t3lib_svbase extends \TYPO3\CMS\Core\Service\AbstractService {}
 
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-interface t3lib_Singleton extends \TYPO3\CMS\Core\SingletonInterface {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -1219,64 +1275,6 @@ class t3lib_extFileFunctions extends \TYPO3\CMS\Core\Utility\File\ExtendedFileUt
  */
 interface t3lib_extFileFunctions_processDataHook extends \TYPO3\CMS\Core\Utility\File\ExtendedFileUtilityProcessDataHookInterface {}
 
-
-if (!class_exists('t3lib_div', FALSE)) {
-	/**
-	* @deprecated since 6.0 will be removed in 7.0
-	*/
-	class t3lib_div extends \TYPO3\CMS\Core\Utility\GeneralUtility {}
-}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_utility_Http extends \TYPO3\CMS\Core\Utility\HttpUtility {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_utility_Mail extends \TYPO3\CMS\Core\Utility\MailUtility {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_utility_Math extends \TYPO3\CMS\Core\Utility\MathUtility {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_utility_Monitor extends \TYPO3\CMS\Core\Utility\MonitorUtility {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_utility_Path extends \TYPO3\CMS\Core\Utility\PathUtility {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_utility_PhpOptions extends \TYPO3\CMS\Core\Utility\PhpOptionsUtility {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class t3lib_utility_VersionNumber extends \TYPO3\CMS\Core\Utility\VersionNumberUtility {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class tx_cssstyledcontent_pi1 extends \TYPO3\CMS\CssStyledContent\Controller\CssStyledContentController {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class ux_t3lib_DB extends \TYPO3\CMS\Dbal\Database\DatabaseConnection {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class ux_t3lib_sqlparser extends \TYPO3\CMS\Dbal\Database\SqlParser {}
-
 /**
  * @deprecated since 6.0 will be removed in 7.0
  */
@@ -1286,11 +1284,6 @@ class tx_dbal_module1 extends \TYPO3\CMS\Dbal\Controller\ModuleController {}
  * @deprecated since 6.0 will be removed in 7.0
  */
 class tx_dbal_querycache extends \TYPO3\CMS\Dbal\QueryCache {}
-
-/**
- * @deprecated since 6.0 will be removed in 7.0
- */
-class ux_localRecordList extends \TYPO3\CMS\Dbal\RecordList\DatabaseRecordList {}
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -4985,3 +4978,4 @@ class Tx_Workspaces_Service_AutoPublishTask extends \TYPO3\CMS\Workspaces\Task\A
  * @deprecated since 6.0 will be removed in 7.0
  */
 class Tx_Workspaces_Service_CleanupPreviewLinkTask extends \TYPO3\CMS\Workspaces\Task\CleanupPreviewLinkTask {}
+

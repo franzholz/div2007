@@ -1,4 +1,12 @@
-08-03-17  Franz Holzinger  <franz@ttproducts.de>
+28-03-17 Franz Holzinger  <franz@ttproducts.de>
+    * needed for TYPO3 8.x: replace renderCharset by 'UTF-8'
+    * add method csConv and compat_version for TYPO3 8.x and backwards compatibility
+    * add paramter table to FrontendUtility::getContentObjectRenderer
+    * add a composer.json file
+    * add core methods compat_version and csConv
+    * add new constant DIV2007_LANGUAGE_LGL for TCA references to language xml or xlf files of EXT:lang
+
+08-03-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix in linkTP_keepCtrlVars: the pivars must be overruled for a link even if they did not exist before
     * adapted method list_browseresults_fh004
     * add method getLanguage to tx_div2007_alpha_language_base

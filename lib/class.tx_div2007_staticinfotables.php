@@ -617,7 +617,7 @@ class tx_div2007_staticinfotables {
 		$value = addcslashes($value, '"' . chr(10) . chr(13));
 		if (!$inScriptTags) {
 
-			$charset = $GLOBALS['TSFE']->renderCharset;
+			$charset = 'UTF-8';
 			$value = htmlspecialchars($value, ENT_COMPAT, $charset);
 		}
 		return '"' . $value . '"';
