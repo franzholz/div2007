@@ -1,3 +1,9 @@
+04-04-17 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix for the composer.json
+    * add the class-alias-maps for the migrations code to the composer.json
+    * create the file ClassAliasMap.php for composer.json
+    * add more getter and setter methods the LocalisationBase.php
+
 28-03-17 Franz Holzinger  <franz@ttproducts.de>
     * needed for TYPO3 8.x: replace renderCharset by 'UTF-8'
     * add method csConv and compat_version for TYPO3 8.x and backwards compatibility
