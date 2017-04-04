@@ -3,6 +3,7 @@
     * add the class-alias-maps for the migrations code to the composer.json
     * create the file ClassAliasMap.php for composer.json
     * add more getter and setter methods the LocalisationBase.php
+    * separate the result of the file ClassAliasMap.php into ClassAliasMapResult.php in order to support PHP < 5.5.
 
 28-03-17 Franz Holzinger  <franz@ttproducts.de>
     * needed for TYPO3 8.x: replace renderCharset by 'UTF-8'
