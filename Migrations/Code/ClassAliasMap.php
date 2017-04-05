@@ -6,7 +6,6 @@ if (version_compare(PHP_VERSION, '5.5.0', '<')) {
 
 require_once 'ClassAliasMapResult.php';
 
-
-return $result;
+return $classArray;
 
 
