@@ -1,3 +1,6 @@
+05-04-17 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix for TYPO3 8.x ClassAliasMap for composer.json Tx_Fluid_Core_ViewHelper in \TYPO3Fluid\Fluid\Core\ViewHelper instead of \TYPO3\CMS\Fluid\Core\ViewHelper
+
 04-04-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix for the composer.json
     * add the class-alias-maps for the migrations code to the composer.json

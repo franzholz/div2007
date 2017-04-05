@@ -1,5 +1,12 @@
 <?php
 
+$fluidViewHelper = 'TYPO3Fluid\\Fluid\\Core\\ViewHelper\\';
+
+if (version_compare(TYPO3_version, '8.0.0', '<')) {
+
+    $fluidViewHelper = 'TYPO3\\CMS\\Fluid\\Core\\ViewHelper\\';
+}
+
 $result = array(
     'Tx_About_Controller_AboutController' => \TYPO3\CMS\About\Controller\AboutController::class,
     'Tx_About_Domain_Model_Extension' => \TYPO3\CMS\About\Domain\Model\Extension::class,
@@ -996,5 +1003,15 @@ $result = array(
     'Tx_Workspaces_Service_CleanupPreviewLinkTask' => \TYPO3\CMS\Workspaces\Task\CleanupPreviewLinkTask::class,
   );
 
+
+if (version_compare(TYPO3_version, '8.0.0', '>=')) {
+
+    unset ($result['Tx_Fluid_Core_ViewHelper_Exception_InvalidVariableException']);
+    unset ($result['Tx_Fluid_Core_ViewHelper_Exception_RenderingContextNotAccessibleException']);
+    unset ($result['Tx_Fluid_Core_ViewHelper_Facets_ChildNodeAccessInterface']);
+    unset ($result['Tx_Fluid_Core_ViewHelper_Facets_CompilableInterface']);
+    unset ($result['Tx_Fluid_Core_ViewHelper_Facets_PostParseInterface']);
+
+}
 
 
