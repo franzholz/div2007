@@ -1157,7 +1157,7 @@ if (version_compare(TYPO3_version, '8.0.0', '>=')) {
         'Tx_Workspaces_ExtDirect_ActionHandler' => \TYPO3\CMS\Workspaces\ExtDirect\ActionHandler::class,
         'Tx_Workspaces_ExtDirect_Server' => \TYPO3\CMS\Workspaces\ExtDirect\ExtDirectServer::class,
         'Tx_Workspaces_ExtDirect_MassActionHandler' => \TYPO3\CMS\Workspaces\ExtDirect\MassActionHandler::class,
-        'Tx_Workspaces_ExtDirect_PagetreeCollectionsProcessor' => YPO3\CMS\Workspaces\ExtDirect\PagetreeCollectionsProcessor::class,
+        'Tx_Workspaces_ExtDirect_PagetreeCollectionsProcessor' => \TYPO3\CMS\Workspaces\ExtDirect\PagetreeCollectionsProcessor::class,
         'Tx_Workspaces_ExtDirect_ToolbarMenu' => \TYPO3\CMS\Workspaces\ExtDirect\ToolbarMenu::class,
     );
 }

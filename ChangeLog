@@ -1,3 +1,7 @@
+07-04-17 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix for TYPO3 8.x: Do not use the missing global $TT variable
+    see /typo3/sysext/core/Classes/TimeTracker/NullTimeTracker.php
+
 05-04-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix for TYPO3 8.x ClassAliasMap for composer.json Tx_Fluid_Core_ViewHelper in \TYPO3Fluid\Fluid\Core\ViewHelper instead of \TYPO3\CMS\Fluid\Core\ViewHelper
     * bugfix for TYPO3 8.x: modify ClassAliasMap to available classes and interfaces

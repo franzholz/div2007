@@ -1999,7 +1999,7 @@ class tx_div2007_alpha5 {
 
 
 	static public function initFE () {
-		global $TYPO3_CONF_VARS, $TSFE, $TT, $BE_USER, $error;
+		global $TYPO3_CONF_VARS, $TSFE, $BE_USER, $error;
 
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
 		/** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
@@ -2042,10 +2042,14 @@ class tx_div2007_alpha5 {
 		}
 
 		// FE_USER
-		$TT->push('Front End user initialized', '');
+		if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->push('Front End user initialized', '');
+		}
 		/** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
 		$TSFE->initFEuser();
-		$TT->pull();
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
+        }
 
 		// BE_USER
 		/** @var $BE_USER \TYPO3\CMS\Backend\FrontendBackendUserAuthentication */
@@ -2053,7 +2057,9 @@ class tx_div2007_alpha5 {
 
 		// Process the ID, type and other parameters
 		// After this point we have an array, $page in TSFE, which is the page-record of the current page, $id
-		$TT->push('Process ID', '');
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->push('Process ID', '');
+        }
 		// Initialize admin panel since simulation settings are required here:
 		$callingClassName3 = '\\TYPO3\\CMS\\Core\\Core\\Bootstrap';
 		$bootStrap = call_user_func($callingClassName3 . '::getInstance');
@@ -2085,8 +2091,9 @@ class tx_div2007_alpha5 {
 			$TSFE->determineId();
 		}
 		$TSFE->makeCacheHash();
-		$TT->pull();
-
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
+        }
 		// Admin Panel & Frontend editing
 		if ($TSFE->isBackendUserLoggedIn()) {
 			$BE_USER->initializeFrontendEdit();
@@ -2101,28 +2108,40 @@ class tx_div2007_alpha5 {
 		}
 
 		// Starts the template
-		$TT->push('Start Template', '');
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->push('Start Template', '');
+		}
 		$TSFE->initTemplate();
-		$TT->pull();
-		// Get from cache
-		$TT->push('Get Page from cache', '');
-		$TSFE->getFromCache();
-		$TT->pull();
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
+            // Get from cache
+            $GLOBALS['TT']->push('Get Page from cache', '');
+        }
+        $TSFE->getFromCache();
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
+        }
 		// Get config if not already gotten
 		// After this, we should have a valid config-array ready
 		$TSFE->getConfigArray();
 		// Convert POST data to internal "renderCharset" if different from the metaCharset
 		$TSFE->convPOSTCharset();
 		// Setting language and locale
-		$TT->push('Setting language and locale', '');
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->push('Setting language and locale', '');
+        }
 		$TSFE->settingLanguage();
 		$TSFE->settingLocale();
-		$TT->pull();
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
+        }
 
 		// Hook for end-of-frontend
 		$TSFE->hook_eofe();
 		// Finish timetracking
-		$TT->pull();
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
+        }
 		// Check memory usage
 		$callingClassName4 = '\\TYPO3\\CMS\\Core\\Utility\\MonitorUtility';
 		call_user_func($callingClassName4 . '::peakMemoryUsage');

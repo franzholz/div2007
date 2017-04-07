@@ -62,7 +62,7 @@ class FrontendUtility {
  */
 
 	static public function init () {
-		global $TT, $TSFE, $BE_USER;
+		global $TSFE, $BE_USER;
 
 		/** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
 		$TSFE = GeneralUtility::makeInstance(
@@ -105,10 +105,14 @@ class FrontendUtility {
 		}
 
 		// FE_USER
-		$TT->push('Front End user initialized', '');
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->push('Front End user initialized', '');
+		}
 		/** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
 		$TSFE->initFEuser();
-		$TT->pull();
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
+        }
 
 		// BE_USER
 		/** @var $BE_USER \TYPO3\CMS\Backend\FrontendBackendUserAuthentication */
@@ -117,7 +121,9 @@ class FrontendUtility {
 		// Process the ID, type and other parameters.
 		// After this point we have an array, $page in TSFE, which is the page-record
 		// of the current page, $id.
-		$TT->push('Process ID', '');
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->push('Process ID', '');
+        }
 		// Initialize admin panel since simulation settings are required here:
 		if ($TSFE->isBackendUserLoggedIn()) {
 			$BE_USER->initializeAdminPanel();
@@ -146,32 +152,44 @@ class FrontendUtility {
 		}
 
 		$TSFE->makeCacheHash();
-		$TT->pull();
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
 
-		// Starts the template
-		$TT->push('Start Template', '');
-		$TSFE->initTemplate();
-		$TT->pull();
-		// Get from cache
-		$TT->push('Get Page from cache', '');
-		$TSFE->getFromCache();
-		$TT->pull();
+            // Starts the template
+            $GLOBALS['TT']->push('Start Template', '');
+        }
+        $TSFE->initTemplate();
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
+            // Get from cache
+            $GLOBALS['TT']->push('Get Page from cache', '');
+        }
+        $TSFE->getFromCache();
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
+        }
 		// Get config if not already gotten
 		// After this, we should have a valid config-array ready
 		$TSFE->getConfigArray();
 		// Setting language and locale
-		$TT->push('Setting language and locale', '');
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->push('Setting language and locale', '');
+        }
 		$TSFE->settingLanguage();
 		$TSFE->settingLocale();
-		$TT->pull();
+        if (is_object($GLOBALS['TT'])) {
+            $GLOBALS['TT']->pull();
+        }
 
 		// Convert POST data to internal "renderCharset" if different from the metaCharset
 		$TSFE->convPOSTCharset();
 
 		// Store session data for fe_users
 		$TSFE->storeSessionData();
-		// Finish timetracking
-		$TT->pull();
+        if (is_object($GLOBALS['TT'])) {
+            // Finish timetracking
+            $GLOBALS['TT']->pull();
+        }
 
 		// Debugging Output
 		if (
