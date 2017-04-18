@@ -479,6 +479,45 @@ class tx_div2007_core {
 		return $result;
 	}
 
+    /**
+     * Returns a subpart from the input content stream.
+     * A subpart is a part of the input stream which is encapsulated in a
+     * string matching the input string, $marker. If this string is found
+     * inside of HTML comment tags the start/end points of the content block
+     * returned will be that right outside that comment block.
+     * Example: The contennt string is
+     * "Hello <!--###sub1### begin--> World. How are <!--###sub1### end--> you?"
+     * If $marker is "###sub1###" then the content returned is
+     * " World. How are ". The input content string could just as well have
+     * been "Hello ###sub1### World. How are ###sub1### you?" and the result
+     * would be the same
+     * Wrapper for MarkerBasedTemplateService::getSubpart which behaves identical
+     *
+     * @param   string      The content stream, typically HTML template content.
+     * @param   string      The marker string, typically on the form "###[the marker string]###"
+     * @return  string      The subpart found, if found.
+     * @see substituteSubpart(), MarkerBasedTemplateService::getSubpart()
+     */
+    public function getSubpart ($content, $marker, &$error_code) {
+
+        $templateClassName = '\\TYPO3\\CMS\\Core\\Service\\MarkerBasedTemplateService';
+
+        if (
+            version_compare(TYPO3_version, '7.0.0', '>=') &&
+            class_exists($templateClassName)
+        ) {
+            $utilityClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+            $useClassName = substr($utilityClassName, 1);
+            $useTemplateClassName = substr($templateClassName, 1);
+            $object = call_user_func($useClassName . '::makeInstance', $useTemplateClassName);
+            $result = $object->getSubpart($content, $marker);
+        } else {
+            $result = t3lib_parsehtml::getSubpart($content, $marker);
+        }
+        return $result;
+    }
+
+
 	### SQL
 
 	/**

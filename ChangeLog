@@ -1,5 +1,6 @@
 18-04-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix for TYPO3 8.x: The file ClassAliasMap.php must return an array with the class maps.
+    * add method getSubpart to the TYPO3 6 core compatibility
 
 07-04-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix for TYPO3 8.x: Do not use the missing global $TT variable
