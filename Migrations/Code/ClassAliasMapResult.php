@@ -1,5 +1,7 @@
 <?php
 
+global $classArray;
+
 $classArray = array(
     'Tx_About_Controller_AboutController' => \TYPO3\CMS\About\Controller\AboutController::class,
     'Tx_About_Domain_Model_Extension' => \TYPO3\CMS\About\Domain\Model\Extension::class,

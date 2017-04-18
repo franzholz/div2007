@@ -5,7 +5,7 @@
  * see https://github.com/TYPO3/class-alias-loader
  */
 if (class_exists('\\TYPO3\\ClassAliasLoader\\ClassAliasMapGenerator')) {
-    return;
+    return array();
 }
 
 /**

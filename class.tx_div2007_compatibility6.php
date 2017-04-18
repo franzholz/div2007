@@ -35,22 +35,38 @@
  */
 
 
-class t3lib_div extends \TYPO3\CMS\Core\Utility\GeneralUtility {}
+if (!class_exists('t3lib_div')) {
+    class t3lib_div extends \TYPO3\CMS\Core\Utility\GeneralUtility {}
+}
 
-class tslib_cObj extends \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer {}
+if (!class_exists('tslib_cObj')) {
+    class tslib_cObj extends \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer {}
+}
 
-class tslib_pibase extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {}
+if (!class_exists('tslib_pibase')) {
+    class tslib_pibase extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {}
+}
 
-class t3lib_extMgm extends \TYPO3\CMS\Core\Utility\ExtensionManagementUtility {}
+if (!class_exists('t3lib_extMgm')) {
+    class t3lib_extMgm extends \TYPO3\CMS\Core\Utility\ExtensionManagementUtility {}
+}
 
-class tslib_fe extends \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController {}
+if (!class_exists('tslib_fe')) {
+    class tslib_fe extends \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController {}
+}
 
-class t3lib_parsehtml extends \TYPO3\CMS\Core\Html\HtmlParser {}
+if (!class_exists('t3lib_parsehtml')) {
+    class t3lib_parsehtml extends \TYPO3\CMS\Core\Html\HtmlParser {}
+}
 
-// empty class which does nothing:
-class tx_div2007_compatibility6 {
-	public function test () {
-		debug ($tmp, 'tx_div2007_compatibility6::test'); // keep this
-	}
+
+if (!class_exists('tx_div2007_compatibility6')) {
+    // empty class which does nothing:
+    class tx_div2007_compatibility6 {
+        public function test () {
+            debug ($tmp, 'tx_div2007_compatibility6::test'); // keep this
+        }
+    }
+
 }
 
