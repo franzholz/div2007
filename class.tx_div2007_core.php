@@ -498,7 +498,7 @@ class tx_div2007_core {
      * @return  string      The subpart found, if found.
      * @see substituteSubpart(), MarkerBasedTemplateService::getSubpart()
      */
-    public function getSubpart ($content, $marker, &$error_code) {
+    static public function getSubpart ($content, $marker) {
 
         $templateClassName = '\\TYPO3\\CMS\\Core\\Service\\MarkerBasedTemplateService';
 
