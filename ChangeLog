@@ -1,3 +1,6 @@
+31-05-17 Franz Holzinger  <franz@ttproducts.de>
+    * add method HtmlUtility::useXHTML to decide if the html tags should be formatted as xhmtl or not
+
 20-04-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix: new method getSubpart must be static and needs no error return parameter
 

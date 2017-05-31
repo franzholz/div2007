@@ -47,6 +47,7 @@ return array(
 	'JambageCom\\Div2007\\Utility\\ExtensionUtility' => $extensionPath . 'Classes/Utility/ExtensionUtility.php',
 	'JambageCom\\Div2007\\Utility\\FileAbstractionUtility' => $extensionPath . 'Classes/Utility/FileAbstractionUtility.php',
 	'JambageCom\\Div2007\\Utility\\FrontendUtility' => $extensionPath . 'Classes/Utility/FrontendUtility.php',
+    'JambageCom\\Div2007\\Utility\\HtmlUtility' => $extensionPath . 'Classes/Utility/HtmlUtility.php',
 	'JambageCom\\Div2007\\Utility\\MailUtility' => $extensionPath . 'Classes/Utility/MailUtility.php',
 	'JambageCom\\Div2007\\Utility\\PhpUtility' => $extensionPath . 'Classes/Utility/PhpUtility.php',
 	'JambageCom\\Div2007\\Utility\\StaticInfoTablesUtility' => $extensionPath . 'Classes/Utility/StaticInfoTablesUtility.php',
