@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2016 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -40,6 +40,8 @@ namespace JambageCom\Div2007\Utility;
  *
  *
  */
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 class MailUtility {
@@ -92,7 +94,7 @@ class MailUtility {
 		}
 
 		if (!is_array($toEMail) && trim($toEMail)) {
-			$emailArray = t3lib_div::trimExplode(',', $toEMail);
+			$emailArray = GeneralUtility::trimExplode(',', $toEMail);
 			$toEMail = array();
 			foreach ($emailArray as $email) {
 				$toEMail[] = $email;
@@ -106,11 +108,11 @@ class MailUtility {
 				if (
 					(
 						!is_numeric($k) &&
-						!t3lib_div::validEmail($k)
+						!GeneralUtility::validEmail($k)
 					) &&
 					(
 						$v == '' ||
-						!t3lib_div::validEmail($v)
+						!GeneralUtility::validEmail($v)
 					)
 				) {
 					unset($emailArray[$k]);
@@ -128,7 +130,7 @@ class MailUtility {
 						$email = $v;
 					}
 
-					debug ('MailUtility::send invalid email address: to "'. $email . '"'); // keep this
+					debug ('MailUtility::send invalid email address: to "' . $email . '"'); // keep this
 				}
 			}
 
@@ -144,7 +146,7 @@ class MailUtility {
 		}
 
 		if (
-			!t3lib_div::validEmail($fromEMail)
+			!GeneralUtility::validEmail($fromEMail)
 		) {
 			debug ('MailUtility::send invalid email address: from "' . $fromEMail . '"'); // keep this
 			debug ('MailUtility::send exited with error 3'); // keep this
@@ -152,7 +154,7 @@ class MailUtility {
 		}
 
 		$fromName = str_replace('"', '\'', $fromName);
-		$fromNameSlashed = tx_div2007_alpha5::slashName($fromName);
+		$fromNameSlashed = \tx_div2007_alpha5::slashName($fromName);
 
 		if ($subject == '') {
 			if ($defaultSubject == '') {
@@ -218,7 +220,7 @@ class MailUtility {
 			is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$hookVar])
 		) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$hookVar] as $classRef) {
-				$hookObj= t3lib_div::getUserObj($classRef);
+				$hookObj = GeneralUtility::makeInstance($classRef);
 				if (method_exists($hookObj, 'init')) {
 					$hookObj->init($mail);
 				}
@@ -408,7 +410,6 @@ class MailUtility {
 			return FALSE;
 		}
 	}
-
 }
 
 

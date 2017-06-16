@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2015 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -51,7 +51,7 @@ class StaticInfoTablesUtility {
 			!is_object(self::$staticInfo) &&
 			\t3lib_extMgm::isLoaded('static_info_tables')
 		) {
-			$eInfo = ExtensionUtility::getExtensionInfo('static_info_tables');
+			$eInfo = \t3lib_extMgm::getExtensionInfo('static_info_tables');
 
 			if (is_array($eInfo)) {
 				$sitVersion = $eInfo['version'];
@@ -68,7 +68,7 @@ class StaticInfoTablesUtility {
 
 				if (version_compare($sitVersion, '2.0.0', '>=')) {
 					// Initialise static info library
-					self::$staticInfo = \t3lib_div::getUserObj($class);
+					self::$staticInfo = \t3lib_div::makeInstance($class);
 					if (
 						!method_exists(self::$staticInfo, 'needsInit') ||
 						self::$staticInfo->needsInit()
