@@ -35,25 +35,28 @@ namespace JambageCom\Div2007\Utility;
  * @maintainer Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3
  * @subpackage div2007
+ *
+ * attention: This class must also work under TYPO3 4.5
  */
 
 use JambageCom\Div2007\Utility\ExtensionUtility;
 
 class StaticInfoTablesUtility {
 
-	static private $staticInfo = FALSE;
+	static private $staticInfo = false;
 
 	/**
 	 * Getting all tt_products_cat categories into internal array
 	 */
 	static public function init () {
-		$result = FALSE;
+		$result = false;
 
 		if (
 			!is_object(self::$staticInfo) &&
 			\t3lib_extMgm::isLoaded('static_info_tables')
 		) {
-			$eInfo = ExtensionUtility::getExtensionInfo('static_info_tables');
+            $path = \t3lib_extMgm::extPath('static_info_tables');
+			$eInfo = ExtensionUtility::getExtensionInfo('static_info_tables', $path);
 
 			if (is_array($eInfo)) {
 				$sitVersion = $eInfo['version'];
@@ -63,7 +66,6 @@ class StaticInfoTablesUtility {
 				} else {
 					$class = 'tx_staticinfotables_pi1';
 					if (!class_exists($class)) {
-						$path = \t3lib_extMgm::extPath('static_info_tables');
 						\t3lib_div::requireOnce($path . 'pi1/class.tx_staticinfotables_pi1.php');
 					}
 				}
@@ -80,9 +82,9 @@ class StaticInfoTablesUtility {
 				}
 
 				if (is_object(self::$staticInfo)) {
-					$result = TRUE;
+					$result = true;
 				} else {
-					self::$staticInfo = FALSE;
+					self::$staticInfo = false;
 				}
 			}
 		}
