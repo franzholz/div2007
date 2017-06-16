@@ -37,6 +37,8 @@ namespace JambageCom\Div2007\Utility;
  * @subpackage div2007
  */
 
+use JambageCom\Div2007\Utility\ExtensionUtility;
+
 class StaticInfoTablesUtility {
 
 	static private $staticInfo = FALSE;
@@ -51,7 +53,7 @@ class StaticInfoTablesUtility {
 			!is_object(self::$staticInfo) &&
 			\t3lib_extMgm::isLoaded('static_info_tables')
 		) {
-			$eInfo = \t3lib_extMgm::getExtensionInfo('static_info_tables');
+			$eInfo = ExtensionUtility::getExtensionInfo('static_info_tables');
 
 			if (is_array($eInfo)) {
 				$sitVersion = $eInfo['version'];
