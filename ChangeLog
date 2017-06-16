@@ -1,5 +1,8 @@
+15-06-17 Franz Holzinger  <franz@ttproducts.de>
+    * add class JambageCom\Div2007\Database\CoreQuery which replaces the TYPO3 core ContentObjectRenderer or tslib_cObj methods DBgetDelete, DBgetUpdate, DBgetInsert, DBmayFEUserEdit and DBmayFEUserEditSelect
+
 31-05-17 Franz Holzinger  <franz@ttproducts.de>
-    * add method HtmlUtility::useXHTML to decide if the html tags should be formatted as xhmtl or not
+    * add method HtmlUtility::useXHTML to decide if the html tags should be formatted as xhtml or not
 
 20-04-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix: new method getSubpart must be static and needs no error return parameter
