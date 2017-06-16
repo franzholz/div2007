@@ -116,6 +116,10 @@ class LocalisationBase {
         return $this->cObj;
     }
 
+    public function getExtKey () {
+        return $this->extKey;
+    }
+
     public function setConf ($conf) {
         $this->conf = $conf;
     }
