@@ -1,3 +1,6 @@
+12-08-17 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix: wrong class_exists check for ClassAliasMapGenerator in LegacyClassesForIde
+
 15-06-17 Franz Holzinger  <franz@ttproducts.de>
     * add class JambageCom\Div2007\Database\CoreQuery which replaces the TYPO3 core ContentObjectRenderer or tslib_cObj methods DBgetDelete, DBgetUpdate, DBgetInsert, DBmayFEUserEdit and DBmayFEUserEditSelect
 

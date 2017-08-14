@@ -80,9 +80,9 @@ class MailUtility {
 		$hookVar = '',
 		$defaultSubject = ''
 	) {
-		$result = TRUE;
+		$result = true;
 		if (version_compare(TYPO3_version, '6.2.0', '<')) {
-			return FALSE;
+			return false;
 		}
 
 		$charset = 'UTF-8';
@@ -138,11 +138,11 @@ class MailUtility {
 				!count($toEMail)
 			) {
 				debug ('MailUtility::send exited with error 1'); // keep this
-				return FALSE;
+				return false;
 			}
 		} else {
 				debug ('MailUtility::send exited with error 2'); // keep this
-			return FALSE;
+			return false;
 		}
 
 		if (
@@ -150,7 +150,7 @@ class MailUtility {
 		) {
 			debug ('MailUtility::send invalid email address: from "' . $fromEMail . '"'); // keep this
 			debug ('MailUtility::send exited with error 3'); // keep this
-			return FALSE;
+			return false;
 		}
 
 		$fromName = str_replace('"', '\'', $fromName);
@@ -243,7 +243,7 @@ class MailUtility {
 						$result
 					);
 
-					if ($result === FALSE) {
+					if ($result === false) {
 						debug ('MailUtility::send exited with error 5'); // keep this
 						break;
 					}
@@ -252,7 +252,7 @@ class MailUtility {
 		}
 
 		if (
-			$result !== FALSE &&
+			$result !== false &&
 			isset($mail) &&
 			is_object($mail)
 		) {
@@ -271,7 +271,7 @@ class MailUtility {
 			} elseif (method_exists($mail, 'sendTheMail')) {
 				$mail->sendTheMail();
 			} else {
-				$result = FALSE;
+				$result = false;
 			}
 		}
 
@@ -381,12 +381,12 @@ class MailUtility {
 	 * This function checks if the corresponding DNS has a valid MX record
 	 *
 	 * @param	string		$email: the email address
-	 * @return	boolean		TRUE if a MX record has been found
+	 * @return	boolean		true if a MX record has been found
 	 */
 	static public function checkMXRecord ($email) {
 
 		if ($email != '' && !GeneralUtility::validEmail($email)) {
-			return FALSE;
+			return false;
 		}
 
 		// gets domain name
@@ -396,18 +396,18 @@ class MailUtility {
 		if(!getmxrr($domain, $mxhosts)) {
 			// no mx records, ok to check domain
 			if (@fsockopen($domain, 25, $errno, $errstr, 30)) {
-				return TRUE;
+				return true;
 			} else {
-				return FALSE;
+				return false;
 			}
 		} else {
 			// mx records found
 			foreach ($mxhosts as $host) {
 				if (@fsockopen($host, 25, $errno, $errstr, 30)) {
-					return TRUE;
+					return true;
 				}
 			}
-			return FALSE;
+			return false;
 		}
 	}
 }

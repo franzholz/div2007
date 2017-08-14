@@ -4,9 +4,9 @@
  * Skip these class declarations if the TYPO3 class alias loader is used
  * see https://github.com/TYPO3/class-alias-loader
  */
-if (class_exists('\\TYPO3\\ClassAliasLoader\\ClassAliasMapGenerator')) {
+if (class_exists('TYPO3\\ClassAliasLoader\\ClassAliasMapGenerator')) {
     return array();
-}
+} else {
 
 /**
  * @deprecated since 6.0 will be removed in 7.0
@@ -4971,4 +4971,6 @@ class Tx_Workspaces_Service_AutoPublishTask extends \TYPO3\CMS\Workspaces\Task\A
  * @deprecated since 6.0 will be removed in 7.0
  */
 class Tx_Workspaces_Service_CleanupPreviewLinkTask extends \TYPO3\CMS\Workspaces\Task\CleanupPreviewLinkTask {}
+
+}
 
