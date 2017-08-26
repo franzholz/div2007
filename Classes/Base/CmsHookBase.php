@@ -1,8 +1,11 @@
 <?php
+
+namespace JambageCom\Div2007\Base;
+
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008-2012 Franz Holzinger <franz@ttproducts.de>
+*  (c) 2008-2017 Franz Holzinger <franz@ttproducts.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -37,49 +40,43 @@
  *
  */
 
+use JambageCom\Div2007\Utility\FlexformUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
-class tx_div2007_hooks_cms implements t3lib_Singleton {
-	public $extKey = '';	// extension key must be overridden
 
-	/**
-	 * Draw the item in the page module
-	 *
-	 * @param	array		parameters
-	 * @param	object		the parent object
-	 * @return	  string
-	 */
+class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface {
+    public $extKey = '';	// extension key must be overridden
 
-	public function pmDrawItem ($params, $pObj) {
-		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+    /**
+    * Draw the item in the page module
+    *
+    * @param	array		parameters
+    * @param	object		the parent object
+    * @return	  string
+    */
 
-		if (
-			class_exists($callingClassName)
-		) {
-			// nothing
-		} else {
-			$callingClassName = 't3lib_extMgm';
-		}
+    public function pmDrawItem ($params, $pObj) {
 
-		if (
-			$this->extKey != '' &&
-			call_user_func($callingClassName . '::isLoaded', ($this->extKey)) &&
-			in_array(
-				intval($pObj->pageRecord['doktype']),
-				array(1, 2, 5)
-			) &&
-			$params['row']['pi_flexform'] != ''
-		) {
-			tx_div2007_ff::load(
-				$params['row']['pi_flexform'],
-				$this->extKey
-			);
-			$codes =
-				'CODE: ' . tx_div2007_ff::get(
-					$this->extKey,
-					'display_mode'
-				);
-		}
-		return $codes;
-	}
+        if (
+            $this->extKey != '' &&
+            ExtensionManagementUtility::isLoaded($this->extKey) &&
+            in_array(
+                intval($pObj->pageRecord['doktype']),
+                array(1, 2, 5)
+            ) &&
+            $params['row']['pi_flexform'] != ''
+        ) {
+            FlexformUtility::load(
+                $params['row']['pi_flexform'],
+                $this->extKey
+            );
+            $codes =
+                'CODE: ' . FlexformUtility::get(
+                    $this->extKey,
+                    'display_mode'
+                );
+        }
+        return $codes;
+    }
 }
 

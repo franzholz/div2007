@@ -1,3 +1,8 @@
+26-08-17 Franz Holzinger  <franz@ttproducts.de>
+    * copy hooks/class.tx_div2007_hooks_cms.php -> Classes/Base/CmsHookBase.php
+    * copy class.tx_div2007_ff.php -> Classes/Utility/FlexformUtility.php
+    * modifications of CmsHookBase and FlexformUtility for namespace
+
 12-08-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix: wrong class_exists check for ClassAliasMapGenerator in LegacyClassesForIde
 
