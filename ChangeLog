@@ -1,3 +1,6 @@
+06-09-17 Franz Holzinger  <franz@ttproducts.de>
+    * New version due to TER security incident TYPO3-PSA-2017-001
+
 26-08-17 Franz Holzinger  <franz@ttproducts.de>
     * copy hooks/class.tx_div2007_hooks_cms.php -> Classes/Base/CmsHookBase.php
     * copy class.tx_div2007_ff.php -> Classes/Utility/FlexformUtility.php
