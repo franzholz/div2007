@@ -1,6 +1,7 @@
 
 09-09-17 Franz Holzinger  <franz@ttproducts.de>
     * modifications to StaticInfoTablesUtility
+    * add JavaScript jQuery.disableReturn.js to disable the RETURN key under jQuery
 
 06-09-17 Franz Holzinger  <franz@ttproducts.de>
     * new version due to TER security incident TYPO3-PSA-2017-001
