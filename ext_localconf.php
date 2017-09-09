@@ -1,29 +1,38 @@
 <?php
+
 if (!defined ('TYPO3_MODE')) {
-	die ('Access denied.');
+    die ('Access denied.');
 }
 
 if (!defined ('DIV2007_EXT')) {
-	define('DIV2007_EXT', 'div2007');
+    define('DIV2007_EXT', 'div2007');
 }
 
-$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
 
 if (
-	class_exists($callingClassName) &&
-	method_exists($callingClassName, 'extPath')
+    class_exists($emClass) &&
+    method_exists($emClass, 'extPath')
 ) {
-	$bePath = call_user_func($callingClassName . '::extPath', DIV2007_EXT);
+    // nothing
 } else {
-	$bePath = t3lib_extMgm::extPath(DIV2007_EXT);
+    $emClass = 't3lib_extMgm';
 }
+
 
 if (!defined ('PATH_BE_DIV2007')) {
-	define('PATH_BE_DIV2007', $bePath);
+    $bePath = call_user_func($emClass . '::extPath', DIV2007_EXT);
+    define('PATH_BE_DIV2007', $bePath);
 }
 
+
+if (!defined ('PATH_FE_DIV2007_REL')) {
+    define('PATH_FE_DIV2007_REL', call_user_func($emClass . '::siteRelPath', DIV2007_EXT));
+}
+
+
 if (!defined ('STATIC_INFO_TABLES_EXT')) {
-	define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
+    define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
 }
 
 // constants for the TCA fields
