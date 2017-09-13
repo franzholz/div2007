@@ -2741,7 +2741,7 @@ class tx_div2007_alpha5 {
 							'ctrl' => $ctrl
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'] as $_funcRef) {
-							$query .= t3lib_div::callUserFunction($_funcRef, $_params, 'tx_div2007_alpha5');
+							$query .= t3lib_div::callUserFunction($_funcRef, $_params, $tmp = 'tx_div2007_alpha5');
 						}
 					}
 				}

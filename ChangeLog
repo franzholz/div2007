@@ -1,3 +1,5 @@
+13-09-17 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix issue#5: callUserFunction for call of hook t3lib/class.t3lib_page.php must pass a variable and not a constant
 
 09-09-17 Franz Holzinger  <franz@ttproducts.de>
     * modifications to StaticInfoTablesUtility
