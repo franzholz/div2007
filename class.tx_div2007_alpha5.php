@@ -2061,13 +2061,18 @@ class tx_div2007_alpha5 {
             $GLOBALS['TT']->push('Process ID', '');
         }
 		// Initialize admin panel since simulation settings are required here:
-		$callingClassName3 = '\\TYPO3\\CMS\\Core\\Core\\Bootstrap';
-		$bootStrap = call_user_func($callingClassName3 . '::getInstance');
+		$callingClassNameBootstrap = '\\TYPO3\\CMS\\Core\\Core\\Bootstrap';
+		$bootStrap = call_user_func($callingClassNameBootstrap . '::getInstance');
 		if ($TSFE->isBackendUserLoggedIn()) {
 			$BE_USER->initializeAdminPanel();
 			$bootStrap->loadExtensionTables(TRUE);
 		} else {
-			$bootStrap->loadCachedTca();
+            if (method_exists($callingClassNameBootstrap, 'loadCachedTca')) {
+                $bootStrap->loadCachedTca();
+			} else {
+                $callingClassNameEid = '\\TYPO3\\CMS\\Frontend\\Utility\\EidUtility';
+                call_user_func($callingClassNameEid . '::initTCA');
+            }
 		}
 		$TSFE->checkAlternativeIdMethods();
 		$TSFE->clear_preview();
@@ -2143,8 +2148,8 @@ class tx_div2007_alpha5 {
             $GLOBALS['TT']->pull();
         }
 		// Check memory usage
-		$callingClassName4 = '\\TYPO3\\CMS\\Core\\Utility\\MonitorUtility';
-		call_user_func($callingClassName4 . '::peakMemoryUsage');
+		$callingClassNameMonitor = '\\TYPO3\\CMS\\Core\\Utility\\MonitorUtility';
+		call_user_func($callingClassNameMonitor . '::peakMemoryUsage');
 
 		// Debugging Output
 		if (isset($error) && is_object($error) && @is_callable(array($error, 'debugOutput'))) {

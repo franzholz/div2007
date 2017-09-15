@@ -1,3 +1,6 @@
+15-09-17 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix for TYPO3 8.7: the initFE for an eID call must use \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA() instead of  \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca()
+
 13-09-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix issue#5: callUserFunction for call of hook t3lib/class.t3lib_page.php must pass a variable and not a constant
 

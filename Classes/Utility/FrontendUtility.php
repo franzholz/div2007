@@ -129,7 +129,12 @@ class FrontendUtility {
 			$BE_USER->initializeAdminPanel();
 			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtensionTables(TRUE);
 		} else {
-			\TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
+            $callingClassNameBootstrap = '\\TYPO3\\CMS\\Core\\Core\\Bootstrap';
+            if (method_exists($callingClassNameBootstrap, 'loadCachedTca')) {
+                \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
+            } else {
+                \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
+            }
 		}
 		$TSFE->checkAlternativeIdMethods();
 		$TSFE->clear_preview();
