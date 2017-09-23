@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 /**
  * PHP5 implementation of the SPL class ArrayObject
