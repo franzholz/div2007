@@ -789,7 +789,8 @@ class tx_div2007_alpha5 {
 	 * Loads local-language values by looking for a "locallang.php" file in the plugin class directory ($langObj->scriptRelPath) and if found includes it.
 	 * Also locallang values set in the TypoScript property "_LOCAL_LANG" are merged onto the values found in the "locallang.xml" file.
 	 *
-	 * @param	object		tx_div2007_alpha_language_base or a tslib_pibase object
+	 * @param	object		\JambageCom\Div2007\Base\LocalisationBase,
+     *                      tx_div2007_alpha_language_base or a tslib_pibase object
 	 * @param	string		language file to load
 	 * @param	boolean		If TRUE, then former language items can be overwritten from the new file
 	 * @return	boolean
@@ -985,6 +986,7 @@ class tx_div2007_alpha5 {
 			$result = TRUE;
 		} else {
 			$output = 'error in call of tx_div2007_alpha::loadLL_fh002: parameter $langObj is not an object';
+			debug ($output, '$output'); // keep this
 		}
 
 		return $result;

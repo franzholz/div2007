@@ -6,7 +6,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2016 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,88 +27,109 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 
 /**
- * extension functions.
- *
- * @author	Franz Holzinger <franz@ttproducts.de>
- * @maintainer Franz Holzinger <franz@ttproducts.de>
- * @package TYPO3
- * @subpackage div2007
- */
+* extension functions.
+*
+* @author	Franz Holzinger <franz@ttproducts.de>
+* @maintainer Franz Holzinger <franz@ttproducts.de>
+* @package TYPO3
+* @subpackage div2007
+*/
 
 class ExtensionUtility {
 
-	/**
-	 * Gets information for an extension, eg. version and most-recently-edited-script
-	 *
-	 * @param	string		Extension key
-	 * @param	string		predefined path ... needed if you have the extension in another place
-	 * @return	array		Information array (unless an error occured)
-	 */
-	static public function getExtensionInfo ($extKey, $path = '') {
-		$result = '';
+    /**
+    * Gets information for an extension, eg. version and most-recently-edited-script
+    *
+    * @param	string		Extension key
+    * @param	string		predefined path ... needed if you have the extension in another place
+    * @return	array		Information array (unless an error occured)
+    */
+    static public function getExtensionInfo ($extKey, $path = '') {
+        $result = '';
 
-		if (!$path) {
-			$path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey);
-		}
+        if (!$path) {
+            $path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey);
+        }
 
-		if (is_dir($path)) {
-			$file = $path . 'ext_emconf.php';
+        if (is_dir($path)) {
+            $file = $path . 'ext_emconf.php';
 
-			if (@is_file($file)) {
-				$_EXTKEY = $extKey;
-				$EM_CONF = array();
-				include($file);
+            if (@is_file($file)) {
+                $_EXTKEY = $extKey;
+                $EM_CONF = array();
+                include($file);
 
-				$eInfo = array();
-				$fieldArray = array(
-					'author',
-					'author_company',
-					'author_email',
-					'category',
-					'constraints',
-					'description',
-					'lastuploaddate',
-					'reviewstate',
-					'state',
-					'title',
-					'version',
-					'CGLcompliance',
-					'CGLcompliance_note'
-				);
-				$extConf = $EM_CONF[$extKey];
+                $eInfo = array();
+                $fieldArray = array(
+                    'author',
+                    'author_company',
+                    'author_email',
+                    'category',
+                    'constraints',
+                    'description',
+                    'lastuploaddate',
+                    'reviewstate',
+                    'state',
+                    'title',
+                    'version',
+                    'CGLcompliance',
+                    'CGLcompliance_note'
+                );
+                $extConf = $EM_CONF[$extKey];
 
-				if (isset($extConf) && is_array($extConf)) {
-					foreach ($fieldArray as $field) {
-						// Info from emconf:
-						if (isset($extConf[$field])) {
-							$eInfo[$field] = $extConf[$field];
-						}
-					}
+                if (isset($extConf) && is_array($extConf)) {
+                    foreach ($fieldArray as $field) {
+                        // Info from emconf:
+                        if (isset($extConf[$field])) {
+                            $eInfo[$field] = $extConf[$field];
+                        }
+                    }
 
-					if (
-						is_array($extConf['constraints']) &&
-						is_array($EM_CONF[$extKey]['constraints']['depends'])
-					) {
-						$eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
-					} else {
-						$eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
-					}
-					$filesHash = unserialize($extConf['_md5_values_when_last_written']);
-					$eInfo['manual'] =
-						@is_file($path . '/doc/manual.sxw') ||
-						@is_file($path . '/Documentation/Index.rst');
-					$result = $eInfo;
-				} else {
-					$result = 'ERROR: $EM_CONF mismatch in file: ' . $file;
-				}
-			} else {
-				$result = 'ERROR: File ext_emconf.php does not exist: ' . $file;
-			}
-		} else {
-			$result = 'ERROR: Path not found: ' . $path;
-		}
+                    if (
+                        is_array($extConf['constraints']) &&
+                        is_array($EM_CONF[$extKey]['constraints']['depends'])
+                    ) {
+                        $eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
+                    } else {
+                        $eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
+                    }
+                    $filesHash = unserialize($extConf['_md5_values_when_last_written']);
+                    $eInfo['manual'] =
+                        @is_file($path . '/doc/manual.sxw') ||
+                        @is_file($path . '/Documentation/Index.rst');
+                    $result = $eInfo;
+                } else {
+                    $result = 'ERROR: $EM_CONF mismatch in file: ' . $file;
+                }
+            } else {
+                $result = 'ERROR: File ext_emconf.php does not exist: ' . $file;
+            }
+        } else {
+            $result = 'ERROR: Path not found: ' . $path;
+        }
 
-		return $result;
-	}
+        return $result;
+    }
+
+
+    /**
+    * Gets the absolute file path of an extension relative path preceded by EXT:
+    *
+    * @param    string      relative path with filename ... can be preceded by EXT:. Otherwise an absolute filename must be given and will be returned unchanged
+    * @return   string / boolean     the absolute filename or false in error case
+    */
+    static public function getExtensionFilePath ($filepath) {
+        $result = $filepath;
+        if (substr($filepath, 0, 4) === 'EXT:') {
+            list($extensionKey, $relativePath) = explode('/', substr($filepath, 4), 2);
+            if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {
+                $result = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey) . $relativePath;
+            } else {
+                $result = false;
+            }
+        }
+        return $result;
+    }
+
 }
 

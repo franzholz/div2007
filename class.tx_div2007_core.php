@@ -90,7 +90,6 @@ class tx_div2007_core {
 		) {
 			$result = t3lib_div::int_from_ver(TYPO3_version);
 		}
-
 		return $result;
 	}
 
