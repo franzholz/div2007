@@ -1,3 +1,6 @@
+27-09-17 Franz Holzinger  <franz@ttproducts.de>
+    * apply pull request #6: substUrlsInPlainText PHP 7 compatibility for preg_replace and tx_div2007_spl_arrayObject
+
 15-09-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix for TYPO3 8.7: the initFE for an eID call must use \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA() instead of  \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca()
 
