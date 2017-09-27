@@ -5237,9 +5237,11 @@ final class tx_div2007_div {
 				// no processing
 			$messageSubstituted = $message;
 		} else {
-			$messageSubstituted = preg_replace(
-				'/(http|https):\/\/.+(?=[\]\.\?]*([\! \'"()<>]+|$))/eiU',
-				'self::makeRedirectUrl("\\0",' . $lengthLimit . ',"' . $index_script_url . '")',
+			$messageSubstituted = preg_replace_callback(
+				'/(http|https):\/\/.+(?=[\]\.\?]*([\! \'"()<>]+|$))/iU',
+				function ($matches) use ($lengthLimit, $index_script_url) {
+					return 'self::makeRedirectUrl("' . $matches[0] . '",' . $lengthLimit . ',"' . $index_script_url . '")';
+				},
 				$message
 			);
 		}
