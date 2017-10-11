@@ -113,23 +113,33 @@ class ExtensionUtility {
 
 
     /**
-    * Gets the absolute file path of an extension relative path preceded by EXT:
+    * Gets the absolute file path out of an extension relative path preceded by EXT:
     *
-    * @param    string      relative path with filename ... can be preceded by EXT:. Otherwise an absolute filename must be given and will be returned unchanged
+    * @param    string      absolute or relative path with filename ... can be preceded by EXT:. Otherwise an absolute filename must be given and will be returned unchanged
+    * @param    boolean     if true, the relative path is returned
     * @return   string / boolean     the absolute filename or false in error case
     */
-    static public function getExtensionFilePath ($filepath) {
+    static public function getExtensionFilePath ($filepath, $relative = false) {
         $result = $filepath;
         if (substr($filepath, 0, 4) === 'EXT:') {
             list($extensionKey, $relativePath) = explode('/', substr($filepath, 4), 2);
             if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {
-                $result = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey) . $relativePath;
+                if ($relative) {
+                    $result =
+                        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath(
+                            $extensionKey
+                        ) . $relativePath;
+                } else {
+                    $result =
+                        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(
+                            $extensionKey
+                        ) . $relativePath;
+                }
             } else {
                 $result = false;
             }
         }
         return $result;
     }
-
 }
 

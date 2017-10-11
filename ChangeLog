@@ -1,3 +1,6 @@
+11-10-17 Franz Holzinger  <franz@ttproducts.de>
+    * add new method getClientIp to get the IP address of the client browser
+
 27-09-17 Franz Holzinger  <franz@ttproducts.de>
     * apply pull request #6: substUrlsInPlainText PHP 7 compatibility for preg_replace and tx_div2007_spl_arrayObject
 
