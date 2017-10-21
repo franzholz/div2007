@@ -54,11 +54,6 @@ class ControlUtility {
         */
     static public function readGP ($variable, $prefixId = '' , $htmlSpecialChars = TRUE) {
         $result = null;
-debug ($variable, 'readGP $variable');
-debug ($prefixId, '$prefixId');
-debug ($_GET, '$_GET');
-debug ($_POST, '$_POST');
-debug ($_REQUEST, '$_REQUEST');
 
         if (
             $variable != ''
@@ -71,35 +66,28 @@ debug ($_REQUEST, '$_REQUEST');
                     isset($value[$variable])
                 ) {
                     $result = $value[$variable];
-debug ($result, 'readGP $result');
                 }
             } else {
                 $result = GeneralUtility::_GP($variable);
-debug ($result, 'readGP $result');
             }
         } else if ($prefixId != '') {
             $result = GeneralUtility::_GP($prefixId);
-debug ($result, 'readGP $result');
         }
 
         if ($htmlSpecialChars && isset($result)) {
             if (is_string($result)) {
                 $result = htmlSpecialChars($result);
-debug ($result, 'readGP $result');
             } else if (is_array($result)) {
                 $newResult = array();
                 foreach ($result as $key => $value) {
                     $newResult[$key] = htmlSpecialChars($value);
                 }
                 $result = $newResult;
-debug ($result, 'readGP $result');
             }
         }
 
-debug ($result, 'readGP ENDE $result');
         return $result;
     }
-
 }
 
 

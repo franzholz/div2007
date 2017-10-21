@@ -1,3 +1,8 @@
+21-10-17 Franz Holzinger  <franz@ttproducts.de>
+    * add method getLL to LocalisationBase instead of tx_div2007_alpha5::getLL_fh003
+    * add class BrowserBase instead of class.tx_div2007_alpha_browse_base
+    * add browser and link functions to FrontendUtility: listBrowser, autoCache, classParam, getClassName, linkTPKeepCtrlVars, linkTP
+
 11-10-17 Franz Holzinger  <franz@ttproducts.de>
     * add new method getClientIp to get the IP address of the client browser
 
