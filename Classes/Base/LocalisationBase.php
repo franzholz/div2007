@@ -59,7 +59,7 @@ class LocalisationBase {
     */
     public $conf = array();
     public $typoVersion;
-    private $hasBeenInitialized = FALSE;
+    private $hasBeenInitialized = false;
 
 
     public function init ($cObj, $extKey, $conf, $scriptRelPath) {
@@ -81,7 +81,7 @@ class LocalisationBase {
 
         $this->typoVersion = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
 
-        $this->hasBeenInitialized = TRUE;
+        $this->hasBeenInitialized = true;
     }
 
     public function setLocallang (&$locallang) {
@@ -100,7 +100,7 @@ class LocalisationBase {
         return $this->LOCAL_LANG_charset;
     }
 
-    public function setLocallangLoaded ($loaded = TRUE) {
+    public function setLocallangLoaded ($loaded = true) {
         $this->LOCAL_LANG_loaded = $loaded;
     }
 
@@ -160,16 +160,16 @@ class LocalisationBase {
      * @param   string      The key from the LOCAL_LANG array for which to return the value.
      * @param   string      input: if set then this language is used if possible. output: the used language
      * @param   string      Alternative string to return IF no value is found set for the key, neither for the local language nor the default.
-     * @param   boolean     If TRUE, the output label is passed through htmlspecialchars()
-     * @return  string      The value from LOCAL_LANG. FALSE in error case
+     * @param   boolean     If true, the output label is passed through htmlspecialchars()
+     * @return  string      The value from LOCAL_LANG. false in error case
      */
     public function getLL (
         $key,
         &$usedLang = '',
         $alternativeLabel = '',
-        $hsc = FALSE
+        $hsc = false
     ) {
-        $output = FALSE;
+        $output = false;
 
         if (
             $usedLang != '' &&

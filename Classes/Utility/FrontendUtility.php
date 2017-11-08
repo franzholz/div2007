@@ -461,7 +461,7 @@ class FrontendUtility {
     */
     static public function getContentObjectRenderer ($data = array(), $table = '') {
         $className = self::getContentObjectRendererClassname();
-        $cObj = \t3lib_div::makeInstance($className);	// Local cObj.
+        $cObj = GeneralUtility::makeInstance($className);	// Local cObj.
         $cObj->start($data, $table);
 
         return $cObj;

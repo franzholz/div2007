@@ -380,6 +380,5 @@ class TableUtility {
 		}
 		return $result;
 	}
-
 }
 

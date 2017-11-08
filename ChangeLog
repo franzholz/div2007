@@ -1,3 +1,6 @@
+08-11-17 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: Captcha classes
+
 21-10-17 Franz Holzinger  <franz@ttproducts.de>
     * add method getLL to LocalisationBase instead of tx_div2007_alpha5::getLL_fh003
     * add class BrowserBase instead of class.tx_div2007_alpha_browse_base
