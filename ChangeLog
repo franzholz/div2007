@@ -1,3 +1,10 @@
+23-12-17 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: add boolean return values to the Captcha functions
+    * new feature: generateXhtmlFix and getXhtmlFix which gets a replacement string for XHTML support or empty otherwise
+    * new feature: add constant DIV2007_LANGUAGE_SUBPATH which stands for /Resources/Private/Language
+    * new feature: ControlUtility::readGP to read in the GET and PUT data
+    * new feature: add language textes for the TCA of the fields tstamp and crdate
+
 08-11-17 Franz Holzinger  <franz@ttproducts.de>
     * new feature: Captcha classes
 

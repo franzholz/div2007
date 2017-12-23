@@ -45,9 +45,11 @@ class Freecap extends CaptchaBase
 
     /**
     * Sets the value of captcha markers
+    * return boolean
     */
     public function addGlobalMarkers (array &$markerArray, $enable = true)
     {
+        $result = false;
         $markerPrefix = $this->getMarkerPrefix();
         $defaultMarkerPrefix = $this->getDefaultMarkerPrefix();
         if (
@@ -63,6 +65,7 @@ class Freecap extends CaptchaBase
                 $newKey = '###' . $defaultMarkerPrefix . $subKey . '###';
                 $captchaMarkerArray[$newKey] = $value;
             }
+            $result = true;
         } else {
             $captchaMarkerArray =
                 array(
@@ -73,6 +76,7 @@ class Freecap extends CaptchaBase
                 );
         }
         $markerArray = array_merge($markerArray, $captchaMarkerArray);
+        return $result;
     }
 
     /**

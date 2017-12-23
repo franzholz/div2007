@@ -37,9 +37,11 @@ class Captcha extends CaptchaBase
 
     /**
     * Sets the value of captcha markers
+    * return boolean
     */
     public function addGlobalMarkers (array &$markerArray, $enable = true)
     {
+        $result = false;
         $markerPrefix = $this->getMarkerPrefix();
         if (
             $enable &&
@@ -47,9 +49,12 @@ class Captcha extends CaptchaBase
         ) {
             $markerArray['###' . $markerPrefix . '_IMAGE###'] =
                 '<img src="' . ExtensionManagementUtility::siteRelPath('captcha') . 'captcha/captcha.php" alt="" />';
+            $result = true;
         } else {
             $markerArray['###' . $markerPrefix . '_IMAGE###'] = '';
         }
+
+        return $result;
     }
 
     /**

@@ -35,11 +35,11 @@ class CaptchaManager
     *
     * @param string $extensionKey: the key of the requesting extension
     * @param string $name: qualifier name of the captcha
-    * @return object, if the use of captcha is enabled, false otherwise
+    * @return object, if the use of captcha is enabled, null otherwise
     */
     static public function getCaptcha ($extensionKey, $name)
     {
-        $result = false;
+        $result = null;
         if (
             $name != '' &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'])

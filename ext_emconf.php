@@ -7,10 +7,10 @@
 
 $EM_CONF[$_EXTKEY] = array (
   'title' => 'Static Methods since 2007',
-  'description' => 'This library is called by several extensions. It provides a modified t3lib_div of TYPO3 4.7.10 and backwards compatibility to TYPO3 6.2 and 4.5. It replaces most tslib_pibase methods.',
+  'description' => 'This library offers functions for TYPO3 extensions. It provides a modified t3lib_div of TYPO3 4.7.10 and backwards compatibility to TYPO3 6.2 and 4.5. It replaces most tslib_pibase methods.',
   'category' => 'misc',
   'shy' => 0,
-  'version' => '1.7.15',
+  'version' => '1.7.16',
   'dependencies' => '',
   'conflicts' => '',
   'suggests' => '',

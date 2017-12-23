@@ -44,6 +44,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 class HtmlUtility {
+    static protected $xhtmlFix = false;
 
     static public function useXHTML () {
         $result = false;
@@ -57,6 +58,15 @@ class HtmlUtility {
             }
         }
         return $result;
+    }
+
+    static public function generateXhtmlFix () {
+        self::$xhtmlFix = (self::useXHTML() ? ' /' : '');
+        return self::$xhtmlFix;
+    }
+
+    static public function getXhtmlFix () {
+        return self::$xhtmlFix;
     }
 }
 

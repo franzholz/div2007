@@ -2,7 +2,6 @@
 
 namespace JambageCom\Div2007\Utility;
 
-
 /***************************************************************
 *  Copyright notice
 *

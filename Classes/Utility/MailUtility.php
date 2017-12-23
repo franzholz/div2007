@@ -60,7 +60,7 @@ class MailUtility {
 	* @param string  $bcc: BCC
 	* @param string  $returnPath: return path
 	* @param string  $replyTo: email address
-	* @param string  $extKey: extension key
+	* @param string  $extensionKey: extension key
 	* @param string  $hookVar: name of the hook
 	* @return void
 	*/
@@ -76,7 +76,7 @@ class MailUtility {
 		$bcc = '',
 		$returnPath = '',
 		$replyTo = '',
-		$extKey = '',
+		$extensionKey = '',
 		$hookVar = '',
 		$defaultSubject = ''
 	) {
@@ -212,14 +212,14 @@ class MailUtility {
 		if (
 			isset($mail) &&
 			is_object($mail) &&
-			$extKey &&
+			$extensionKey &&
 			$hookVar &&
-			isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]) &&
-			is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]) &&
-			isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$hookVar]) &&
-			is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$hookVar])
+			isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]) &&
+			is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]) &&
+			isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey][$hookVar]) &&
+			is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey][$hookVar])
 		) {
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$hookVar] as $classRef) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey][$hookVar] as $classRef) {
 				$hookObj = GeneralUtility::makeInstance($classRef);
 				if (method_exists($hookObj, 'init')) {
 					$hookObj->init($mail);
@@ -238,7 +238,7 @@ class MailUtility {
 						$bcc,
 						$returnPath,
 						$replyTo,
-						$extKey,
+						$extensionKey,
 						$hookVar,
 						$result
 					);

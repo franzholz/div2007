@@ -52,7 +52,7 @@ class ControlUtility {
         * @param	array		$tags: the array of tags
         * @return	string		the regular expression
         */
-    static public function readGP ($variable, $prefixId = '' , $htmlSpecialChars = TRUE) {
+    static public function readGP ($variable, $prefixId = '' , $htmlSpecialChars = true) {
         $result = null;
 
         if (
