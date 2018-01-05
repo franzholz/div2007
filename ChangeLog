@@ -1,3 +1,6 @@
+05-01-18 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix issue#5: callUserFunction for call of hook t3lib/class.t3lib_page.php must pass a variable and not a constant also in TableUtility
+
 23-12-17 Franz Holzinger  <franz@ttproducts.de>
     * new feature: add boolean return values to the Captcha functions
     * new feature: generateXhtmlFix and getXhtmlFix which gets a replacement string for XHTML support or empty otherwise

@@ -6,7 +6,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2016 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2018 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -232,7 +232,7 @@ class TableUtility {
 							'ctrl' => $ctrl
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'] as $_funcRef) {
-							$query .= \t3lib_div::callUserFunction($_funcRef, $_params, 'TableUtility');
+							$query .= \t3lib_div::callUserFunction($_funcRef, $_params, $tmp = 'TableUtility');
 						}
 					}
 				}
