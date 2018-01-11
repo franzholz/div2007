@@ -39,6 +39,9 @@ namespace JambageCom\Div2007\Base;
 *
 */
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 class LocalisationBase {
     public $cObj;
@@ -84,7 +87,7 @@ class LocalisationBase {
         $this->hasBeenInitialized = true;
     }
 
-    public function setLocallang (&$locallang) {
+    public function setLocallang (array &$locallang) {
         $this->LOCAL_LANG = &$locallang;
     }
 
@@ -236,6 +239,169 @@ class LocalisationBase {
         }
 
         return $output;
+    }
+
+    /**
+     * used since TYPO3 4.6
+     * Loads local-language values by looking for a "locallang.php" file in the plugin class directory ($langObj->scriptRelPath) and if found includes it.
+     * Also locallang values set in the TypoScript property "_LOCAL_LANG" are merged onto the values found in the "locallang.xml" file.
+     *
+     * @param   string      language file to load
+     * @param   boolean     If true, then former language items can be overwritten from the new file
+     * @return  boolean
+     */
+    public function loadLL (
+        $langFileParam = '',
+        $overwrite = true
+    ) {
+        $result = false;
+        $langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
+
+        if (
+            substr($langFile, 0, 4) === 'EXT:' ||
+            substr($langFile, 0, 5) === 'typo3' ||
+            substr($langFile, 0, 9) === 'fileadmin'
+        ) {
+            $basePath = $langFile;
+        } else {
+            $basePath = ExtensionManagementUtility::extPath($this->extKey) .
+                ($this->scriptRelPath ? dirname($this->scriptRelPath) . '/' : '') . $langFile;
+        }
+
+        if (version_compare(TYPO3_version, '7.4.0', '>')) {
+            $callingClassName = '\\TYPO3\\CMS\\Core\\Localization\\LocalizationFactory';
+            $useClassName = substr($callingClassName, 1);
+
+            /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
+            $languageFactory = GeneralUtility::makeInstance($useClassName);
+            $tempLOCAL_LANG = $languageFactory->getParsedData(
+                $basePath,
+                $this->LLkey,
+                'UTF-8'
+            );
+        } else {
+                // Read the strings in the required charset (since TYPO3 4.2)
+            $tempLOCAL_LANG =
+                GeneralUtility::readLLfile(
+                    $basePath,
+                    $this->LLkey,
+                    $GLOBALS['TSFE']->renderCharset
+                );
+        }
+
+        if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
+            foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
+                if (is_array($tempLOCAL_LANG[$langKey])) {
+
+                    if ($overwrite) {
+                        $this->LOCAL_LANG[$langKey] = array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
+                    } else {
+                        $this->LOCAL_LANG[$langKey] = array_merge($tempLOCAL_LANG[$langKey], $this->LOCAL_LANG[$langKey]);
+                    }
+                }
+            }
+        } else {
+            $this->LOCAL_LANG = $tempLOCAL_LANG;
+        }
+        $charset = 'UTF-8';
+
+        if ($this->altLLkey) {
+            $tempLOCAL_LANG =
+                GeneralUtility::readLLfile(
+                    $basePath,
+                    $this->altLLkey,
+                    $charset
+                );
+
+            if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
+                foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
+                    if (is_array($tempLOCAL_LANG[$langKey])) {
+                        if ($overwrite) {
+                            $this->LOCAL_LANG[$langKey] =
+                                array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
+                        } else {
+                            $this->LOCAL_LANG[$langKey] =
+                                array_merge($tempLOCAL_LANG[$langKey], $this->LOCAL_LANG[$langKey]);
+                        }
+                    }
+                }
+            } else {
+                $this->LOCAL_LANG = $tempLOCAL_LANG;
+            }
+        }
+
+            // Overlaying labels from TypoScript (including fictitious language keys for non-system languages!):
+
+        $confLL = $this->conf['_LOCAL_LANG.'];
+
+        if (is_array($confLL)) {
+            foreach ($confLL as $languageKey => $languageArray) {
+                if (is_array($languageArray)) {
+                    if (!isset($this->LOCAL_LANG[$languageKey])) {
+                        $this->LOCAL_LANG[$languageKey] = array();
+                    }
+                    $languageKey = substr($languageKey, 0, -1);
+                    $charset = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];
+
+                    // For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset"
+                    // and if that is not set, assumed to be that of the individual system languages
+                    if (!$charset) {
+                        $charset = $GLOBALS['TSFE']->csConvObj->charSetArray[$languageKey];
+                    }
+
+                        // Remove the dot after the language key
+                    foreach ($languageArray as $labelKey => $labelValue) {
+                        if (!isset($this->LOCAL_LANG[$languageKey][$labelKey])) {
+                            $this->LOCAL_LANG[$languageKey][$labelKey] = array();
+                        }
+
+                        if (is_array($labelValue)) {
+                            foreach ($labelValue as $labelKey2 => $labelValue2) {
+                                if (is_array($labelValue2)) {
+                                    foreach ($labelValue2 as $labelKey3 => $labelValue3) {
+                                        if (is_array($labelValue3)) {
+                                            foreach ($labelValue3 as $labelKey4 => $labelValue4) {
+                                                if (is_array($labelValue4)) {
+                                                } else {
+                                                    $this->LOCAL_LANG[$languageKey][$labelKey . $labelKey2 . $labelKey3 . $labelKey4][0]['target'] = $labelValue4;
+
+                                                    if ($languageKey != 'default') {
+                                                        $this->LOCAL_LANG_charset[$languageKey][$labelKey . $labelKey2 . $labelKey3 . $labelKey4] = $charset;    // For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            $this->LOCAL_LANG[$languageKey][$labelKey . $labelKey2 . $labelKey3][0]['target'] = $labelValue3;
+
+                                            if ($languageKey != 'default') {
+                                                $this->LOCAL_LANG_charset[$languageKey][$labelKey . $labelKey2 . $labelKey3] = $charset; // For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    $this->LOCAL_LANG[$languageKey][$labelKey . $labelKey2][0]['target'] = $labelValue2;
+
+                                    if ($languageKey != 'default') {
+                                        $this->LOCAL_LANG_charset[$languageKey][$labelKey . $labelKey2] = $charset;  // For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
+                                    }
+                                }
+                            }
+                        } else {
+                            $this->LOCAL_LANG[$languageKey][$labelKey][0]['target'] = $labelValue;
+
+                            if ($languageKey != 'default') {
+                                $this->LOCAL_LANG_charset[$languageKey][$labelKey] = $charset;   // For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset" and if that is not set, assumed to be that of the individual system languages (thus no conversion)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $this->LOCAL_LANG_loaded = 1;
+        $result = true;
+
+        return $result;
     }
 }
 
