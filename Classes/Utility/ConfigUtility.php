@@ -145,7 +145,7 @@ class ConfigUtility {
                 $result = $code;
             }
         } else {
-            $result = 'error in call of \JambageCom\Div2007\Utility\ConfigUtility::getSetupOrFFvalue: parameter $cObj is not an object';
+            $result = 'error in call of \\JambageCom\\Div2007\\Utility\\ConfigUtility::getSetupOrFFvalue: parameter $cObj is not an object';
             debug ($result, '$result'); // keep this
         }
         return $result;
