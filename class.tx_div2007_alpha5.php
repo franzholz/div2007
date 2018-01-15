@@ -110,6 +110,70 @@ class tx_div2007_alpha5 {
 	}
 
 
+
+    /**
+     * Returns the values from the setup field or the field of the flexform converted into the value
+     * The default value will be used if no return value would be available.
+     * This can be used fine to get the CODE values or the display mode dependant if flexforms are used or not.
+     * And all others fields of the flexforms can be read.
+     *
+     * example:
+     *  $config['code'] = tx_div2007_alpha5::getSetupOrFFvalue_fh004(
+     *                  $cObj,
+     *                  $this->conf['code'],
+     *                  $this->conf['code.'],
+     *                  $this->conf['defaultCode'],
+     *                  $this->cObj->data['pi_flexform'],
+     *                  'display_mode',
+     *                  $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][TT_PRODUCTS_EXTkey]['useFlexforms']);
+     *
+     * You have to call $this->pi_initPIflexForm(); before you call this method!
+     * @param   object      tx_div2007_alpha_language_base object
+     * @param   string      TypoScript configuration
+     * @param   string      extended TypoScript configuration
+     * @param   string      default value to use if the result would be empty
+     * @param   boolean     if flexforms are used or not
+     * @param   string      name of the flexform which has been used in ext_tables.php
+     *                      $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['5']='pi_flexform';
+     * @return  string      name of the field to look for in the flexform
+     * @access  public
+     *
+     */
+    static public function getSetupOrFFvalue_fh004 (
+        $cObj,
+        $code,
+        $codeExt,
+        $defaultCode,
+        $T3FlexForm_array,
+        $fieldName = 'display_mode',
+        $bUseFlexforms = TRUE,
+        $sheet = 'sDEF',
+        $lang = 'lDEF',
+        $value = 'vDEF'
+    ) {
+        $rc = '';
+        if (is_object($cObj)) {
+            if (empty($code)) {
+                if ($bUseFlexforms) {
+                    // Converting flexform data into array:
+                    $rc = tx_div2007_ff::get($T3FlexForm_array, $fieldName, $sheet, $lang, $value);
+                } else {
+                    $rc = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
+                }
+                if (empty($rc)) {
+                    $rc = strtoupper($defaultCode);
+                }
+            } else {
+                $rc = $code;
+            }
+        } else {
+            $rc = 'error in call of tx_div2007_alpha5::getSetupOrFFvalue_fh004: parameter $cObj is not an object';
+            debug ($rc, '$rc'); // keep this
+        }
+        return $rc;
+    }
+
+
 	/**
 	 * Returns informations about the table and foreign table
 	 * This is used by various tables.
@@ -2414,69 +2478,6 @@ class tx_div2007_alpha5 {
 		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
 		$rc = $cObj->substituteMarkerArray($helpTemplate, $markerArray);
-		return $rc;
-	}
-
-
-	/**
-	 * Returns the values from the setup field or the field of the flexform converted into the value
-	 * The default value will be used if no return value would be available.
-	 * This can be used fine to get the CODE values or the display mode dependant if flexforms are used or not.
-	 * And all others fields of the flexforms can be read.
-	 *
-	 * example:
-	 * 	$config['code'] = tx_div2007_alpha5::getSetupOrFFvalue_fh004(
-	 *					$cObj,
-	 * 					$this->conf['code'],
-	 * 					$this->conf['code.'],
-	 * 					$this->conf['defaultCode'],
-	 * 					$this->cObj->data['pi_flexform'],
-	 * 					'display_mode',
-	 * 					$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][TT_PRODUCTS_EXTkey]['useFlexforms']);
-	 *
-	 * You have to call $this->pi_initPIflexForm(); before you call this method!
-	 * @param	object		tx_div2007_alpha_language_base object
-	 * @param	string		TypoScript configuration
-	 * @param	string		extended TypoScript configuration
-	 * @param	string		default value to use if the result would be empty
-	 * @param	boolean		if flexforms are used or not
-	 * @param	string		name of the flexform which has been used in ext_tables.php
-	 * 						$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['5']='pi_flexform';
-	 * @return	string		name of the field to look for in the flexform
-	 * @access	public
-	 *
-	 */
-	static public function getSetupOrFFvalue_fh004 (
-		$cObj,
-		$code,
-		$codeExt,
-		$defaultCode,
-		$T3FlexForm_array,
-		$fieldName = 'display_mode',
-		$bUseFlexforms = TRUE,
-		$sheet = 'sDEF',
-		$lang = 'lDEF',
-		$value = 'vDEF'
-	) {
-		$rc = '';
-		if (is_object($cObj)) {
-			if (empty($code)) {
-				if ($bUseFlexforms) {
-					// Converting flexform data into array:
-					$rc = tx_div2007_ff::get($T3FlexForm_array, $fieldName, $sheet, $lang, $value);
-				} else {
-					$rc = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
-				}
-				if (empty($rc)) {
-					$rc = strtoupper($defaultCode);
-				}
-			} else {
-				$rc = $code;
-			}
-		} else {
-			$rc = 'error in call of tx_div2007_alpha::getSetupOrFFvalue_fh004: parameter $cObj is not an object';
-			debug ($rc, '$rc'); // keep this
-		}
 		return $rc;
 	}
 
