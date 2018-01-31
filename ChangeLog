@@ -1,4 +1,9 @@
 
+
+2018-01-31 Franz Holzinger  <franz@ttproducts.de>
+    * copy tx_div2007_alpha5::getTypoLink_fh003 into \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink
+    * copy tx_div2007_alpha5::getTypoLink_URL_fh003 into \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink_URL
+
 2018-01-15 Franz Holzinger  <franz@ttproducts.de>
     * copy tx_div2007_alpha5::getSetupOrFFvalue_fh004 into \JambageCom\Div2007\Utility\ConfigUtility::getSetupOrFFvalue
 

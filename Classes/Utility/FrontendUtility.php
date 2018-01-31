@@ -1060,5 +1060,97 @@ class FrontendUtility {
         $result = $cObj->typoLink($str, $conf);
         return $result;
     }
+
+    /**
+     * Returns a linked string made from typoLink parameters.
+     *
+     * This function takes $label as a string, wraps it in a link-tag based on the $params string, which should contain data like that you would normally pass to the popular <LINK>-tag in the TSFE.
+     * Optionally you can supply $urlParameters which is an array with key/value pairs that are rawurlencoded and appended to the resulting url.
+     *
+     * @param   object      cObject
+     * @param   string      Text string being wrapped by the link.
+     * @param   string      Link parameter; eg. "123" for page id, "kasperYYYY@typo3.com" for email address, "http://...." for URL, "fileadmin/blabla.txt" for file.
+     * @param   array       An array with key/value pairs representing URL parameters to set. Values NOT URL-encoded yet.
+     * @param   string      Specific target set, if any. (Default is using the current)
+     * @param   array       Configuration
+     * @return  string      The wrapped $label-text string
+     * @see getTypoLink_URL()
+     */
+    static public function getTypoLink (
+        $cObj,
+        $label,
+        $params,
+        $urlParameters = array(),
+        $target = '',
+        $conf = array()
+    ) {
+        $result = FALSE;
+
+        if (is_object($cObj)) {
+            $conf['parameter'] = $params;
+
+            if ($target) {
+                if (!isset($conf['target'])) {
+                    $conf['target'] = $target;
+                }
+                if (!isset($conf['extTarget'])) {
+                    $conf['extTarget'] = $target;
+                }
+            }
+
+            if (is_array($urlParameters)) {
+                if (count($urlParameters)) {
+                    $conf['additionalParams'] .= GeneralUtility::implodeArrayForUrl('', $urlParameters);
+                }
+            } else {
+                $conf['additionalParams'] .= $urlParameters;
+            }
+            $result = $cObj->typolink($label, $conf);
+        } else {
+            $out = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink: parameter $cObj is not an object';
+        }
+        return $result;
+    }
+
+
+    /**
+     * Returns the URL of a "typolink" create from the input parameter string, url-parameters and target
+     *
+     * @param   object      cObject
+     * @param   string      Link parameter; eg. "123" for page id, "kasperYYYY@typo3.com" for email address, "http://...." for URL, "fileadmin/blabla.txt" for file.
+     * @param   array       An array with key/value pairs representing URL parameters to set. Values NOT URL-encoded yet.
+     * @param   string      Specific target set, if any. (Default is using the current)
+     * @param   array       Configuration
+     * @return  string      The URL
+     * @see getTypoLink()
+     */
+    static public function getTypoLink_URL (
+        $cObj,
+        $params,
+        $urlParameters = array(),
+        $target = '',
+        $conf = array()
+    ) {
+        $result = FALSE;
+
+        if (is_object($cObj)) {
+            $result = self::getTypoLink(
+                $cObj,
+                '',
+                $params,
+                $urlParameters,
+                $target,
+                $conf
+            );
+            if ($result !== FALSE) {
+                $result = $cObj->lastTypoLinkUrl;
+            }
+        } else {
+            $out = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink_URL: parameter $cObj is not an object';
+            debug($out, '$out'); // keep this
+        }
+
+        return $result;
+    }
 }
 
