@@ -1,4 +1,8 @@
 
+2018-02-07 Franz Holzinger  <franz@ttproducts.de>
+    * fix Warning: Ambiguous class resolution, t3lib_extMgm, t3lib_parsehtml, t3lib_div, tslib_cObj, tslib_fe
+    * Remove the file class.tx_div2007_compatibility6.php.
+    * Empty and deprecate method activateCompatibility6 from class.tx_div2007_core.php
 
 2018-01-31 Franz Holzinger  <franz@ttproducts.de>
     * copy tx_div2007_alpha5::getTypoLink_fh003 into \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink

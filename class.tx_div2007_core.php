@@ -549,24 +549,13 @@ class tx_div2007_core {
 	### TYPO3 7
 
 	/**
+	 * deprecated
 	 * Call this method under TYPO3 7.x to get backwards compatibility by defining the former class names of TYPO3 6 and 4
 	 * @return void
 	 */
 	static public function activateCompatibility6 () {
-		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
-
-		if (
-			version_compare(TYPO3_version, '7.0.0', '>=') &&
-			class_exists($callingClassName) &&
-			!call_user_func($callingClassName . '::isLoaded', 'compatibility6') &&
-			!class_exists('t3lib_div') &&
-			!class_exists('tslib_cObj') &&
-			!class_exists('t3lib_extMgm')
-		) {
-			$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
-            $useClassName = substr($callingClassName, 1);
-			$object = call_user_func($useClassName . '::getUserObj', 'tx_div2007_compatibility6');
-		}
+        // nothing
+        // The migrations folder already cares for the backwards compatibility.
 	}
 
     ### $GLOBALS['TSFE']
