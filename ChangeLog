@@ -1,3 +1,6 @@
+2018-02-22 Franz Holzinger  <franz@ttproducts.de>
+    * copy tx_div2007_alpha5::RTEcssText into \JambageCom\Div2007\Utility\FrontendUtility::RTEcssText
+
 2018-02-20 Franz Holzinger  <franz@ttproducts.de>
     * copy tx_div2007_alpha5::displayHelpPage_fh003 into \JambageCom\Div2007\Utility\ViewUtility::displayHelpPage
 

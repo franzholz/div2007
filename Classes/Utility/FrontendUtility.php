@@ -1152,5 +1152,33 @@ class FrontendUtility {
 
         return $result;
     }
+
+    static public function hasRTEparser () {
+        $result = isset($GLOBALS['TSFE']->tmpl->setup['lib.']['parseFunc_RTE.']);
+        return $result;
+    }
+
+    /**
+    * This is the original pi_RTEcssText from tslib_pibase
+    * Will process the input string with the parseFunc function from tslib_cObj based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
+    * This is useful for rendering of content in RTE fields where the transformation mode is set to "ts_css" or so.
+    * Notice that this requires the use of "css_styled_content" to work right.
+    *
+    * @param	object     cOject of class tslib_cObj
+    * @param	string     The input text string to process
+    * @return	string     The processed string
+    * @see tslib_cObj::parseFunc()
+    */
+    static public function RTEcssText ($cObj, $str) {
+        $result = '';
+        $parseFunc = '';
+        if (self::hasRTEparser()) {
+            $parseFunc = $GLOBALS['TSFE']->tmpl->setup['lib.']['parseFunc_RTE.'];
+        }
+        if (is_array($parseFunc)) {
+            $result = $cObj->parseFunc($str, $parseFunc);
+        }
+        return $result;
+    }
 }
 
