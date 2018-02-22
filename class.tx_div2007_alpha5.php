@@ -2428,7 +2428,7 @@ class tx_div2007_alpha5 {
 	 * Returns the help page with a mini guide how to setup the extension
 	 *
 	 * example:
-	 * 	$content .= tx_div2007_alpha5::displayHelpPage($this->cObj->fileResource('EXT:myextension/template/help.tmpl'));
+	 * 	$content .= tx_div2007_alpha5::displayHelpPage_fh003($this->cObj->fileResource('EXT:myextension/template/help.tmpl'));
 	 * 	unset($this->errorMessage);
 	 *
 	 * @param	object		tx_div2007_alpha_language_base
