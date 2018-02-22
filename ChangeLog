@@ -1,7 +1,7 @@
 
 2018-02-22 Franz Holzinger  <franz@ttproducts.de>
     * accouncement: 1.7.20 is the latest version which supports TYPO3 4.5 - 6.1
-      Starting with 1.8.0 TYPO3 6.2 is the minimum requirement for extension div2007.
+      Starting with 1.8.0 TYPO3 6.2 and PHP 5.5.0 are the minimum requirements for extension div2007.
 
 2018-02-22 Franz Holzinger  <franz@ttproducts.de>
     * copy tx_div2007_alpha5::RTEcssText into \JambageCom\Div2007\Utility\FrontendUtility::RTEcssText
