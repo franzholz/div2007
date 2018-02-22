@@ -25,6 +25,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
+ * Deprecated
+ *
  * Part of the div2007 (Collection of static functions) extension.
  *
  * interface for the language object

@@ -42,6 +42,8 @@
  */
 
 /**
+ * Deprecated
+ *
  * Collection of static functions contributed by different people
  *
  * This class contains diverse staticfunctions in "alpha" status.

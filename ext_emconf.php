@@ -10,7 +10,7 @@ $EM_CONF[$_EXTKEY] = array (
   'description' => 'This library offers functions for TYPO3 extensions. It provides a modified t3lib_div of TYPO3 4.7.10 and backwards compatibility to TYPO3 6.2 and 4.5. It replaces most tslib_pibase methods.',
   'category' => 'misc',
   'shy' => 0,
-  'version' => '1.7.20',
+  'version' => '1.8.0',
   'dependencies' => '',
   'conflicts' => '',
   'suggests' => '',
@@ -28,17 +28,12 @@ $EM_CONF[$_EXTKEY] = array (
   'author_company' => 'jambage.com',
   'CGLcompliance' => '',
   'CGLcompliance_note' => '',
-  'excludeXCLASScheck' =>
-  array (
-    0 => '*div*',
-    1 => 'hooks/*',
-  ),
   'constraints' =>
   array (
     'depends' =>
     array (
-      'php' => '5.2.0-7.99.99',
-      'typo3' => '4.5.0-8.99.99',
+      'php' => '5.5.0-7.99.99',
+      'typo3' => '6.2.0-8.99.99',
     ),
     'conflicts' =>
     array (
