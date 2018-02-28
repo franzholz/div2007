@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Base;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008-2017 Franz Holzinger <franz@ttproducts.de>
+*  (c) 2008-2018 Franz Holzinger <franz@ttproducts.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -45,7 +45,8 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 
 class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface {
-    public $extKey = '';	// extension key must be overridden
+    public $extensionKey = '';	// extension key must be overridden
+    public $extKey = '';	// DEPRECATED
 
     /**
     * Draw the item in the page module
@@ -57,9 +58,20 @@ class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface {
 
     public function pmDrawItem ($params, $pObj) {
 
+        $extensionKey = '';
         if (
-            $this->extKey != '' &&
-            ExtensionManagementUtility::isLoaded($this->extKey) &&
+            $this->extensionKey != ''
+        ) {
+            $extensionKey = $this->extensionKey;
+        } else if (
+            $this->extKey != ''
+        ) {
+            $extensionKey = $this->extKey;
+        }
+
+        if (
+            $extensionKey != '' &&
+            ExtensionManagementUtility::isLoaded($extensionKey) &&
             in_array(
                 intval($pObj->pageRecord['doktype']),
                 array(1, 2, 5)
@@ -68,11 +80,11 @@ class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface {
         ) {
             FlexformUtility::load(
                 $params['row']['pi_flexform'],
-                $this->extKey
+                $extensionKey
             );
             $codes =
                 'CODE: ' . FlexformUtility::get(
-                    $this->extKey,
+                    $extensionKey,
                     'display_mode'
                 );
         }

@@ -53,7 +53,9 @@ class LocalisationBase {
     public $LLtestPrefix = '';      // You can set this during development to some value that makes it easy for you to spot all labels that ARe delivered by the getLL function.
     public $LLtestPrefixAlt = '';   // Save as LLtestPrefix, but additional prefix for the alternative value in getLL() function calls
     public $scriptRelPath;          // Path to the plugin class script relative to extension directory, eg. 'pi1/class.tx_newfaq_pi1.php'
-    public $extKey;                 // Extension key.
+    public $extensionKey = '';	// extension key must be overridden
+    public $extKey;             // DEPRECATED
+
     /**
     * Should normally be set in the main function with the TypoScript content passed to the method.
     *
@@ -65,7 +67,7 @@ class LocalisationBase {
     private $hasBeenInitialized = false;
 
 
-    public function init ($cObj, $extKey, $conf, $scriptRelPath) {
+    public function init ($cObj, $extensionKey, $conf, $scriptRelPath) {
 
         if (
             isset($GLOBALS['TSFE']->config['config']) &&
@@ -78,7 +80,8 @@ class LocalisationBase {
         }
 
         $this->cObj = $cObj;
-        $this->extKey = $extKey;
+        $this->extensionKey = $extensionKey;
+        $this->extKey = $extensionKey; // DEPRECATED
         $this->conf = $conf;
         $this->scriptRelPath = $scriptRelPath;
 
@@ -119,7 +122,11 @@ class LocalisationBase {
         return $this->cObj;
     }
 
-    public function getExtKey () {
+    public function getExtensionKey () {
+        return $this->extensionKey;
+    }
+
+    public function getExtKey () { // DEPRECATED
         return $this->extKey;
     }
 
@@ -264,7 +271,7 @@ class LocalisationBase {
         ) {
             $basePath = $langFile;
         } else {
-            $basePath = ExtensionManagementUtility::extPath($this->extKey) .
+            $basePath = ExtensionManagementUtility::extPath($this->getExtensionKey()) .
                 ($this->scriptRelPath ? dirname($this->scriptRelPath) . '/' : '') . $langFile;
         }
 
