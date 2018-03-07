@@ -1,9 +1,12 @@
 
+2018-03-07 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: StatusProviderBase taken from extension sr_feuser_register StatusProvider
+
 2018-02-22 Franz Holzinger  <franz@ttproducts.de>
     * deprecate the files class.tx_div2007_alpha.php, class.tx_div2007_alpha5.php, class.tx_div2007_email.php and class.tx_div2007_alpha_language_base.php. The Classes folder has replacement files for the functions of these files.
 
 2018-02-22 Franz Holzinger  <franz@ttproducts.de>
-    * accouncement: 1.7.20 is the last version which supports TYPO3 4.5 - 6.1
+    * accouncement: 1.7.20 is the last version which supports TYPO3 4.5 - 6.1 and PHP < 5.5 .
       Starting with 1.8.0 TYPO3 6.2 and PHP 5.5.0 are the minimum requirements for extension div2007.
 
 2018-02-22 Franz Holzinger  <franz@ttproducts.de>
