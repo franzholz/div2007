@@ -1,3 +1,5 @@
+2018-03-08 Franz Holzinger  <franz@ttproducts.de>
+    * copy tx_div2007_alpha5::userProcess_fh002 into \JambageCom\Div2007\Utility\SystemUtility::userProcess
 
 2018-03-07 Franz Holzinger  <franz@ttproducts.de>
     * new feature: StatusProviderBase taken from extension sr_feuser_register StatusProvider
