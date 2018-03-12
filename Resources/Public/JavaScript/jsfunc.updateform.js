@@ -43,7 +43,7 @@ function updateForm(formId, fieldname, value) {
 				fObj.value = value;
 			break;
 			case "checkbox":
-				fObj.checked = ((value && value != 0) ? "on" : "");
+				fObj.checked = ((value && value != 0) ? "1" : "");
 			break;
 			case "select-one":
 				var l=fObj.length;
