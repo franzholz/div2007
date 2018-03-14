@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2011 Fabien Udriot (fudriot@omic.ch)
+*  (c) 2018 Fabien Udriot (fudriot@omic.ch)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -129,12 +129,16 @@ class tx_div2007_ff {
 	 */
 	static public function get () {
 
+		$num_args = func_num_args();
 		//true when the first argument is a flexForm or a reference to flexForm
 		if(
-			is_array(func_get_arg(0)) ||
-			array_key_exists(
-				func_get_arg(0),
-				self::$flexForms
+            $num_args &&
+            (
+                is_array(func_get_arg(0)) ||
+                array_key_exists(
+                    func_get_arg(0),
+                    self::$flexForms
+                )
 			)
 		) {
 			//case 1, $args 1 is an array...     case 2, $args 1 is a key array that contains a flexform
@@ -145,9 +149,9 @@ class tx_div2007_ff {
 			$index = 0;
 		}
 		$fieldName = func_get_arg($index);
-		@func_get_arg($index + 1) ? $sheet = func_get_arg($index + 1) : $sheet = 'sDEF';
-		@func_get_arg($index + 2) ? $lang = func_get_arg($index + 2) : $lang = 'lDEF';
-		@func_get_arg($index + 3) ? $value = func_get_arg($index + 3) : $value = 'vDEF';
+		$num_args > $index + 1 ? $sheet = func_get_arg($index + 1) : $sheet = 'sDEF';
+		$num_args > $index + 2 ? $lang = func_get_arg($index + 2) : $lang = 'lDEF';
+		$num_args > $index + 3 ? $value = func_get_arg($index + 3) : $value = 'vDEF';
 
 		is_array($_flexForm) ? $sheetArray = $_flexForm['data'][$sheet][$lang] : $sheetArray = '';
 		$result = null;
@@ -175,7 +179,7 @@ class tx_div2007_ff {
 					$c = 0;
 					foreach($tempArr as $values){
 						if ($c == $v){
-							$tempArr=$values;
+							$tempArr = $values;
 							break;
 						}
 						$c++;
