@@ -1,4 +1,7 @@
 
+2018-03-15 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix for captcha functions: An empty $captchaWord must cause an error.
+
 2018-03-13 Franz Holzinger  <franz@ttproducts.de>
     * bugfix for func_get_arg():  Argument 2 not passed to function at /div2007/class.tx_div2007_ff.php
 

@@ -57,7 +57,7 @@ interface CaptchaInterface extends \TYPO3\CMS\Core\SingletonInterface
     *
     * @param array $captchaWord: captcha word which is to be checked
     * @param string $evalRule: type of the captcha
-    * @return boolean true if the evaluation is successful, false in error case
+    * @return boolean true if the evaluation is successful, false in error case or when the captcha word is empty.
     */
     public function evalValues ($captchaWord, $evalRule);
 }

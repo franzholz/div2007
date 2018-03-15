@@ -87,6 +87,8 @@ class Captcha extends CaptchaBase
             } else {
                 $result = false;
             }
+        } else if ($captchaWord == '') {
+            $result = false;
         }
         return $result;
     }

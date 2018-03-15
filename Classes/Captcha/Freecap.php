@@ -109,6 +109,8 @@ class Freecap extends CaptchaBase
                 );
                 $GLOBALS['TSFE']->storeSessionData();
             }
+        } else if ($captchaWord == '') {
+            $result = false;
         }
 
         return $result;
