@@ -91,26 +91,27 @@ class Freecap extends CaptchaBase
         $result = true;
         if (
             $name == $this->getName() &&
-            $captchaWord != '' &&
             ($result = $this->initialize())
         ) {
-            // Save the sr_freecap word_hash
-            // sr_freecap will invalidate the word_hash after calling checkWord
-            $sessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', $this->sessionName);
-
-            if (!$this->srFreecap->checkWord($captchaWord)) {
+            if ($captchaWord == '') {
                 $result = false;
             } else {
-                // Restore sr_freecap word_hash
-                $GLOBALS['TSFE']->fe_user->setKey(
-                    'ses',
-                    $this->sessionName,
-                    $sessionData
-                );
-                $GLOBALS['TSFE']->storeSessionData();
+                // Save the sr_freecap word_hash
+                // sr_freecap will invalidate the word_hash after calling checkWord
+                $sessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', $this->sessionName);
+
+                if (!$this->srFreecap->checkWord($captchaWord)) {
+                    $result = false;
+                } else {
+                    // Restore sr_freecap word_hash
+                    $GLOBALS['TSFE']->fe_user->setKey(
+                        'ses',
+                        $this->sessionName,
+                        $sessionData
+                    );
+                    $GLOBALS['TSFE']->storeSessionData();
+                }
             }
-        } else if ($captchaWord == '') {
-            $result = false;
         }
 
         return $result;

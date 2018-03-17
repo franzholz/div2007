@@ -1,4 +1,7 @@
 
+2018-03-17 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix for captcha functions: No error for an empty $captchaWord if the captcha extension is not activated.
+
 2018-03-15 Franz Holzinger  <franz@ttproducts.de>
     * bugfix for captcha functions: An empty $captchaWord must cause an error.
 

@@ -69,26 +69,27 @@ class Captcha extends CaptchaBase
         $result = true;
         if (
             $name == $this->getName() &&
-            $captchaWord != '' &&
             $this->isLoaded()
         ) {
-            $captchaString = '';
-            $started = session_start();
-            if (isset($_SESSION[$this->sessionName])) {
-                $captchaString = $_SESSION[$this->sessionName];
-                if (
-                    empty($captchaString) ||
-                    $captchaWord !== $captchaString
-                ) {
-                    $result = false;
-                } else {
-                    $_SESSION[$this->sessionName] = '';
-                }
-            } else {
+            if ($captchaWord == '') {
                 $result = false;
+            } else {
+                $captchaString = '';
+                $started = session_start();
+                if (isset($_SESSION[$this->sessionName])) {
+                    $captchaString = $_SESSION[$this->sessionName];
+                    if (
+                        empty($captchaString) ||
+                        $captchaWord !== $captchaString
+                    ) {
+                        $result = false;
+                    } else {
+                        $_SESSION[$this->sessionName] = '';
+                    }
+                } else {
+                    $result = false;
+                }
             }
-        } else if ($captchaWord == '') {
-            $result = false;
         }
         return $result;
     }
