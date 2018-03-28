@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2018 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -42,7 +42,8 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 
 class FrontendUtility {
-    static public function test () {
+    static public function test ()
+    {
         return true;
     }
 
@@ -61,7 +62,8 @@ class FrontendUtility {
 * @author Kasper Skårhøj <kasperYYYY@typo3.com>
 */
 
-    static public function init () {
+    static public function init ()
+    {
         global $TSFE, $BE_USER;
 
         /** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
@@ -229,7 +231,8 @@ class FrontendUtility {
         $arrPrefix,
         $fieldList,
         $javascriptFilename = ''
-    ) {
+    )
+    {
         $result = false;
         $JSPart = '';
         $updateValues = GeneralUtility::trimExplode(',', $fieldList);
@@ -264,9 +267,8 @@ class FrontendUtility {
         return $result;
     }
 
-
-    static public function addJavascriptFile ($filename, $key) {
-
+    static public function addJavascriptFile ($filename, $key)
+    {
         $script =
             '<script type="text/javascript" src="' .
                 $GLOBALS['TSFE']->absRefPrefix .
@@ -275,19 +277,19 @@ class FrontendUtility {
         $GLOBALS['TSFE']->additionalHeaderData[$key] = $script;
     }
 
-
-    static public function addCssFile ($filename, $key) {
+    static public function addCssFile ($filename, $key)
+    {
         $GLOBALS['TSFE']->additionalHeaderData[$key] =
             '<link rel="stylesheet" href="' .
             $GLOBALS['TSFE']->absRefPrefix .
             GeneralUtility::createVersionNumberedFilename($filename) . '" type="text/css" />';
     }
 
-
     static public function determineJavascriptFilename (
         &$javascriptFilename,
         $defaultBasename
-    ) {
+    )
+    {
         $result = self::determineFilename (
             $javascriptFilename,
             $defaultBasename,
@@ -297,11 +299,11 @@ class FrontendUtility {
         return $result;
     }
 
-
     static public function determineCssFilename (
         &$javascriptFilename,
         $defaultBasename
-    ) {
+    )
+    {
         $result = self::determineFilename (
             $javascriptFilename,
             $defaultBasename,
@@ -310,7 +312,6 @@ class FrontendUtility {
 
         return $result;
     }
-
 
     static public function determineFilename (
         &$filename,
@@ -343,7 +344,6 @@ class FrontendUtility {
         return $result;
     }
 
-
     static public function addTab (
         $templateCode,
         &$markerArray,
@@ -352,7 +352,8 @@ class FrontendUtility {
         $keyPrefix = '',
         $javascriptFilename = '',
         $cssFilename = ''
-    ) {
+    )
+    {
         $result = false;
         preg_match_all('/###(TAB_.*)###/', $templateCode, $treffer);
         $internalMarkerArray = array();
@@ -427,11 +428,10 @@ class FrontendUtility {
         }
 
         return $result;
-
     }
 
-
-    static public function getContentObjectRendererClassname () {
+    static public function getContentObjectRendererClassname ()
+    {
         $useClassName = false;
         $callingClassName = '\\TYPO3\\CMS\\Frontend\\ContentObject\\ContentObjectRenderer';
 
@@ -448,7 +448,6 @@ class FrontendUtility {
         return $useClassName;
     }
 
-
     /**
     * Class constructor.
     * Well, it has to be called manually since it is not a real constructor function.
@@ -458,14 +457,14 @@ class FrontendUtility {
     * @param string $table The table that the data record is from.
     * @return void
     */
-    static public function getContentObjectRenderer ($data = array(), $table = '') {
+    static public function getContentObjectRenderer ($data = array(), $table = '')
+    {
         $className = self::getContentObjectRendererClassname();
         $cObj = GeneralUtility::makeInstance($className);	// Local cObj.
         $cObj->start($data, $table);
 
         return $cObj;
     }
-
 
     /**
      * Returns a results browser. This means a bar of page numbers plus a "previous" and "next" link. For each entry in the bar the ctrlVars "pointer" will be pointing to the "result page" to show.
@@ -509,7 +508,8 @@ class FrontendUtility {
         $pointerName = 'pointer',
         $hscText = true,
         $addQueryString = array()
-    ) {
+    )
+    {
         $usedLang = '';
         $linkArray = $addQueryString;
             // Initializing variables:
@@ -892,7 +892,8 @@ class FrontendUtility {
      * @return  boolean     Returns true (1) if conditions are met.
      * @see linkTPKeepCtrlVars()
      */
-    static public function autoCache ($pObject, $inArray) {
+    static public function autoCache ($pObject, $inArray)
+    {
         $bUseCache = true;
 
         if (is_array($inArray)) {
@@ -907,7 +908,8 @@ class FrontendUtility {
                         intval($inArray[$fN]) <= intval($pObject->autoCacheFields[$fN]['range'][1])) {
                         $bIsCachable = true;
                     }
-                    if (
+
+                    if (    
                         is_array($this->autoCacheFields[$fN]['list']) &&
                         in_array($inArray[$fN], $pObject->autoCacheFields[$fN]['list'])
                     ){
@@ -924,7 +926,6 @@ class FrontendUtility {
         return $bUseCache;
     }
 
-
     /**
      * Returns the class-attribute with the correctly prefixed classname
      * Using getClassName()
@@ -936,7 +937,8 @@ class FrontendUtility {
      * @return  string      A "class" attribute with value and a single space char before it.
      * @see pi_classParam()
      */
-    static public function classParam ($class, $addClasses = '', $prefixId = '', $bAddPrefixTx = false) {
+    static public function classParam ($class, $addClasses = '', $prefixId = '', $bAddPrefixTx = false)
+    {
         $output = '';
         foreach (GeneralUtility::trimExplode(',', $class) as $v) {
             $output .= ' ' . self::getClassName($v, $prefixId, $bAddPrefixTx);
@@ -947,23 +949,22 @@ class FrontendUtility {
         return ' class="' . trim($output) . '"';
     }
 
-
     /**
      * Returns a class-name prefixed with $prefixId and with all underscores substituted to dashes (-). Copied from pi_getClassName
      *
-     * @param   string      The class name (or the END of it since it will be prefixed by $prefixId.'-')
+     * @param   string      The class name (or the END of it since it will be prefixed by $prefixId . '-')
      * @param   string      $prefixId
      * @param   boolean     if set, then the prefix 'tx_' is added to the extension name
      * @return  string      The combined class name (with the correct prefix)
      * @see pi_getClassName()
      */
-    static public function getClassName ($class, $prefixId = '', $bAddPrefixTx = false) {
+    static public function getClassName ($class, $prefixId = '', $bAddPrefixTx = false)
+    {
         if ($bAddPrefixTx && $prefixId != '' && strpos($prefixId, 'tx_') !== 0) {
-            $prefixId = 'tx_' . $prefixId;
+            $prefixId = 'tx-' . $prefixId;
         }
         return str_replace('_', '-', $prefixId) . ($prefixId != '' ? '-' : '') . $class;
     }
-
 
     /**
      * Link a string to the current page while keeping currently set values in piVars.
@@ -990,7 +991,8 @@ class FrontendUtility {
         $cache = 0,
         $clearAnyway = 0,
         $altPageId = 0
-    ) {
+    )
+    {
         $overruledCtrlVars = '';
 
         if (
@@ -1030,7 +1032,6 @@ class FrontendUtility {
         return $result;
     }
 
-
     /**
      * Link string to the current page.
      * Returns the $str wrapped in <a>-tags with a link to the CURRENT page, but with $urlParameters set as extra parameters for the page.
@@ -1051,7 +1052,8 @@ class FrontendUtility {
         $urlParameters = array(),
         $cache = 0,
         $altPageId = 0
-    ) {
+    )
+    {
         $conf = array();
         $conf['useCacheHash'] = $pObject->bUSER_INT_obj ? 0 : $cache;
         $conf['no_cache'] = $pObject->bUSER_INT_obj ? 0 : !$cache;
@@ -1083,7 +1085,8 @@ class FrontendUtility {
         $urlParameters = array(),
         $target = '',
         $conf = array()
-    ) {
+    )
+    {
         $result = FALSE;
 
         if (is_object($cObj)) {
@@ -1112,7 +1115,6 @@ class FrontendUtility {
         return $result;
     }
 
-
     /**
      * Returns the URL of a "typolink" create from the input parameter string, url-parameters and target
      *
@@ -1130,7 +1132,8 @@ class FrontendUtility {
         $urlParameters = array(),
         $target = '',
         $conf = array()
-    ) {
+    )
+    {
         $result = FALSE;
 
         if (is_object($cObj)) {
@@ -1153,7 +1156,8 @@ class FrontendUtility {
         return $result;
     }
 
-    static public function hasRTEparser () {
+    static public function hasRTEparser ()
+    {
         $result = isset($GLOBALS['TSFE']->tmpl->setup['lib.']['parseFunc_RTE.']);
         return $result;
     }
@@ -1169,7 +1173,8 @@ class FrontendUtility {
     * @return	string     The processed string
     * @see tslib_cObj::parseFunc()
     */
-    static public function RTEcssText ($cObj, $str) {
+    static public function RTEcssText ($cObj, $str)
+    {
         $result = '';
         $parseFunc = '';
         if (self::hasRTEparser()) {
@@ -1178,6 +1183,12 @@ class FrontendUtility {
         if (is_array($parseFunc)) {
             $result = $cObj->parseFunc($str, $parseFunc);
         }
+        return $result;
+    }
+
+    static public function translate ($extensionKey, $filename, $key)
+    {
+        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key); 
         return $result;
     }
 }

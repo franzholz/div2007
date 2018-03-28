@@ -91,21 +91,21 @@ class CoreQuery {
      *
      * @param string $table The table name, should be in $GLOBALS['TCA']
      * @param int $uid The UID of the record from $table which we are going to update
-     * @param array $dataArr The data array where key/value pairs are fieldnames/values for the record to update.
+     * @param array $dataArray The data array where key/value pairs are fieldnames/values for the record to update.
      * @param string $fieldList Comma list of fieldnames which are allowed to be updated. Only values from the data record for fields in this list will be updated!!
      * @param bool $doExec If set, the query is executed. IT'S HIGHLY RECOMMENDED TO USE THIS FLAG to execute the query directly!!!
      * @return string The query, ready to execute unless $doExec was TRUE in which case the return value is FALSE.
      * @see DBgetInsert(), DBgetDelete(), user_feAdmin
      */
-    static public function DBgetUpdate ($table, $uid, $dataArr, $fieldList, $doExec = false)
+    static public function DBgetUpdate ($table, $uid, array $dataArray, $fieldList, $doExec = false)
     {
         // uid can never be set
-        unset($dataArr['uid']);
-        $uid = (int)$uid;
+        unset($dataArray['uid']);
+        $uid = (int) $uid;
         if ($uid) {
             $fieldList = implode(',', GeneralUtility::trimExplode(',', $fieldList, true));
             $updateFields = [];
-            foreach ($dataArr as $f => $v) {
+            foreach ($dataArray as $f => $v) {
                 if (GeneralUtility::inList($fieldList, $f)) {
                     $updateFields[$f] = $v;
                 }
@@ -131,50 +131,50 @@ class CoreQuery {
      *
      * @param string $table The table name, should be in $GLOBALS['TCA']
      * @param int $pid The PID value for the record to insert
-     * @param array $dataArr The data array where key/value pairs are fieldnames/values for the record to insert
+     * @param array $dataArray The data array where key/value pairs are fieldnames/values for the record to insert
      * @param string $fieldList Comma list of fieldnames which are allowed to be inserted. Only values from the data record for fields in this list will be inserted!!
      * @param bool $doExec If set, the query is executed. IT'S HIGHLY RECOMMENDED TO USE THIS FLAG to execute the query directly!!!
      * @return string The query, ready to execute unless $doExec was TRUE in which case the return value is FALSE.
      * @see DBgetUpdate(), DBgetDelete(), user_feAdmin
      */
-    static public function DBgetInsert ($table, $pid, $dataArr, $fieldList, $doExec = false)
+    static public function DBgetInsert ($table, $pid, array $dataArray, $fieldList, $doExec = false)
     {
         $extraList = 'pid';
         if ($GLOBALS['TCA'][$table]['ctrl']['tstamp']) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['tstamp'];
-            $dataArr[$field] = $GLOBALS['EXEC_TIME'];
+            $dataArray[$field] = $GLOBALS['EXEC_TIME'];
             $extraList .= ',' . $field;
         }
         if ($GLOBALS['TCA'][$table]['ctrl']['crdate']) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['crdate'];
-            $dataArr[$field] = $GLOBALS['EXEC_TIME'];
+            $dataArray[$field] = $GLOBALS['EXEC_TIME'];
             $extraList .= ',' . $field;
         }
         if ($GLOBALS['TCA'][$table]['ctrl']['cruser_id']) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['cruser_id'];
-            $dataArr[$field] = 0;
+            $dataArray[$field] = 0;
             $extraList .= ',' . $field;
         }
         if ($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id']) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'];
-            $dataArr[$field] = (int) self::getTypoScriptFrontendController()->fe_user->user['uid'];
+            $dataArray[$field] = (int) self::getTypoScriptFrontendController()->fe_user->user['uid'];
             $extraList .= ',' . $field;
         }
         if ($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id']) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'];
-            list($dataArr[$field]) = explode(',', self::getTypoScriptFrontendController()->fe_user->user['usergroup']);
-            $dataArr[$field] = (int)$dataArr[$field];
+            list($dataArray[$field]) = explode(',', self::getTypoScriptFrontendController()->fe_user->user['usergroup']);
+            $dataArray[$field] = (int)$dataArray[$field];
             $extraList .= ',' . $field;
         }
         // Uid can never be set
-        unset($dataArr['uid']);
+        unset($dataArray['uid']);
         if ($pid >= 0) {
-            $dataArr['pid'] = $pid;
+            $dataArray['pid'] = $pid;
         }
         // Set pid < 0 and the dataarr-pid will be used!
         $fieldList = implode(',', GeneralUtility::trimExplode(',', $fieldList . ',' . $extraList, true));
         $insertFields = [];
-        foreach ($dataArr as $f => $v) {
+        foreach ($dataArray as $f => $v) {
             if (GeneralUtility::inList($fieldList, $f)) {
                 $insertFields[$f] = $v;
             }

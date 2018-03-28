@@ -173,7 +173,7 @@ class MailUtility {
 			}
 		}
 
-		$mail = \tx_div2007_core::newMailMessage();
+		$mail = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Mail\MailMessage::class);
 		$mail->setTo($toEMail)
 			->setFrom(array($fromEMail => $fromName))
 			->setReturnPath($returnPath)

@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -44,7 +44,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
 class HtmlUtility {
+    static private   $initialized = false;
     static protected $xhtmlFix = false;
+
+    static public function setInitialized ($initialized) {
+        self::$initialized = $initialized;
+    }
+
+    static public function getInitialized () {
+        return self::$initialized;
+    }
 
     static public function useXHTML () {
         $result = false;
@@ -61,13 +70,22 @@ class HtmlUtility {
     }
 
     static public function generateXhtmlFix () {
-        self::$xhtmlFix = (self::useXHTML() ? ' /' : '');
+        self::$xhtmlFix = (self::useXHTML() ? '/' : '');
+        self::setInitialized(true);
         return self::$xhtmlFix;
     }
 
     static public function getXhtmlFix () {
         return self::$xhtmlFix;
     }
-}
 
+    static public function determineXhtmlFix () {
+        if (self::getInitialized()) {
+            $result = self::getXhtmlFix();
+        } else {
+            $result = self::generateXhtmlFix();
+        }
+        return $result;
+    }
+}
 

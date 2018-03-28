@@ -23,8 +23,12 @@ namespace JambageCom\Div2007\Captcha;
  */
 
 use JambageCom\Div2007\Captcha\CaptchaBase;
+use SJBR\SrFreecap\PiBaseApi;
+use SJBR\SrFreecap\Domain\Session\SessionStorage;
+
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 /**
  * Hook for captcha image marker when extension 'sr_freecap' is used
@@ -33,15 +37,30 @@ class Freecap extends CaptchaBase
 {
     protected $extensionKey = 'sr_freecap';
     protected $name         = 'freecap';
-    protected $sessionName  = 'tx_srfreecap';
     protected $markerPrefix = 'SR_FREECAP';
 
     /**
     * SrFreecap object
     *
-    * @var PiBaseApi
+    * @var SJBR\SrFreecap\PiBaseApi
     */
     protected $srFreecap = null;
+
+    /**
+    * Session object
+    *
+    * @var SJBR\SrFreecap\Domain\Session
+    */
+    protected $session = null;
+    
+
+    public function getApi () {
+        return $this->srFreecap;
+    }
+
+    public function getSession () {
+        return $this->session;
+    }
 
     /**
     * Sets the value of captcha markers
@@ -54,9 +73,9 @@ class Freecap extends CaptchaBase
         $defaultMarkerPrefix = $this->getDefaultMarkerPrefix();
         if (
             $enable &&
-            $this->initialize() !== null
+            $this->initialize() == true
         ) {
-            $freecapMarkerArray = $this->srFreecap->makeCaptcha();
+            $freecapMarkerArray = $this->getApi()->makeCaptcha();
             $captchaMarkerArray = array();
             $prefixLength = strlen($markerPrefix);
 
@@ -76,6 +95,7 @@ class Freecap extends CaptchaBase
                 );
         }
         $markerArray = array_merge($markerArray, $captchaMarkerArray);
+
         return $result;
     }
 
@@ -98,18 +118,14 @@ class Freecap extends CaptchaBase
             } else {
                 // Save the sr_freecap word_hash
                 // sr_freecap will invalidate the word_hash after calling checkWord
-                $sessionData = $GLOBALS['TSFE']->fe_user->getKey('ses', $this->sessionName);
+                $sessionData = $this->getSession()->restoreFromSession();
 
-                if (!$this->srFreecap->checkWord($captchaWord)) {
-                    $result = false;
-                } else {
+                if ($this->getApi()->checkWord($captchaWord)) {
                     // Restore sr_freecap word_hash
-                    $GLOBALS['TSFE']->fe_user->setKey(
-                        'ses',
-                        $this->sessionName,
-                        $sessionData
-                    );
-                    $GLOBALS['TSFE']->storeSessionData();
+                    $this->getSession()->writeToSession($sessionData);
+                    $this->getFrontendUser()->storeSessionData();
+                } else {
+                    $result = false;
                 }
             }
         }
@@ -125,17 +141,37 @@ class Freecap extends CaptchaBase
         $result = false;
 
         if (
-            $this->srFreecap == null &&
+            $this->getApi() == null &&
             $this->isLoaded()
         ) {
             $this->srFreecap =
-                GeneralUtility::makeInstance(\SJBR\SrFreecap\PiBaseApi::class);
-            if (is_object($this->srFreecap)) {
-                $result = true;
-            }
+                GeneralUtility::makeInstance(PiBaseApi::class);
+            $this->session =
+                GeneralUtility::makeInstance(SessionStorage::class);
+        }
+
+        if (
+            is_object($this->getApi()) &&
+            is_object($this->getSession())
+        ) {
+            $result = true;
         }
 
         return $result;
+    }
+
+    /**
+    * Gets a frontend user from TSFE->fe_user
+    *
+    * @return	\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthtenication	The current frontend user object
+    * @throws	SessionNotFoundException
+    */
+    protected function getFrontendUser()
+    {
+        if ($GLOBALS ['TSFE']->fe_user) {
+            return $GLOBALS ['TSFE']->fe_user;
+        }
+        throw new SessionNotFoundException('No frontend user found in session!');
     }
 }
 

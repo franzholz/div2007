@@ -1,7 +1,7 @@
 {
   "name": "jambagecom/div2007",
   "type": "typo3-cms-extension",
-  "description": "Static Methods since 2007 for TYPO3 CMS. It offers many functions for FE extensions. You can replace tslib_pibase by div2007.",
+  "description": "Static Methods since 2007 for TYPO3 CMS. It offers many functions for Front End extensions. You can replace tslib_pibase by div2007.",
   "keywords": [
     "TYPO3",
     "extension",

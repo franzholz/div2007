@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Captcha;
  *  Copyright notice
  *
  *  (c) 2009 Sonja Scholz <ss@cabag.ch>
- *  (c) 2017 Stanislas Rolland <typo3(arobas)sjbr.ca>
+ *  (c) 2018 Stanislas Rolland <typo3(arobas)sjbr.ca>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -33,7 +33,6 @@ class Captcha extends CaptchaBase
 {
     protected $extensionKey = 'captcha';
     protected $name = 'captcha';
-    protected $sessionName = 'tx_captcha_string';
 
     /**
     * Sets the value of captcha markers
@@ -43,15 +42,20 @@ class Captcha extends CaptchaBase
     {
         $result = false;
         $markerPrefix = $this->getMarkerPrefix();
+
         if (
             $enable &&
             $this->isLoaded()
         ) {
+            $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
+
             $markerArray['###' . $markerPrefix . '_IMAGE###'] =
-                '<img src="' . ExtensionManagementUtility::siteRelPath('captcha') . 'captcha/captcha.php" alt="" />';
+                '<img src="/index.php?eID=captcha" alt=""' . $xhtmlFix . '>';
+            $markerArray['###' . $markerPrefix . '_NOTICE###'] = '';
             $result = true;
         } else {
             $markerArray['###' . $markerPrefix . '_IMAGE###'] = '';
+            $markerArray['###' . $markerPrefix . '_NOTICE###'] = '';
         }
 
         return $result;
@@ -74,23 +78,10 @@ class Captcha extends CaptchaBase
             if ($captchaWord == '') {
                 $result = false;
             } else {
-                $captchaString = '';
-                $started = session_start();
-                if (isset($_SESSION[$this->sessionName])) {
-                    $captchaString = $_SESSION[$this->sessionName];
-                    if (
-                        empty($captchaString) ||
-                        $captchaWord !== $captchaString
-                    ) {
-                        $result = false;
-                    } else {
-                        $_SESSION[$this->sessionName] = '';
-                    }
-                } else {
-                    $result = false;
-                }
+                $result = \ThinkopenAt\Captcha\Utility::checkCaptcha($captchaWord);
             }
         }
+
         return $result;
     }
 }

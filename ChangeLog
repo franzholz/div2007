@@ -1,4 +1,11 @@
 
+2018-03-19 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: add lookupFilename to LocalisationBase
+    * bugfix to captcha extension: $_SESSION is broken. Use the TYPO3 session instead of the PHP session.
+
+2018-03-19 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: HtmlUtility::determineXhtmlFix can be called without prior initialization
+
 2018-03-17 Franz Holzinger  <franz@ttproducts.de>
     * bugfix for captcha functions: No error for an empty $captchaWord if the captcha extension is not activated.
 

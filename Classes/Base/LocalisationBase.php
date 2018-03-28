@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Base;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -55,6 +55,7 @@ class LocalisationBase {
     public $scriptRelPath;          // Path to the plugin class script relative to extension directory, eg. 'pi1/class.tx_newfaq_pi1.php'
     public $extensionKey = '';	// extension key must be overridden
     public $extKey;             // DEPRECATED
+    protected $lookupFilename = ''; // filename used for the lookup method
 
     /**
     * Should normally be set in the main function with the TypoScript content passed to the method.
@@ -67,7 +68,7 @@ class LocalisationBase {
     private $hasBeenInitialized = false;
 
 
-    public function init ($cObj, $extensionKey, $conf, $scriptRelPath) {
+    public function init ($cObj, $extensionKey, $conf, $scriptRelPath, $lookupFilename = '') {
 
         if (
             isset($GLOBALS['TSFE']->config['config']) &&
@@ -82,8 +83,9 @@ class LocalisationBase {
         $this->cObj = $cObj;
         $this->extensionKey = $extensionKey;
         $this->extKey = $extensionKey; // DEPRECATED
-        $this->conf = $conf;
+        $this->setConf($conf);
         $this->scriptRelPath = $scriptRelPath;
+        $this->lookupFilename = $lookupFilename;
 
         $this->typoVersion = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
 
@@ -142,6 +144,14 @@ class LocalisationBase {
         return $this->typoVersion;
     }
 
+    public function setLookupFilename ($lookupFilename) {
+        $this->lookupFilename = $lookupFilename;
+    }
+
+    public function getLookupFilename () {
+        return $this->lookupFilename;
+    }
+    
     public function needsInit () {
         return !$this->hasBeenInitialized;
     }
@@ -261,7 +271,6 @@ class LocalisationBase {
         $langFileParam = '',
         $overwrite = true
     ) {
-        $result = false;
         $langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
 
         if (
@@ -338,8 +347,11 @@ class LocalisationBase {
         }
 
             // Overlaying labels from TypoScript (including fictitious language keys for non-system languages!):
-
-        $confLL = $this->conf['_LOCAL_LANG.'];
+        $conf = $this->getConf();
+        $confLL = '';
+        if (isset($conf['_LOCAL_LANG.'])) {
+            $confLL = $conf['_LOCAL_LANG.'];
+        }
 
         if (is_array($confLL)) {
             foreach ($confLL as $languageKey => $languageArray) {
@@ -408,6 +420,18 @@ class LocalisationBase {
         $this->LOCAL_LANG_loaded = 1;
         $result = true;
 
+        return $result;
+    }
+
+    public function translate ($key, $extensionKey = '', $filename = '')
+    {
+        if ($filename == '') {
+            $filename = $this->getLookupFilename();
+        }
+        if ($extensionKey == '') {
+            $extensionKey = $this->getExtensionKey();
+        }
+        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);    
         return $result;
     }
 }
