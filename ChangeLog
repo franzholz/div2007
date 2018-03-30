@@ -1,3 +1,5 @@
+2018-03-30 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: add modified session handler utility classes Typo3SessionHandler and PhpSessionHandler originally from the extension captcha.
 
 2018-03-19 Franz Holzinger  <franz@ttproducts.de>
     * new feature: add lookupFilename to LocalisationBase
