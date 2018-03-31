@@ -1,5 +1,8 @@
-2018-03-30 Franz Holzinger  <franz@ttproducts.de>
+
+2018-03-31 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: add method \JambageCom\Div2007\Utility\SystemUtility::fetchFeGroups which reads all FE groups and readFeGroupsRecords for all FE group records of a logged in front end user.
     * new feature: add modified session handler utility classes Typo3SessionHandler and PhpSessionHandler originally from the extension captcha.
+    * new features: add classes \JambageCom\Div2007\Security\StorageSecurity and \JambageCom\Div2007\Security\TransmissionSecurity which are copied from extension sr_feuser_register
 
 2018-03-19 Franz Holzinger  <franz@ttproducts.de>
     * new feature: add lookupFilename to LocalisationBase

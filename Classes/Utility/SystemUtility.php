@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -74,5 +74,46 @@ class SystemUtility {
         }
         return $passVar;
     } // userProcess
+
+    /**
+    * Fetches the FE user groups (fe_groups) of the logged in FE user
+    *
+    * @return array of the FE groups
+    */
+    static public function fetchFeGroups ()
+    {
+        $result = array();
+
+        if (
+            isset($GLOBALS['TSFE']->fe_user) &&
+            isset($GLOBALS['TSFE']->fe_user->user) &&
+            isset($GLOBALS['TSFE']->fe_user->user['usergroup'])
+        ) {
+           $result = explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']); 
+        }
+        return $result;
+    }
+
+    /**
+    * Fetches the FE user groups (fe_groups) of the logged in FE user as an array of record
+    *
+    * @return array of the records of all FE groups
+    */
+    static public function readFeGroupsRecords ()
+    {
+        $result = false;
+        $feGroups = self::fetchFeGroups();
+
+        if (!empty($feGroups)) {
+            $feGroupList = implode(',', $feGroups);
+            $where_clause = 'uid IN (' . $feGroupList . ')';
+            $result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+                '*',
+                'fe_groups',
+                $where_clause
+            );
+        }
+        return $result;
+    }
 }
 

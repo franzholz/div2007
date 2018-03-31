@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2018-03-30T12:00:00Z" product-name="div2007">
+		<header/>
+		<body>
+			<trans-unit id="security.internal_decrypt_auto_login_failed" xml:space="preserve">
+				<source>Failed to decrypt the auto login password</source>
+			</trans-unit>
+			<trans-unit id="security.internal_rsaauth_process_incoming_password_failed" xml:space="preserve">
+				<source>RSA auth service failed to process incoming password</source>
+			</trans-unit>
+			<trans-unit id="security.internal_rsaauth_process_incoming_password_failed" xml:space="preserve">
+				<source>RSA auth service failed to process incoming password</source>
+			</trans-unit>
+			<trans-unit id="security.internal_rsaauth_retrieve_private_key_failed" xml:space="preserve">
+				<source>RSA auth service failed to retrieve private key</source>
+			</trans-unit>
+			<trans-unit id="security.internal_rsaauth_backend_not_available" xml:space="preserve">
+				<source>Required RSA auth backend not available</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
