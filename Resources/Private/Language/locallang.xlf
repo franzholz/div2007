@@ -6,17 +6,17 @@
 			<trans-unit id="security.internal_decrypt_auto_login_failed" xml:space="preserve">
 				<source>Failed to decrypt the auto login password</source>
 			</trans-unit>
-			<trans-unit id="security.internal_rsaauth_process_incoming_password_failed" xml:space="preserve">
-				<source>RSA auth service failed to process incoming password</source>
-			</trans-unit>
-			<trans-unit id="security.internal_rsaauth_process_incoming_password_failed" xml:space="preserve">
-				<source>RSA auth service failed to process incoming password</source>
+			<trans-unit id="security.internal_rsaauth_process_incoming_field_failed" xml:space="preserve">
+				<source>RSA auth service failed to process incoming field "%s"</source>
 			</trans-unit>
 			<trans-unit id="security.internal_rsaauth_retrieve_private_key_failed" xml:space="preserve">
 				<source>RSA auth service failed to retrieve private key</source>
 			</trans-unit>
 			<trans-unit id="security.internal_rsaauth_backend_not_available" xml:space="preserve">
 				<source>Required RSA auth backend not available</source>
+			</trans-unit>
+			<trans-unit id="error.internal_required_extension_missing" xml:space="preserve">
+				<source>The extension "%1$s" is required and must be installed</source>
 			</trans-unit>
 		</body>
 	</file>

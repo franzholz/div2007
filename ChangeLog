@@ -1,3 +1,5 @@
+2018-04-04 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: enhance the TransmissionSecurity with support for 2 dimensional arrays.
 
 2018-03-31 Franz Holzinger  <franz@ttproducts.de>
     * new feature: add method \JambageCom\Div2007\Utility\SystemUtility::fetchFeGroups which reads all FE groups and readFeGroupsRecords for all FE group records of a logged in front end user.

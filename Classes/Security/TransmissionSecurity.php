@@ -52,6 +52,11 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     protected $extensionKey = DIV2007_EXT;
         // The storage security level: normal or rsa
     protected $transmissionSecurityLevel = 'normal';
+    public    $encryptionMarker = '###ENCRYPTION###';
+    public    $hiddenMarker     = '###HIDDENFIELDS###';
+    protected $encryptionAttribute = 'data-rsa-encryption=""';
+    public    $requiredExtensions = array('rsa' => array('rsaauth'));
+    public    $allowSyslog = true;
 
     /**
     * Constructor
@@ -59,11 +64,59 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string $extensionKey: empty or extension key
     * @return	void
     */
-    public function __construct ($extensionKey = '') {
+    public function __construct ($extensionKey = '', $allowSyslog = true) {
         if ($extensionKey != '') {
             $this->extensionKey = $extensionKey;
         }
         $this->setTransmissionSecurityLevel();
+        $this->allowSyslog = $allowSyslog;
+    }
+
+    /**
+    * Sets the encryption marker for which the replacement is used by the RSA encryption extension
+    *
+    * @param	string
+    * @return	void
+    */
+    public function setEncryptionMarker ($encryptionMarker) {
+        $this->encryptionMarker = $encryptionMarker;
+    }
+
+    /**
+    * Returns the encryption marker for which the replacement is used by the RSA encryption extension
+    *
+    * @return	string
+    */
+    public function getEncryptionMarker () {
+        return $this->encryptionMarker;
+    }
+
+    /**
+    * Sets the hidden fields marker for which the RSA encryption extension itself or its hooks might add entries
+    *
+    * @param	string
+    * @return	void
+    */
+    public function setHiddenMarker ($hiddenMarker) {
+        $this->hiddenMarker = $hiddenMarker;
+    }
+
+    /**
+    * Returns the hidden fields marker for which the RSA encryption extension itself or its hooks might add entries
+    *
+    * @return	string
+    */
+    public function getHiddenMarker () {
+        return $this->hiddenMarker;
+    }
+
+    /**
+    * Returns the encryption attribute used by the RSA encryption extension
+    *
+    * @return	string
+    */
+    public function getEncryptionAttribute () {
+        return $this->encryptionAttribute;
     }
 
     /**
@@ -82,10 +135,26 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     /**
     * Gets the transmission security level
     *
-    * @return	string	the storage security level
+    * @return	string	the transmission security level
     */
     public function getTransmissionSecurityLevel () {
         return $this->transmissionSecurityLevel;
+    }
+    
+    /**
+    * Gets the required extensions for the given transmission security level
+    *
+    * @param string $level: 
+    * @return	array	the required extensions for the given transmission security level
+    */
+    public function getRequiredExtensions ($level) {
+        $result = '';
+
+        if (isset($this->requiredExtensions[$level])) {
+            $result = $this->requiredExtensions[$level];
+        }
+
+        return $result;
     }
 
     /**
@@ -93,7 +162,7 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @param array $row: incoming and outgoing array that may contain encrypted fields which will be decrypted
     * @param string $errorMessage: outgoing text with an error message
-    * @return void
+    * @return boolean  true if any entry inside of the $row array has been decrypted.
     */
     public function decryptIncomingFields (array &$row, &$errorMessage) {
         $decrypted = false;
@@ -104,7 +173,20 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                     $needsDecryption = false;
                     foreach ($row as $field => $value) {
                         if (isset($value) && $value != '') {
-                            if (substr($value, 0, 4) == 'rsa:') {
+                            if (is_array($value)) {
+                                $row2 = $value;
+                                foreach ($row2 as $field2 => $value2) {
+                                    if (
+                                        is_string($value2) &&
+                                        substr($value2, 0, 4) == 'rsa:'
+                                    ) {
+                                        $needsDecryption = true;
+                                    }
+                                }
+                            } else if (
+                                is_string($value) &&
+                                substr($value, 0, 4) == 'rsa:'
+                            ) {
                                 $needsDecryption = true;
                             }
                         }
@@ -120,43 +202,86 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                     $backend = BackendFactory::getBackend();
                     /** @var $storage \TYPO3\CMS\Rsaauth\Storage\AbstractStorage */
                     $storage = StorageFactory::getStorage();
-            
+                    $errorDecryptField = '';
+
                     if (is_object($backend) && is_object($storage)) {
                         $key = $storage->get();
                         if ($key != null) {
                             foreach ($row as $field => $value) {
                                 if (isset($value) && $value != '') {
-                                    if (substr($value, 0, 4) == 'rsa:') {
+                                    if (is_array($value)) {
+                                        $row2 = $value;
+                                        foreach ($row2 as $field2 => $value2) {
+                                            if (
+                                                is_string($value2) &&
+                                                substr($value2, 0, 4) == 'rsa:'
+                                            ) {
+                                                    // Decode password
+                                                $result =
+                                                    $backend->decrypt(
+                                                        $key,
+                                                        substr($value2, 4)
+                                                    );
+                                                if ($result !== null) {
+                                                    $row2[$field2] = $result;
+                                                    $decrypted = true;
+                                                } else {
+                                                    $errorDecryptField = $field . '|' . $field2;
+                                                }
+                                            }
+                                        } // foreach
+                                        $row[$field] = $row2;
+                                    } else if (
+                                        is_string($value) &&
+                                        substr($value, 0, 4) == 'rsa:'
+                                    ) {
                                             // Decode password
                                         $result = $backend->decrypt($key, substr($value, 4));
-                                        if ($result) {
+                                        if ($result !== null) {
                                             $row[$field] = $result;
                                             $decrypted = true;
                                         } else {
-                                                // RSA auth service failed to process incoming password
-                                                // May happen if the key is wrong
-                                                // May happen if multiple instances of rsaauth are on same page
-                                            $errorMessage =
-                                                $GLOBALS['TSFE']->sL(
-                                                'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_process_incoming_password_failed');
-                                            GeneralUtility::sysLog(
-                                                $errorMessage, 
-                                                $this->extensionKey,
-                                                GeneralUtility::SYSLOG_SEVERITY_ERROR
-                                            );
+                                            $errorDecryptField = $field;
                                         }
                                     }
                                 }
+                            } // foreach
+
+                            if ($errorDecryptField != '') {
+                                    // RSA auth service failed to process incoming password
+                                    // May happen if the key is wrong
+                                    // May happen if multiple instances of rsaauth are on same page
+                                $errorMessage =
+                                    $GLOBALS['TSFE']->sL(
+                                    'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_process_incoming_field_failed');
+                                $errorMessage = sprintf($errorMessage, $errorDecryptField);
+
+                                if ($this->allowSyslog) {
+                                    GeneralUtility::sysLog(
+                                        $errorMessage, 
+                                        $this->extensionKey,
+                                        GeneralUtility::SYSLOG_SEVERITY_ERROR
+                                    );
+                                }                                
                             }
-                                // Remove the key
-                            $storage->put(null);
+
+                            if ($decrypted) {
+                                    // Remove the key
+                                $storage->put(null);
+                            }
                         } else {
                                 // RSA auth service failed to retrieve private key
                                 // May happen if the key was already removed
                             $errorMessage =
                                 $GLOBALS['TSFE']->sL(
                                     'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_retrieve_private_key_failed');
-                            GeneralUtility::sysLog($errorMessage, $this->extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
+                            if ($this->allowSyslog) {
+                                GeneralUtility::sysLog(
+                                    $errorMessage,
+                                    $this->extensionKey,
+                                    GeneralUtility::SYSLOG_SEVERITY_ERROR
+                                );
+                            }
                         }
                     } else {
                             // Required RSA auth backend not available
@@ -164,7 +289,13 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                         $errorMessage =
                             $GLOBALS['TSFE']->sL(
                                 'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_backend_not_available');
-                        GeneralUtility::sysLog($errorMessage, $this->extensionKey, GeneralUtility::SYSLOG_SEVERITY_ERROR);
+                        if ($this->allowSyslog) {
+                            GeneralUtility::sysLog(
+                                $errorMessage,
+                                $this->extensionKey,
+                                GeneralUtility::SYSLOG_SEVERITY_ERROR
+                            );
+                        }
                     }
                     break;
                 case 'normal':
@@ -181,15 +312,15 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @param string $javaScript: outgoing text with the added JavaScript
     * @param string $extensionKey: extension key
-    * @param boolean $checkPasswordAgain: if the password again field is present
     * @param string $formId: the form HTML id
+    * @param boolean $checkPasswordAgain: if the password again field is present
     * @return void
     */
     public function getJavaScript (
         &$javaScript,
         $extensionKey,
-        $checkPasswordAgain,
-        $formId
+        $formId,
+        $checkPasswordAgain = false
     ) {
         if (
             $this->getTransmissionSecurityLevel() == 'rsa' &&
@@ -219,22 +350,38 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
     }
 
     /**
+    * Adds values to the ###HIDDENFIELDS### and ###ENCRYPTION### markers as empty values. Call this method if the RSA encryption is inactive.
+    *
+    * @param array $markerArray: incoming and outgoing marker array
+    * @param string $extensionKey: extension key. This is only needed if the password again check is used.
+    * @param boolean $checkPasswordAgain: if the password again field is present
+    * @param boolean $loginForm: if it is a login form where some login hooks shall be performed
+    * @return void
+    */
+    public function getEmptyMarkers (
+        array &$markerArray
+    ) {
+        $markerArray[$this->getEncryptionMarker()] = '';
+        $markerArray[$this->getHiddenMarker()]     = '';    
+    }
+
+    /**
     * Adds values to the ###HIDDENFIELDS### and ###ENCRYPTION### markers which are needed for RSA encryption
     *
     * @param array $markerArray: incoming and outgoing marker array
-    * @param string $extensionKey: extension key
+    * @param string $extensionKey: extension key. This is only needed if the password again check is used.
     * @param boolean $checkPasswordAgain: if the password again field is present
     * @param boolean $loginForm: if it is a login form where some login hooks shall be performed
     * @return void
     */
     public function getMarkers (
         array &$markerArray,
-        $extensionKey,
-        $checkPasswordAgain,
+        $extensionKey = '',
+        $checkPasswordAgain = false,
         $loginForm = false
     ) {
-        $markerArray['###ENCRYPTION###'] = '';
-        $xhtmlFix = HtmlUtility::getXhtmlFix();
+        $markerArray[$this->getEncryptionMarker()] = '';
+        $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $extraHiddenFieldsArray = array();
 
         if (
@@ -250,12 +397,14 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
 
         switch ($this->getTransmissionSecurityLevel()) {
             case 'rsa':
-                if ($checkPasswordAgain) {
-
+                if (
+                    $checkPasswordAgain &&
+                    $extensionKey != ''
+                ) {
                     $extraHiddenFieldsArray[] = '<input type="hidden" name="password_again_failure" value="0"' . $xhtmlFix . '>' . LF . '<input type="hidden" name="' . $extensionKey . '[submit-security]" value="0"' . $xhtmlFix . '>';
                 }
 
-                $markerArray['###ENCRYPTION###'] = ' data-rsa-encryption=""';
+                $markerArray[$this->getEncryptionMarker()] = ' ' . $this->getEncryptionAttribute();
                 break;
             case 'normal':
             default:
@@ -268,7 +417,7 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
         }
 
         if ($extraHiddenFields != '') {
-            $markerArray['###HIDDENFIELDS###'] .= $extraHiddenFields . LF;
+            $markerArray[$this->getHiddenMarker()] .= $extraHiddenFields . LF;
         }
         
         return true;
