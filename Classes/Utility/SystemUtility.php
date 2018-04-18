@@ -102,7 +102,7 @@ class SystemUtility {
     static public function readFeGroupsRecords ()
     {
         $result = false;
-        $feGroups = self::fetchFeGroups();
+        $feGroups = static::fetchFeGroups();
 
         if (!empty($feGroups)) {
             $feGroupList = implode(',', $feGroups);

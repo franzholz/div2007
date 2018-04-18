@@ -1,3 +1,6 @@
+2018-04-18 Franz Holzinger  <franz@ttproducts.de>
+    * Replace self method calls by static method calls in Utility classes in order to allow inheritance for static classes.
+
 2018-04-04 Franz Holzinger  <franz@ttproducts.de>
     * new feature: enhance the TransmissionSecurity with support for 2 dimensional arrays.
 

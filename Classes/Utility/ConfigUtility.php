@@ -63,7 +63,7 @@ class ConfigUtility {
                 // descend into all non-stdWrap-subelements first
                 foreach ($confNextLevel as $subKey => $subConfNextLevel) {
                     if (is_array($subConfNextLevel) && strpos($subKey, '.') !== false && $subKey !== 'stdWrap.') {
-                        $conf[$key . '.'] = self::applyStdWrapRecursive($confNextLevel, $level + 1);
+                        $conf[$key . '.'] = static::applyStdWrapRecursive($confNextLevel, $level + 1);
                     }
                 }
 

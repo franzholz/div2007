@@ -48,11 +48,11 @@ class HtmlUtility {
     static protected $xhtmlFix = false;
 
     static public function setInitialized ($initialized) {
-        self::$initialized = $initialized;
+        static::$initialized = $initialized;
     }
 
     static public function getInitialized () {
-        return self::$initialized;
+        return static::$initialized;
     }
 
     static public function useXHTML () {
@@ -70,20 +70,20 @@ class HtmlUtility {
     }
 
     static public function generateXhtmlFix () {
-        self::$xhtmlFix = (self::useXHTML() ? '/' : '');
-        self::setInitialized(true);
-        return self::$xhtmlFix;
+        static::$xhtmlFix = (static::useXHTML() ? '/' : '');
+        static::setInitialized(true);
+        return static::$xhtmlFix;
     }
 
     static public function getXhtmlFix () {
-        return self::$xhtmlFix;
+        return static::$xhtmlFix;
     }
 
     static public function determineXhtmlFix () {
-        if (self::getInitialized()) {
-            $result = self::getXhtmlFix();
+        if (static::getInitialized()) {
+            $result = static::getXhtmlFix();
         } else {
-            $result = self::generateXhtmlFix();
+            $result = static::generateXhtmlFix();
         }
         return $result;
     }

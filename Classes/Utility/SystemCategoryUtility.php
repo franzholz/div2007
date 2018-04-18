@@ -71,7 +71,7 @@ class SystemCategoryUtility {
 		array $uidArray = array(),
 		$orderBy = ''
 	) {
-		return self::getUids($tableName, $fieldName, $uidArray, $orderBy, type_foreign);
+		return static::getUids($tableName, $fieldName, $uidArray, $orderBy, type_foreign);
 	}
 
 	/**
@@ -106,7 +106,7 @@ class SystemCategoryUtility {
 			$uidArray = $GLOBALS['TYPO3_DB']->cleanIntArray($uidArray);
 			$inputTable = $tableName;
 			if ($type == type_foreign) {
-				$inputTable = self::$storageTableName;
+				$inputTable = static::$storageTableName;
 			}
 
 			// Add condition on uid field
@@ -115,14 +115,14 @@ class SystemCategoryUtility {
 				')';
 		}
 
-		$outputTable = self::$storageTableName;
+		$outputTable = static::$storageTableName;
 		if ($type == type_foreign) {
 			$outputTable = $tableName;
 		}
 
 		$resource = $GLOBALS['TYPO3_DB']->exec_SELECT_mm_query(
 			'DISTINCT ' . $outputTable . '.uid',
-			self::$storageTableName,
+			static::$storageTableName,
 			'sys_category_record_mm',
 			$tableName,
 			$where,

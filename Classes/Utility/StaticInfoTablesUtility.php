@@ -55,7 +55,7 @@ class StaticInfoTablesUtility {
         $result = false;
 
         if (
-            !is_object(self::$staticInfo) &&
+            !is_object(static::$staticInfo) &&
             ExtensionManagementUtility::isLoaded('static_info_tables')
         ) {
             $path = ExtensionManagementUtility::extPath('static_info_tables');
@@ -71,18 +71,18 @@ class StaticInfoTablesUtility {
                 }
 
                 // Initialise static info library
-                self::$staticInfo = GeneralUtility::makeInstance($class);
+                static::$staticInfo = GeneralUtility::makeInstance($class);
                 if (
-                    !method_exists(self::$staticInfo, 'needsInit') ||
-                    self::$staticInfo->needsInit()
+                    !method_exists(static::$staticInfo, 'needsInit') ||
+                    static::$staticInfo->needsInit()
                 ) {
-                    self::$staticInfo->init();
+                    static::$staticInfo->init();
                 }
 
-                if (is_object(self::$staticInfo)) {
+                if (is_object(static::$staticInfo)) {
                     $result = true;
                 } else {
-                    self::$staticInfo = false;
+                    static::$staticInfo = false;
                 }
             }
         }
@@ -91,7 +91,7 @@ class StaticInfoTablesUtility {
     } // init
 
     static public function getStaticInfo () {
-        return self::$staticInfo;
+        return static::$staticInfo;
     }
 
     /**

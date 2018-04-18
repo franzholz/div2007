@@ -255,12 +255,12 @@ class FrontendUtility {
 ';
 
         if (
-            self::determineJavascriptFilename(
+            static::determineJavascriptFilename(
                 $javascriptFilename,
                 'jsfunc.updateform.js'
             )
         ) {
-            self::addJavascriptFile($javascriptFilename, 'JSincludeFormupdate');
+            static::addJavascriptFile($javascriptFilename, 'JSincludeFormupdate');
             $result = $JSPart;
         }
 
@@ -290,7 +290,7 @@ class FrontendUtility {
         $defaultBasename
     )
     {
-        $result = self::determineFilename (
+        $result = static::determineFilename (
             $javascriptFilename,
             $defaultBasename,
             'Resources/Public/JavaScript/'
@@ -304,7 +304,7 @@ class FrontendUtility {
         $defaultBasename
     )
     {
-        $result = self::determineFilename (
+        $result = static::determineFilename (
             $javascriptFilename,
             $defaultBasename,
             'Resources/Public/Css/'
@@ -378,24 +378,24 @@ class FrontendUtility {
 
         if (
             $headerCounter == $boxCounter &&
-            self::determineJavascriptFilename(
+            static::determineJavascriptFilename(
                 $javascriptFilename,
                 'jsfunc.tab.js'
             )
         ) {
-            self::addJavascriptFile($javascriptFilename, $keyPrefix . 'JSincludeTab');
+            static::addJavascriptFile($javascriptFilename, $keyPrefix . 'JSincludeTab');
             $markerArray['###TAB_OPEN_JS###'] =
 '<script type="text/javascript">
         openTab(1); // open Tab 1
 </script>';
 
             if (
-                self::determineCssFilename(
+                static::determineCssFilename(
                     $cssFilename,
                     'tab.css'
                 )
             ) {
-                self::addCssFile($cssFilename, $keyPrefix . 'CSSincludeTab');
+                static::addCssFile($cssFilename, $keyPrefix . 'CSSincludeTab');
                 $result = true;
                 $wrappedSubpartArray['###TAB_MENU###'] =
                     array(
@@ -459,7 +459,7 @@ class FrontendUtility {
     */
     static public function getContentObjectRenderer ($data = array(), $table = '')
     {
-        $className = self::getContentObjectRendererClassname();
+        $className = static::getContentObjectRendererClassname();
         $cObj = GeneralUtility::makeInstance($className);	// Local cObj.
         $cObj->start($data, $table);
 
@@ -529,7 +529,7 @@ class FrontendUtility {
                 100
             );
         $bUseCache =
-            self::autoCache(
+            static::autoCache(
                 $pObject,
                 $pObject->ctrlVars
             );
@@ -581,7 +581,7 @@ class FrontendUtility {
             $wrapper['disabledLinkWrap'] = '<td nowrap="nowrap"><p>|</p></td>';
             $wrapper['inactiveLinkWrap'] = '<td nowrap="nowrap"><p>|</p></td>';
             $wrapper['activeLinkWrap'] = '<td' .
-                self::classParam(
+                static::classParam(
                     'browsebox-SCell', '', $prefixId
                 ) . ' nowrap="nowrap"><p>|</p></td>';
             $wrapper['browseLinksWrap'] = trim('<table ' . $browseParams) . '><tr>|</tr></table>';
@@ -612,7 +612,7 @@ class FrontendUtility {
             <!--
                 List browsing box:
             -->
-            <div ' . self::classParam('browsebox', '', $prefixId) . '>
+            <div ' . static::classParam('browsebox', '', $prefixId) . '>
                 |
             </div>';
         }
@@ -648,7 +648,7 @@ class FrontendUtility {
                     $linkArray[$pointerName] = null;
                     $links[] =
                         $cObj->wrap(
-                            self::linkTPKeepCtrlVars(
+                            static::linkTPKeepCtrlVars(
                                 $pObject,
                                 $cObj,
                                 $prefixId,
@@ -689,7 +689,7 @@ class FrontendUtility {
                     $linkArray[$pointerName] = ($pointer - 1 ? $pointer - 1 : '');
                     $links[] =
                         $cObj->wrap(
-                            self::linkTPKeepCtrlVars(
+                            static::linkTPKeepCtrlVars(
                                 $pObject,
                                 $cObj,
                                 $prefixId,
@@ -751,7 +751,7 @@ class FrontendUtility {
                     } else if ($pageText != '') {
                         $linkArray[$pointerName] = ($a ? $a : '');
                         $link =
-                            self::linkTPKeepCtrlVars(
+                            static::linkTPKeepCtrlVars(
                                 $pObject,
                                 $cObj,
                                 $prefixId,
@@ -764,7 +764,7 @@ class FrontendUtility {
                     $linkArray[$pointerName] = ($a ? $a : '');
                     $link =
                         $cObj->wrap(
-                            self::linkTPKeepCtrlVars(
+                            static::linkTPKeepCtrlVars(
                                 $pObject,
                                 $cObj,
                                 $prefixId,
@@ -794,7 +794,7 @@ class FrontendUtility {
                     $linkArray[$pointerName] = $pointer + 1;
                     $links[] =
                         $cObj->wrap(
-                            self::linkTPKeepCtrlVars(
+                            static::linkTPKeepCtrlVars(
                                 $pObject,
                                 $cObj,
                                 $prefixId,
@@ -812,7 +812,7 @@ class FrontendUtility {
                     $linkArray[$pointerName] = $totalPages - 1;
                     $links[] =
                         $cObj->wrap(
-                            self::linkTPKeepCtrlVars(
+                            static::linkTPKeepCtrlVars(
                                 $pObject,
                                 $cObj,
                                 $prefixId,
@@ -867,7 +867,7 @@ class FrontendUtility {
                 $resultCountMsg = sprintf(
                     str_replace(
                         '###SPAN_BEGIN###',
-                        '<span' . self::classParam('browsebox-strong', '', $prefixId) . '>',
+                        '<span' . static::classParam('browsebox-strong', '', $prefixId) . '>',
                         $langObj->getLL('list_browseresults_displays', $usedLang, 'Displaying results ###SPAN_BEGIN###%s to %s</span> out of ###SPAN_BEGIN###%s</span>')
                     ),
                     $count > 0 ? $pR1 : 0,
@@ -885,7 +885,7 @@ class FrontendUtility {
 
     /**
      * Returns true if the array $inArray contains only values allowed to be cached based on the configuration in $this->pi_autoCacheFields
-     * Used by self::linkTPKeepCtrlVars
+     * Used by static::linkTPKeepCtrlVars
      * This is an advanced form of evaluation of whether a URL should be cached or not.
      *
      * @param   object      parent object of type tx_div2007_alpha_browse_base
@@ -941,7 +941,7 @@ class FrontendUtility {
     {
         $output = '';
         foreach (GeneralUtility::trimExplode(',', $class) as $v) {
-            $output .= ' ' . self::getClassName($v, $prefixId, $bAddPrefixTx);
+            $output .= ' ' . static::getClassName($v, $prefixId, $bAddPrefixTx);
         }
         foreach (GeneralUtility::trimExplode(',', $addClasses) as $v) {
             $output .= ' ' . $v;
@@ -968,19 +968,19 @@ class FrontendUtility {
 
     /**
      * Link a string to the current page while keeping currently set values in piVars.
-     * Like self::linkTP, but $urlParameters is by default set to $this->piVars with $overruleCtrlVars overlaid.
+     * Like static::linkTP, but $urlParameters is by default set to $this->piVars with $overruleCtrlVars overlaid.
      * This means any current entries from this->piVars are passed on (except the key "DATA" which will be unset before!) and entries in $overruleCtrlVars will OVERRULE the current in the link.
      *
      * @param   object      parent object of type tx_div2007_alpha_browse_base
      * @param   object      cObject
      * @param   string      prefix id
      * @param   string      The content string to wrap in <a> tags
-     * @param   array       Array of values to override in the current piVars. Contrary to self::linkTP the keys in this array must correspond to the real piVars array and therefore NOT be prefixed with the $this->prefixId string. Further, if a value is a blank string it means the piVar key will not be a part of the link (unset)
+     * @param   array       Array of values to override in the current piVars. Contrary to static::linkTP the keys in this array must correspond to the real piVars array and therefore NOT be prefixed with the $this->prefixId string. Further, if a value is a blank string it means the piVar key will not be a part of the link (unset)
      * @param   boolean     If $cache is set, the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
      * @param   boolean     If set, then the current values of piVars will NOT be preserved anyways... Practical if you want an easy way to set piVars without having to worry about the prefix, "tx_xxxxx[]"
      * @param   integer     Alternative page ID for the link. (By default this function links to the SAME page!)
      * @return  string      The input string wrapped in <a> tags
-     * @see self::linkTP()
+     * @see static::linkTP()
      */
     static public function linkTPKeepCtrlVars (
         $pObject,
@@ -1014,12 +1014,12 @@ class FrontendUtility {
                     $overruleCtrlVars
                 );
             if ($pObject->bAutoCacheEn) {
-                $cache = self::autoCache($pObject, $overruledCtrlVars);
+                $cache = static::autoCache($pObject, $overruledCtrlVars);
             }
         }
 
         $result =
-            self::linkTP(
+            static::linkTP(
                 $pObject,
                 $cObj,
                 $str,
@@ -1058,7 +1058,7 @@ class FrontendUtility {
         $conf['useCacheHash'] = $pObject->bUSER_INT_obj ? 0 : $cache;
         $conf['no_cache'] = $pObject->bUSER_INT_obj ? 0 : !$cache;
         $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
-        $conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . GeneralUtility::implodeArrayForUrl('', $urlParameters, '', TRUE) . $pObject->moreParams;
+        $conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) . $pObject->moreParams;
         $result = $cObj->typoLink($str, $conf);
         return $result;
     }
@@ -1087,7 +1087,7 @@ class FrontendUtility {
         $conf = array()
     )
     {
-        $result = FALSE;
+        $result = false;
 
         if (is_object($cObj)) {
             $conf['parameter'] = $params;
@@ -1110,7 +1110,7 @@ class FrontendUtility {
             }
             $result = $cObj->typolink($label, $conf);
         } else {
-            $out = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink: parameter $cObj is not an object';
+            $result = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink: parameter $cObj is not an object';
         }
         return $result;
     }
@@ -1134,10 +1134,10 @@ class FrontendUtility {
         $conf = array()
     )
     {
-        $result = FALSE;
+        $result = false;
 
         if (is_object($cObj)) {
-            $result = self::getTypoLink(
+            $result = static::getTypoLink(
                 $cObj,
                 '',
                 $params,
@@ -1145,7 +1145,7 @@ class FrontendUtility {
                 $target,
                 $conf
             );
-            if ($result !== FALSE) {
+            if ($result !== false) {
                 $result = $cObj->lastTypoLinkUrl;
             }
         } else {
@@ -1177,7 +1177,7 @@ class FrontendUtility {
     {
         $result = '';
         $parseFunc = '';
-        if (self::hasRTEparser()) {
+        if (static::hasRTEparser()) {
             $parseFunc = $GLOBALS['TSFE']->tmpl->setup['lib.']['parseFunc_RTE.'];
         }
         if (is_array($parseFunc)) {

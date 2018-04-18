@@ -7,7 +7,7 @@ class TestUtility {
 
 
 	static public function test () {
-		return TRUE;
+		return true;
 	}
 
 

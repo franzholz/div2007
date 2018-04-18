@@ -201,7 +201,7 @@ class MailUtility {
 
 			// HTML
 		if (trim($HTMLContent)) {
-			$HTMLContent = self::embedMedia($mail, $HTMLContent);
+			$HTMLContent = static::embedMedia($mail, $HTMLContent);
 			$mail->setBody($HTMLContent, 'text/html', $charset);
 		}
 
@@ -289,7 +289,7 @@ class MailUtility {
 	static public function embedMedia ($mail, $htmlContent) {
 		$substitutedHtmlContent = $htmlContent;
 		$media = array();
-		$attribRegex = self::makeTagRegex(array('img', 'embed', 'audio', 'video'));
+		$attribRegex = static::makeTagRegex(array('img', 'embed', 'audio', 'video'));
 			// Split the document by the beginning of the above tags
 		$codepieces = preg_split($attribRegex, $htmlContent);
 		$len = strlen($codepieces[0]);
@@ -300,7 +300,7 @@ class MailUtility {
 			$len += strlen($tag) + strlen($codepieces[$i]) + 2;
 			$dummy = preg_match('/[^>]*/', $codepieces[$i], $reg);
 				// Fetches the attributes for the tag
-			$attributes = self::getTagAttributes($reg[0]);
+			$attributes = static::getTagAttributes($reg[0]);
 			if ($attributes['src'] != '' && $attributes['src'] != 'clear.gif') {
 				$media[] = $attributes['src'];
 			}

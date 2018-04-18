@@ -167,7 +167,7 @@ class TableUtility {
 	 * @return	string		The clause starting like " AND ...=... AND ...=..."
 	 * @see tslib_cObj::enableFields(), deleteClause()
 	 */
-	static public function enableFields ($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = TRUE) {
+	static public function enableFields ($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = true) {
 		if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
 			$show_hidden = $table == 'pages' ? $GLOBALS['TSFE']->showHiddenPage : $GLOBALS['TSFE']->showHiddenRecords;
 		}
@@ -219,7 +219,7 @@ class TableUtility {
 						!$ignore_array['fe_group']
 					) {
 						$field = $table . '.' . $ctrl['enablecolumns']['fe_group'];
-						$query .= self::getMultipleGroupsWhereClause($field, $table);
+						$query .= static::getMultipleGroupsWhereClause($field, $table);
 					}
 
 						// Call hook functions for additional enableColumns
@@ -262,7 +262,7 @@ class TableUtility {
 	static public function checkPidArray ($listArr) {
 		$outArr = array();
 		if (is_array($listArr) && count($listArr)) {
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . self::enableFields('pages') . ' AND doktype NOT IN (' . $this->checkPid_badDoktypeList . ')');
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . static::enableFields('pages') . ' AND doktype NOT IN (' . $this->checkPid_badDoktypeList . ')');
 			if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
 				$GLOBALS['TT']->setTSlogMessage($error . ': ' . $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery, 3);
 			} else {
@@ -280,7 +280,7 @@ class TableUtility {
 	 * @return array
 	 */
 	static public function getSystemFields () {
-		return self::$systemFields;
+		return static::$systemFields;
 	}
 
 
@@ -289,12 +289,12 @@ class TableUtility {
 	 *
 	 * @return array
 	 */
-	static public function getFields ($table, $prefix = FALSE) {
-		$result = FALSE;
+	static public function getFields ($table, $prefix = false) {
+		$result = false;
 
 		if (is_array($GLOBALS['TCA'][$table]['columns'])) {
 			$tcaFields = array_keys($GLOBALS['TCA'][$table]['columns']);
-			$systemFields = self::getSystemFields();
+			$systemFields = static::getSystemFields();
 			$result = array_diff($tcaFields, $systemFields);
 			if ($prefix) {
 				$prefixArray = array();

@@ -83,20 +83,20 @@ class FlexformUtility {
         //handle the case $flexForm is a string. It can be a xml string or key array
         if(is_string($flexForm)) {
             //test if $flexForm already exists in the memory. In this case load the flexform according to its key
-            if(array_key_exists($flexForm, self::$flexForms)) {
-                self::$flexForm = self::$flexForms[$flexForm];
+            if(array_key_exists($flexForm, static::$flexForms)) {
+                static::$flexForm = static::$flexForms[$flexForm];
             } else {
                 //if false, it means it is *still* a string to convert in an array
-                self::$flexForm = GeneralUtility::xml2array($flexForm);
+                static::$flexForm = GeneralUtility::xml2array($flexForm);
             }
         } else {
             //else it is right away an array, load it in memory
-            self::$flexForm = $flexForm;
+            static::$flexForm = $flexForm;
         }
 
         //true when the flexform is going to be stored for further use
         if($flexFormName != '') {
-            self::setFlexForm($flexFormName, self::$flexForm);
+            static::setFlexForm($flexFormName, static::$flexForm);
         }
     }
 
@@ -111,7 +111,7 @@ class FlexformUtility {
         $flexFormName,
         $flexForm
     ) {
-        self::$flexForms[$flexFormName] = $flexForm;
+        static::$flexForms[$flexFormName] = $flexForm;
     }
 
     /**
@@ -122,8 +122,8 @@ class FlexformUtility {
     */
     static public function getFlexForm ($flexFormName) {
         $result = false;
-        if(array_key_exists($flexFormName, self::$flexForms)) {
-            $result = self::$flexForms[$flexFormName];
+        if(array_key_exists($flexFormName, static::$flexForms)) {
+            $result = static::$flexForms[$flexFormName];
         }
         return $result;
     }
@@ -145,14 +145,14 @@ class FlexformUtility {
             is_array(func_get_arg(0)) ||
             array_key_exists(
                 func_get_arg(0),
-                self::$flexForms
+                static::$flexForms
             )
         ) {
             //case 1, $args 1 is an array...     case 2, $args 1 is a key array that contains a flexform
-            is_array(func_get_arg(0)) ? $_flexForm = func_get_arg(0) : $_flexForm = &self::getFlexForm(func_get_arg(0));
+            is_array(func_get_arg(0)) ? $_flexForm = func_get_arg(0) : $_flexForm = &static::getFlexForm(func_get_arg(0));
             $index = 1;
         } else {
-            $_flexForm = &self::$flexForm;
+            $_flexForm = &static::$flexForm;
             $index = 0;
         }
         $fieldName = func_get_arg($index);
@@ -164,7 +164,7 @@ class FlexformUtility {
         $result = null;
         if (is_array($sheetArray)) {
             $result =
-                self::_getFFValueFromSheetArray(
+                static::_getFFValueFromSheetArray(
                     $sheetArray,
                     explode('/', $fieldName),
                     $value
