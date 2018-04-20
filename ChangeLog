@@ -1,3 +1,6 @@
+2018-04-20 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: add the TYPO3 7.6.23 method XHTML_clean under \JambageCom\Div2007\Utility\HtmlUtility::XHTML_clean as a HTML to XHTML converter. However this seems not to work yet. Some initialization calls must be done before.
+
 2018-04-18 Franz Holzinger  <franz@ttproducts.de>
     * Replace self method calls by static method calls in Utility classes in order to allow inheritance for static classes.
 

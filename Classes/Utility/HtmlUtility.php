@@ -47,15 +47,18 @@ class HtmlUtility {
     static private   $initialized = false;
     static protected $xhtmlFix = false;
 
-    static public function setInitialized ($initialized) {
+    static public function setInitialized ($initialized)
+    {
         static::$initialized = $initialized;
     }
 
-    static public function getInitialized () {
+    static public function getInitialized ()
+    {
         return static::$initialized;
     }
 
-    static public function useXHTML () {
+    static public function useXHTML ()
+    {
         $result = false;
         if (is_object($GLOBALS['TSFE'])) {
             $config = $GLOBALS['TSFE']->config['config'];
@@ -69,21 +72,67 @@ class HtmlUtility {
         return $result;
     }
 
-    static public function generateXhtmlFix () {
+    static public function generateXhtmlFix ()
+    {
         static::$xhtmlFix = (static::useXHTML() ? '/' : '');
         static::setInitialized(true);
         return static::$xhtmlFix;
     }
 
-    static public function getXhtmlFix () {
+    static public function getXhtmlFix ()
+    {
         return static::$xhtmlFix;
     }
 
-    static public function determineXhtmlFix () {
+    static public function determineXhtmlFix ()
+    {
         if (static::getInitialized()) {
             $result = static::getXhtmlFix();
         } else {
             $result = static::generateXhtmlFix();
+        }
+        return $result;
+    }
+
+    /**
+     * Attention. Because this method might not work as intended. I recommend to use 
+     * a linux command line tool "tidy" to convert your files from HTML to XTHML.
+     *
+     * Tries to convert the content to be XHTML compliant and other stuff like that.
+     * STILL EXPERIMENTAL. See comments below.
+     *
+     * What it does NOT do (yet) according to XHTML specs.:
+     * - Wellformedness: Nesting is NOT checked
+     * - name/id attribute issue is not observed at this point.
+     * - Certain nesting of elements not allowed. Most interesting, <PRE> cannot contain img, big,small,sub,sup ...
+     * - Wrapping scripts and style element contents in CDATA - or alternatively they should have entitites converted.
+     * - Setting charsets may put some special requirements on both XML declaration/ meta-http-equiv. (C.9)
+     * - UTF-8 encoding is in fact expected by XML!!
+     * - stylesheet element and attribute names are NOT converted to lowercase
+     * - ampersands (and entities in general I think) MUST be converted to an entity reference! (&amps;). This may mean further conversion of non-tag content before output to page. May be related to the charset issue as a whole.
+     * - Minimized values not allowed: Must do this: selected="selected"
+     *
+     * What it does at this point:
+     * - All tags (frame,base,meta,link + img,br,hr,area,input) is ended with "/>" - others?
+     * - Lowercase for elements and attributes
+     * - All attributes in quotes
+     * - Add "alt" attribute to img-tags if it's not there already.
+     *
+     * @param string $content Content to clean up
+     * @param boolean $onlyForXhtml The conversion is only done when XHTML is activated for a page in the TYPO3 config.doctype setup.
+     * @return string Cleaned up content returned.
+     * @access private
+     */
+    static public function XHTML_clean ($content, $onlyForXhtml = true)
+    {
+        if (
+            !$onlyForXhtml ||
+            static::useXHTML()
+        ) {
+            $htmlParser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Html\HtmlParser::class);
+            $result = $htmlParser->HTMLcleaner($content, [], 1, 0, ['xhtml' => 1]);
+        } else {
+            $result =  $content;
         }
         return $result;
     }
