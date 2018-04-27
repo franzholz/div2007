@@ -46,6 +46,8 @@ use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
 use TYPO3\CMS\Saltedpasswords\Salt\SaltFactory;
 use TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility;
 
+use JambageCom\Div2007\Constants\ErrorCode;
+
 
 class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
         // Extension key
@@ -56,7 +58,8 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return	string	the storage security level
     */
-    static protected function getStorageSecurityLevel () {
+    static protected function getStorageSecurityLevel ()
+    {
         $result = 'normal';
         if (
             ExtensionManagementUtility::isLoaded('saltedpasswords') &&
@@ -74,8 +77,8 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * @return	string	encrypted password
     *           boolean false in case of an error
     */
-    static public function encryptPasswordForStorage ($password) {
-
+    static public function encryptPasswordForStorage ($password)
+    {
         $encryptedPassword = $password;
         if ($password != '') {
             switch (self::getStorageSecurityLevel()) {
@@ -111,7 +114,8 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
         $password,
         &$cryptedPassword,
         &$autoLoginKey
-    ) {
+    )
+    {
         $result = false;
         $privateKey = '';
         $cryptedPassword = '';
@@ -126,7 +130,13 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
             $keyDetails = openssl_pkey_get_details($keyPair);
             $publicKey = $keyDetails['key'];
 
-            if (@openssl_public_encrypt($password, $cryptedPassword, $publicKey)) {
+            if (
+                @openssl_public_encrypt(
+                    $password,
+                    $cryptedPassword,
+                    $publicKey
+                )
+            ) {
                 $autoLoginKey = $privateKey;
                 $result = true;
             }
@@ -138,17 +148,21 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     /**
     * Decrypts the password for auto-login on confirmation or invitation acceptation
     *
-    * @param	string	$password: the password to be decrypted
-    * @param	string	$autoLoginKey: the auto-login private key
+    * @param string	$password: incoming and outgoing string of the password to be decrypted
+    * @param string $errorCode: outgoing text with an error code
+    * @param string $errorMessage: outgoing text with an error message
+    * @param string	$autoLoginKey: incoming the auto-login private key
     * @return	boolean  true if decryption is successfull or no rsaauth is used
     */
     public function decryptPasswordForAutoLogin (
         &$password,
-        &$message,
+        &$errorCode,
+        &$errorMessage,
         $autoLoginKey
-    ) {
+    )
+    {
         $result = true;
-        $message = '';
+        $errorMessage = '';
 
         if ($autoLoginKey != '') {
             $privateKey = $autoLoginKey;
@@ -163,13 +177,14 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                         if ($decryptedPassword) {
                             $password = $decryptedPassword;
                         } else {
+                            $errorCode = SECURITY_RSA_AUTH_DECRYPTION_FAILED;
                                 // Failed to decrypt auto login password
-                            $message =
+                            $errorMessage =
                                 $GLOBALS['TSFE']->sL(
                                     'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_decrypt_auto_login_failed'
                                 );
                             GeneralUtility::sysLog(
-                                $message,
+                                $errorMessage,
                                 $this->extensionKey,
                                 GeneralUtility::SYSLOG_SEVERITY_ERROR
                             );

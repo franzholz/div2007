@@ -1,3 +1,8 @@
+2018-04-27 Franz Holzinger  <franz@ttproducts.de>
+    * important change: The API for Security classes has been inhanced by code error parameters. This allows the caller to determine by himself how to handle error cases.
+    * new feature: add methods createTime and addTimeZone
+    * new feature: add an error code constants class Constants\ErrorCode
+
 2018-04-20 Franz Holzinger  <franz@ttproducts.de>
     * new feature: add the TYPO3 7.6.23 method XHTML_clean under \JambageCom\Div2007\Utility\HtmlUtility::XHTML_clean as a HTML to XHTML converter. However this seems not to work yet. Some initialization calls must be done before.
 

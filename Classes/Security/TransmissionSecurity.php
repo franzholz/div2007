@@ -44,6 +44,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
 use TYPO3\CMS\Rsaauth\Storage\StorageFactory;
 
+use JambageCom\Div2007\Constants\ErrorCode;
 use JambageCom\Div2007\Utility\HtmlUtility;
 
 
@@ -64,7 +65,11 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string $extensionKey: empty or extension key
     * @return	void
     */
-    public function __construct ($extensionKey = '', $allowSyslog = true) {
+    public function __construct (
+        $extensionKey = '',
+        $allowSyslog = true
+    )
+    {
         if ($extensionKey != '') {
             $this->extensionKey = $extensionKey;
         }
@@ -78,7 +83,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * @param	string
     * @return	void
     */
-    public function setEncryptionMarker ($encryptionMarker) {
+    public function setEncryptionMarker ($encryptionMarker)
+    {
         $this->encryptionMarker = $encryptionMarker;
     }
 
@@ -97,7 +103,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * @param	string
     * @return	void
     */
-    public function setHiddenMarker ($hiddenMarker) {
+    public function setHiddenMarker ($hiddenMarker)
+    {
         $this->hiddenMarker = $hiddenMarker;
     }
 
@@ -106,7 +113,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return	string
     */
-    public function getHiddenMarker () {
+    public function getHiddenMarker ()
+    {
         return $this->hiddenMarker;
     }
 
@@ -115,7 +123,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return	string
     */
-    public function getEncryptionAttribute () {
+    public function getEncryptionAttribute ()
+    {
         return $this->encryptionAttribute;
     }
 
@@ -125,7 +134,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string $level: empty or loginSecurityLevel
     * @return	void
     */
-    protected function setTransmissionSecurityLevel ($level = '') {
+    protected function setTransmissionSecurityLevel ($level = '')
+    {
         if ($level == '') {
             $level = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
         }
@@ -137,7 +147,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return	string	the transmission security level
     */
-    public function getTransmissionSecurityLevel () {
+    public function getTransmissionSecurityLevel ()
+    {
         return $this->transmissionSecurityLevel;
     }
     
@@ -147,7 +158,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * @param string $level: 
     * @return	array	the required extensions for the given transmission security level
     */
-    public function getRequiredExtensions ($level) {
+    public function getRequiredExtensions ($level)
+    {
         $result = '';
 
         if (isset($this->requiredExtensions[$level])) {
@@ -161,10 +173,16 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * Decrypts fields that were encrypted for transmission
     *
     * @param array $row: incoming and outgoing array that may contain encrypted fields which will be decrypted
+    * @param string $errorCode: outgoing text with an error code
     * @param string $errorMessage: outgoing text with an error message
     * @return boolean  true if any entry inside of the $row array has been decrypted.
     */
-    public function decryptIncomingFields (array &$row, &$errorMessage) {
+    public function decryptIncomingFields (
+        array &$row,
+        &$errorCode,
+        &$errorMessage
+    )
+    {
         $decrypted = false;
 
         if (count($row)) {
@@ -251,6 +269,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                                     // RSA auth service failed to process incoming password
                                     // May happen if the key is wrong
                                     // May happen if multiple instances of rsaauth are on same page
+                                    // May happen if the entered password has been empty
+                                $errorCode = SECURITY_RSA_AUTH_FAILED_INCOMING;
                                 $errorMessage =
                                     $GLOBALS['TSFE']->sL(
                                     'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_process_incoming_field_failed');
@@ -270,6 +290,7 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                                 $storage->put(null);
                             }
                         } else {
+                            $errorCode = SECURITY_RSA_AUTH_FAILED_PRIVATE_KEY;
                                 // RSA auth service failed to retrieve private key
                                 // May happen if the key was already removed
                             $errorMessage =
@@ -284,6 +305,7 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                             }
                         }
                     } else {
+                        $errorCode = SECURITY_RSA_AUTH_BACKEND_NOT_AVAILABLE;
                             // Required RSA auth backend not available
                             // Should not happen. It should have been checked before the call of this function
                         $errorMessage =
@@ -321,7 +343,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
         $extensionKey,
         $formId,
         $checkPasswordAgain = false
-    ) {
+    )
+    {
         if (
             $this->getTransmissionSecurityLevel() == 'rsa' &&
             $checkPasswordAgain
@@ -360,7 +383,8 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
     */
     public function getEmptyMarkers (
         array &$markerArray
-    ) {
+    )
+    {
         $markerArray[$this->getEncryptionMarker()] = '';
         $markerArray[$this->getHiddenMarker()]     = '';    
     }
@@ -379,7 +403,8 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
         $extensionKey = '',
         $checkPasswordAgain = false,
         $loginForm = false
-    ) {
+    )
+    {
         $markerArray[$this->getEncryptionMarker()] = '';
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $extraHiddenFieldsArray = array();

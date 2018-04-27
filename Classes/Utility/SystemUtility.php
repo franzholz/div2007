@@ -115,5 +115,30 @@ class SystemUtility {
         }
         return $result;
     }
+
+    /**
+    * Adds the time zone to the given unix time parameter
+    *
+    * @param string $time: incoming and outgoing UNIX time
+    * @return array of the records of all FE groups
+    */
+    static public function addTimeZone (&$time) {
+        if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['serverTimeZone'])) {
+            $time += ($GLOBALS['TYPO3_CONF_VARS']['SYS']['serverTimeZone'] * 3600);
+        }
+    }
+
+    /**
+    * Reads the current time and considers the time zone
+    *
+    * @return array of the records of all FE groups
+    */
+    static public function createTime ()
+    {
+        $result = time();
+        static::addTimeZone($result);
+        return $result;
+    }
 }
+
 

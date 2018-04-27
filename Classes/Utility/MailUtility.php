@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -174,12 +174,13 @@ class MailUtility {
 		}
 
 		$mail = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Mail\MailMessage::class);
-		$mail->setTo($toEMail)
+		$mail->setCharset($charset)
+            ->setTo($toEMail)
 			->setFrom(array($fromEMail => $fromName))
 			->setReturnPath($returnPath)
 			->setSubject($subject)
-			->setBody($HTMLContent, 'text/HTMLContent', $charset)
-			->addPart($PLAINContent, 'text/plain', $charset);
+			->setBody($HTMLContent, 'text/HTMLContent')
+			->addPart($PLAINContent, 'text/plain');
 
 		if ($replyTo) {
 			$mail->setReplyTo(array($replyTo => $fromEmail));
