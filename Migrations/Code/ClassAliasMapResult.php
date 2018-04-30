@@ -937,7 +937,7 @@ $classArray = array(
 $deleteClassArray = array();
 $variantClassArray = array();
 
-if (version_compare(TYPO3_version, '8.0.0', '>=')) {
+if (class_exists(\TYPO3\CMS\Rtehtmlarea\Controller\Wizard\RteController::class) || version_compare(TYPO3_version, '8.0.0', '>=')) {
     $variantClassArray = array(
         'Tx_Aboutmodules_Controller_ModulesController' => \TYPO3\CMS\About\Controller\ModulesController::class,
         'SC_wizard_rte' => \TYPO3\CMS\Rtehtmlarea\Controller\Wizard\RteController::class,
@@ -1169,4 +1169,3 @@ $classArray = array_diff_key($classArray, $deleteClassArray);
 $classArray = array_merge($classArray, $variantClassArray);
 
 ksort($classArray);
-
