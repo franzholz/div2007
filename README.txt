@@ -5,3 +5,13 @@ It provides the migration classes for TYPO3 6.x, 7.x and 8.x.
 
 Starting with version 1.8.0 TYPO3 6.2 and PHP 5.5.0 are the minimum requirement for extension div2007.
       
+Some texts which are used in many extensions are added to the local languages files of div2007. You can simply reuse them in your own extensions.
+
+Use this setup to overwrite the privacy policy conditions:
+
+lib.div2007 {
+  _LOCAL_LANG.default {
+    privacy_policy.acknowledged = I agree and confirm to have read the privacy policy.
+    privacy_policy.hint_1 = A telephone call or an email sent to us is enough to be deleted from our database. You can do this at any time.
+  }
+}

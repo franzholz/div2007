@@ -3,6 +3,9 @@
 	<file source-language="en" datatype="plaintext" original="messages" date="2018-03-30T12:00:00Z" product-name="div2007">
 		<header/>
 		<body>
+			<trans-unit id="example_text" xml:space="preserve">
+				<source>Overwrite this example text in your div2007 setup.</source>
+			</trans-unit>
 			<trans-unit id="security.internal_decrypt_auto_login_failed" xml:space="preserve">
 				<source>Failed to decrypt the auto login password</source>
 			</trans-unit>
@@ -17,6 +20,27 @@
 			</trans-unit>
 			<trans-unit id="error.internal_required_extension_missing" xml:space="preserve">
 				<source>The extension "%1$s" is required and must be installed</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy.title" xml:space="preserve">
+				<source>Privacy Policy</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy.acknowledgement" xml:space="preserve">
+				<source>Privacy Policy Acknowledgement</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy.approval_required" xml:space="preserve">
+				<source>Before you can continue, your approval to this website's privacy policy is required</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy.acknowledged" xml:space="preserve">
+				<source>I acknowledge and agree to the privacy policy.</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy.acknowledged_2" xml:space="preserve">
+				<source>I agree for any data I transmit through this site, that you can use them in accordance with its Privacy Policy.</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy.hint" xml:space="preserve">
+				<source>Hint</source>
+			</trans-unit>
+			<trans-unit id="privacy_policy.hint_1" xml:space="preserve">
+				<source>You have the right to renounce the agreement to the usage of your personal data at any time via email.</source>
 			</trans-unit>
 		</body>
 	</file>

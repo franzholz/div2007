@@ -1,3 +1,8 @@
+2018-05-01 Franz Holzinger  <franz@ttproducts.de>
+    * add texts for the DSGVO / GDPR compliant privacy policy agreements taken from extension agency
+    * new feature: LocalisationBase::init loads the div2007 internal language file by default and adds its texts to the texts of the calling extension.
+    * add a setup default configuration with an example example_text for the overwriting of the texts in the language file
+
 2018-04-27 Franz Holzinger  <franz@ttproducts.de>
     * important change: The API for Security classes has been inhanced by code error parameters. This allows the caller to determine by himself how to handle error cases.
     * new feature: add methods createTime and addTimeZone

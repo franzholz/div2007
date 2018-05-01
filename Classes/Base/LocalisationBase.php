@@ -68,8 +68,14 @@ class LocalisationBase {
     private $hasBeenInitialized = false;
 
 
-    public function init ($cObj, $extensionKey, $conf, $scriptRelPath, $lookupFilename = '') {
-
+    public function init (
+        $cObj,
+        $extensionKey,
+        $conf,
+        $scriptRelPath,
+        $lookupFilename = '',
+        $useDiv2007Language = true
+    ) {
         if (
             isset($GLOBALS['TSFE']->config['config']) &&
             isset($GLOBALS['TSFE']->config['config']['language'])
@@ -83,6 +89,15 @@ class LocalisationBase {
         $this->cObj = $cObj;
         $this->extensionKey = $extensionKey;
         $this->extKey = $extensionKey; // DEPRECATED
+        $internalConf = $GLOBALS['TSFE']->tmpl->setup['lib.'][DIV2007_EXT . '.'];
+        if (
+            isset($internalConf) &&
+            is_array($internalConf) &&
+            is_array($conf)
+        ) {
+            $conf = array_merge_recursive($internalConf, $conf);
+        }
+
         $this->setConf($conf);
         $this->scriptRelPath = $scriptRelPath;
         $this->lookupFilename = $lookupFilename;
@@ -90,6 +105,11 @@ class LocalisationBase {
         $this->typoVersion = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
 
         $this->hasBeenInitialized = true;
+        if ($useDiv2007Language) {
+            $this->loadLL(
+                'EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf'
+            );
+        }
     }
 
     public function setLocallang (array &$locallang) {

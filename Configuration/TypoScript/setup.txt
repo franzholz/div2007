@@ -1,0 +1,14 @@
+##
+## @package TYPO3
+## @subpackage div2007
+##
+
+
+
+lib.div2007 {
+  _LOCAL_LANG.default {
+    example_text = This is the modified example text.
+  }
+}
+
+
