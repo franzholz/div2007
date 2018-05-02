@@ -4,8 +4,10 @@ It provides the migration classes for TYPO3 6.x, 7.x and 8.x.
 1.7.20 is the last version which supports TYPO3 4.5 - 6.1 and PHP < 5.5 .
 
 Starting with version 1.8.0 TYPO3 6.2 and PHP 5.5.0 are the minimum requirement for extension div2007.
+
+div2007 contained a migration class map for TYPO3 4.5 - 6.1. This has been removed and put into the extension migration_core. If you run TYPO3 7 oder 8 then you might consider to install the extension migration_core if older TYPO3 methods are still used in extensions which did rely on div2007.
       
-Some texts which are used in many extensions are added to the local languages files of div2007. You can simply reuse them in your own extensions.
+Some texts which are used in many extensions are added to the local language files of div2007. You can simply reuse them in your own extensions.
 
 Use this setup to overwrite the privacy policy conditions:
 
@@ -15,3 +17,4 @@ lib.div2007 {
     privacy_policy.hint_1 = A telephone call or an email sent to us is enough to be deleted from our database. You can do this at any time.
   }
 }
+
