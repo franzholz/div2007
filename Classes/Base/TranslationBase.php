@@ -119,16 +119,16 @@ class TranslationBase {
         }
     }
 
-    public function setLocalLang (array &$locallang) {
-        $this->LOCAL_LANG = &$locallang;
+    public function setLocalLang (array $locallang) {
+        $this->LOCAL_LANG = $locallang;
     }
 
     public function getLocalLang () {
         return $this->LOCAL_LANG;
     }
 
-    public function setLocalLangCharset (&$locallang) {
-        $this->LOCAL_LANG_charset = &$locallang;
+    public function setLocalLangCharset ($locallang) {
+        $this->LOCAL_LANG_charset = $locallang;
     }
 
     public function getLocalLangCharset () {
