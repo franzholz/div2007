@@ -47,13 +47,12 @@ class TranslationBase {
     public $LOCAL_LANG = array();   // Local Language content
     public $LOCAL_LANG_charset = array();   // Local Language content charset for individual labels (overriding)
     public $LOCAL_LANG_loaded = 0;  // Flag that tells if the locallang file has been fetch (or tried to be fetched) already.
-    public $LLkey = 'default';      // Pointer to the language to use.
-    public $altLLkey = '';          // Pointer to alternative fall-back language to use.
-    public $LLtestPrefix = '';      // You can set this during development to some value that makes it easy for you to spot all labels that ARe delivered by the getLL function.
-    public $LLtestPrefixAlt = '';   // Save as LLtestPrefix, but additional prefix for the alternative value in getLL() function calls
+    public $LocalLangKey = 'default';      // Pointer to the language to use.
+    public $altLocalLangKey = '';          // Pointer to alternative fall-back language to use.
+    public $localLangTestPrefix = '';      // You can set this during development to some value that makes it easy for you to spot all labels that ARe delivered by the getLocalLang function.
+    public $localLangTestPrefixAlt = '';   // Save as localLangTestPrefix, but additional prefix for the alternative value in getLocalLang() function calls
     public $scriptRelPath;          // Path to the plugin class script relative to extension directory, eg. 'pi1/class.tx_newfaq_pi1.php'
     public $extensionKey = '';	// extension key must be overridden
-    public $extKey;             // DEPRECATED
     protected $lookupFilename = ''; // filename used for the lookup method
 
     /**
@@ -77,9 +76,9 @@ class TranslationBase {
             isset($GLOBALS['TSFE']->config['config']) &&
             isset($GLOBALS['TSFE']->config['config']['language'])
         ) {
-            $this->LLkey = $GLOBALS['TSFE']->config['config']['language'];
+            $this->LocalLangKey = $GLOBALS['TSFE']->config['config']['language'];
             if ($GLOBALS['TSFE']->config['config']['language_alt']) {
-                $this->altLLkey = $GLOBALS['TSFE']->config['config']['language_alt'];
+                $this->altLocalLangKey = $GLOBALS['TSFE']->config['config']['language_alt'];
             }
         }
 
@@ -114,7 +113,7 @@ class TranslationBase {
 
         $this->hasBeenInitialized = true;
         if ($useDiv2007Language) {
-            $this->loadLL(
+            $this->loadLocalLang(
                 'EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf'
             );
         }
@@ -144,18 +143,17 @@ class TranslationBase {
         return $this->LOCAL_LANG_loaded;
     }
 
-    public function setLLkey ($llKey) {
-        $this->LLkey = $llKey;
+    public function setLocalLangKey ($localLangKey) {
+        $this->LocalLangKey = $localLangKey;
     }
 
-    public function getLLkey () {
-        return $this->LLkey;
+    public function getLocalLangKey () {
+        return $this->LocalLangKey;
     }
 
     public function getExtensionKey () {
         return $this->extensionKey;
     }
-
 
     public function setConfLocalLang ($conf) {
         $this->confLocalLang = $conf;
@@ -196,7 +194,7 @@ class TranslationBase {
         /**
      * Attention: only for TYPO3 versions above 4.6
      * Returns the localized label of the LOCAL_LANG key, $key used since TYPO3 4.6
-     * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->LLtestPrefixAlt and ->LLtestPrefix
+     * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->localLangTestPrefixAlt and ->localLangTestPrefix
      *
      * @param   string      The key from the LOCAL_LANG array for which to return the value.
      * @param   string      input: if set then this language is used if possible. output: the used language
@@ -204,7 +202,7 @@ class TranslationBase {
      * @param   boolean     If true, the output label is passed through htmlspecialchars()
      * @return  string      The value from LOCAL_LANG. false in error case
      */
-    public function getLL (
+    public function getLocalLang (
         $key,
         &$usedLang = '',
         $alternativeLabel = '',
@@ -227,11 +225,11 @@ class TranslationBase {
                 $word = $this->LOCAL_LANG[$usedLang][$key][0]['target'];
             }
         } else if (
-            $this->getLLkey() != '' &&
-            is_array($this->LOCAL_LANG[$this->getLLkey()][$key][0]) &&
-            $this->LOCAL_LANG[$this->getLLkey()][$key][0]['target'] != ''
+            $this->getLocalLangKey() != '' &&
+            is_array($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]) &&
+            $this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['target'] != ''
         ) {
-            $usedLang = $this->getLLkey();
+            $usedLang = $this->getLocalLangKey();
 
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if ($this->LOCAL_LANG_charset[$usedLang][$key] != '') {
@@ -240,14 +238,14 @@ class TranslationBase {
                     $this->LOCAL_LANG_charset[$usedLang][$key]
                 );
             } else {
-                $word = $this->LOCAL_LANG[$this->getLLkey()][$key][0]['target'];
+                $word = $this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['target'];
             }
         } elseif (
-            $this->altLLkey &&
-            is_array($this->LOCAL_LANG[$this->altLLkey][$key][0]) &&
-            $this->LOCAL_LANG[$this->altLLkey][$key][0]['target'] != ''
+            $this->altLocalLangKey &&
+            is_array($this->LOCAL_LANG[$this->altLocalLangKey][$key][0]) &&
+            $this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['target'] != ''
         ) {
-            $usedLang = $this->altLLkey;
+            $usedLang = $this->altLocalLangKey;
 
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if (isset($this->LOCAL_LANG_charset[$usedLang][$key])) {
@@ -256,7 +254,7 @@ class TranslationBase {
                     $this->LOCAL_LANG_charset[$usedLang][$key]
                 );
             } else {
-                $word = $this->LOCAL_LANG[$this->altLLkey][$key][0]['target'];
+                $word = $this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['target'];
             }
         } elseif (
             is_array($this->LOCAL_LANG['default'][$key][0]) &&
@@ -267,10 +265,10 @@ class TranslationBase {
             $word = $this->LOCAL_LANG[$usedLang][$key][0]['target'];
         } else {
                 // Return alternative string or empty
-            $word = (isset($this->LLtestPrefixAlt)) ? $this->LLtestPrefixAlt . $alternativeLabel : $alternativeLabel;
+            $word = (isset($this->localLangTestPrefixAlt)) ? $this->localLangTestPrefixAlt . $alternativeLabel : $alternativeLabel;
         }
 
-        $output = (isset($this->LLtestPrefix)) ? $this->LLtestPrefix . $word : $word;
+        $output = (isset($this->localLangTestPrefix)) ? $this->localLangTestPrefix . $word : $word;
 
         if ($hsc) {
             $output = htmlspecialchars($output);
@@ -288,7 +286,7 @@ class TranslationBase {
      * @param   boolean     If true, then former language items can be overwritten from the new file
      * @return  boolean
      */
-    public function loadLL (
+    public function loadLocalLang (
         $langFileParam = '',
         $overwrite = true
     ) {
@@ -316,7 +314,7 @@ class TranslationBase {
             $languageFactory = GeneralUtility::makeInstance($useClassName);
             $tempLOCAL_LANG = $languageFactory->getParsedData(
                 $basePath,
-                $this->getLLkey(),
+                $this->getLocalLangKey(),
                 'UTF-8'
             );
         } else {
@@ -324,7 +322,7 @@ class TranslationBase {
             $tempLOCAL_LANG =
                 GeneralUtility::readLLfile(
                     $basePath,
-                    $this->getLLkey(),
+                    $this->getLocalLangKey(),
                     $GLOBALS['TSFE']->renderCharset
                 );
         }
@@ -345,11 +343,11 @@ class TranslationBase {
         }
         $charset = 'UTF-8';
 
-        if ($this->altLLkey) {
+        if ($this->altLocalLangKey) {
             $tempLOCAL_LANG =
                 GeneralUtility::readLLfile(
                     $basePath,
-                    $this->altLLkey,
+                    $this->altLocalLangKey,
                     $charset
                 );
 
@@ -371,10 +369,10 @@ class TranslationBase {
         }
 
             // Overlaying labels from TypoScript (including fictitious language keys for non-system languages!):
-        $confLL = $this->getConfLocalLang();
+        $confLocalLang = $this->getConfLocalLang();
 
-        if (is_array($confLL)) {
-            foreach ($confLL as $languageKey => $languageArray) {
+        if (is_array($confLocalLang)) {
+            foreach ($confLocalLang as $languageKey => $languageArray) {
                 if (is_array($languageArray)) {
                     if (!isset($this->LOCAL_LANG[$languageKey])) {
                         $this->LOCAL_LANG[$languageKey] = array();
