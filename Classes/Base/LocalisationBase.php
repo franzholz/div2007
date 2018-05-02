@@ -42,9 +42,10 @@ namespace JambageCom\Div2007\Base;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+// DEPRECATED: Use the class TranslationBase instead
 
 class LocalisationBase {
-    public $cObj;
+    public $cObj; // DEPRECATED
     public $LOCAL_LANG = array();   // Local Language content
     public $LOCAL_LANG_charset = array();   // Local Language content charset for individual labels (overriding)
     public $LOCAL_LANG_loaded = 0;  // Flag that tells if the locallang file has been fetch (or tried to be fetched) already.
@@ -56,7 +57,6 @@ class LocalisationBase {
     public $extensionKey = '';	// extension key must be overridden
     public $extKey;             // DEPRECATED
     protected $lookupFilename = ''; // filename used for the lookup method
-
     /**
     * Should normally be set in the main function with the TypoScript content passed to the method.
     *
@@ -64,12 +64,12 @@ class LocalisationBase {
     * $conf[userFunc] / $conf[includeLibs]  reserved for setting up the USER / USER_INT object. See TSref
     */
     public $conf = array();
-    public $typoVersion;
+    public $typoVersion; // DEPRECATED
     private $hasBeenInitialized = false;
 
 
     public function init (
-        $cObj,
+        $cObj, // DEPRECATED
         $extensionKey,
         $conf,
         $scriptRelPath,
@@ -86,7 +86,9 @@ class LocalisationBase {
             }
         }
 
-        $this->cObj = $cObj;
+        if (is_objetc($cObj)) {
+            $this->cObj = $cObj;
+        }
         $this->extensionKey = $extensionKey;
         $this->extKey = $extensionKey; // DEPRECATED
         $internalConf = $GLOBALS['TSFE']->tmpl->setup['lib.'][DIV2007_EXT . '.'];
@@ -136,11 +138,15 @@ class LocalisationBase {
         return $this->LOCAL_LANG_loaded;
     }
 
+    public function setLLkey ($llKey) {
+        $this->LLkey = $llKey;
+    }
+
     public function getLLkey () {
         return $this->LLkey;
     }
 
-    public function getCObj () {
+    public function getCObj () { // DEPRECATED
         return $this->cObj;
     }
 
@@ -152,15 +158,15 @@ class LocalisationBase {
         return $this->extKey;
     }
 
-    public function setConf ($conf) {
+    public function setConf ($conf) { // DEPRECATED
         $this->conf = $conf;
     }
 
-    public function getConf () {
+    public function getConf () { // DEPRECATED
         return $this->conf;
     }
 
-    public function getTypoVersion () {
+    public function getTypoVersion () { // DEPRECATED
         return $this->typoVersion;
     }
 
@@ -226,11 +232,11 @@ class LocalisationBase {
                 $word = $this->LOCAL_LANG[$usedLang][$key][0]['target'];
             }
         } else if (
-            $this->LLkey != '' &&
-            is_array($this->LOCAL_LANG[$this->LLkey][$key][0]) &&
-            $this->LOCAL_LANG[$this->LLkey][$key][0]['target'] != ''
+            $this->getLLkey() != '' &&
+            is_array($this->LOCAL_LANG[$this->getLLkey()][$key][0]) &&
+            $this->LOCAL_LANG[$this->getLLkey()][$key][0]['target'] != ''
         ) {
-            $usedLang = $this->LLkey;
+            $usedLang = $this->getLLkey();
 
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if ($this->LOCAL_LANG_charset[$usedLang][$key] != '') {
@@ -239,7 +245,7 @@ class LocalisationBase {
                     $this->LOCAL_LANG_charset[$usedLang][$key]
                 );
             } else {
-                $word = $this->LOCAL_LANG[$this->LLkey][$key][0]['target'];
+                $word = $this->LOCAL_LANG[$this->getLLkey()][$key][0]['target'];
             }
         } elseif (
             $this->altLLkey &&
@@ -312,7 +318,7 @@ class LocalisationBase {
             $languageFactory = GeneralUtility::makeInstance($useClassName);
             $tempLOCAL_LANG = $languageFactory->getParsedData(
                 $basePath,
-                $this->LLkey,
+                $this->getLLkey(),
                 'UTF-8'
             );
         } else {
@@ -320,7 +326,7 @@ class LocalisationBase {
             $tempLOCAL_LANG =
                 GeneralUtility::readLLfile(
                     $basePath,
-                    $this->LLkey,
+                    $this->getLLkey(),
                     $GLOBALS['TSFE']->renderCharset
                 );
         }
