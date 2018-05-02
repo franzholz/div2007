@@ -1,3 +1,6 @@
+2018-05-02 Franz Holzinger  <franz@ttproducts.de>
+    * deprecate LocalisationBase.php. Replace it by TranslationBase.php
+
 2018-05-01 Franz Holzinger  <franz@ttproducts.de>
     * add texts for the DSGVO / GDPR compliant privacy policy agreements taken from extension agency
     * new feature: LocalisationBase::init loads the div2007 internal language file by default and adds its texts to the texts of the calling extension.
