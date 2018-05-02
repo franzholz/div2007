@@ -27,6 +27,9 @@
     "php": ">=5.5.0,<=7.99.99",
     "typo3/cms-core": ">=6.2.0,<8.99.99"
   },
+  "suggest": {
+    "typo3-ter/migration_core": ">=0.0.1"
+  },
   "autoload": {
     "psr-4": {
       "JambageCom\\Div2007\\": "Classes"

@@ -62,7 +62,7 @@ class MailUtility {
 	* @param string  $replyTo: email address
 	* @param string  $extensionKey: extension key
 	* @param string  $hookVar: name of the hook
-	* @return void
+	* @return boolean if the email has been sent
 	*/
 	static public function send (
 		$toEMail,

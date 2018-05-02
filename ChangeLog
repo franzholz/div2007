@@ -1,5 +1,7 @@
 2018-05-02 Franz Holzinger  <franz@ttproducts.de>
     * deprecate LocalisationBase.php. Replace it by TranslationBase.php
+    * removed feature: The Migrations class folder. All migration classes have been divided into different versions of the extension migration_core. - see https://stackoverflow.com/questions/50109006/determine-the-typo3-version-in-migrations-classes-for-the-composer. Therefor the extension migration_core is suggested now. It is not necessary for extensions which do not use classes from TYPO3 4.5 any more.
+    * fix issue#7 : move the migration classes into extension migration_core
 
 2018-05-01 Franz Holzinger  <franz@ttproducts.de>
     * add texts for the DSGVO / GDPR compliant privacy policy agreements taken from extension agency
