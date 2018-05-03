@@ -86,7 +86,7 @@ class LocalisationBase {
             }
         }
 
-        if (is_objetc($cObj)) {
+        if (is_object($cObj)) {
             $this->cObj = $cObj;
         }
         $this->extensionKey = $extensionKey;

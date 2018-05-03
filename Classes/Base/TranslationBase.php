@@ -89,7 +89,7 @@ class TranslationBase {
         if (
             isset($conf) &&
             is_array($conf) &&
-            isset($conf['_LOCAL_LANG.']))
+            isset($conf['_LOCAL_LANG.'])
         ) {
             $internalConfLocalLang = $conf['_LOCAL_LANG.'];
         }
@@ -191,7 +191,7 @@ class TranslationBase {
         return $result;
     }
 
-        /**
+    /**
      * Attention: only for TYPO3 versions above 4.6
      * Returns the localized label of the LOCAL_LANG key, $key used since TYPO3 4.6
      * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->localLangTestPrefixAlt and ->localLangTestPrefix
@@ -202,7 +202,7 @@ class TranslationBase {
      * @param   boolean     If true, the output label is passed through htmlspecialchars()
      * @return  string      The value from LOCAL_LANG. false in error case
      */
-    public function getLocalLang (
+    public function getLabel (
         $key,
         &$usedLang = '',
         $alternativeLabel = '',
