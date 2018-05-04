@@ -176,13 +176,17 @@ class tx_div2007_core {
 			class_exists($callingClassName)
 		) {
 			$useClassName = substr($callingClassName, 1);
+
+            $callingClassName2 = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+            $useClassName2 = substr($callingClassName2, 1);
+            $result = call_user_func($useClassName2 . '::makeInstance', $useClassName);
 		} else if (
 			class_exists('t3lib_parsehtml')
 		) {
 			$useClassName = 't3lib_parsehtml';
+            $result = t3lib_div::makeInstance($useClassName);
 		}
 
-		$result = t3lib_div::makeInstance($useClassName);
 		return $result;
 	}
 
@@ -196,13 +200,17 @@ class tx_div2007_core {
 			class_exists($callingClassName)
 		) {
 			$useClassName = substr($callingClassName, 1);
-		} else if (
+
+            $callingClassName2 = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+            $useClassName2 = substr($callingClassName2, 1);
+            $result = call_user_func($useClassName2 . '::makeInstance', $useClassName);
+        } else if (
 			class_exists('t3lib_tsparser')
 		) {
 			$useClassName = 't3lib_tsparser';
-		}
+            $result = t3lib_div::makeInstance($useClassName);
+        }
 
-		$result = t3lib_div::makeInstance($useClassName);
 		return $result;
 	}
 
@@ -217,13 +225,17 @@ class tx_div2007_core {
 			class_exists($callingClassName)
 		) {
 			$useClassName = substr($callingClassName, 1);
-		} else if (
+
+            $callingClassName2 = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+            $useClassName2 = substr($callingClassName2, 1);
+            $result = call_user_func($useClassName2 . '::makeInstance', $useClassName);
+        } else if (
 			class_exists('t3lib_mail_Message')
 		) {
 			$useClassName = 't3lib_mail_Message';
-		}
+            $result = t3lib_div::makeInstance($useClassName);
+        }
 
-		$result = t3lib_div::makeInstance($useClassName);
 		return $result;
 	}
 

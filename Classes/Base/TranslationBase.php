@@ -453,5 +453,22 @@ class TranslationBase {
         $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);    
         return $result;
     }
+
+    /**
+    * Split Label function for front-end applications.
+    *
+    * @param	string		Key string. Accepts the "LLL:" prefix.
+    * @return	string		Label value, if any.
+    */
+    static public function splitLabel ($input) {
+        $restStr = trim(substr($input, 4));
+        $extPrfx = '';
+        if (!strcmp(substr($restStr, 0, 4), 'EXT:')) {
+            $restStr = trim(substr($restStr, 4));
+            $extPrfx = 'EXT:';
+        }
+        $parts = explode(':', $restStr);
+        return ($parts[1]);
+    }
 }
 

@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -41,18 +41,27 @@ namespace JambageCom\Div2007\Utility;
 
 use JambageCom\Div2007\Utility\ExtensionUtility;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Localization\Locales;
 
 class StaticInfoTablesUtility {
 
     static private $staticInfo = false;
+    static private $cache = array();
+
+
+    static public function getStaticInfo () {
+        return static::$staticInfo;
+    }
 
     /**
     * Getting all tt_products_cat categories into internal array
     */
     static public function init () {
         $result = false;
+		Locales::initialize();
 
         if (
             !is_object(static::$staticInfo) &&
@@ -90,20 +99,207 @@ class StaticInfoTablesUtility {
         return $result;
     } // init
 
-    static public function getStaticInfo () {
-        return static::$staticInfo;
+    /**
+    * Returns the current language as iso-2-alpha code
+    *
+    * @return	string		'DE', 'EN', 'DK', ...
+    */
+    static public function getCurrentLanguage () {
+
+        if (is_object($GLOBALS['TSFE'])) {
+            $langCodeT3 = $GLOBALS['TSFE']->lang;
+        } elseif (is_object($GLOBALS['LANG'])) {
+            $langCodeT3 = $GLOBALS['LANG']->lang;
+        } else {
+            return 'EN';
+        }
+        if ($langCodeT3 == 'default') {
+            return 'EN';
+        }
+            // Return cached value if any
+        if (isset(self::$cache['getCurrentLanguage'][$langCodeT3])) {
+            return self::$cache['getCurrentLanguage'][$langCodeT3];
+        }
+
+        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+            'lg_iso_2,lg_country_iso_2',
+            'static_languages',
+            'lg_typo3=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($langCodeT3, 'static_languages')
+        );
+        while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+            $lang = $row['lg_iso_2'] . ($row['lg_country_iso_2'] ? '_' . $row['lg_country_iso_2'] : '');
+        }
+        $GLOBALS['TYPO3_DB']->sql_free_result($res);
+
+        $lang = $lang ? $lang : strtoupper($langCodeT3);
+
+            // Initialize cache array
+        if (!is_array(self::$cache['getCurrentLanguage'])) {
+            self::$cache['getCurrentLanguage'] = array();
+        }
+            // Cache retrieved value
+        self::$cache['getCurrentLanguage'][$langCodeT3] = $lang;
+
+        return $lang;
     }
 
     /**
-     * Get a list of countries by specific parameters or parts of names of countries
-     * in different languages. Parameters might be left empty.
-     *
-     * @param   string      a name of the country or a part of it in any language
-     * @param   string      ISO alpha-2 code of the country
-     * @param   string      ISO alpha-3 code of the country
-     * @param   array       Database row.
-     * @return  array       Array of rows of country records
-     */
+    * Returns a label field for the current language
+    *
+    * @param	string		table name
+    * @param	boolean		DEPRECATED
+    * @param	string		language to be used
+    * @param	boolean		If set, we are looking for the "local" title field
+    * @return	string		field name
+    */
+    static public function getTCAlabelField ($table, $bLoadTCA = true, $lang = '', $local = false) {
+
+        $labelFields = array();
+        if(
+            $table &&
+            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'])
+        ) {
+            $locales = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\Locales::class);
+            $isoArray = (array) $locales->getIsoMapping();
+
+            $lang = $lang ? $lang : static::getCurrentLanguage();
+            $lang = isset($isoArray[$lang]) ? $isoArray[$lang] : $lang;
+            
+            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'] as $field) {
+                if ($local) {
+                    $labelField = str_replace ('##', 'local', $field);
+                } else {
+                    $labelField = str_replace ('##',  strtolower($lang), $field);
+                }
+                if (is_array($GLOBALS['TCA'][$table]['columns'][$labelField])) {
+                    $labelFields[] = $labelField;
+                }
+            }
+        }
+        return $labelFields;
+    }
+
+    /**
+    * Returns the type of an iso code: nr, 2, 3
+    *
+    * @param	string		iso code
+    * @return	string		iso code type
+    */
+    static public function isoCodeType ($isoCode) {
+        $type = '';
+        $isoCodeAsInteger = 
+            MathUtility::canBeInterpretedAsInteger($isoCode);
+        if ($isoCodeAsInteger) {
+            $type = 'nr';
+        } elseif (strlen($isoCode) == 2) {
+            $type = '2';
+        } elseif (strlen($isoCode) == 3) {
+            $type = '3';
+        }
+        return $type;
+    }
+
+    /**
+    * Returns a iso code field for the passed table and iso code
+    *
+    *  $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables']
+    *
+    * @param	string		table name
+    * @param	string		iso code
+    * @param	boolean		If set (default) the TCA definition of the table should be loaded with tx_div2007_core::loadTCA(). It will be needed to set it to false if you call this function from inside of tca.php
+    * @param	integer		index in the table's isocode_field array in the global variable
+    * @return	string		field name
+    */
+    static public function getIsoCodeField ($table, $isoCode, $bLoadTCA = false, $index = 0) {
+        $result = false;
+
+        if (
+            $isoCode &&
+            $table
+        ) {
+            $isoCodeField = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['isocode_field'][$index];
+
+            if ($isoCodeField != '') {
+                $type = static::isoCodeType($isoCode);
+                $isoCodeField = str_replace ('##', $type, $isoCodeField);
+
+                if (is_array($GLOBALS['TCA'][$table]['columns'][$isoCodeField])) {
+                    $result = $isoCodeField;
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+    * Fetches short title from an iso code
+    *
+    * @param	string		table name
+    * @param	string		iso code
+    * @param	string		language code - if not set current default language is used
+    * @param	boolean		local name only - if set local title is returned
+    * @return	string		short title
+    */
+    static public function getTitleFromIsoCode ($table, $isoCode, $lang = '', $local = false) {
+
+        $title = '';
+        $titleFields = static::getTCAlabelField($table, true, $lang, $local);
+        if (count ($titleFields)) {
+            $prefixedTitleFields = array();
+            foreach ($titleFields as $titleField) {
+                $prefixedTitleFields[] = $table . '.' . $titleField;
+            }
+            $fields = implode(',', $prefixedTitleFields);
+            $whereClause = '1=1';
+            if (!is_array($isoCode)) {
+                $isoCode = array($isoCode);
+            }
+            $index = 0;
+            foreach ($isoCode as $index => $code) {
+                if ($code != '') {
+                    $tmpField = static::getIsoCodeField($table, $code, true, $index);
+                    $tmpValue = $GLOBALS['TYPO3_DB']->fullQuoteStr($code, $table);
+                    if ($tmpField && $tmpValue)	{
+                        $whereClause .= ' AND ' . $table . '.' . $tmpField . ' = ' . $tmpValue;
+                    }
+                }
+            }
+            if (is_object($GLOBALS['TSFE'])) {
+                $enableFields = $GLOBALS['TSFE']->sys_page->enableFields($table);
+            } else {
+                $enableFields = tx_div2007_core::deleteClause($table);
+            }
+
+            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+                $fields,
+                $table,
+                $whereClause . $enableFields
+            );
+
+            if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+                foreach ($titleFields as $titleField) {
+                    if ($row[$titleField]) {
+                        $title = $row[$titleField];
+                        break;
+                    }
+                }
+            }
+            $GLOBALS['TYPO3_DB']->sql_free_result($res);
+        }
+
+        return $title;
+    }
+
+    /**
+    * Get a list of countries by specific parameters or parts of names of countries
+    * in different languages. Parameters might be left empty.
+    *
+    * @param   string      a name of the country or a part of it in any language
+    * @param   string      ISO alpha-2 code of the country
+    * @param   string      ISO alpha-3 code of the country
+    * @param   array       Database row.
+    * @return  array       Array of rows of country records
+    */
     static public function fetchCountries ($country, $iso2 = '', $iso3 = '', $isonr = '') {
 
         $resultArray = array();
@@ -145,6 +341,5 @@ class StaticInfoTablesUtility {
         }
         return $resultArray;
     }
-
 }
 

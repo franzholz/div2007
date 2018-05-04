@@ -50,14 +50,6 @@ class TcaUtility {
 
 		$divClass = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
 
-		if (
-			class_exists($divClass)
-		) {
-			// nothing
-		} else {
-			$divClass = 't3lib_div';
-		}
-
 		$fieldArray = call_user_func($divClass . '::trimExplode', ',', $fieldList, 1);
 
 		$tmpArray = explode(',', $tableTca['interface']['showRecordFieldList']);

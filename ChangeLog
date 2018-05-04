@@ -1,5 +1,16 @@
-2018-05-03 Franz Holzinger  <franz@ttproducts.de>
-    * replacing function: LocalisationBase::getLL ==> TranslationBase::getLabel
+2018-05-04 Franz Holzinger  <franz@ttproducts.de>
+    * replacing function: LocalisationBase::getLL -> TranslationBase::getLabel
+    * copy: tx_div2007_alpha5::getExternalCObject_fh003 ->  \JambageCom\Div2007\Utility\ObsoleteUtility::getExternalCObject
+    * copy: tx_div2007_alpha5::fixImageCodeAbsRefPrefix_fh001 -> \JambageCom\Div2007\Utility\FrontendUtility::fixImageCodeAbsRefPrefix
+    * copy: tx_div2007_alpha5::unserialize_fh002 ->  \JambageCom\Div2007\Utility\SystemUtility::unserialize
+    * copy: tx_div2007_alpha5::sL_fh002 ->  \JambageCom\Div2007\Base\LocalisationBase::sL and \JambageCom\Div2007\Base\TranslationBase::sL
+    * copy: class.tx_div2007_error.php -> Classes/Utility/ErrorUtility.php
+    * copy: tx_div2007_staticinfotables::getTitleFromIsoCode -> \JambageCom\Div2007\Utility\StaticInfoTablesUtility::getTitleFromIsoCode
+    * copy: tx_div2007_staticinfotables::getCurrentLanguage -> \JambageCom\Div2007\Utility\StaticInfoTablesUtility::getCurrentLanguage
+    * copy: tx_div2007_staticinfotables::getTCAlabelField -> \JambageCom\Div2007\Utility\StaticInfoTablesUtility::getTCAlabelField
+    * copy: tx_div2007_staticinfotables::getIsoCodeField -> \JambageCom\Div2007\Utility\StaticInfoTablesUtility::getIsoCodeField
+    * copy: tx_div2007_alpha::phpFunc -> \JambageCom\Div2007\UtilitySystemUtility->phpFunc
+    * bugfix: class.tx_div2007_core must not use t3lib_div::makeInstance but GeneralUtility::makeInstance
 
 2018-05-02 Franz Holzinger  <franz@ttproducts.de>
     * deprecate LocalisationBase.php. Replace it by TranslationBase.php

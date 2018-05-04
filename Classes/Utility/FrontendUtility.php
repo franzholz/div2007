@@ -983,7 +983,7 @@ class FrontendUtility {
      * @see static::linkTP()
      */
     static public function linkTPKeepCtrlVars (
-        $pObject,
+        \JambageCom\Div2007\Base\BrowserBase $pObject,
         $cObj,
         $prefixId,
         $str,
@@ -1013,7 +1013,7 @@ class FrontendUtility {
                     $overruledCtrlVars,
                     $overruleCtrlVars
                 );
-            if ($pObject->bAutoCacheEn) {
+            if ($pObject->getAutoCacheEnable()) {
                 $cache = static::autoCache($pObject, $overruledCtrlVars);
             }
         }
@@ -1046,7 +1046,7 @@ class FrontendUtility {
      * @see pi_linkTP_keepPIvars(), tslib_cObj::typoLink()
      */
     static public function linkTP (
-        $pObject,
+        \JambageCom\Div2007\Base\BrowserBase $pObject,
         $cObj,
         $str,
         $urlParameters = array(),
@@ -1055,8 +1055,8 @@ class FrontendUtility {
     )
     {
         $conf = array();
-        $conf['useCacheHash'] = $pObject->bUSER_INT_obj ? 0 : $cache;
-        $conf['no_cache'] = $pObject->bUSER_INT_obj ? 0 : !$cache;
+        $conf['useCacheHash'] = $pObject->getIsUserIntObject() ? 0 : $cache;
+        $conf['no_cache'] = $pObject->getIsUserIntObject() ? 0 : !$cache;
         $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
         $conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) . $pObject->moreParams;
         $result = $cObj->typoLink($str, $conf);
@@ -1190,6 +1190,109 @@ class FrontendUtility {
     {
         $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key); 
         return $result;
+    }
+
+    /**
+    * Wrap content with the plugin code
+    * wraps the content of the plugin before the final output
+    *
+    * @param	string		content
+    * @param	string		CODE of plugin
+    * @param	string		prefix id of the plugin
+    * @param	string		content uid
+    * @return	string		The resulting content
+    * @see pi_linkToPage()
+    */
+    static public function wrapContentCode (
+        $content,
+        $theCode,
+        $prefixId,
+        $uid
+    ) {
+        $idNumber = str_replace('_', '-', $prefixId . '-' . strtolower($theCode));
+        $classname = $idNumber;
+        if ($uid != '') {
+            $idNumber .= '-' . $uid;
+        }
+
+        $result = '<!-- START: ' . $idNumber . ' --><div id="' . $idNumber . '" class="' . $classname . '" >' .
+            ($content != '' ? $content : '') . '</div><!-- END: ' . $idNumber . ' -->';
+
+        return $result;
+    }
+
+    /**
+    * Wraps the input string in a <div> tag with the class attribute set to the prefixId.
+    * All content returned from your plugins should be returned through this function so all content from your plugin is encapsulated in a <div>-tag nicely identifying the content of your plugin.
+    *
+    * @param	string		HTML content to wrap in the div-tags with the "main class" of the plugin
+    * @return	string		HTML content wrapped, ready to return to the parent object.
+    * @see pi_wrapInBaseClass()
+    */
+    static public function wrapInBaseClass (
+        $str,
+        $prefixId,
+        $extKey
+    ) {
+        $content = '<div class="' . str_replace('_', '-', $prefixId) . '">
+        ' . $str . '
+    </div>
+    ';
+
+        if(!$GLOBALS['TSFE']->config['config']['disablePrefixComment']) {
+            $content = '
+
+    <!--
+
+        BEGIN: Content of extension "' . $extKey . '", plugin "' . $prefixId . '"
+
+    -->
+    ' . $content . '
+    <!-- END: Content of extension "' . $extKey . '", plugin "' . $prefixId . '" -->
+
+    ';
+        }
+
+        return $content;
+    }
+
+    static public function fixImageCodeAbsRefPrefix (
+        &$imageCode,
+        $domain = ''
+    ) {
+        $absRefPrefix = '';
+        $absRefPrefixDomain = '';
+        $bSetAbsRefPrefix = FALSE;
+        if ($GLOBALS['TSFE']->absRefPrefix != '') {
+            $absRefPrefix = $GLOBALS['TSFE']->absRefPrefix;
+        } else {
+            $bSetAbsRefPrefix = TRUE;
+            $absRefPrefix = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+        }
+
+        if ($domain != '') {
+            $absRefPrefixArray = explode('?', $absRefPrefix);
+            $protocollArray = explode('//', $absRefPrefixArray['0']);
+            $absRefPrefixArray['0'] = $protocollArray['0'] . '//' . $domain;
+            $absRefPrefixDomain = implode('?', $absRefPrefixArray);
+        }
+
+        if ($bSetAbsRefPrefix) {
+            if ($absRefPrefixDomain != '') {
+                $absRefPrefix = $absRefPrefixDomain . '/';
+            }
+            $fixImgCode = str_replace('index.php', $absRefPrefix . 'index.php', $imageCode);
+            $fixImgCode = str_replace('src="', 'src="' . $absRefPrefix, $fixImgCode);
+            $fixImgCode = str_replace('"uploads/', '"' . $absRefPrefix . 'uploads/', $fixImgCode);
+            $imageCode = $fixImgCode;
+        } else {
+            if ($absRefPrefixDomain != '') {
+                $fixImgCode = str_replace($absRefPrefix . 'index.php', $absRefPrefixDomain . 'index.php', $imageCode);
+                $fixImgCode = str_replace('src="' . $absRefPrefix, 'src="' . $absRefPrefixDomain, $fixImgCode);
+                $fixImgCode = str_replace('"' . $absRefPrefix . 'uploads/', '"' . $absRefPrefixDomain . 'uploads/', $fixImgCode);
+                $imageCode = $fixImgCode;
+            }
+        }
     }
 }
 

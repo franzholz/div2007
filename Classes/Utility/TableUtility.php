@@ -35,6 +35,9 @@ namespace JambageCom\Div2007\Utility;
  * @subpackage div2007
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+ 
 class TableUtility {
 
 	/**
@@ -143,7 +146,7 @@ class TableUtility {
 	 * @see enableFields()
 	 */
 	static public function getMultipleGroupsWhereClause ($field, $table) {
-		$memberGroups = \t3lib_div::intExplode(',', $GLOBALS['TSFE']->gr_list);
+		$memberGroups = GeneralUtility::intExplode(',', $GLOBALS['TSFE']->gr_list);
 		$orChecks = array();
 		$orChecks[] = $field . '=\'\''; // If the field is empty, then OK
 		$orChecks[] = $field . ' IS NULL'; // If the field is NULL, then OK
@@ -232,7 +235,7 @@ class TableUtility {
 							'ctrl' => $ctrl
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'] as $_funcRef) {
-							$query .= \t3lib_div::callUserFunction($_funcRef, $_params, $tmp = 'TableUtility');
+							$query .= GeneralUtility::callUserFunction($_funcRef, $_params, $tmp = 'TableUtility');
 						}
 					}
 				}

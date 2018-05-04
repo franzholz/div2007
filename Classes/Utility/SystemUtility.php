@@ -139,6 +139,140 @@ class SystemUtility {
         static::addTimeZone($result);
         return $result;
     }
+
+    /**
+    * Returns a class-name prefixed with $this->prefixId and with all underscores substituted to dashes (-)
+    * this is an initial state, not yet finished! Therefore the debug lines have been left.
+    *
+    * @param	string		$str Input 
+    * @param	string		$prefixId
+    * @return	string		The combined class name (with the correct prefix)
+    */
+    static public function unserialize (
+        $str,
+        $errorCheck = true
+    ) {
+        $result = false;
+
+        $codeArray = array('a', 's');
+        $len = strlen($str);
+        $depth = 0;
+        $mode = 'c';
+        $i = 0;
+        $errorOffset = -1;
+        $controlArray = array();
+        $controlCount = array();
+        $controlData = array();
+        $controlIndex = 0;
+        while ($i < $len) {
+            $ch = $str{$i};
+            $i++;
+            $next = $str{$i};
+            if ($next == ':') {
+                $i++;
+                $paramPos = strpos($str, ':', $i);
+                $param1 = substr($str, $i, $paramPos - $i);
+                if ($param1 != '') {
+                    $i = $paramPos + 1;
+                    switch ($ch) {
+                        case 'a':
+                            if (isset($var)) {
+                            } else {
+                                $var = array();
+                            }
+                            if ($str{$i} == '{') {
+                                $i++;
+                                $controlIndex++;
+                                $controlArray[$controlIndex] = $ch;
+                                $controlData[$controlIndex] = array('param' => $param1);
+                                $controlCount[$controlIndex] = 0;
+                            } else {
+                                $errorOffset = $i;
+                            }
+                        break;
+                        case 's':
+                            if (isset($var)) {
+                                if ($str{$i} == '"') {
+                                    $i++;
+                                    $param2 = substr($str, $i, $param1);
+                                    $fixPos = strpos($param2, '";');
+                                    if ($fixPos !== false && in_array($param2{$fixPos + 2}, $codeArray)) {
+                                        $i += $fixPos; // fix wrong string length if it is really shorter now
+                                        $param2 = substr($param2, 0, $fixPos);
+                                    } else {
+                                        $i += $param1;
+                                    }
+
+                                    if ($str{$i} == '"' && $str{$i + 1} == ';') {
+                                        $i += 2;
+                                        if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k'] == '' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
+                                            $controlData[$controlIndex]['k'] = $param2;
+                                            continue;
+                                        }
+                                    }
+
+                                    if ($controlArray[$controlIndex] == 'a' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'] && isset($controlData[$controlIndex]['k']))	{
+                                        $controlCount[$controlIndex]++;
+                                        $var[$controlData[$controlIndex]['k']] = $param2;
+                                        $controlData[$controlIndex]['k'] = '';
+                                    }
+                                }
+                            } else {
+                                $var = '';
+                            }
+
+                        break;
+                        default:
+                            $errorOffset = $i;
+                        break;
+                    }
+                } else {
+                    $errorOffset = $i;
+                }
+            } else {
+                $errorOffset = $i;
+            }
+            if ($errorOffset >= 0) {
+                    if ($errorCheck) {
+                        trigger_error('unserialize_fh002(): Error at offset ' . $errorOffset . ' of ' . $len . ' bytes \'' . substr($str, $errorOffset, 12) . '\'', E_USER_NOTICE);
+                        $result = false;
+                    }
+                break;
+            }
+        }
+        if (isset($var) && (!$errorCheck || $errorOffset == 0)) {
+            $result = $var;
+        }
+        return $result;
+    }
+
+    /**
+    * This is will calculate your setup as a PHP function
+    * This function is called in your stdWrap preUserFunc function.
+    * 		preUserFunc = \JambageCom\Div2007\UtilitySystemUtility->phpFunc
+    *		preUserFunc {
+    *			php = round($value,12);
+    *		}
+    * The $value in the PHP string will be replaced by your value and the function
+    * will be evaluated.
+    *
+    * @param	string		value
+    * @param	array		the configuration. only the 'php' part is used.
+    * @return	string		The processed string
+    * @see tslib_cObj::parseFunc()
+    */
+    static public function phpFunc (
+        $content,
+        $conf
+    ) {
+        $result = '';
+
+        if ($conf['php'] != '') {
+            $evalStr = str_replace('$value', $content, $conf['php']);
+            $result = eval('return ' . $evalStr);
+        }
+        return $result;
+    }    
 }
 
 

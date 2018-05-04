@@ -195,7 +195,7 @@ class MailUtility {
 
 			foreach ($attachmentArray as $theAttachment) {
 				if (file_exists($theAttachment)) {
-					$mail->attach(Swift_Attachment::fromPath($theAttachment));
+					$mail->attach(\Swift_Attachment::fromPath($theAttachment));
 				}
 			}
 		}
