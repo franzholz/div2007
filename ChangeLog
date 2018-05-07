@@ -1,3 +1,7 @@
+
+2018-05-07 Franz Holzinger  <franz@ttproducts.de>
+    * bufix #9: Remove class alias maps also form the composer.json file.
+ 
 2018-05-04 Franz Holzinger  <franz@ttproducts.de>
     * replacing function: LocalisationBase::getLL -> TranslationBase::getLabel
     * copy: tx_div2007_alpha5::getExternalCObject_fh003 ->  \JambageCom\Div2007\Utility\ObsoleteUtility::getExternalCObject
