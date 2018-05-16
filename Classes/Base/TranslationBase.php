@@ -67,7 +67,7 @@ class TranslationBase {
 
     public function init (
         $extensionKey = '',
-        $confLocalLang = array(), // only the $conf['_LOCAL_LANG.'] part of the setup
+        $confLocalLang = array(), // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
         $scriptRelPath = '',
         $lookupFilename = '',
         $useDiv2007Language = true
@@ -123,6 +123,7 @@ class TranslationBase {
         $this->LOCAL_LANG = $locallang;
     }
 
+    /* former getLocallang */
     public function getLocalLang () {
         return $this->LOCAL_LANG;
     }
@@ -147,6 +148,7 @@ class TranslationBase {
         $this->LocalLangKey = $localLangKey;
     }
 
+    /* former getLLkey */
     public function getLocalLangKey () {
         return $this->LocalLangKey;
     }
@@ -192,7 +194,7 @@ class TranslationBase {
     }
 
     /**
-     * Attention: only for TYPO3 versions above 4.6
+     * This method has been used under TYPO3 versions above 4.6 as getLL
      * Returns the localized label of the LOCAL_LANG key, $key used since TYPO3 4.6
      * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->localLangTestPrefixAlt and ->localLangTestPrefix
      *
@@ -278,7 +280,7 @@ class TranslationBase {
     }
 
     /**
-     * used since TYPO3 4.6
+     * used since TYPO3 4.6 as loadLL
      * Loads local-language values by looking for a "locallang.php" file in the plugin class directory ($langObj->scriptRelPath) and if found includes it.
      * Also locallang values set in the TypoScript property "_LOCAL_LANG" are merged onto the values found in the "locallang.xml" file.
      *

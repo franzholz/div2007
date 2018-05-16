@@ -1,6 +1,8 @@
+2018-05-16 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix in MailUtility: pay attention that the Swiftmailer has no namespace
 
 2018-05-07 Franz Holzinger  <franz@ttproducts.de>
-    * bufix #9: Remove class alias maps also form the composer.json file.
+    * bugfix #9: Remove class alias maps also form the composer.json file.
  
 2018-05-04 Franz Holzinger  <franz@ttproducts.de>
     * replacing function: LocalisationBase::getLL -> TranslationBase::getLabel

@@ -7,7 +7,8 @@
     "extension",
     "library",
     "t3lib_div",
-    "tslib_pibase"
+    "tslib_pibase",
+    "static_info_tables"
   ],
   "support": {
     "issues": "https://github.com/franzholz/div2007/issues"

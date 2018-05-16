@@ -310,7 +310,7 @@ class MailUtility {
 		foreach ($media as $key => $source) {
 			$substitutedHtmlContent = str_replace(
 				'"' . $source . '"',
-				'"' . $mail->embed(Swift_Image::fromPath($source)) . '"',
+				'"' . $mail->embed(\Swift_Image::fromPath($source)) . '"',
 				$substitutedHtmlContent
 			);
 		}
