@@ -1,6 +1,7 @@
 2018-05-16 Franz Holzinger  <franz@ttproducts.de>
     * bugfix in MailUtility: pay attention that the Swiftmailer has no namespace
-
+    * bugfix in MailUtility: Swiftmailer::embed requires the full TYPO3 path PATH_site
+    
 2018-05-07 Franz Holzinger  <franz@ttproducts.de>
     * bugfix #9: Remove class alias maps also form the composer.json file.
  

@@ -287,7 +287,11 @@ class MailUtility {
     * @param string $htmlContent: the HTML content of the message
     * @return string the subtituted HTML content
     */
-    static public function embedMedia ($mail, $htmlContent) {
+    static public function embedMedia (
+        \TYPO3\CMS\Core\Mail\MailMessage $mail,
+        $htmlContent
+    )
+    {
         $substitutedHtmlContent = $htmlContent;
         $media = array();
         $attribRegex = static::makeTagRegex(array('img', 'embed', 'audio', 'video'));
@@ -310,7 +314,7 @@ class MailUtility {
         foreach ($media as $key => $source) {
             $substitutedHtmlContent = str_replace(
                 '"' . $source . '"',
-                '"' . $mail->embed(\Swift_Image::fromPath($source)) . '"',
+                '"' . $mail->embed(\Swift_Image::fromPath(PATH_site . $source)) . '"',
                 $substitutedHtmlContent
             );
         }
