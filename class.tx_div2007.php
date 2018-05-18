@@ -227,7 +227,7 @@ class tx_div2007 {
 		$pathT3lib = PATH_site . 't3lib/';
 		require_once($pathT3lib . 'class.t3lib_tcemain.php');
 		$tce = new t3lib_tcemain();
-		$tce->admin = TRUE;
+		$tce->admin = true;
 		$tce->clear_cacheCmd('all');
 	}
 
@@ -339,40 +339,49 @@ class tx_div2007 {
 		return self::getGlobal('TYPO3_DB');
 	}
 
-	/**
-	 * Get the logged in front end user
-	 *
-	 * @param	string		field of the user if set
-	 *
-	 * @return object The current frontend user or string value of the field or boolean FALSE.
-	 * @see tx_div2007::user();
-	 */
-	static public function getFrontEndUser ($field = '') {
-		$result = FALSE;
+    /**
+    * Get the logged in front end user
+    *
+    * @param	string		field of the user if set
+    *
+    * @return object The current frontend user or string value of the field or boolean false.
+    * @see tx_div2007::user();
+    */
+    static public function getFrontEndUser ($field = '') {
+        $result = false;
 
-		if (isset($GLOBALS['TSFE']->fe_user) && is_object($GLOBALS['TSFE']->fe_user) && is_array($GLOBALS['TSFE']->fe_user->user)) {
-			$result = $GLOBALS['TSFE']->fe_user;
+        if (
+            isset($GLOBALS['TSFE']->fe_user) &&
+            is_object($GLOBALS['TSFE']->fe_user) &&
+            is_array($GLOBALS['TSFE']->fe_user->user) &&
+            isset($GLOBALS['TSFE']->fe_user->user['username']) &&
+            $GLOBALS['TSFE']->fe_user->user['username'] != ''
+        ) {
+            $result = $GLOBALS['TSFE']->fe_user;
 
-			if ($field != '' && isset($GLOBALS['TSFE']->fe_user->user[$field])) {
-				$result = $GLOBALS['TSFE']->fe_user->user[$field];
-			}
-		}
+            if (
+                $field != '' &&
+                isset($GLOBALS['TSFE']->fe_user->user[$field])
+            ) {
+                $result = $GLOBALS['TSFE']->fe_user->user[$field];
+            }
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 
 	/**
 	 * Load the site relative extension path for the given extension key.
 	 *
 	 * @param string Extension key to resolve.
-	 * @return string Site relative path. FALSE if not found.
+	 * @return string Site relative path. false if not found.
 	 */
 	static public function getSiteRelativeExtensionPath ($key) {
 		global $TYPO3_LOADED_EXT;
 		if(isset($TYPO3_LOADED_EXT[$key]['siteRelPath']) ) {
 			return $TYPO3_LOADED_EXT[$key]['siteRelPath'];
 		} else {
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -385,7 +394,7 @@ class tx_div2007 {
 	 * @return	boolean		is the key valid?
 	 */
 	static public function getValidKey ($rawKey) {
-		$result = FALSE;
+		$result = false;
 
 		$rawKey = str_replace('_', '', $rawKey);
 		$uKeys = array_keys(self::getGlobal('TYPO3_LOADED_EXT'));
@@ -439,11 +448,11 @@ class tx_div2007 {
 	 *    </pre>
 	 *
 	 * @param	string		the minimal necessary information (see 1-4)
-	 * @return	string		the guessed key, FALSE if no result
+	 * @return	string		the guessed key, false if no result
 	 */
 	static public function guessKey ($minimalInformation) {
 		$info=trim($minimalInformation);
-		$key = FALSE;
+		$key = false;
 		if($info){
 			// Can it be the key itself?
 			if(!$key && preg_match('/^([A-Za-z_]*)$/', $info, $matches ) ) {
@@ -466,7 +475,7 @@ class tx_div2007 {
 				$key = self::getValidKey($key);
 			}
 		}
-		return $key ? $key : FALSE;
+		return $key ? $key : false;
 	}
 
 	/**
@@ -504,9 +513,9 @@ class tx_div2007 {
 	static public function loadClass ($classNameOrPathInformation) {
 		require_once(PATH_BE_div2007 . 'class.tx_div2007_t3Loader.php');
 		if(tx_div2007_t3Loader::load($classNameOrPathInformation)) {
-			return TRUE;
+			return true;
 		}
-		return FALSE;
+		return false;
 	}
 
 
@@ -525,7 +534,7 @@ class tx_div2007 {
 	static public function loadTcaAdditions ($ext_keys) {
 		global $_EXTKEY, $TCA;
 
-		$loadTcaAdditions = TRUE;
+		$loadTcaAdditions = true;
 
 		//Merge all ext_keys
 		if (is_array($ext_keys)) {
@@ -546,13 +555,13 @@ class tx_div2007 {
 	 * with the shorter notation simplyfies the generation of objects.
 	 *
 	 * @param	string		classname
-	 * @return	object		the instance else FALSE
+	 * @return	object		the instance else false
 	 * @see     tx_div2007_loader
 	 */
 	static public function makeInstance ($className) {
 		$instance = t3lib_div::makeInstance($className);
 		if(!is_object($instance)) {
-			return FALSE;
+			return false;
 		} else {
 			return $instance;
 		}
@@ -650,7 +659,7 @@ class tx_div2007 {
 		for($i = 0; $i < count($array); $i = $i + 2) {
 			$string .= $array[$i] . ' : ' . $array[$i + 1] . ', ';
 		}
-		return $string ? substr($sting, 0, -1) : FALSE;
+		return $string ? substr($sting, 0, -1) : false;
 	}
 
 

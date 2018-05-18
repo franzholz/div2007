@@ -1,3 +1,10 @@
+2018-05-18 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: copy all image files except the apps from the TYPO3 system extension t3skin and the folder typo3_src-7.6.27/typo3/sysext/t3skin/images/icons/ into div2007/Resources/Public/Images/Icons/ . see #79259 EXT:t3skin removed
+
+2018-05-17 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix in tx_div2007_core: method newHtmlParser requires a parameter for the exact method type. TYPO3 7 and 8 have in some cases a new class \TYPO3\CMS\Core\Service\MarkerBasedTemplateService for string substitution methos like substituteSubpart.
+    * bugfix in tx_div2007::getFrontEndUser: TYPO3 8 has set the TSFE fe_user->user array even when no FE user has been logged in. The value of username must be checked, too.
+
 2018-05-16 Franz Holzinger  <franz@ttproducts.de>
     * bugfix in MailUtility: pay attention that the Swiftmailer has no namespace
     * bugfix in MailUtility: Swiftmailer::embed requires the full TYPO3 path PATH_site

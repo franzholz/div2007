@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2017 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -168,13 +168,22 @@ class tx_div2007_core {
 
 
 	### HTML parser object
-	static public function newHtmlParser () {
-		$useClassName = '';
-		$callingClassName = '\\TYPO3\\CMS\\Core\\Html\\HtmlParser';
+	### attention: some methods have been moved into the classs \TYPO3\CMS\Core\Service\MarkerBasedTemplateService . Use the $html parameter for the methods which type you will use.
 
-		if (
-			class_exists($callingClassName)
-		) {
+	static public function newHtmlParser ($html = true) {
+        $useClassName = '';
+        $callingClassName = '\\TYPO3\\CMS\\Core\\Html\\HtmlParser';
+
+        if (!$html) {
+            $checkClassName = '\\TYPO3\\CMS\\Core\\Service\\MarkerBasedTemplateService';
+            if (class_exists($checkClassName)) {
+                $callingClassName = $checkClassName;
+            }
+        }
+
+        if (
+            class_exists($callingClassName)
+        ) {
 			$useClassName = substr($callingClassName, 1);
 
             $callingClassName2 = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';

@@ -47,5 +47,6 @@ if (version_compare(TYPO3_version, '8.0.0', '>=')) {
 }
 
 define('DIV2007_LANGUAGE_SUBPATH', '/Resources/Private/Language/');
+define('DIV2007_ICONS_SUBPATH', 'Resources/Public/Images/Icons/');
 
 
