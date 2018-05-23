@@ -64,7 +64,7 @@ class FrontendUtility {
 
     static public function init ()
     {
-        global $TSFE, $BE_USER;
+        global $TSFE, $BE_USER, $TYPO3_CONF_VARS;
 
         /** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
         $TSFE = GeneralUtility::makeInstance(
@@ -1145,6 +1145,7 @@ class FrontendUtility {
                 $target,
                 $conf
             );
+
             if ($result !== false) {
                 $result = $cObj->lastTypoLinkUrl;
             }

@@ -1,3 +1,6 @@
+2018-05-23 Franz Holzinger  <franz@ttproducts.de>
+    * fix bug in FrontendUtility::init : The global variable $TYPO3_CONF_VARS has not been declared. This leads to wrong results with realurl and ajax eID under tt_products. The page id is empty and then all TypoScript is missing.
+
 2018-05-18 Franz Holzinger  <franz@ttproducts.de>
     * new feature: copy all image files except the apps from the TYPO3 system extension t3skin and the folder typo3_src-7.6.27/typo3/sysext/t3skin/images/icons/ into div2007/Resources/Public/Images/Icons/ . see #79259 EXT:t3skin removed
 
