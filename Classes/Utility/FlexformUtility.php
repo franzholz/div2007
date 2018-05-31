@@ -149,10 +149,10 @@ class FlexformUtility {
             )
         ) {
             //case 1, $args 1 is an array...     case 2, $args 1 is a key array that contains a flexform
-            is_array(func_get_arg(0)) ? $_flexForm = func_get_arg(0) : $_flexForm = &static::getFlexForm(func_get_arg(0));
+            is_array(func_get_arg(0)) ? $_flexForm = func_get_arg(0) : $_flexForm = static::getFlexForm(func_get_arg(0));
             $index = 1;
         } else {
-            $_flexForm = &static::$flexForm;
+            $_flexForm = static::$flexForm;
             $index = 0;
         }
         $fieldName = func_get_arg($index);
