@@ -388,10 +388,10 @@ class tx_div2007_alpha5 {
 	 */
 	static public function classParam_fh001 ($class, $addClasses = '', $prefixId = '') {
 		$output = '';
-		foreach (t3lib_div::trimExplode(',', $class) as $v) {
+		foreach (\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $class) as $v) {
 			$output .= ' ' . self::getClassName_fh001($v, $prefixId);
 		}
-		foreach (t3lib_div::trimExplode(',', $addClasses) as $v) {
+		foreach (\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $addClasses) as $v) {
 			$output .= ' ' . $v;
 		}
 		return ' class="' . trim($output) . '"';
@@ -410,10 +410,10 @@ class tx_div2007_alpha5 {
 	 */
 	static public function classParam_fh002 ($class, $addClasses = '', $prefixId = '', $bAddPrefixTx = FALSE) {
 		$output = '';
-		foreach (t3lib_div::trimExplode(',', $class) as $v) {
+		foreach (\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $class) as $v) {
 			$output .= ' ' . self::getClassName_fh002($v, $prefixId, $bAddPrefixTx);
 		}
-		foreach (t3lib_div::trimExplode(',', $addClasses) as $v) {
+		foreach (\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $addClasses) as $v) {
 			$output .= ' ' . $v;
 		}
 		return ' class="' . trim($output) . '"';
@@ -430,7 +430,7 @@ class tx_div2007_alpha5 {
 	 * @param	boolean		If $cache is set (0/1), the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
 	 * @param	integer		Alternative page ID for the link. (By default this function links to the SAME page!)
 	 * @return	string		The input string wrapped in <a> tags
-	 * @see pi_linkTP_keepPIvars(), tslib_cObj::typoLink()
+	 * @see pi_linkTP_keepPIvars(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink()
 	 */
 	static public function linkTP (
 		$pObject,
@@ -444,7 +444,7 @@ class tx_div2007_alpha5 {
 		$conf['useCacheHash'] = $pObject->bUSER_INT_obj ? 0 : $cache;
 		$conf['no_cache'] = $pObject->bUSER_INT_obj ? 0 : !$cache;
 		$conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
-		$conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . t3lib_div::implodeArrayForUrl('', $urlParameters, '', TRUE) . $pObject->moreParams;
+		$conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . \TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('', $urlParameters, '', TRUE) . $pObject->moreParams;
 		$result = $cObj->typoLink($str, $conf);
 		return $result;
 	}
@@ -556,7 +556,7 @@ class tx_div2007_alpha5 {
 
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'] .= t3lib_div::implodeArrayForUrl('', $urlParameters);
+					$conf['additionalParams'] .= \TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
 				$conf['additionalParams'] .= $urlParameters;
@@ -654,7 +654,7 @@ class tx_div2007_alpha5 {
 	 * @param	string		Target value to use. Affects the &type-value of the URL, defaults to current.
 	 * @param	array		Additional URL parameters to set (key/value pairs)
 	 * @return	string		The input string wrapped in <a> tags with the URL and target set.
-	 * @see pi_getPageLink(), tslib_cObj::getTypoLink()
+	 * @see pi_getPageLink(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::getTypoLink()
 	 */
 	static public function linkToPage_fh001 (
 		$cObj,
@@ -904,7 +904,7 @@ class tx_div2007_alpha5 {
                 $useClassName = substr($callingClassName, 1);
 
                 /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
-                $languageFactory = t3lib_div::makeInstance($useClassName);
+                $languageFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($useClassName);
                 $tempLOCAL_LANG = $languageFactory->getParsedData(
                     $basePath,
                     $langObj->LLkey,
@@ -913,7 +913,7 @@ class tx_div2007_alpha5 {
             } else {
                     // Read the strings in the required charset (since TYPO3 4.2)
                 $tempLOCAL_LANG =
-                    t3lib_div::readLLfile(
+                    \TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile(
                         $basePath,
                         $langObj->LLkey,
                         $GLOBALS['TSFE']->renderCharset
@@ -941,7 +941,7 @@ class tx_div2007_alpha5 {
 
 			if ($langObj->altLLkey) {
 				$tempLOCAL_LANG =
-					t3lib_div::readLLfile(
+					\TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile(
 						$basePath,
 						$langObj->altLLkey,
 						$charset
@@ -1969,7 +1969,7 @@ class tx_div2007_alpha5 {
 	/* $imageCode is the result of a call $this->cObj->IMAGE(...) */
 	static public function fixImageCodeAbsRefPrefix (&$imageCode) {
 		if ($GLOBALS['TSFE']->absRefPrefix == '') {
-			$absRefPrefix = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+			$absRefPrefix = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 			$fixImgCode = str_replace('index.php', $absRefPrefix . 'index.php', $imageCode);
 			$fixImgCode = str_replace('src="', 'src="' . $absRefPrefix, $fixImgCode);
 			$fixImgCode = str_replace('"uploads/', '"' . $absRefPrefix . 'uploads/', $fixImgCode);
@@ -1986,7 +1986,7 @@ class tx_div2007_alpha5 {
 			$absRefPrefix = $GLOBALS['TSFE']->absRefPrefix;
 		} else {
 			$bSetAbsRefPrefix = TRUE;
-			$absRefPrefix = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+			$absRefPrefix = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 		}
 
 		if ($domain != '') {
@@ -2339,7 +2339,7 @@ class tx_div2007_alpha5 {
 
 
 
-		/**
+    /**
 	 * Wraps the input string in a <div> tag with the class attribute set to the prefixId.
 	 * All content returned from your plugins should be returned through this function so all content from your plugin is encapsulated in a <div>-tag nicely identifying the content of your plugin.
 	 *
@@ -2507,9 +2507,9 @@ class tx_div2007_alpha5 {
 
 				foreach ($ext_keys as $_EXTKEY) {
 
-					if (t3lib_extMgm::isLoaded($_EXTKEY)) {
+					if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($_EXTKEY)) {
 						//Include the ext_table
-						require_once(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
+						require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'ext_tables.php');
 					}
 				}
 			}
@@ -2524,14 +2524,14 @@ class tx_div2007_alpha5 {
 
 	/**
 	 * This is the original pi_RTEcssText from tslib_pibase
-	 * Will process the input string with the parseFunc function from tslib_cObj based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
+	 * Will process the input string with the parseFunc function from TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
 	 * This is useful for rendering of content in RTE fields where the transformation mode is set to "ts_css" or so.
 	 * Notice that this requires the use of "css_styled_content" to work right.
 	 *
-	 * @param	object		cOject of class tslib_cObj
+	 * @param	object		cOject of class TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
 	 * @param	string		The input text string to process
 	 * @return	string		The processed string
-	 * @see tslib_cObj::parseFunc()
+	 * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::parseFunc()
 	 */
 	static public function RTEcssText ($cObj, $str) {
 		$parseFunc = $GLOBALS['TSFE']->tmpl->setup['lib.']['parseFunc_RTE.'];
@@ -2675,7 +2675,7 @@ class tx_div2007_alpha5 {
 	 * @see enableFields()
 	 */
 	static public function getMultipleGroupsWhereClause ($field, $table) {
-		$memberGroups = t3lib_div::intExplode(',', $GLOBALS['TSFE']->gr_list);
+		$memberGroups = \TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $GLOBALS['TSFE']->gr_list);
 		$orChecks = array();
 		$orChecks[] = $field . '=\'\''; // If the field is empty, then OK
 		$orChecks[] = $field . ' IS NULL'; // If the field is NULL, then OK
@@ -2693,11 +2693,11 @@ class tx_div2007_alpha5 {
 	 * Is using the $GLOBALS['TCA'] arrays "ctrl" part where the key "enablefields" determines for each table which of these features applies to that table.
 	 *
 	 * @param	string		Table name found in the $GLOBALS['TCA'] array
-	 * @param	integer		If $show_hidden is set (0/1), any hidden-fields in records are ignored. NOTICE: If you call this function, consider what to do with the show_hidden parameter. Maybe it should be set? See tslib_cObj->enableFields where it's implemented correctly.
+	 * @param	integer		If $show_hidden is set (0/1), any hidden-fields in records are ignored. NOTICE: If you call this function, consider what to do with the show_hidden parameter. Maybe it should be set? See TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer->enableFields where it's implemented correctly.
 	 * @param	array		Array you can pass where keys can be "disabled", "starttime", "endtime", "fe_group" (keys from "enablefields" in TCA) and if set they will make sure that part of the clause is not added. Thus disables the specific part of the clause. For previewing etc.
 	 * @param	boolean		If set, enableFields will be applied regardless of any versioning preview settings which might otherwise disable enableFields
 	 * @return	string		The clause starting like " AND ...=... AND ...=..."
-	 * @see tslib_cObj::enableFields(), deleteClause()
+	 * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::enableFields(), deleteClause()
 	 */
 	static public function enableFields ($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = FALSE) {
 		if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
@@ -2751,7 +2751,7 @@ class tx_div2007_alpha5 {
 							'ctrl' => $ctrl
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'] as $_funcRef) {
-							$query .= t3lib_div::callUserFunction($_funcRef, $_params, $tmp = 'tx_div2007_alpha5');
+							$query .= \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($_funcRef, $_params, $tmp = 'tx_div2007_alpha5');
 						}
 					}
 				}

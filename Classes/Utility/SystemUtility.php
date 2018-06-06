@@ -259,7 +259,7 @@ class SystemUtility {
     * @param	string		value
     * @param	array		the configuration. only the 'php' part is used.
     * @return	string		The processed string
-    * @see tslib_cObj::parseFunc()
+    * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::parseFunc()
     */
     static public function phpFunc (
         $content,

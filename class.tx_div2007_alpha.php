@@ -154,8 +154,8 @@ class tx_div2007_alpha {
 
 		$rc = '';
 		if (!isset($TCA[$theTable]['columns'])) {
-			t3lib_div::loadTCA($theTable);
-			t3lib_div::loadTCA($foreignTable);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($theTable);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($foreignTable);
 		}
 
 		if (isset($TCA[$theTable]['columns']) && is_array($TCA[$theTable]['columns'])) {
@@ -188,7 +188,7 @@ class tx_div2007_alpha {
 		global $TCA;
 
 		$foreign_table = $fieldValue['config'][$prefix . 'foreign_table'];
-		t3lib_div::loadTCA($foreign_table);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($foreign_table);
 		$rootLevel = $TCA[$foreign_table]['ctrl']['rootLevel'];
 
 		$fTWHERE = $fieldValue['config'][$prefix . 'foreign_table_where'];
@@ -248,7 +248,7 @@ class tx_div2007_alpha {
 
 		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $this->cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
 			// Markers and substitution:
-		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
+		$markerArray['###PATH###'] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($extKey);
 		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
 		$rc = $langObj->cObj->substituteMarkerArray($helpTemplate, $markerArray);
@@ -284,7 +284,7 @@ class tx_div2007_alpha {
 		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
 			// Markers and substitution:
 
-		$markerArray['###PATH###'] = t3lib_extMgm::siteRelPath($extKey);
+		$markerArray['###PATH###'] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($extKey);
 		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
 		$rc = $cObj->substituteMarkerArray($helpTemplate, $markerArray);
@@ -312,9 +312,9 @@ class tx_div2007_alpha {
 
 			foreach ($ext_keys as $_EXTKEY) {
 
-				if (t3lib_extMgm::isLoaded($_EXTKEY)) {
+				if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($_EXTKEY)) {
 					//Include the ext_table
-					include_once(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
+					include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'ext_tables.php');
 				}
 			}
 		}
@@ -335,8 +335,8 @@ class tx_div2007_alpha {
 	function getExtensionInfo_fh001 ($extKey) {
 		$rc = '';
 
-		if (t3lib_extMgm::isLoaded($extKey)) {
-			$path = t3lib_extMgm::extPath($extKey);
+		if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey)) {
+			$path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey);
 
 			$file = $path.'/ext_emconf.php';
 			if (@is_file($file)) {
@@ -383,7 +383,7 @@ class tx_div2007_alpha {
 		$result = '';
 
 		if (!$path) {
-			$path = t3lib_extMgm::extPath($extKey);
+			$path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey);
 		}
 
 		if (is_dir($path)) {
@@ -535,11 +535,11 @@ class tx_div2007_alpha {
 			if (substr($langFile, 0, 4) === 'EXT:' || substr($langFile, 0, 5) === 'typo3' || substr($langFile, 0, 9) === 'fileadmin') {
 				$basePath = $langFile;
 			} else {
-				$basePath = t3lib_extMgm::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
+				$basePath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($langObj->extKey) . ($langObj->scriptRelPath ? dirname($langObj->scriptRelPath) . '/' : '') . $langFile;
 			}
 				// php or xml as source: In any case the charset will be that of the system language.
 				// However, this function guarantees only return output for default language plus the specified language (which is different from how 3.7.0 dealt with it)
-			$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->LLkey, 'UTF-8');
+			$tempLOCAL_LANG = \TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($basePath, $langObj->LLkey, 'UTF-8');
 
 			if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 				foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -555,7 +555,7 @@ class tx_div2007_alpha {
 				$langObj->LOCAL_LANG = $tempLOCAL_LANG;
 			}
 			if ($langObj->altLLkey) {
-				$tempLOCAL_LANG = t3lib_div::readLLfile($basePath, $langObj->altLLkey, 'UTF-8');
+				$tempLOCAL_LANG = \TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($basePath, $langObj->altLLkey, 'UTF-8');
 
 				if (count($langObj->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
 					foreach ($langObj->LOCAL_LANG as $langKey => $tempArray) {
@@ -864,7 +864,7 @@ class tx_div2007_alpha {
 			}
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'].= t3lib_div::implodeArrayForUrl('', $urlParameters);
+					$conf['additionalParams'].= \TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
 				$conf['additionalParams'] .= $urlParameters;
@@ -910,7 +910,7 @@ class tx_div2007_alpha {
 			}
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'] .= t3lib_div::implodeArrayForUrl('', $urlParameters);
+					$conf['additionalParams'] .= \TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
 				$conf['additionalParams'] .= $urlParameters;
@@ -1264,14 +1264,14 @@ class tx_div2007_alpha {
 
 	/**
 	 * This is the original pi_RTEcssText from tslib_pibase
-	 * Will process the input string with the parseFunc function from tslib_cObj based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
+	 * Will process the input string with the parseFunc function from TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
 	 * This is useful for rendering of content in RTE fields where the transformation mode is set to "ts_css" or so.
 	 * Notice that this requires the use of "css_styled_content" to work right.
 	 *
-	 * @param	object		cOject of class tslib_cObj
+	 * @param	object		cOject of class TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
 	 * @param	string		The input text string to process
 	 * @return	string		The processed string
-	 * @see tslib_cObj::parseFunc()
+	 * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::parseFunc()
 	 */
 	function RTEcssText ($cObj, $str) {
 		global $TSFE;
@@ -1503,19 +1503,19 @@ class tx_div2007_alpha {
 			// Create $TSFE object (TSFE = TypoScript Front End)
 			// Connecting to database
 			// ***********************************
-			$TSFE = t3lib_div::makeInstance('tslib_fe',
+			$TSFE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tslib_fe',
 				$TYPO3_CONF_VARS,
-				t3lib_div::_GP('id'),
-				t3lib_div::_GP('type'),
-				t3lib_div::_GP('no_cache'),
-				t3lib_div::_GP('cHash'),
-				t3lib_div::_GP('jumpurl'),
-				t3lib_div::_GP('MP'),
-				t3lib_div::_GP('RDCT')
+				\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('id'),
+				\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('type'),
+				\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('no_cache'),
+				\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('cHash'),
+				\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('jumpurl'),
+				\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('MP'),
+				\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('RDCT')
 			);
 
 			if($TYPO3_CONF_VARS['FE']['pageUnavailable_force'] &&
-				!t3lib_div::cmpIP(t3lib_div::getIndpEnv('REMOTE_ADDR'), $TYPO3_CONF_VARS['SYS']['devIPmask'])) {
+				!\TYPO3\CMS\Core\Utility\GeneralUtility::cmpIP(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR'), $TYPO3_CONF_VARS['SYS']['devIPmask'])) {
 				$TSFE->pageUnavailableAndExit('This page is temporarily unavailable.');
 			}
 
@@ -1595,7 +1595,7 @@ class tx_div2007_alpha {
 	 * @param	string		value
 	 * @param	array		the configuration. only the 'php' part is used.
 	 * @return	string		The processed string
-	 * @see tslib_cObj::parseFunc()
+	 * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::parseFunc()
 	 */
 	function phpFunc (
 		$content,

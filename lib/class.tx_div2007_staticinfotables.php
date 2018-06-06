@@ -61,7 +61,7 @@ class tx_div2007_staticinfotables {
 	 * Returns a label field for the current language
 	 *
 	 * @param	string		table name
-	 * @param	boolean		If set (default) the TCA definition of the table should be loaded with t3lib_div::loadTCA(). It will be needed to set it to false if you call this function from inside of tca.php
+	 * @param	boolean		If set (default) the TCA definition of the table should be loaded with \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA(). It will be needed to set it to false if you call this function from inside of tca.php
 	 * @param	string		language to be used
 	 * @param	boolean		If set, we are looking for the "local" title field
 	 * @return	string		field name
@@ -78,13 +78,13 @@ class tx_div2007_staticinfotables {
 
 		if (!is_object($csConvObj)) {
 			// The object may not exist yet, so we need to create it now.
-			$csConvObj = t3lib_div::makeInstance('t3lib_cs');
+			$csConvObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_cs');
 		}
 
 		$labelFields = array();
 		if($table && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'])) {
 			if ($bLoadTCA && $typoVersion < 6002000) {
-				t3lib_div::loadTCA($table);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($table);
 
 					// get all extending TCAs
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['extendingTCA']))	{
@@ -152,7 +152,7 @@ class tx_div2007_staticinfotables {
 
 			if ($isoCodeField != '') {
 				if ($bLoadTCA && $typoVersion < 6002000) {
-					t3lib_div::loadTCA($table);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($table);
 				}
 				$type = self::isoCodeType($isoCode);
 				$isoCodeField = str_replace ('##', $type, $isoCodeField);
@@ -642,9 +642,9 @@ class tx_div2007_staticinfotables {
 			//Merge all ext_keys
 			if (is_array($ext_keys)) {
 				foreach ($ext_keys as $_EXTKEY) {
-					if (t3lib_extMgm::isLoaded($_EXTKEY)) {
+					if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($_EXTKEY)) {
 						//Include the ext_table
-						include_once(t3lib_extMgm::extPath($_EXTKEY) . 'ext_tables.php');
+						include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'ext_tables.php');
 					}
 				}
 			}

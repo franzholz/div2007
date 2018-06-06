@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This class is a wrapper around tslib_cObj::typoLink
+ * This class is a wrapper around TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink
  *
  * Copyright (c) 2006-2007 Elmar Hinz
  *
@@ -30,7 +30,7 @@
  */
 
 /**
- * This class is a wrapper around tslib_cObj::typoLink
+ * This class is a wrapper around TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink
  *
  * It is not a full implementation of typolink functionality
  * but targeted to the day-to-day requirements. The idea is to provide
@@ -48,7 +48,7 @@ class tx_div2007_link {
 	var $tagAttributes = array();       // setting attributes for the tag in general
 	var $classString = '';              // tags class attribute
 	var $idString = '';                 // tags id attribute
-	var $cObject;                       // instance of tslib_cObj
+	var $cObject;                       // instance of TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
 	var $destination = '';              // page id, alias, external link, etc.
 	var $labelString = '';              // tags label
 	var $labelHasAlreadyHtmlSpecialChars = false; // is the label already HSC?
@@ -70,15 +70,15 @@ class tx_div2007_link {
 	/**
 	 * Construct a link object
 	 *
-	 * By default this object wraps tslib_cObj::typolink();
+	 * By default this object wraps TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typolink();
 	 * The $cObjectClass parameter can be used to provide a mock object
 	 * for unit tests.
 	 *
 	 * @param	object		mock object for testing purpuses
 	 * @return	void
 	 */
-	public function __construct($cObjectClass = 'tslib_cObj') {
-		$this->cObject = t3lib_div::makeInstance($cObjectClass);
+	public function __construct($cObjectClass = 'TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer') {
+		$this->cObject = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($cObjectClass);
 	}
 
 	// -------------------------------------------------------------------------------------
@@ -143,7 +143,7 @@ class tx_div2007_link {
 	 * @param	boolean		if true don't parse through htmlspecialchars()
 	 * @return	object		self
 	 * @see		TSref => typolink => parameter
-	 * @see		tslib_cObj::typoLink()
+	 * @see		TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink()
 	 */
 	public function destination($destination) {
 		$this->destination = $destination;
@@ -346,7 +346,7 @@ class tx_div2007_link {
 	 */
 	public function redirect() {
 		session_write_close();
-		header('Location: ' . t3lib_div::getIndpEnv('TYPO3_REQUEST_DIR')
+		header('Location: ' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR')
 			. $this->cObject->typolink(null, $this->_makeConfig('url')));
 		exit();
 	}

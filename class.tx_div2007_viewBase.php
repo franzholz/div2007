@@ -58,13 +58,13 @@ class tx_div2007_viewBase extends tx_div2007_object {
 	 * This method gives you the possibility to specify a template path from the controller.
 	 * This can become usefull, if you work with different template directories.
 	 * You can make use the syntax  EXT:myextension/somepath.
-	 * It will be evaluated to the absolute path by t3lib_div::getFileAbsFileName()
+	 * It will be evaluated to the absolute path by \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName()
 	 *
 	 * @param	string		path to the directory containing the php templates
 	 * @return	void
 	 */
 	public function setPathToTemplateDirectory($pathToTemplateDirectory) {
-		$this->pathToTemplateDirectory = t3lib_div::getFileAbsFileName($pathToTemplateDirectory);
+		$this->pathToTemplateDirectory = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($pathToTemplateDirectory);
 	}
 
 	//-------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ class tx_div2007_viewBase extends tx_div2007_object {
 			$this->_die(__FILE__, __LINE__, 'Please set the path to the template directory.
 			Do it either with the method setPathToTemplateDirectory($path)
 			or by choosing the default name "pathToTemplateDirectory" in the TS setup.');
-		return t3lib_div::getFileAbsFileName($pathToTemplateDirectory);
+		return \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($pathToTemplateDirectory);
 	}
 
 	/**

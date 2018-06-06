@@ -177,7 +177,7 @@ class tx_div2007 {
 		// Format subdirectory first to '.../' or ''
 		preg_match('/^\/?(.*)\/?$/', $subdirectory, $matches);
 		$subdirectory = strlen($matches[1]) ? $matches[1] . '/' : '';
-		$path = t3lib_extMgm::extPath($extensionKey) . $subdirectory;
+		$path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey) . $subdirectory;
 		if(is_dir($path)) {
 			$handle = opendir($path);
 			while($entry = readdir($handle)) {
@@ -282,12 +282,12 @@ class tx_div2007 {
 	}
 
 	/**
-	 * Returns a tslib_cObj to access typolink, ect.
+	 * Returns a TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer to access typolink, ect.
 	 *
 	 * If $this->controller is set it returns the plugins cObject.
 	 * If it is called outside a controllers context, it creates a cObject as singleton.
 	 *
-	 * @return	tslib_cObj		a tslib_CObj
+	 * @return	TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer		a TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
 	 */
 	static public function findCObject () {
 		if(is_object($this->controller) && is_object($this->controller->cObject)){
@@ -299,7 +299,7 @@ class tx_div2007 {
 		static $cObject;
 		if(!is_object($cObject))
 		  require_once(PATH_tslib.'class.tslib_content.php');
-			$cObject = t3lib_div::makeInstance('tslib_cObj');
+			$cObject = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
 		return	$cObject;
 	}
 
@@ -323,7 +323,7 @@ class tx_div2007 {
 		ob_end_clean();
 		if(!isset($tce)) {
 			static $tce; // Singleton.
-			$tce = t3lib_div::makeInstance('t3lib_tcemain');
+			$tce = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_tcemain');
 			$tce->stripslashes_value = 0;
 		}
 		return $tce;
@@ -408,7 +408,7 @@ class tx_div2007 {
 				}
 			}
 		} else {
-			$packageManager = t3lib_div::makeInstance('TYPO3\\CMS\\Core\\Package\\PackageManager');
+			$packageManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Package\\PackageManager');
 			foreach ($packageManager->getActivePackages() as $package) {
 				$packageKey = $package->getPackageKey();
 				if (
@@ -541,7 +541,7 @@ class tx_div2007 {
 			for($i = 0; $i < sizeof($ext_keys); $i++){
 				//Include the ext_table
 				$_EXTKEY = $ext_keys[$i];
-				include_once(t3lib_extMgm::extPath($ext_keys[$i]) . 'ext_tables.php');
+				include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($ext_keys[$i]) . 'ext_tables.php');
 			}
 		}
 	}
@@ -550,7 +550,7 @@ class tx_div2007 {
 	/**
 	 * Load the class file and make an instance of the class
 	 *
-	 * This is an extension to t3lib_div::makeInstance(). The advantage
+	 * This is an extension to \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(). The advantage
 	 * is that it tries to autoload the file wich in combination
 	 * with the shorter notation simplyfies the generation of objects.
 	 *
@@ -559,7 +559,7 @@ class tx_div2007 {
 	 * @see     tx_div2007_loader
 	 */
 	static public function makeInstance ($className) {
-		$instance = t3lib_div::makeInstance($className);
+		$instance = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($className);
 		if(!is_object($instance)) {
 			return false;
 		} else {
@@ -577,7 +577,7 @@ class tx_div2007 {
 	static public function resolvePathWithExtPrefix ($path) {
 		if(substr($path, 0, 4) == 'EXT:') {
 			list($extKey, $local) = explode('/', substr($path, 4), 2);
-			if(t3lib_extMgm::isLoaded($extKey)) {
+			if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey)) {
 				$path = self::getSiteRelativeExtensionPath($extKey) . $local;
 			}
 		}

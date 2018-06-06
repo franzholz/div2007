@@ -1043,7 +1043,7 @@ class FrontendUtility {
      * @param   boolean     If $cache is set (0/1), the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
      * @param   integer     Alternative page ID for the link. (By default this function links to the SAME page!)
      * @return  string      The input string wrapped in <a> tags
-     * @see pi_linkTP_keepPIvars(), tslib_cObj::typoLink()
+     * @see pi_linkTP_keepPIvars(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink()
      */
     static public function linkTP (
         \JambageCom\Div2007\Base\BrowserBase $pObject,
@@ -1165,14 +1165,14 @@ class FrontendUtility {
 
     /**
     * This is the original pi_RTEcssText from tslib_pibase
-    * Will process the input string with the parseFunc function from tslib_cObj based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
+    * Will process the input string with the parseFunc function from TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
     * This is useful for rendering of content in RTE fields where the transformation mode is set to "ts_css" or so.
     * Notice that this requires the use of "css_styled_content" to work right.
     *
-    * @param	object     cOject of class tslib_cObj
+    * @param	object     cOject of class TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
     * @param	string     The input text string to process
     * @return	string     The processed string
-    * @see tslib_cObj::parseFunc()
+    * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::parseFunc()
     */
     static public function RTEcssText ($cObj, $str)
     {

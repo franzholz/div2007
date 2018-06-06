@@ -1,3 +1,7 @@
+
+2018-06-06 Franz Holzinger  <franz@ttproducts.de>
+    * introduce the new TYPO3 6.x namespaces in almost all files
+
 2018-05-31 Franz Holzinger  <franz@ttproducts.de>
     * do not use references inside of the FlexformUtility methods
 

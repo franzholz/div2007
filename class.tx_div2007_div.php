@@ -1135,7 +1135,7 @@ final class tx_div2007_div {
 	 * @param string $string Input string, eg "123 + 456 / 789 - 4"
 	 * @param string $operators Operators to split by, typically "/+-*"
 	 * @return array Array with operators and operands separated.
-	 * @see tslib_cObj::calc(), tslib_gifBuilder::calcOffset()
+	 * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::calc(), tslib_gifBuilder::calcOffset()
 	 */
 	static public function splitCalc($string, $operators) {
 		$res = Array();
@@ -1168,7 +1168,7 @@ final class tx_div2007_div {
 	 *
 	 * @param string $string Input string, eg "(123 + 456) / 789 - 4"
 	 * @return integer Calculated value. Or error string.
-	 * @see calcPriority(), tslib_cObj::stdWrap()
+	 * @see calcPriority(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::stdWrap()
 	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::calculateWithParentheses() instead
 	 */
 	static public function calcParenthesis($string) {
@@ -3803,8 +3803,8 @@ final class tx_div2007_div {
 		if (substr($filename, 0, 4) == 'EXT:') { // extension
 			list($extKey, $local) = explode('/', substr($filename, 4), 2);
 			$filename = '';
-			if (strcmp($extKey, '') && t3lib_extMgm::isLoaded($extKey) && strcmp($local, '')) {
-				$filename = t3lib_extMgm::extPath($extKey) . $local;
+			if (strcmp($extKey, '') && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey) && strcmp($local, '')) {
+				$filename = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey) . $local;
 			}
 		} elseif (!self::isAbsPath($filename)) { // relative. Prepended with $relPathPrefix
 			$filename = $relPathPrefix . $filename;
@@ -4045,7 +4045,7 @@ final class tx_div2007_div {
 	 *
 	 * @param string $addQueryParams Query-parameters: "&xxx=yyy&zzz=uuu"
 	 * @return array Array with key/value pairs of query-parameters WITHOUT a certain list of variable names (like id, type, no_cache etc.) and WITH a variable, encryptionKey, specific for this server/installation
-	 * @see tslib_fe::makeCacheHash(), tslib_cObj::typoLink(), tx_div2007_div::calculateCHash()
+	 * @see tslib_fe::makeCacheHash(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink(), tx_div2007_div::calculateCHash()
 	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 6.1 - use t3lib_cacheHash instead
 	 */
 	static public function cHashParams($addQueryParams) {
@@ -4956,7 +4956,7 @@ final class tx_div2007_div {
 			'requestedExcludeServiceKeys' => $excludeServiceKeys,
 		);
 
-		while ($info = t3lib_extMgm::findService($serviceType, $serviceSubType, $excludeServiceKeys)) {
+		while ($info = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::findService($serviceType, $serviceSubType, $excludeServiceKeys)) {
 
 				// provide information about requested service to service object
 			$info = array_merge($info, $requestInfo);
@@ -4999,7 +4999,7 @@ final class tx_div2007_div {
 				}
 			}
 				// deactivate the service
-			t3lib_extMgm::deactivateService($info['serviceType'], $info['serviceKey']);
+			\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::deactivateService($info['serviceType'], $info['serviceKey']);
 		}
 		return $error;
 	}

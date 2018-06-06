@@ -87,7 +87,7 @@ class tx_div2007_email {
 		}
 
 		if (!is_array($toEMail) && trim($toEMail)) {
-			$emailArray = t3lib_div::trimExplode(',', $toEMail);
+			$emailArray = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $toEMail);
 			$toEMail = array();
 			foreach ($emailArray as $email) {
 				$toEMail[] = $email;
@@ -101,11 +101,11 @@ class tx_div2007_email {
 				if (
 					(
 						!is_numeric($k) &&
-						!t3lib_div::validEmail($k)
+						!\TYPO3\CMS\Core\Utility\GeneralUtility::validEmail($k)
 					) &&
 					(
 						$v == '' ||
-						!t3lib_div::validEmail($v)
+						!\TYPO3\CMS\Core\Utility\GeneralUtility::validEmail($v)
 					)
 				) {
 					unset($emailArray[$k]);
@@ -139,7 +139,7 @@ class tx_div2007_email {
 		}
 
 		if (
-			!t3lib_div::validEmail($fromEMail)
+			!\TYPO3\CMS\Core\Utility\GeneralUtility::validEmail($fromEMail)
 		) {
 			debug ('tx_div2007_email::sendMail invalid email address: from "' . $fromEMail . '"'); // keep this
 			debug ('tx_div2007_email::sendMail exited with error 3'); // keep this
@@ -237,7 +237,7 @@ class tx_div2007_email {
 				$toEMail = implode(',', $emailArray);
 			}
 
-			$mail = t3lib_div::makeInstance('t3lib_htmlmail');
+			$mail = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_htmlmail');
 			$mail->start();
 			$mail->mailer = 'TYPO3 HTMLMail';
 			// $mail->useBase64(); TODO
@@ -278,7 +278,7 @@ class tx_div2007_email {
 
 			if ($HTMLContent) {
 				$mail->theParts['HTMLContent']['content'] = $HTMLContent;
-				$mail->theParts['HTMLContent']['path'] = t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST') . '/';
+				$mail->theParts['HTMLContent']['path'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/';
 				$mail->extractMediaLinks();
 				$mail->extractHyperLinks();
 				$mail->fetchHTMLMedia();
@@ -328,7 +328,7 @@ class tx_div2007_email {
 			is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$hookVar])
 		) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey][$hookVar] as $classRef) {
-				$hookObj= t3lib_div::getUserObj($classRef);
+				$hookObj= \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($classRef);
 				if (method_exists($hookObj, 'init')) {
 					$hookObj->init($mail);
 				}

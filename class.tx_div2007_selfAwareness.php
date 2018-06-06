@@ -155,7 +155,7 @@ class tx_div2007_selfAwareness {
 	 */
 	public function findCObject () {
 		if(!$this->cObjectSingleton) {
-			$this->cObjectSingleton = t3lib_div::makeInstance('tslib_cObj');
+			$this->cObjectSingleton = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
 		}
 		return	$this->cObjectSingleton;
 	}
@@ -236,7 +236,7 @@ class tx_div2007_selfAwareness {
 						}
 					}
 				} else  {
-					$keys = t3lib_div::trimExplode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
+					$keys = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $GLOBALS['TYPO3_CONF_VARS']['EXT']['extList']);
 					foreach($keys as $extensionKey) {
 						if($candidate == str_replace('_', '', $extensionKey)) {
 							return $extensionKey;
@@ -256,10 +256,10 @@ class tx_div2007_selfAwareness {
 	 * Find the absolute path of this extension.
 	 *
 	 * @return	string		path to the extension
-	 * @see		t3lib_extMgm::extPath()
+	 * @see		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath()
 	 */
 	public function getExtensionPath () {
-		return t3lib_extMgm::extPath($this->getExtensionKey());
+		return \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($this->getExtensionKey());
 	}
 
 	/**

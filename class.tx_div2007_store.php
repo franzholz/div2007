@@ -27,7 +27,7 @@
 /**
  * store for variables used in your extensions
  *
- * class tslib_cObj	All main TypoScript features, rendering of content objects (cObjects). This class is the backbone of TypoScript Template rendering.
+ * class TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer	All main TypoScript features, rendering of content objects (cObjects). This class is the backbone of TypoScript Template rendering.
  *
  * @package    TYPO3
  * @subpackage div2007
@@ -42,7 +42,7 @@ class tx_div2007_store {
 	 * Storage of the currently used cObject
 	 * You set the cObject in your extension at the beginning.
 	 * Then you can fetch it in your functions from here if you call
-	 * $obj = t3lib_div::getUserObj('&tx_div2007_cobj');
+	 * $obj = \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('&tx_div2007_cobj');
 	 * $cObj = $obj->getCurrent();
 	 *
 	 * @param	array		$data	the record data that is rendered.
@@ -53,7 +53,7 @@ class tx_div2007_store {
 
 		$className = 'TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer';
 		if (
-			$cObject instanceof tslib_cObj ||
+			$cObject instanceof TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer ||
 			$cObject instanceof $className
 		) {
 			$this->cObj = $cObject;

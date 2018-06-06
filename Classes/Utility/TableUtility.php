@@ -164,11 +164,11 @@ class TableUtility {
 	 * Is using the $GLOBALS['TCA'] arrays "ctrl" part where the key "enablefields" determines for each table which of these features applies to that table.
 	 *
 	 * @param	string		Table name found in the $GLOBALS['TCA'] array
-	 * @param	integer		If $show_hidden is set (0/1), any hidden-fields in records are ignored. NOTICE: If you call this function, consider what to do with the show_hidden parameter. Maybe it should be set? See tslib_cObj->enableFields where it's implemented correctly.
+	 * @param	integer		If $show_hidden is set (0/1), any hidden-fields in records are ignored. NOTICE: If you call this function, consider what to do with the show_hidden parameter. Maybe it should be set? See TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer->enableFields where it's implemented correctly.
 	 * @param	array		Array you can pass where keys can be "disabled", "starttime", "endtime", "fe_group" (keys from "enablefields" in TCA) and if set they will make sure that part of the clause is not added. Thus disables the specific part of the clause. For previewing etc.
 	 * @param	boolean		If set, enableFields will be applied regardless of any versioning preview settings which might otherwise disable enableFields
 	 * @return	string		The clause starting like " AND ...=... AND ...=..."
-	 * @see tslib_cObj::enableFields(), deleteClause()
+	 * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::enableFields(), deleteClause()
 	 */
 	static public function enableFields ($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = true) {
 		if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
