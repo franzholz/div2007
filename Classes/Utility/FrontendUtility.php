@@ -467,6 +467,9 @@ class FrontendUtility {
     }
 
     /**
+     * deprecated:
+     * use BrowserUtility::render instead
+     *
      * Returns a results browser. This means a bar of page numbers plus a "previous" and "next" link. For each entry in the bar the ctrlVars "pointer" will be pointing to the "result page" to show.
      * Using $this->ctrlVars['pointer'] as pointer to the page to display. Can be overwritten with another string ($pointerName) to make it possible to have more than one pagebrowser on a page)
      * Using $this->internal['resCount'], $this->internal['limit'] and $this->internal['maxPages'] for count number, how many results to show and the max number of pages to include in the browse bar.
@@ -884,6 +887,9 @@ class FrontendUtility {
     }
 
     /**
+     * deprecated:
+     * use BrowserUtility::autoCache instead
+     *
      * Returns true if the array $inArray contains only values allowed to be cached based on the configuration in $this->pi_autoCacheFields
      * Used by static::linkTPKeepCtrlVars
      * This is an advanced form of evaluation of whether a URL should be cached or not.
@@ -967,6 +973,9 @@ class FrontendUtility {
     }
 
     /**
+     * deprecated:
+     * use BrowserUtility::linkTPKeepCtrlVars instead
+     *
      * Link a string to the current page while keeping currently set values in piVars.
      * Like static::linkTP, but $urlParameters is by default set to $this->piVars with $overruleCtrlVars overlaid.
      * This means any current entries from this->piVars are passed on (except the key "DATA" which will be unset before!) and entries in $overruleCtrlVars will OVERRULE the current in the link.
@@ -1033,6 +1042,9 @@ class FrontendUtility {
     }
 
     /**
+     * deprecated:
+     * use BrowserUtility::linkTPKeepCtrlVars instead
+     *
      * Link string to the current page.
      * Returns the $str wrapped in <a>-tags with a link to the CURRENT page, but with $urlParameters set as extra parameters for the page.
      *

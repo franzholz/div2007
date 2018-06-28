@@ -1,3 +1,8 @@
+2018-06-28 Franz Holzinger  <franz@ttproducts.de>
+    * copy: \JambageCom\Div2007\Utility\FrontendUtility::listBrowser ->  \JambageCom\Div2007\Utility\BrowserUtility::render
+    * copy: \JambageCom\Div2007\Utility\FrontendUtility::autoCache ->  \JambageCom\Div2007\Utility\BrowserUtility::autoCache
+    * copy: \JambageCom\Div2007\Utility\FrontendUtility::linkTPKeepCtrlVars ->  \JambageCom\Div2007\Utility\BrowserUtility::linkTPKeepCtrlVars
+    * copy: \JambageCom\Div2007\Utility\FrontendUtility::linkTP ->  \JambageCom\Div2007\Utility\BrowserUtility::linkTP
 
 2018-06-06 Franz Holzinger  <franz@ttproducts.de>
     * introduce the new TYPO3 6.x namespaces in almost all files

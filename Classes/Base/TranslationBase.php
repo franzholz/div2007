@@ -51,7 +51,7 @@ class TranslationBase {
     public $altLocalLangKey = '';          // Pointer to alternative fall-back language to use.
     public $localLangTestPrefix = '';      // You can set this during development to some value that makes it easy for you to spot all labels that ARe delivered by the getLocalLang function.
     public $localLangTestPrefixAlt = '';   // Save as localLangTestPrefix, but additional prefix for the alternative value in getLocalLang() function calls
-    public $scriptRelPath;          // Path to the plugin class script relative to extension directory, eg. 'pi1/class.tx_newfaq_pi1.php'
+    public $scriptRelPath;          // relative path to the extension directory where the locallang XLF / XML files are stored. The leading and trailing slashes must be included. E.g. '/Resources/Private/Language/'
     public $extensionKey = '';	// extension key must be overridden
     protected $lookupFilename = ''; // filename used for the lookup method
 
@@ -302,8 +302,15 @@ class TranslationBase {
         ) {
             $basePath = $langFile;
         } else if ($extensionKey != '') {
-            $basePath = ExtensionManagementUtility::extPath($extensionKey) .
-                ($this->scriptRelPath ? dirname($this->scriptRelPath) . '/' : '') . $langFile;
+            $basePath = ExtensionManagementUtility::extPath($extensionKey);
+            if ($this->scriptRelPath != '') {
+                if (strpos($this->scriptRelPath, '.php')) {
+                    $basePath .= dirname($this->scriptRelPath) . '/';
+                } else {
+                    $basePath .= $this->scriptRelPath;
+                }
+            }
+            $basePath .= $langFile;
         } else {
             return false;
         }
