@@ -1,3 +1,6 @@
+2018-07-03 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: add class \JambageCom\Div2007\Utility\MarkerUtility which converts a multidimensional array into markers.
+
 2018-06-28 Franz Holzinger  <franz@ttproducts.de>
     * copy: \JambageCom\Div2007\Utility\FrontendUtility::listBrowser ->  \JambageCom\Div2007\Utility\BrowserUtility::render
     * copy: \JambageCom\Div2007\Utility\FrontendUtility::autoCache ->  \JambageCom\Div2007\Utility\BrowserUtility::autoCache
