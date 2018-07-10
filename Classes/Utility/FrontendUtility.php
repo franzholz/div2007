@@ -1113,13 +1113,20 @@ class FrontendUtility {
                 }
             }
 
+            $paramsOld = '';
+            $paramsNew = '';
+            if (isset($conf['additionalParams'])) {
+                $paramsOld = $conf['additionalParams'];
+            }
+
             if (is_array($urlParameters)) {
                 if (count($urlParameters)) {
-                    $conf['additionalParams'] .= GeneralUtility::implodeArrayForUrl('', $urlParameters);
+                    $paramsNew = GeneralUtility::implodeArrayForUrl('', $urlParameters);
                 }
             } else {
-                $conf['additionalParams'] .= $urlParameters;
+                $paramsNew = $urlParameters;
             }
+            $conf['additionalParams'] = $paramsOld . $paramsNew;
             $result = $cObj->typolink($label, $conf);
         } else {
             $result = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink: parameter $cObj is not an object';

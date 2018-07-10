@@ -554,13 +554,20 @@ class tx_div2007_alpha5 {
 				}
 			}
 
+			$paramsOld = '';
+			$paramsNew = '';
+			if (isset($conf['additionalParams'])) {
+                $paramsOld = $conf['additionalParams'];
+			}
+
 			if (is_array($urlParameters)) {
 				if (count($urlParameters)) {
-					$conf['additionalParams'] .= \TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('', $urlParameters);
+					$paramsNew = \TYPO3\CMS\Core\Utility\GeneralUtility::implodeArrayForUrl('', $urlParameters);
 				}
 			} else {
-				$conf['additionalParams'] .= $urlParameters;
+				$paramsNew = $urlParameters;
 			}
+			$conf['additionalParams'] = $paramsOld . $paramsNew;
 			$result = $cObj->typolink($label, $conf);
 		} else {
 			$out = 'error in call of tx_div2007_alpha5::getTypoLink_fh003: parameter $cObj is not an object';
