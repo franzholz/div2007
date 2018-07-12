@@ -36,6 +36,7 @@ namespace JambageCom\Div2007\Utility;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
 
  
 class TableUtility {
@@ -383,5 +384,43 @@ class TableUtility {
 		}
 		return $result;
 	}
+
+    /**
+    * Determine the recursive page ids including the given root page id
+    * @param integer $uid  root page id
+    * @return array
+    */
+    static public function getAllSubPages ($uid) {
+
+        $uidArray = array();
+        $result = array();
+
+        if (MathUtility::canBeInterpretedAsInteger($uid)) {
+            $uidArray[] = $uid;
+        } else {
+            $uids = GeneralUtility::trimExplode(',', $uid);
+            foreach ($uids as $currentUid) {
+                if (MathUtility::canBeInterpretedAsInteger($currentUid)) {
+                    $uidArray[] = $currentUid;
+                }
+            }
+        }
+
+        foreach ($uidArray as $currentUid) {
+            $records = \TYPO3\CMS\Frontend\Page\PageRepository::getRecordsByField(
+                'pages',
+                'pid',
+                $currentUid
+            );
+            $result[] = $currentUid;
+            if (count($records) > 0) {
+                foreach ($records as $record) {
+                    $result = array_merge($result, static::getAllSubPages($record['uid']));
+                }
+            }
+        }
+        $result = array_unique($result);
+        return $result;
+    }
 }
 
