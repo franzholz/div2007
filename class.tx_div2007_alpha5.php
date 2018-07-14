@@ -2045,7 +2045,7 @@ class tx_div2007_alpha5 {
 			$idNumber .= '-' . $uid;
 		}
 
-		$result = '<!-- START: ' . $idNumber . ' --><div id="' . $idNumber . '" class="' . $classname . '" >' .
+		$result = '<!-- START: ' . $idNumber . ' --><div id="' . $idNumber . '" class="' . $classname . '">' .
 			($content != '' ? $content : '') . '</div><!-- END: ' . $idNumber . ' -->';
 
 		return $result;

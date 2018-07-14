@@ -1235,7 +1235,7 @@ class FrontendUtility {
             $idNumber .= '-' . $uid;
         }
 
-        $result = '<!-- START: ' . $idNumber . ' --><div id="' . $idNumber . '" class="' . $classname . '" >' .
+        $result = '<!-- START: ' . $idNumber . ' --><div id="' . $idNumber . '" class="' . $classname . '">' .
             ($content != '' ? $content : '') . '</div><!-- END: ' . $idNumber . ' -->';
 
         return $result;
@@ -1259,7 +1259,7 @@ class FrontendUtility {
     </div>
     ';
 
-        if(!$GLOBALS['TSFE']->config['config']['disablePrefixComment']) {
+        if (!$GLOBALS['TSFE']->config['config']['disablePrefixComment']) {
             $content = '
 
     <!--

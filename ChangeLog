@@ -1,4 +1,7 @@
 
+2018-07-14 Franz Holzinger  <franz@ttproducts.de>
+    * remove the last blank inside of the generated div tag of method wrapContentCode
+
 2018-07-12 Franz Holzinger  <franz@ttproducts.de>
     * new feature: add method \JambageCom\Div2007\Utility\TableUtility::getAllSubPages which returns the recursive page ids for a given root page
 
