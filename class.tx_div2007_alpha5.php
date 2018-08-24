@@ -2223,8 +2223,13 @@ class tx_div2007_alpha5 {
             $GLOBALS['TT']->pull();
         }
 		// Check memory usage
-		$callingClassNameMonitor = '\\TYPO3\\CMS\\Core\\Utility\\MonitorUtility';
-		call_user_func($callingClassNameMonitor . '::peakMemoryUsage');
+        $callingClassNameMonitor = '\\TYPO3\\CMS\\Core\\Utility\\MonitorUtility';
+        if (!class_exists($callingClassNameMonitor)) {
+            $callingClassNameMonitor = '\\JambageCom\\MigrationCore\\Utility\\MonitorUtility';
+        }
+        if (class_exists($callingClassNameMonitor)) {
+            call_user_func($callingClassNameMonitor . '::peakMemoryUsage');
+        }
 
 		// Debugging Output
 		if (isset($error) && is_object($error) && @is_callable(array($error, 'debugOutput'))) {

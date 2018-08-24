@@ -1,3 +1,9 @@
+2018-08-24 Franz Holzinger  <franz@ttproducts.de>
+    * workaround for TYPO3 bug: THe class alias loader of migration_core does not replace the class \TYPO3\CMS\Core\Utility\MonitorUtility which is missing in TYPO3 8. see https://github.com/TYPO3/class-alias-loader/issues/9 
+    * modification to composer.json
+
+2018-07-19 Franz Holzinger  <franz@ttproducts.de>
+    *bugfix in XHTML detection from config: xhtmlDoctype = html5 is not a XHTML
 
 2018-07-14 Franz Holzinger  <franz@ttproducts.de>
     * remove the last blank inside of the generated div tag of method wrapContentCode

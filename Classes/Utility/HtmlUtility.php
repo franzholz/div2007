@@ -63,8 +63,15 @@ class HtmlUtility {
         if (is_object($GLOBALS['TSFE'])) {
             $config = $GLOBALS['TSFE']->config['config'];
             if (
-                $config['xhtmlDoctype'] != '' ||
-                stripos($config['doctype'], 'xthml') !== false
+                (
+                    $config['xhtmlDoctype'] != '' &&
+                    stripos($config['xhtmlDoctype'], 'xthml') !== false
+                )
+                    ||
+                (
+                    $config['doctype'] != '' &&
+                    stripos($config['doctype'], 'xthml') !== false
+                )
             ) {
                 $result = true;
             }
