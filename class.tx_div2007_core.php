@@ -78,7 +78,8 @@ class tx_div2007_core {
 			class_exists($callingClassName) &&
 			method_exists($callingClassName, 'convertVersionNumberToInteger')
 		) {
-			$result = call_user_func($callingClassName . '::convertVersionNumberToInteger', TYPO3_version);
+			$useClassName = substr($callingClassName, 1);
+			$result = call_user_func($useClassName . '::convertVersionNumberToInteger', TYPO3_version);
 		} else if (
 			class_exists('t3lib_utility_VersionNumber') &&
 			method_exists('t3lib_utility_VersionNumber', 'convertVersionNumberToInteger')
@@ -103,7 +104,8 @@ class tx_div2007_core {
 			class_exists($callingClassName) &&
 			method_exists($callingClassName, 'canBeInterpretedAsInteger')
 		) {
-			$result = call_user_func($callingClassName . '::canBeInterpretedAsInteger', $var);
+			$useClassName = substr($callingClassName, 1);
+			$result = call_user_func($useClassName . '::canBeInterpretedAsInteger', $var);
 		} else if (
 			class_exists('t3lib_utility_Math') &&
 			method_exists('t3lib_utility_Math', 'canBeInterpretedAsInteger')
@@ -127,7 +129,8 @@ class tx_div2007_core {
 			class_exists($callingClassName) &&
 			method_exists($callingClassName, 'forceIntegerInRange')
 		) {
-			$result = call_user_func($callingClassName . '::forceIntegerInRange', $theInt, $min, $max, $zeroValue);
+			$useClassName = substr($callingClassName, 1);
+			$result = call_user_func($useClassName . '::forceIntegerInRange', $theInt, $min, $max, $zeroValue);
 		} else if (
 			class_exists('t3lib_utility_Math') &&
 			method_exists('t3lib_utility_Math', 'forceIntegerInRange')
@@ -150,7 +153,8 @@ class tx_div2007_core {
 			class_exists($callingClassName) &&
 			method_exists($callingClassName, 'convertToPositiveInteger')
 		) {
-			$result = call_user_func($callingClassName . '::convertToPositiveInteger', $theInt);
+			$useClassName = substr($callingClassName, 1);
+			$result = call_user_func($useClassName . '::convertToPositiveInteger', $theInt);
 		} else if (
 			class_exists('t3lib_utility_Math') &&
 			method_exists('t3lib_utility_Math', 'convertToPositiveInteger')
@@ -279,7 +283,8 @@ class tx_div2007_core {
 			class_exists($callingClassName) &&
 			method_exists($callingClassName, 'debug')
 		) {
-			call_user_func($callingClassName . '::debug', $var, $header, $group);
+            $useClassName = substr($callingClassName, 1);
+			call_user_func($useClassName . '::debug', $var, $header, $group);
 		} else if (
 			class_exists('t3lib_utility_Debug') &&
 			method_exists('t3lib_utility_Debug', 'debug')
@@ -301,7 +306,8 @@ class tx_div2007_core {
 			class_exists($callingClassName) &&
 			method_exists($callingClassName, 'debugTrail')
 		) {
-			$result = call_user_func($callingClassName . '::debugTrail');
+            $useClassName = substr($callingClassName, 1);
+			$result = call_user_func($useClassName . '::debugTrail');
 		} else if (
 			class_exists('t3lib_utility_Debug') &&
 			method_exists('t3lib_utility_Debug', 'debugTrail')

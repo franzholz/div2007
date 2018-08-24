@@ -1,4 +1,5 @@
 2018-08-24 Franz Holzinger  <franz@ttproducts.de>
+    * do not use the backslash in the class name for the function call with call_user_func.
     * fix for bug at https://github.com/TYPO3/class-alias-loader/issues/9 : do not use the backslash in the class name for the function call with call_user_func.
     * workaround for TYPO3 bug: The class alias loader of migration_core does not replace the class \TYPO3\CMS\Core\Utility\MonitorUtility which is missing in TYPO3 8. see https://github.com/TYPO3/class-alias-loader/issues/9 
     * modification to composer.json
