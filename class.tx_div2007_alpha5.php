@@ -2224,11 +2224,9 @@ class tx_div2007_alpha5 {
         }
 		// Check memory usage
         $callingClassNameMonitor = '\\TYPO3\\CMS\\Core\\Utility\\MonitorUtility';
-        if (!class_exists($callingClassNameMonitor)) {
-            $callingClassNameMonitor = '\\JambageCom\\MigrationCore\\Utility\\MonitorUtility';
-        }
         if (class_exists($callingClassNameMonitor)) {
-            call_user_func($callingClassNameMonitor . '::peakMemoryUsage');
+			$useClassName = substr($callingClassNameMonitor, 1);
+            call_user_func($useClassName . '::peakMemoryUsage');
         }
 
 		// Debugging Output
