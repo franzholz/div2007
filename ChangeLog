@@ -1,3 +1,7 @@
+2018-09-07 Franz Holzinger  <franz@ttproducts.de>
+    * fix for bug with TYPO3 6.2: readd autoloader file ext_autoload.php
+    * This should work with TYPO3 9.3 .
+
 2018-08-24 Franz Holzinger  <franz@ttproducts.de>
     * do not use the backslash in the class name for the function call with call_user_func.
     * fix for bug at https://github.com/TYPO3/class-alias-loader/issues/9 : do not use the backslash in the class name for the function call with call_user_func.
