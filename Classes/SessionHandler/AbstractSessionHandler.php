@@ -18,7 +18,7 @@ namespace JambageCom\Div2007\SessionHandler;
 /**
  * Abstract session handling base class.
  *
- * @author Kraft Bernhard <kraftb@think-open.at>
+ * @author Bernhard Kraft <kraftb@think-open.at>
  * @copyright 2016
  */
 abstract class AbstractSessionHandler {
@@ -42,7 +42,7 @@ abstract class AbstractSessionHandler {
     /**
     * Get session key
     *
-    * @param string $key: The session key for the extension for which you read the session data.
+    * @param string $key: The session key for the extension for which you read or write the session data.
     * @return data The session data for the captcha extension
     */
     public function setSessionKey ($key) {

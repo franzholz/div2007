@@ -18,13 +18,13 @@ namespace JambageCom\Div2007\SessionHandler;
 /**
 * TYPO3 session handling utility.
 *
-* @author Kraft Bernhard <kraftb@think-open.at>
+* @author Bernhard Kraft <kraftb@think-open.at>
 * @copyright 2018
 */
 class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandlerInterface {
 
     /**
-    * The session variable key
+    * The session variable key. You should overwrite this.
     *
     * @var string
     */

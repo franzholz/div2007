@@ -1,3 +1,9 @@
+
+
+2018--- Franz Holzinger  <franz@ttproducts.de>
+
+
+
 2018-09-07 Franz Holzinger  <franz@ttproducts.de>
     * fix for bug with TYPO3 6.2: readd autoloader file ext_autoload.php
     * This should work with TYPO3 9.3 .

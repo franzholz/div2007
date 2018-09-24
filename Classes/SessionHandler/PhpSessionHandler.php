@@ -18,7 +18,7 @@ namespace JambageCom\Div2007\SessionHandler;
 /**
  * PHP session handling utility.
  *
- * @author Kraft Bernhard <kraftb@think-open.at>
+ * @author Bernhard Kraft <kraftb@think-open.at>
  * @copyright 2018
  */
 class PhpSessionHandler extends AbstractSessionHandler implements SessionHandlerInterface {

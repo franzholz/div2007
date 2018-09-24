@@ -18,7 +18,7 @@ namespace JambageCom\Div2007\SessionHandler;
 /**
  * Interface definition for session handling class.
  *
- * @author Kraft Bernhard <kraftb@think-open.at>
+ * @author Bernhard Kraft <kraftb@think-open.at>
  * @copyright 2018
  */
 interface SessionHandlerInterface {
