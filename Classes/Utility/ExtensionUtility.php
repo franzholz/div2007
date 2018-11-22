@@ -123,6 +123,7 @@ class ExtensionUtility {
         $result = $filepath;
         if (substr($filepath, 0, 4) === 'EXT:') {
             list($extensionKey, $relativePath) = explode('/', substr($filepath, 4), 2);
+
             if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {
                 if ($relative) {
                     $result =
@@ -139,6 +140,7 @@ class ExtensionUtility {
                 $result = false;
             }
         }
+
         return $result;
     }
 }

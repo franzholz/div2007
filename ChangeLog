@@ -1,11 +1,11 @@
 
-
-2018--- Franz Holzinger  <franz@ttproducts.de>
-
-
+2018-11-22 Franz Holzinger  <franz@ttproducts.de>
+    * The CaptchaManager supports the extensions captcha and sr_freecap by default.
+    * compatibility: replace the method \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath by execution of \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix with parameter \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath
+    * compatibility: remove deprecated entries from file ext_emconf.php
 
 2018-09-07 Franz Holzinger  <franz@ttproducts.de>
-    * fix for bug with TYPO3 6.2: readd autoloader file ext_autoload.php
+    * fix for bug with TYPO3 6.2: read autoloader file ext_autoload.php
     * This should work with TYPO3 9.3 .
 
 2018-08-24 Franz Holzinger  <franz@ttproducts.de>

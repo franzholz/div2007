@@ -40,11 +40,21 @@ class CaptchaManager
     static public function getCaptcha ($extensionKey, $name)
     {
         $result = null;
+        $captchaArray = array(
+            \JambageCom\Div2007\Captcha\Captcha::class,
+            \JambageCom\Div2007\Captcha\Freecap::class
+        );
         if (
-            $name != '' &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha']) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'])
         ) {
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'] as $classRef) {
+            $captchaArray = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'];
+        }
+
+        if (
+            $name != ''
+        ) {
+            foreach ($captchaArray as $classRef) {
                 $captchaObj = GeneralUtility::makeInstance($classRef);
                 if (
                     is_object($captchaObj) &&

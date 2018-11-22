@@ -9,25 +9,19 @@ if (!defined ('DIV2007_EXT')) {
 }
 
 $emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
-
-if (
-    class_exists($emClass) &&
-    method_exists($emClass, 'extPath')
-) {
-    // nothing
-} else {
-    $emClass = 't3lib_extMgm';
-}
-
+$extensionPath = call_user_func($emClass . '::extPath', DIV2007_EXT);
 
 if (!defined ('PATH_BE_DIV2007')) {
-    $bePath = call_user_func($emClass . '::extPath', DIV2007_EXT);
-    define('PATH_BE_DIV2007', $bePath);
+    define('PATH_BE_DIV2007', $extensionPath);
 }
 
 
 if (!defined ('PATH_FE_DIV2007_REL')) {
-    define('PATH_FE_DIV2007_REL', call_user_func($emClass . '::siteRelPath', DIV2007_EXT));
+    $relativeExtensionPath = \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(
+        $extensionPath
+    );
+
+    define('PATH_FE_DIV2007_REL', $relativeExtensionPath);
 }
 
 
