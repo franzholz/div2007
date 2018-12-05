@@ -43,6 +43,8 @@ namespace JambageCom\Div2007\Utility;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use JambageCom\Div2007\Utility\FrontendUtility;
+
 
 class MailUtility {
 
@@ -81,10 +83,6 @@ class MailUtility {
         $defaultSubject = ''
     ) {
         $result = true;
-        if (version_compare(TYPO3_version, '6.2.0', '<')) {
-            return false;
-        }
-
         $charset = 'UTF-8';
         if (
             isset($GLOBALS['TSFE']->renderCharset) &&
@@ -141,7 +139,7 @@ class MailUtility {
                 return false;
             }
         } else {
-                debug ('MailUtility::send exited with error 2'); // keep this
+            debug ('MailUtility::send exited with error 2'); // keep this
             return false;
         }
 
@@ -154,10 +152,10 @@ class MailUtility {
         }
 
         $fromName = str_replace('"', '\'', $fromName);
-        $fromNameSlashed = \tx_div2007_alpha5::slashName($fromName);
 
         if ($subject == '') {
             if ($defaultSubject == '') {
+                $fromNameSlashed = FrontendUtility::slashName($fromName);
                 $defaultSubject = 'message from ' . $fromNameSlashed . ($fromNameSlashed != '' ? '<' : '') . $fromEMail . ($fromNameSlashed != '' ? '>' : '');
             }
 
@@ -257,17 +255,119 @@ class MailUtility {
             isset($mail) &&
             is_object($mail)
         ) {
-            $mailClass = get_class($mail);
+            $signerRow = null;
+
+            if (
+                isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]) &&
+                isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['dkimFile']) &&
+                $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['dkimFile'] != ''
+            ) {
+                $signerXmlFilename =
+                    GeneralUtility::resolveBackPath(
+                        PATH_typo3conf . '../' . $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['dkimFile']
+                    );
+                // determine the file type
+                $basename = basename($signerXmlFilename);
+                $posFileExtension = strrpos($basename, '.');
+                $fileExtension = substr($basename, $posFileExtension + 1);
+                $absFilename = GeneralUtility::getFileAbsFileName($signerXmlFilename);
+                $handle = fopen($absFilename, 'rt');
+                if ($handle === false) {
+                    throw new \Exception(DIV2007_EXT . ': File not found ("' . $absFilename . '")');
+                }
+
+                if ($fileExtension == 'xml') {
+                    $objDom = new \domDocument();
+                    $objDom->encoding = 'utf-8';
+                    $resultLoad = $objDom->load($absFilename, LIBXML_COMPACT);
+
+                    if ($resultLoad) {
+
+                        $bRowFits = false;
+                        $objRows = $objDom->getElementsByTagName('Row');
+
+                        foreach ($objRows as $myRow) {
+                            $tag = $myRow->nodeName;
+
+                            if ($tag == 'Row') {
+                                $objRowDetails = $myRow->childNodes;
+                                $xmlRow = array();
+                                $count = 0;
+
+                                foreach ($objRowDetails as $rowDetail) {
+                                    $count++;
+                                    $detailValue = '';
+                                    $detailTag = $rowDetail->nodeName;
+
+                                    if ($detailTag != '#text') {
+                                        $detailValue = trim($rowDetail->nodeValue);
+                                        $xmlRow[$detailTag] = $detailValue;
+                                    }
+                                    if ($count > 30) {
+                                        break;
+                                    }
+                                }
+                            }
+                            $parts = explode('@', $fromEMail);
+                            $fromEmailDomain = $parts['1'];
+                            if ($fromEmailDomain == $xmlRow['domain']) {
+                                $signerRow = $xmlRow;
+                                break;
+                            }
+                        }
+                    } else {
+                        throw new \Exception($extKey . ': The file "' . $absFilename . '" is not XML valid.');
+                    }
+                } else {
+                    throw new \Exception($extKey . ': The file "' . $absFilename . '" has an invalid extension.');
+                }
+            }
+
+            if (
+                isset($signerRow) &&
+                is_array($signerRow) &&
+                isset($signerRow['privateKeyFile']) &&
+                isset($signerRow['selector'])
+            ) {
+                $signerFilename =
+                    GeneralUtility::resolveBackPath(
+                        PATH_typo3conf . '../' . $signerRow['privateKeyFile']
+                    );
+
+                $absFilename = GeneralUtility::getFileAbsFileName($signerFilename);
+                $handle = fopen($absFilename, 'rt');
+                if ($handle === false) {
+                    throw new \Exception(DIV2007_EXT . ': File not found ("' . $absFilename . '")');
+                }
+
+                //  create a signer
+                $signer = \Swift_Signers_DKIMSigner::newInstance(
+                    file_get_contents($absFilename),
+                    $signerRow['domain'],
+                    $signerRow['selector']
+                );
+
+                // ignore the additional headers
+                $signer->ignoreHeader('Content-Transfer-Encoding');
+                $signer->ignoreHeader('X-Swift-Return-Path');
+                $signer->ignoreHeader('X-Mailer');
+                
+                // add the signer
+                $mail->attachSigner($signer);
+            }
 
             if (
                 method_exists($mail, 'send') &&
                 method_exists($mail, 'isSent')
             ) {
-                $mail->send();
+                $mail->send(); // TODO: debug and test mode to not send an email
                 $result = $mail->isSent();
                 if (!$result) {
                     debug ('MailUtility::send exited with error 6'); // keep this
-                    debug ('MailUtility::send undelivered: ', implode(',', $mail->getFailedRecipients())); // keep this
+                    $undelivered = $mail->getFailedRecipients();
+                    if (is_array($undelivered)) {
+                        debug ('MailUtility::send undelivered: ' . implode(',', $undelivered)); // keep this
+                    }
                 }
             } elseif (method_exists($mail, 'sendTheMail')) {
                 $mail->sendTheMail();
@@ -278,7 +378,6 @@ class MailUtility {
 
         return $result;
     }
-
 
     /**
     * Embeds media into the mail message
@@ -380,7 +479,6 @@ class MailUtility {
         }
         return $attributes;
     }
-
 
     /**
     * This function checks if the corresponding DNS has a valid MX record
