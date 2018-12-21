@@ -1,5 +1,8 @@
 2018-12-05 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: add a configuration file to div2007
     * new feature: DKIM can be used for multiple domains
+    * new feature: debug the email data instead of sending the email: debug.mail = 1 in the Extension Manager.
+    * new feature: improve the base class for the reports module for a function to check for set global TYPO3 variables.
 
 2018-11-22 Franz Holzinger  <franz@ttproducts.de>
     * The CaptchaManager supports the extensions captcha and sr_freecap by default.

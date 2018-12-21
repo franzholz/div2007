@@ -1,2 +1,4 @@
-  # cat=dkim/enable; type=string; label=DKIM Signer File: Path to the XML file which contains all the information needed for DKIM for multiple domains. You must also setup your DNS records: https://support.dnsimple.com/articles/dkim-record/
+  # cat=dkim/enable; type=string; label=DKIM Signer File: Path to the XML file which contains all the information needed for DKIM for multiple domains. You must also setup your DNS records: https://support.dnsimple.com/articles/dkim-record/. See the file div2007/Resources/Private/Examples/dkim_domains.xml as an example.
 dkimFile = 
+  # cat=debug/enable; type=boolean; label=Debug Mails: If set then instead of sending the emails a debug output is generated.
+debug.mail = 

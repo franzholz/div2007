@@ -1,11 +1,26 @@
 <?php
-
-if (!defined ('TYPO3_MODE')) {
-    die ('Access denied.');
-}
+defined('TYPO3_MODE') or die('Access denied.');
 
 if (!defined ('DIV2007_EXT')) {
     define('DIV2007_EXT', 'div2007');
+}
+
+$_EXTCONF = unserialize($_EXTCONF);    // unserializing the configuration so we can use it here:
+
+if (
+    isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]) &&
+    is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT])
+) {
+    $storeArray = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT];
+} else {
+    unset($storeArray);
+}
+
+if (isset($_EXTCONF) && is_array($_EXTCONF)) {
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT] = $_EXTCONF;
+    if (isset($storeArray) && is_array($storeArray)) {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT] = array_merge($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT], $storeArray);
+    }
 }
 
 $emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';

@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<Dkim>
+<Row>
+    <privateKeyFile>fileadmin/dkim/mytypo3domain.priv</privateKeyFile>
+    <selector>section1</selector>
+    <domain>mytypo3domain.com</domain>
+</Row>
+<Row>
+    <privateKeyFile>fileadmin/dkim/mytypo3domain2.priv</privateKeyFile>
+    <selector>section2</selector>
+    <domain>mytypo3domain2.com</domain>
+</Row>
+</Dkim>

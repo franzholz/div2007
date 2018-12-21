@@ -30,8 +30,10 @@ use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
 use TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility;
 
+use JambageCom\Div2007\Utility\StatusUtility;
+
 /**
-* Hook into the backend module "Reports" checking the required or conflicting configurations
+* checking of the required or conflicting configurations
 */
 class StatusProviderBase implements StatusProviderInterface
 {
@@ -54,6 +56,10 @@ class StatusProviderBase implements StatusProviderInterface
         return $this->extensionName;
     }
 
+    public function getGlobalVariables () {
+        return null;
+    }
+
     /**
     * Compiles a collection of system status checks as a status report.
     *
@@ -65,7 +71,8 @@ class StatusProviderBase implements StatusProviderInterface
             'requiredExtensionsAreInstalled' => $this->checkIfRequiredExtensionsAreInstalled(),
             'noConflictingExtensionIsInstalled' => $this->checkIfNoConflictingExtensionIsInstalled(),
             'frontEndLoginSecurityLevelIsCorrectlySet' => $this->checkIfFrontEndLoginSecurityLevelIsCorrectlySet(),
-            'saltedPasswordsAreEnabledInFrontEnd' => $this->checkIfSaltedPasswordsAreEnabledInFrontEnd()
+            'saltedPasswordsAreEnabledInFrontEnd' => $this->checkIfSaltedPasswordsAreEnabledInFrontEnd(),
+            'globalVariablesAreSet' => StatusUtility::checkIfGlobalVariablesAreSet($this->getExtensionName(), $this->getGlobalVariables())
         );
         return $result;
     }
@@ -77,8 +84,12 @@ class StatusProviderBase implements StatusProviderInterface
     */
     protected function checkIfRequiredExtensionsAreInstalled ()
     {
-        $title = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:Required_extensions_not_installed', $this->getExtensionName());
+        $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Required_extensions_not_installed', $this->getExtensionName());
+        $value = null;
+        $message = null;
+        $status = Status::OK;
         $missingExtensions = array();
+
         if (
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->getExtensionKey()]['constraints']['depends'])
         ) {
@@ -91,11 +102,11 @@ class StatusProviderBase implements StatusProviderInterface
         }
 
         if (count($missingExtensions)) {
-            $value = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:keys', $this->getExtensionName()) . ' ' . implode(', ', $missingExtensions);
-            $message = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:install', $this->getExtensionName());
+            $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:keys', $this->getExtensionName()) . ' ' . implode(', ', $missingExtensions);
+            $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:install', $this->getExtensionName());
             $status = Status::ERROR;
         } else {
-            $value = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:none', $this->getExtensionName());
+            $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:none', $this->getExtensionName());
             $message = '';
             $status = Status::OK;
         }
@@ -118,7 +129,10 @@ class StatusProviderBase implements StatusProviderInterface
     */
     protected function checkIfNoConflictingExtensionIsInstalled ()
     {
-        $title = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:Conflicting_extensions_installed', $this->getExtensionName());
+        $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Conflicting_extensions_installed', $this->getExtensionName());
+        $value = null;
+        $message = null;
+        $status = Status::OK;
         $conflictingExtensions = array();
 
         if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->getExtensionKey()]['constraints']['conflicts'])) {
@@ -130,11 +144,11 @@ class StatusProviderBase implements StatusProviderInterface
         }
 
         if (count($conflictingExtensions)) {
-            $value = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:keys', $this->getExtensionName()) . ' ' . implode(', ', $conflictingExtensions);
-            $message = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:uninstall', $this->getExtensionName());
+            $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:keys', $this->getExtensionName()) . ' ' . implode(', ', $conflictingExtensions);
+            $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:uninstall', $this->getExtensionName());
             $status = Status::ERROR;
         } else {
-            $value = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:none', $this->getExtensionName());
+            $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:none', $this->getExtensionName());
             $message = '';
             $status = Status::OK;
         }
@@ -149,7 +163,10 @@ class StatusProviderBase implements StatusProviderInterface
     */
     protected function checkIfFrontEndLoginSecurityLevelIsCorrectlySet ()
     {
-        $title = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:Front_end_login_security_level', $this->getExtensionName());
+        $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Front_end_login_security_level', $this->getExtensionName());
+        $value = null;
+        $message = null;
+        $status = Status::OK;
         $supportedTransmissionSecurityLevels = array('', 'normal', 'rsa');
 
         if (
@@ -163,7 +180,7 @@ class StatusProviderBase implements StatusProviderInterface
             $status = Status::OK;
         } else {
             $value = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
-            $message = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:must_be_normal_or_rsa', $this->getExtensionName());
+            $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:must_be_normal_or_rsa', $this->getExtensionName());
             $status = Status::ERROR;
         }
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
@@ -177,21 +194,25 @@ class StatusProviderBase implements StatusProviderInterface
     */
     protected function checkIfSaltedPasswordsAreEnabledInFrontEnd ()
     {
-        $title = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:Salted_passwords_in_front_end', $this->getExtensionName());
+        $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Salted_passwords_in_front_end', $this->getExtensionName());
+        $value = null;
+        $message = null;
+        $status = Status::OK;
 
         if (
             !ExtensionManagementUtility::isLoaded('saltedpasswords') ||
             !SaltedPasswordsUtility::isUsageEnabled('FE')
         ) {
-            $value = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:disabled', $this->getExtensionName());
-            $message = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:salted_passwords_must_be_enabled', $this->getExtensionName());
+            $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:disabled', $this->getExtensionName());
+            $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:salted_passwords_must_be_enabled', $this->getExtensionName());
             $status = Status::ERROR;
         } else {
-            $value = LocalizationUtility::translate('LLL:EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf:enabled', $this->getExtensionName());
+            $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:enabled', $this->getExtensionName());
             $message = '';
             $status = Status::OK;
         }
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
         return $result;
     }
+    
 }

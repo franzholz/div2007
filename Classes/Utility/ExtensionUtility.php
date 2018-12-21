@@ -140,7 +140,6 @@ class ExtensionUtility {
                 $result = false;
             }
         }
-
         return $result;
     }
 }

@@ -179,6 +179,7 @@ class CoreQuery {
                 $insertFields[$f] = $v;
             }
         }
+
         if ($doExec) {
             return self::getDatabaseConnection()->exec_INSERTquery($table, $insertFields);
         } else {

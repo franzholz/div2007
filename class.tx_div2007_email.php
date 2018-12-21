@@ -77,6 +77,19 @@ class tx_div2007_email {
 		$hookVar = '',
 		$defaultSubject = ''
 	) {
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug.']) &&
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug.']['mail']
+        ) {
+            debug ($toEMail, '$toEMail'); // keep this
+            debug ($subject, '$subject'); // keep this
+            debug ($PLAINContent, '$PLAINContent'); // keep this
+            debug ($HTMLContent, '$HTMLContent'); // keep this
+            debug ($fromEMail, '$fromEMail'); // keep this
+            debug ($fromName, '$fromName'); // keep this
+            return TRUE;
+        }
+            
 		$result = TRUE;
 		$charset = 'utf-8';
 		if (

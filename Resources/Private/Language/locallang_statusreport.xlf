@@ -30,11 +30,17 @@
 			<trans-unit id="Salted_passwords_in_front_end" xml:space="preserve">
 				<source>Salted passwords in front end</source>
 			</trans-unit>
+			<trans-unit id="Global_variables_in_front_end" xml:space="preserve">
+				<source>Global variables in front end</source>
+			</trans-unit>
 			<trans-unit id="enabled" xml:space="preserve">
 				<source>Enabled</source>
 			</trans-unit>
 			<trans-unit id="disabled" xml:space="preserve">
 				<source>Disabled</source>
+			</trans-unit>
+			<trans-unit id="global_variable_must_be_set" xml:space="preserve">
+				<source>For %s to function correctly, the global variable %s must have the value "%s".</source>
 			</trans-unit>
 			<trans-unit id="salted_passwords_must_be_enabled" xml:space="preserve">
 				<source>For %s to function correctly, extension "saltedpasswords" must be installed and must be configured so that salted passwords are enabled in front end. Note that if front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) is not set to "", "normal" or "rsa", then salted passwords cannot be enabled in front end.</source>

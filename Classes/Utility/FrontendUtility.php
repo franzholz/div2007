@@ -1314,5 +1314,11 @@ class FrontendUtility {
             }
         }
     }
+
+    static public function slashName ($name, $apostrophe='"') {
+        $name = str_replace(',' , ' ', $name);
+        $rc = $apostrophe . addcslashes($name, '<>()@;:\\".[]' . chr('\n')) . $apostrophe;
+        return $rc;
+    }
 }
 

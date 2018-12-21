@@ -83,6 +83,19 @@ class MailUtility {
         $defaultSubject = ''
     ) {
         $result = true;
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug.']) &&
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug.']['mail']
+        ) {
+            debug ($toEMail, '$toEMail'); // keep this
+            debug ($subject, '$subject'); // keep this
+            debug ($PLAINContent, '$PLAINContent'); // keep this
+            debug ($HTMLContent, '$HTMLContent'); // keep this
+            debug ($fromEMail, '$fromEMail'); // keep this
+            debug ($fromName, '$fromName'); // keep this
+            return $result;
+        }
+
         $charset = 'UTF-8';
         if (
             isset($GLOBALS['TSFE']->renderCharset) &&
@@ -337,7 +350,7 @@ class MailUtility {
                 $absFilename = GeneralUtility::getFileAbsFileName($signerFilename);
                 $handle = fopen($absFilename, 'rt');
                 if ($handle === false) {
-                    throw new \Exception(DIV2007_EXT . ': File not found ("' . $absFilename . '")');
+                    throw new \Exception(DIV2007_EXT . ': Signer file not found ("' . $absFilename . '")');
                 }
 
                 //  create a signer
