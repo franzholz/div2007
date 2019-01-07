@@ -24,7 +24,7 @@ namespace JambageCom\Div2007\SessionHandler;
 class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandlerInterface {
 
     /**
-    * The session variable key. You should overwrite this.
+    * The session variable key. You must overwrite this class to make it working.
     *
     * @var string
     */
@@ -44,7 +44,15 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     */
     public function __construct () {
         if (basename($_SERVER['PHP_SELF']) !== 'phpunit') {
-            $this->frontendUser = \TYPO3\CMS\Frontend\Utility\EidUtility::initFeUser();
+            if (
+                isset($GLOBALS['TSFE']) &&
+                is_object($GLOBALS['TSFE']) &&
+                isset($GLOBALS['TSFE']->fe_user)
+            ) {
+                $this->frontendUser = $GLOBALS['TSFE']->fe_user;
+            } else {
+                $this->frontendUser = \TYPO3\CMS\Frontend\Utility\EidUtility::initFeUser();
+            }
         }
     }
 

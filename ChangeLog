@@ -1,3 +1,8 @@
+
+
+2019-01-07 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix to the Typo3SessionHandler: Use the global $GLOBALS['TSFE']->fe_user if already present in the system.
+
 2018-12-05 Franz Holzinger  <franz@ttproducts.de>
     * new feature: add a configuration file to div2007
     * new feature: DKIM can be used for multiple domains
