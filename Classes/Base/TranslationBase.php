@@ -197,6 +197,8 @@ class TranslationBase {
      * This method has been used under TYPO3 versions above 4.6 as getLL
      * Returns the localized label of the LOCAL_LANG key, $key used since TYPO3 4.6
      * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->localLangTestPrefixAlt and ->localLangTestPrefix
+     * 
+     * former getLL method
      *
      * @param   string      The key from the LOCAL_LANG array for which to return the value.
      * @param   string      input: if set then this language is used if possible. output: the used language
@@ -215,7 +217,11 @@ class TranslationBase {
         if (
             $usedLang != '' &&
             is_array($this->LOCAL_LANG[$usedLang][$key][0]) &&
-            $this->LOCAL_LANG[$usedLang][$key][0]['target'] != ''
+            isset($this->LOCAL_LANG[$usedLang][$key][0]['target']) &&
+            (
+                $this->LOCAL_LANG[$usedLang][$key][0]['target'] != '' ||
+                !isset($this->LOCAL_LANG[$usedLang][$key][0]['source']) // neu FHO
+            )
         ) {
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if ($this->LOCAL_LANG_charset[$usedLang][$key] != '') {
@@ -229,7 +235,11 @@ class TranslationBase {
         } else if (
             $this->getLocalLangKey() != '' &&
             is_array($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]) &&
-            $this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['target'] != ''
+            isset($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['target']) &&
+            (
+                $this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['target'] != '' ||
+                !isset($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['source']) // neu FHO
+            )
         ) {
             $usedLang = $this->getLocalLangKey();
 
@@ -245,7 +255,10 @@ class TranslationBase {
         } elseif (
             $this->altLocalLangKey &&
             is_array($this->LOCAL_LANG[$this->altLocalLangKey][$key][0]) &&
-            $this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['target'] != ''
+            (
+                $this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['target'] != '' ||
+                !isset($this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['source']) // neu FHO
+            )
         ) {
             $usedLang = $this->altLocalLangKey;
 
@@ -260,7 +273,10 @@ class TranslationBase {
             }
         } elseif (
             is_array($this->LOCAL_LANG['default'][$key][0]) &&
-            $this->LOCAL_LANG['default'][$key][0]['target'] != ''
+            (
+                $this->LOCAL_LANG['default'][$key][0]['target'] != '' ||
+                !isset($this->LOCAL_LANG['default'][$key][0]['source']) // neu FHO
+            )
         ) {
             $usedLang = 'default';
                 // Get default translation (without charset conversion, english)
@@ -283,6 +299,8 @@ class TranslationBase {
      * used since TYPO3 4.6 as loadLL
      * Loads local-language values by looking for a "locallang.php" file in the plugin class directory ($langObj->scriptRelPath) and if found includes it.
      * Also locallang values set in the TypoScript property "_LOCAL_LANG" are merged onto the values found in the "locallang.xml" file.
+     *
+     * former method loadLL
      *
      * @param   string      language file to load
      * @param   boolean     If true, then former language items can be overwritten from the new file
@@ -465,6 +483,8 @@ class TranslationBase {
 
     /**
     * Split Label function for front-end applications.
+    *
+    * former method sL 
     *
     * @param	string		Key string. Accepts the "LLL:" prefix.
     * @return	string		Label value, if any.

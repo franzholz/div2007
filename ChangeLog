@@ -1,4 +1,6 @@
 
+2019-01-11 Franz Holzinger  <franz@ttproducts.de>
+    * new feature for TranslationBase: A language entry can be overwritten by an empty setup in order to clear the original language text.
 
 2019-01-07 Franz Holzinger  <franz@ttproducts.de>
     * bugfix to the Typo3SessionHandler: Use the global $GLOBALS['TSFE']->fe_user if already present in the system.
