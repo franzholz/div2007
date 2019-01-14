@@ -1,4 +1,8 @@
 
+
+2019-01-14 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix to the function getLabel from TranslationBase: The return value must be false of type boolean if no entry in locallang or setup has been found.
+
 2019-01-11 Franz Holzinger  <franz@ttproducts.de>
     * new feature for TranslationBase: A language entry can be overwritten by an empty setup in order to clear the original language text.
 

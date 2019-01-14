@@ -204,7 +204,7 @@ class TranslationBase {
      * @param   string      input: if set then this language is used if possible. output: the used language
      * @param   string      Alternative string to return IF no value is found set for the key, neither for the local language nor the default.
      * @param   boolean     If true, the output label is passed through htmlspecialchars()
-     * @return  string      The value from LOCAL_LANG. false in error case
+     * @return  string / boolean The prefixed value from LOCAL_LANG. false, if no entry could be found.
      */
     public function getLabel (
         $key,
@@ -286,10 +286,11 @@ class TranslationBase {
             $word = (isset($this->localLangTestPrefixAlt)) ? $this->localLangTestPrefixAlt . $alternativeLabel : $alternativeLabel;
         }
 
-        $output = (isset($this->localLangTestPrefix)) ? $this->localLangTestPrefix . $word : $word;
-
-        if ($hsc) {
-            $output = htmlspecialchars($output);
+        if (isset($word)) {
+            $output = (isset($this->localLangTestPrefix)) ? $this->localLangTestPrefix . $word : $word;
+            if ($hsc) {
+                $output = htmlspecialchars($output);
+            }
         }
 
         return $output;
