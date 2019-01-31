@@ -41,38 +41,39 @@ namespace JambageCom\Div2007\Utility;
 
 class FileAbstractionUtility {
 
-	/**
-	* Gets the file records
-	* looking up the MM relations of this record to the
-	* table name defined in the local field 'table_name'.
-	*
-	* @return array
-	*/
-	static public function getFileRecords (
-		$tableName,
-		$fieldName,
-		array $uidArray = array(),
-		$orderBy = 'sorting'
-	) {
-		$result = array();
+    /**
+    * Gets the file records
+    * looking up the MM relations of this record to the
+    * table name defined in the local field 'table_name'.
+    *
+    * @return array
+    */
+    static public function getFileRecords (
+        $tableName,
+        $fieldName,
+        array $uidArray = array(),
+        $orderBy = 'sorting'
+    )
+    {
+        $result = array();
 
-		if (count($uidArray)) {
-			$where_clause = 'uid_foreign IN (' . implode(',', $uidArray) . ') AND tablenames="' . $tableName . '" AND fieldname="' . $fieldName . '"' ;
-			$where_clause .= \JambageCom\Div2007\Utility\TableUtility::enableFields('sys_file_reference');
-			$result =
-				$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-					'*',
-					'sys_file_reference',
-					$where_clause,
-					'',
-					$orderBy,
-					'',
-					'uid_local'
-				);
-		}
+        if (count($uidArray)) {
+            $where_clause = 'uid_foreign IN (' . implode(',', $uidArray) . ') AND tablenames="' . $tableName . '" AND fieldname="' . $fieldName . '"' ;
+            $where_clause .= \JambageCom\Div2007\Utility\TableUtility::enableFields('sys_file_reference');
+            $result =
+                $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+                    '*',
+                    'sys_file_reference',
+                    $where_clause,
+                    '',
+                    $orderBy,
+                    '',
+                    'uid_local'
+                );
+        }
 
-		return $result;
-	}
+        return $result;
+    }
 }
 
 
