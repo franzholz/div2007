@@ -1,5 +1,12 @@
 
 
+
+
+2019-02-04 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: method \JambageCom\Div2007\Utility\MarkerUtility::getTags to determine an array of all markers inside of a template
+    * new feature: method \JambageCom\Div2007\Utility\FileAbstractionUtility::getFileInfo to read the objects of the File Abstraction Layer and a file information based on the uid of the sys_file_reference table.
+    * no support for TYPO3 4.x
+
 2019-01-14 Franz Holzinger  <franz@ttproducts.de>
     * bugfix to the function getLabel from TranslationBase: The return value must be false of type boolean if no entry in locallang or setup has been found.
 

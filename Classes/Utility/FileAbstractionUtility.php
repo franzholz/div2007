@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2016 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2019 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -74,6 +74,27 @@ class FileAbstractionUtility {
 
         return $result;
     }
+
+    static public function getFileInfo (
+        &$fileObj,
+        &$fileInfo,
+        $fileReferenceUid
+    ) {
+        $result = false;
+
+        $storageRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\StorageRepository');
+        $storage = $storageRepository->findByUid(1);
+        $resourceFactory = \TYPO3\CMS\Core\Resource\ResourceFactory::getInstance();
+        $fileObj = $resourceFactory->getFileReferenceObject(intval($fileReferenceUid));
+
+        if (is_object($fileObj)) {
+            $fileInfo = $storage->getFileInfo($fileObj);
+            $result = true;
+        }
+
+        return $result;
+    }
+
 }
 
 

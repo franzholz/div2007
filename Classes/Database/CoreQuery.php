@@ -33,14 +33,14 @@ class CoreQuery {
     public function __construct (TypoScriptFrontendController $typoScriptFrontendController = null)
     {
         if (is_object($typoScriptFrontendController)) {
-            self::setTypoScriptFrontendController($typoScriptFrontendController);
+            static::setTypoScriptFrontendController($typoScriptFrontendController);
         }
     }
 
 
     static public function setTypoScriptFrontendController (TypoScriptFrontendController $typoScriptFrontendController)
     {
-        self::$typoScriptFrontendController = $typoScriptFrontendController;
+        static::$typoScriptFrontendController = $typoScriptFrontendController;
     }
 
     /***********************************************
@@ -64,7 +64,7 @@ class CoreQuery {
         if (!$uid) {
             return '';
         }
-        $db = self::getDatabaseConnection();
+        $db = static::getDatabaseConnection();
         if ($GLOBALS['TCA'][$table]['ctrl']['delete']) {
             $updateFields = [];
             $updateFields[$GLOBALS['TCA'][$table]['ctrl']['delete']] = 1;
@@ -115,9 +115,9 @@ class CoreQuery {
             }
             if (!empty($updateFields)) {
                 if ($doExec) {
-                    return self::getDatabaseConnection()->exec_UPDATEquery($table, 'uid=' . $uid, $updateFields);
+                    return static::getDatabaseConnection()->exec_UPDATEquery($table, 'uid=' . $uid, $updateFields);
                 }
-                return self::getDatabaseConnection()->UPDATEquery($table, 'uid=' . $uid, $updateFields);
+                return static::getDatabaseConnection()->UPDATEquery($table, 'uid=' . $uid, $updateFields);
             }
         }
         return '';
@@ -157,12 +157,12 @@ class CoreQuery {
         }
         if ($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id']) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'];
-            $dataArray[$field] = (int) self::getTypoScriptFrontendController()->fe_user->user['uid'];
+            $dataArray[$field] = (int) static::getTypoScriptFrontendController()->fe_user->user['uid'];
             $extraList .= ',' . $field;
         }
         if ($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id']) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'];
-            list($dataArray[$field]) = explode(',', self::getTypoScriptFrontendController()->fe_user->user['usergroup']);
+            list($dataArray[$field]) = explode(',', static::getTypoScriptFrontendController()->fe_user->user['usergroup']);
             $dataArray[$field] = (int)$dataArray[$field];
             $extraList .= ',' . $field;
         }
@@ -181,9 +181,9 @@ class CoreQuery {
         }
 
         if ($doExec) {
-            return self::getDatabaseConnection()->exec_INSERTquery($table, $insertFields);
+            return static::getDatabaseConnection()->exec_INSERTquery($table, $insertFields);
         } else {
-            return self::getDatabaseConnection()->INSERTquery($table, $insertFields);
+            return static::getDatabaseConnection()->INSERTquery($table, $insertFields);
         }
     }
 
@@ -307,7 +307,7 @@ class CoreQuery {
      */
     static protected function getTypoScriptFrontendController ()
     {
-        return self::$typoScriptFrontendController ?: $GLOBALS['TSFE'];
+        return static::$typoScriptFrontendController ?: $GLOBALS['TSFE'];
     }
 }
 

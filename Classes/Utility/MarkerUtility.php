@@ -6,7 +6,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2019 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,13 +27,14 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 
 /**
- * XML functions.
+ * marker functions.
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
  * @maintainer Franz Holzinger <franz@ttproducts.de>
  * @package TYPO3
  * @subpackage div2007
  */
+
 
 
 class MarkerUtility {
@@ -47,6 +48,28 @@ class MarkerUtility {
                 static::addMarkers($markerArray, $markerkey, $separator, $k, $v);
             }
         }
+    }
+
+    /*determine all markers 
+    */
+    static public function getTags ($content)
+    {
+        $found = array();
+        $result = false;
+
+        preg_match_all('/###([\w:-]+)###/', $content, $found);
+        if (
+            isset($found) &&
+            is_array($found) &&
+            isset($found['1']) &&
+            is_array($found['1'])
+        ) {
+            $tagArray = array_unique($found['1']);
+            $tagArray = array_flip($tagArray);
+            $result = $tagArray;
+        }
+
+        return $result;
     }
 }
 
