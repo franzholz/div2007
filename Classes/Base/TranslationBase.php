@@ -303,7 +303,11 @@ class TranslationBase {
                 if (strpos($this->scriptRelPath, '.php')) {
                     $basePath .= dirname($this->scriptRelPath) . '/';
                 } else {
-                    $basePath .= $this->scriptRelPath . '/';
+                    $basePath .= $this->scriptRelPath;
+                }
+
+                if (substr($basePath, -1) != '/') {
+                    $basePath .= '/';
                 }
             }
             $basePath .= $langFile;
