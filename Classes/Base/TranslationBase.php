@@ -288,7 +288,7 @@ class TranslationBase {
         $langFileParam = '',
         $overwrite = true
     ) {
-        $langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
+        $langFile = ($langFileParam ? $langFileParam : $this->getLookupFilename());
         $extensionKey = $this->getExtensionKey();
 
         if (
@@ -303,15 +303,19 @@ class TranslationBase {
                 if (strpos($this->scriptRelPath, '.php')) {
                     $basePath .= dirname($this->scriptRelPath) . '/';
                 } else {
-                    $basePath .= $this->scriptRelPath;
+                    $basePath .= $this->scriptRelPath . '/';
                 }
             }
             $basePath .= $langFile;
         } else {
             return false;
         }
+        $ext = pathinfo($basePath, PATHINFO_EXTENSION);
 
-        if (version_compare(TYPO3_version, '7.4.0', '>')) {
+        if (
+            $ext == 'xlf' &&
+            version_compare(TYPO3_version, '7.4.0', '>=')
+        ) {
             $callingClassName = '\\TYPO3\\CMS\\Core\\Localization\\LocalizationFactory';
             $useClassName = substr($callingClassName, 1);
 

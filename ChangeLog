@@ -1,6 +1,7 @@
 
 
-
+2019-02-06 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix to the function loadLocalLang from TranslationBase: LocalizationFactory is only capable to load a language file having a xlf extension.
 
 2019-02-04 Franz Holzinger  <franz@ttproducts.de>
     * new feature: method \JambageCom\Div2007\Utility\MarkerUtility::getTags to determine an array of all markers inside of a template
