@@ -1,4 +1,7 @@
 
+2019-02-08 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix to the function loadLocalLang from TranslationBase: No xlf file extension check. LocalizationFactory  must always be used for TYPO3 7 and 8.
+
 2019-02-06 Franz Holzinger  <franz@ttproducts.de>
     * improvement to the function loadLocalLang from TranslationBase: add the last slash to the pathname if necessary.
 

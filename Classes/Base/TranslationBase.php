@@ -317,7 +317,6 @@ class TranslationBase {
         $ext = pathinfo($basePath, PATHINFO_EXTENSION);
 
         if (
-            $ext == 'xlf' &&
             version_compare(TYPO3_version, '7.4.0', '>=')
         ) {
             $callingClassName = '\\TYPO3\\CMS\\Core\\Localization\\LocalizationFactory';
