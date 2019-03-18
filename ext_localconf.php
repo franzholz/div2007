@@ -39,7 +39,6 @@ if (!defined ('PATH_FE_DIV2007_REL')) {
     define('PATH_FE_DIV2007_REL', $relativeExtensionPath);
 }
 
-
 if (!defined ('STATIC_INFO_TABLES_EXT')) {
     define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
 }

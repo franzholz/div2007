@@ -29,26 +29,30 @@ class Double6 {
     *
     * @param	string		Value to evaluate
     * @param	string		Is-in string
-    * @param	boolean		if TRUE the value is set
+    * @param	boolean		if true the value is set
     * @return	string		Modified $value
     */
     public function evaluateFieldValue ($value, $is_in, $set)
     {
         if ($set) {
             $theDec = 0;
+
             for ($a = strlen($value); $a > 0; $a--) {
+                $commaCheck = substr($value, $a - 1, 1);
                 if (
-                    substr($value, $a - 1, 1) == '.' ||
-                    substr($value, $a - 1, 1) == ','
+                    $commaCheck == '.' ||
+                    $commaCheck == ','
                 ) {
                     $theDec = substr($value, $a);
                     $value = substr($value, 0, $a - 1);
                     break;
                 }
             }
+
             $theDec = preg_replace('/[^0-9]/', '', $theDec) . '000000';
             $value = intval(str_replace(' ', '', $value)) . '.' . substr($theDec, 0, 6);
         }
+
         return $value;
     }
 }
