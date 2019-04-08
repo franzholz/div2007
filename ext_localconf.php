@@ -1,5 +1,5 @@
 <?php
-defined('TYPO3_MODE') or die('Access denied.');
+defined('TYPO3_MODE') || die('Access denied.');
 
 if (!defined ('DIV2007_EXT')) {
     define('DIV2007_EXT', 'div2007');

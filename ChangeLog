@@ -1,3 +1,6 @@
+2019-04-05 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: add method \JambageCom\Div2007\Utility\SystemUtility::getRecursivePids to read the recursive page tree 
+
 2019-02-19 Franz Holzinger  <franz@ttproducts.de>
     * change hook tx_double6 into JambageCom\Div2007\Hooks\Evaluation\Double6
 

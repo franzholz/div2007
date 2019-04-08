@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2019 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -40,9 +40,40 @@ namespace JambageCom\Div2007\Utility;
  *
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Div2007\Utility\TableUtility;
 
 
 class SystemUtility {
+    /**
+     * @return string
+     */
+    public function getRecursivePids ($storagePid, $recursionDepth, $whereClause = '') {
+        if ($recursionDepth <= 0) {
+            return $storagePid;
+        }
+
+        $cObj = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::class);
+        $recursiveStoragePids = '';
+        $storagePids = GeneralUtility::intExplode(',', $storagePid);
+        if ($whereClause == '') {
+            $whereClause = TableUtility::enableFields('pages');
+        }
+
+        foreach ($storagePids as $startPid) {
+            $pids = $cObj->getTreeList($startPid, $recursionDepth, 0, $whereClause);
+            if ((string)$pids !== '') {
+                $recursiveStoragePids .= $pids . ',';
+            }
+        }
+        $recursiveStoragePids = rtrim($recursiveStoragePids, ',');
+        $pids = explode(',', $recursiveStoragePids);
+        $pids = array_unique($pids);
+        $result = implode(',', $pids);
+
+        return $result;
+    }
 
     /**
     * Invokes a user process
