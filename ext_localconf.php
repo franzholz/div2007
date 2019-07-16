@@ -12,7 +12,7 @@ call_user_func(function () {
     ) {
         $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
-        )->get(FH_DEBUG_EXT);
+        )->get(DIV2007_EXT);
     } else if (isset($extensionConfiguration)) {
         $extensionConfiguration = unserialize($_EXTCONF);    // unserializing the configuration so we can use it here:
     }

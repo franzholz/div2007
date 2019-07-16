@@ -1,4 +1,7 @@
 2019-07-16 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix in ext_localconf.php
+
+2019-07-16 Franz Holzinger  <franz@ttproducts.de>
     * downwards compatibility of TYPO3 9: Add removed deprecated method record_registration. $GLOBALS['TYPO3_CONF_VARS']['FE']['maxSessionDataSize'] should be set if this method is called. The class for this method is \JambageCom\Div2007\Api\Frontend .
 
 2019-04-08 Franz Holzinger  <franz@ttproducts.de>
