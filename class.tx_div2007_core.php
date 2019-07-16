@@ -627,8 +627,7 @@ class tx_div2007_core {
         return $result;
     }
 
-
-        /**
+     /**
      * Returns TRUE if the current TYPO3 version (or compatibility version) is compatible to the input version
      * Notice that this function compares branches, not versions (4.0.1 would be > 4.0.0 although they use the same compat_version)
      *

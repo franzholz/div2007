@@ -5,56 +5,65 @@ if (!defined ('DIV2007_EXT')) {
     define('DIV2007_EXT', 'div2007');
 }
 
-$_EXTCONF = unserialize($_EXTCONF);    // unserializing the configuration so we can use it here:
-
-if (
-    isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]) &&
-    is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT])
-) {
-    $storeArray = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT];
-} else {
-    unset($storeArray);
-}
-
-if (isset($_EXTCONF) && is_array($_EXTCONF)) {
-    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT] = $_EXTCONF;
-    if (isset($storeArray) && is_array($storeArray)) {
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT] = array_merge($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT], $storeArray);
+call_user_func(function () {
+    if (
+        defined('TYPO3_version') &&
+        version_compare(TYPO3_version, '9.0.0', '>=')
+    ) {
+        $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
+        )->get(FH_DEBUG_EXT);
+    } else if (isset($extensionConfiguration)) {
+        $extensionConfiguration = unserialize($_EXTCONF);    // unserializing the configuration so we can use it here:
     }
-}
 
-$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
-$extensionPath = call_user_func($emClass . '::extPath', DIV2007_EXT);
+    if (
+        isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]) &&
+        is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT])
+    ) {
+        $storeArray = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT];
+    } else {
+        unset($storeArray);
+    }
 
-if (!defined ('PATH_BE_DIV2007')) {
-    define('PATH_BE_DIV2007', $extensionPath);
-}
+    if (isset($extensionConfiguration) && is_array($extensionConfiguration)) {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT] = $extensionConfiguration;
+        if (isset($storeArray) && is_array($storeArray)) {
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT] = array_merge($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT], $storeArray);
+        }
+    }
 
+    $emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
+    $extensionPath = call_user_func($emClass . '::extPath', DIV2007_EXT);
 
-if (!defined ('PATH_FE_DIV2007_REL')) {
-    $relativeExtensionPath = \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(
-        $extensionPath
-    );
+    if (!defined ('PATH_BE_DIV2007')) {
+        define('PATH_BE_DIV2007', $extensionPath);
+    }
 
-    define('PATH_FE_DIV2007_REL', $relativeExtensionPath);
-}
+    if (!defined ('PATH_FE_DIV2007_REL')) {
+        $relativeExtensionPath = \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(
+            $extensionPath
+        );
 
-if (!defined ('STATIC_INFO_TABLES_EXT')) {
-    define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
-}
+        define('PATH_FE_DIV2007_REL', $relativeExtensionPath);
+    }
 
-// constants for the TCA fields
+    if (!defined ('STATIC_INFO_TABLES_EXT')) {
+        define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
+    }
 
-if (version_compare(TYPO3_version, '8.0.0', '>=')) {
-    // 'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
+    // constants for the TCA fields
 
-    define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.');
-} else {
-    // 'label' => 'LLL:EXT:lang/locallang_general.php:LGL.starttime',
-    define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:lang/locallang_general.php:LGL.');
-}
+    if (version_compare(TYPO3_version, '8.0.0', '>=')) {
+        // 'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
 
-define('DIV2007_LANGUAGE_SUBPATH', '/Resources/Private/Language/');
-define('DIV2007_ICONS_SUBPATH', 'Resources/Public/Images/Icons/');
+        define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.');
+    } else {
+        // 'label' => 'LLL:EXT:lang/locallang_general.php:LGL.starttime',
+        define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:lang/locallang_general.php:LGL.');
+    }
 
+    define('DIV2007_LANGUAGE_SUBPATH', '/Resources/Private/Language/');
+    define('DIV2007_ICONS_SUBPATH', 'Resources/Public/Images/Icons/');
+});
 
