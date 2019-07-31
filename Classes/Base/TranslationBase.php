@@ -29,7 +29,7 @@ class TranslationBase {
     public $localLangTestPrefix = '';      // You can set this during development to some value that makes it easy for you to spot all labels that ARe delivered by the getLocalLang function.
     public $localLangTestPrefixAlt = '';   // Save as localLangTestPrefix, but additional prefix for the alternative value in getLocalLang() function calls
     public $scriptRelPath;          // relative path to the extension directory where the locallang XLF / XML files are stored. The leading and trailing slashes must be included. E.g. '/Resources/Private/Language/'
-    public $extensionKey = '';	// extension key must be overridden
+    protected $extensionKey = '';	// extension key must be overridden
     protected $lookupFilename = ''; // filename used for the lookup method
 
     /**
@@ -53,7 +53,7 @@ class TranslationBase {
             isset($GLOBALS['TSFE']->config['config']) &&
             isset($GLOBALS['TSFE']->config['config']['language'])
         ) {
-            $this->LocalLangKey = $GLOBALS['TSFE']->config['config']['language'];
+            $this->setLocalLangKey($GLOBALS['TSFE']->config['config']['language']);
             if ($GLOBALS['TSFE']->config['config']['language_alt']) {
                 $this->altLocalLangKey = $GLOBALS['TSFE']->config['config']['language_alt'];
             }

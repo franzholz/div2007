@@ -1,3 +1,10 @@
+
+2019-07-27 Franz Holzinger  <franz@ttproducts.de>
+    * PHP warning: method JambageCom\Div2007\Utility\SystemUtility::getRecursivePids() must be static
+
+2019-07-17 Franz Holzinger  <franz@ttproducts.de>
+    * compatibility: remove SystemUtility::userProcess. Replace it by a slot method. Use ObsoleteUtility::userProcess as a quick fix.
+
 2019-07-16 Franz Holzinger  <franz@ttproducts.de>
     * bugfix in ext_localconf.php
 

@@ -49,7 +49,7 @@ class SystemUtility {
     /**
      * @return string
      */
-    public function getRecursivePids ($storagePid, $recursionDepth, $whereClause = '') {
+    static public function getRecursivePids ($storagePid, $recursionDepth, $whereClause = '') {
         if ($recursionDepth <= 0) {
             return $storagePid;
         }
@@ -74,37 +74,6 @@ class SystemUtility {
 
         return $result;
     }
-
-    /**
-    * Invokes a user process
-    *
-    * @param object $pObject: the name of the parent object
-    * @param array  $conf:    the base TypoScript setup
-    * @param array  $mConfKey: the configuration array of the user process
-    * @param array  $passVar: the array of variables to be passed to the user process
-    * @return array the updated array of passed variables
-    */
-    static public function userProcess (
-        $pObject,
-        $conf,
-        $mConfKey,
-        $passVar
-    ) {
-        if (
-            isset($conf) &&
-            is_array($conf) &&
-            $conf[$mConfKey]
-        ) {
-            $funcConf = $conf[$mConfKey . '.'];
-            $funcConf['parentObj'] = $pObject;
-            $passVar = $GLOBALS['TSFE']->cObj->callUserFunction(
-                $conf[$mConfKey],
-                $funcConf,
-                $passVar
-            );
-        }
-        return $passVar;
-    } // userProcess
 
     /**
     * Fetches the FE user groups (fe_groups) of the logged in FE user
