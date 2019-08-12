@@ -1,3 +1,7 @@
+2019-08-12 Franz Holzinger  <franz@ttproducts.de>
+     * compatibility: PHP 7.3
+     * compatibility: add new method tx_div2007_core::substituteMarkerArrayCached
+     * compatibility: Under TYPO3 8 and 9 the method tx_div2007_core::newHtmlParser must always return an object of class \TYPO3\CMS\Core\Service\MarkerBasedTemplateService
 
 2019-07-27 Franz Holzinger  <franz@ttproducts.de>
     * PHP warning: method JambageCom\Div2007\Utility\SystemUtility::getRecursivePids() must be static

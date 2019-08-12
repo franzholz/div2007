@@ -177,8 +177,11 @@ class tx_div2007_core {
 	static public function newHtmlParser ($html = true) {
         $useClassName = '';
         $callingClassName = '\\TYPO3\\CMS\\Core\\Html\\HtmlParser';
-
-        if (!$html) {
+        if (
+            defined('TYPO3_version') &&
+            version_compare(TYPO3_version, '8.0.0', '>=') ||
+            !$html
+        ) {
             $checkClassName = '\\TYPO3\\CMS\\Core\\Service\\MarkerBasedTemplateService';
             if (class_exists($checkClassName)) {
                 $callingClassName = $checkClassName;
@@ -543,6 +546,63 @@ class tx_div2007_core {
         return $result;
     }
 
+
+    /**
+     * Multi substitution function with caching.
+     *
+     * This function should be a one-stop substitution function for working
+     * with HTML-template. It does not substitute by str_replace but by
+     * splitting. This secures that the value inserted does not themselves
+     * contain markers or subparts.
+     *
+     * Note that the "caching" won't cache the content of the substition,
+     * but only the splitting of the template in various parts. So if you
+     * want only one cache-entry per template, make sure you always pass the
+     * exact same set of marker/subpart keys. Else you will be flooding the
+     * user's cache table.
+     *
+     * This function takes three kinds of substitutions in one:
+     * $markContentArray is a regular marker-array where the 'keys' are
+     * substituted in $content with their values
+     *
+     * $subpartContentArray works exactly like markContentArray only is whole
+     * subparts substituted and not only a single marker.
+     *
+     * $wrappedSubpartContentArray is an array of arrays with 0/1 keys where
+     * the subparts pointed to by the main key is wrapped with the 0/1 value
+     * alternating.
+     *
+     * @param string $content The content stream, typically HTML template content.
+     * @param array $markContentArray Regular marker-array where the 'keys' are substituted in $content with their values
+     * @param array $subpartContentArray Exactly like markContentArray only is whole subparts substituted and not only a single marker.
+     * @param array $wrappedSubpartContentArray An array of arrays with 0/1 keys where the subparts pointed to by the main key is wrapped with the 0/1 value alternating.
+     * @return string The output content stream
+     * @see MarkerBasedTemplateService methods substituteSubpart(), substituteMarker(), substituteMarkerInObject(), TEMPLATE()
+     */
+    static public function substituteMarkerArrayCached ($content, array $markContentArray = null, array $subpartContentArray = null, array $wrappedSubpartContentArray = null)
+    {
+        $templateClassName = '\\TYPO3\\CMS\\Core\\Service\\MarkerBasedTemplateService';
+
+        if (
+            version_compare(TYPO3_version, '8.0.0', '>=') &&
+            class_exists($templateClassName)
+        ) {
+            $utilityClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+            $useClassName = substr($utilityClassName, 1);
+            $useTemplateClassName = substr($templateClassName, 1);
+            $object = call_user_func($useClassName . '::makeInstance', $useTemplateClassName);
+            $result = $object->substituteMarkerArrayCached($content, $markContentArray, $subpartContentArray, $wrappedSubpartContentArray);
+        } else {
+            $templateClassName = '\\TYPO3\\CMS\\Frontend\\ContentObject\\ContentObjectRenderer';
+            $utilityClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+            $useClassName = substr($utilityClassName, 1);
+            $useTemplateClassName = substr($templateClassName, 1);
+            $object = call_user_func($useClassName . '::makeInstance', $useTemplateClassName);
+            $result = $object->substituteMarkerArrayCached($content, $markContentArray, $subpartContentArray, $wrappedSubpartContentArray);
+        }
+        return $result;
+    }
+    
 
 	### SQL
 

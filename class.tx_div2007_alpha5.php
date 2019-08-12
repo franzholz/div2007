@@ -2222,10 +2222,10 @@ class tx_div2007_alpha5 {
         if (is_object($GLOBALS['TT'])) {
             $GLOBALS['TT']->pull();
         }
-		// Check memory usage
+        // Check memory usage
         $callingClassNameMonitor = '\\TYPO3\\CMS\\Core\\Utility\\MonitorUtility';
         if (class_exists($callingClassNameMonitor)) {
-			$useClassName = substr($callingClassNameMonitor, 1);
+            $useClassName = substr($callingClassNameMonitor, 1);
             call_user_func($useClassName . '::peakMemoryUsage');
         }
 
@@ -2637,7 +2637,7 @@ class tx_div2007_alpha5 {
 										$i += 2;
 										if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k'] == '' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
 											$controlData[$controlIndex]['k'] = $param2;
-											continue;
+											continue 2;
 										}
 									}
 
