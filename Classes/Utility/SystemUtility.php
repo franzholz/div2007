@@ -74,6 +74,29 @@ class SystemUtility {
 
         return $result;
     }
+    
+    /**
+    * Invokes a user process
+    *
+    * @param object $pObject: the name of the parent object
+    * @param array  $conf:    the base TypoScript setup
+    * @param array  $mConfKey: the configuration array of the user process
+    * @param array  $passVar: the array of variables to be passed to the user process
+    * @return array the updated array of passed variables
+    */
+    static public function userProcess (
+        $pObject,
+        $conf,
+        $mConfKey,
+        $passVar
+    ) {
+        return \JambageCom\Div2007\Utility\ObsoleteUtility::userProcess(
+            $pObject,
+            $conf,
+            $mConfKey,
+            $passVar
+        );
+    }
 
     /**
     * Fetches the FE user groups (fe_groups) of the logged in FE user
@@ -272,7 +295,7 @@ class SystemUtility {
             $result = eval('return ' . $evalStr);
         }
         return $result;
-    }    
+    }
 }
 
 
