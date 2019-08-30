@@ -60,7 +60,7 @@ class ViewUtility {
     *
     */
     static public function displayHelpPage (
-        \JambageCom\Div2007\Base\TranslationBase $langObj,
+        \JambageCom\Div2007\Base\TranslationBase $languageObjj,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         $helpTemplate,
         $extensionKey,
@@ -69,11 +69,11 @@ class ViewUtility {
     ) {
             // Get language version
         $helpTemplate_lang='';
-        if ($langObj->getLLkey()) {
+        if ($languageObjj->getLocalLangKey()) {
             $helpTemplate_lang =
                 $cObj->getSubpart(
                     $helpTemplate,
-                    '###TEMPLATE_' . $langObj->getLLkey() . '###'
+                    '###TEMPLATE_' . $languageObjj->getLocalLangKey() . '###'
                 );
         }
 
