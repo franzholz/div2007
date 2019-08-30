@@ -37,6 +37,7 @@ namespace JambageCom\Div2007\Utility;
  */
 
 use \TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use \JambageCom\Div2007\Utility\HtmlUtility;
 
@@ -67,11 +68,19 @@ class ViewUtility {
         $errorMessage = '',
         $theCode = ''
     ) {
+        $parser = $cObj;
+        if (
+            defined('TYPO3_version') &&
+            version_compare(TYPO3_version, '8.0.0', '>=')
+        ) {
+            $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        }
+
             // Get language version
         $helpTemplate_lang='';
         if ($languageObjj->getLocalLangKey()) {
             $helpTemplate_lang =
-                $cObj->getSubpart(
+                $parser->getSubpart(
                     $helpTemplate,
                     '###TEMPLATE_' . $languageObjj->getLocalLangKey() . '###'
                 );
@@ -80,14 +89,14 @@ class ViewUtility {
         $helpTemplate = (
             $helpTemplate_lang ?
                 $helpTemplate_lang :
-                $cObj->getSubpart($helpTemplate, '###TEMPLATE_DEFAULT###')
+                $parser->getSubpart($helpTemplate, '###TEMPLATE_DEFAULT###')
         );
             // Markers and substitution:
 
         $markerArray['###PATH###'] = ExtensionManagementUtility::siteRelPath($extensionKey);
         $markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<strong>' . $errorMessage . '</strong><br' . HtmlUtility::generateXhtmlFix() . '>' : '');
         $markerArray['###CODE###'] = $theCode;
-        $result = $cObj->substituteMarkerArray($helpTemplate, $markerArray);
+        $result = $parser->substituteMarkerArray($helpTemplate, $markerArray);
         return $result;
     }
 }
