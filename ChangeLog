@@ -1,3 +1,6 @@
+2019-08-30 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix: All namespace classes must use language objects derived from TranslationBase and never from LocalisationBase. 
+
 2019-08-24 Franz Holzinger  <franz@ttproducts.de>
      * compatibility: Reactivate the deprecated method \JambageCom\Div2007\Utility\SystemUtility::userProcess
 

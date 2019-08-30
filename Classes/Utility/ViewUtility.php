@@ -48,19 +48,19 @@ class ViewUtility {
     * 	$content .= ViewUtility::displayHelpPage($this->cObj->fileResource('EXT:myextension/template/help.tmpl'));
     * 	unset($this->errorMessage);
     *
-    * @param	object		tx_div2007_alpha_language_base
-    * @param	object		cObj
-    * @param	string		HTML template content
-    * @param	string		extension key
-    * @param	string		error message for the marker ###ERROR_MESSAGE###
-    * @param	string		CODE of plugin
+    * @param   object      language object of type \JambageCom\Div2007\Base\TranslationBase
+    * @param   object	   cObj
+    * @param   string	   HTML template content
+    * @param   string	   extension key
+    * @param   string	   error message for the marker ###ERROR_MESSAGE###
+    * @param   string	   CODE of plugin
     *
     * @return	string		HTML to display the help page
     * @access	public
     *
     */
     static public function displayHelpPage (
-        \JambageCom\Div2007\Base\LocalisationBase $langObj,
+        \JambageCom\Div2007\Base\TranslationBase $langObj,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         $helpTemplate,
         $extensionKey,

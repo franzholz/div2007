@@ -60,7 +60,7 @@ class BrowserUtility {
      * otherwise the formatting string is expected to hold sprintf-markers (%s) for from, to, outof (in that sequence)
      *
      * @param   object      parent object of type \JambageCom\Div2007\Base\BrowserBase
-     * @param   object      language object of type \JambageCom\Div2007\Base\LocalisationBase
+     * @param   object      language object of type \JambageCom\Div2007\Base\TranslationBase
      * @param   object      cObject
      * @param   string      prefix id
      * @param   boolean     if CSS styled content with div tags shall be used
