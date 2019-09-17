@@ -230,7 +230,7 @@ class SystemUtility {
                                         $i += 2;
                                         if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k'] == '' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
                                             $controlData[$controlIndex]['k'] = $param2;
-                                            continue;
+                                            continue 2;
                                         }
                                     }
 
