@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Kasper Skårhøj (kasperYYYY@typo3.com)
+*  (c) 2019 Kasper Skårhøj (kasperYYYY@typo3.com)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -495,13 +495,13 @@ class FrontendUtility {
      *                      (only used if no CSS style is set)
      * @param   array       Array with elements to overwrite the default $wrapper-array.
      * @param   string      varname for the pointer.
-     * @param   boolean     enable htmlspecialchars() for the getLL function (set this to false if you want e.g. use images instead of text for links like 'previous' and 'next').
+     * @param   boolean     enable htmlspecialchars() for the getLabel function (set this to false if you want e.g. use images instead of text for links like 'previous' and 'next').
      * @param   array       Additional query string to be passed as parameters to the links
      * @return  string      Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
      */
     static public function listBrowser (
         \JambageCom\Div2007\Base\BrowserBase $pObject,
-        \JambageCom\Div2007\Base\TranslationBase $langObj,
+        \JambageCom\Div2007\Base\TranslationBase $languageObj,
         $cObj,
         $prefixId,
         $bCSSStyled = true,
@@ -655,7 +655,7 @@ class FrontendUtility {
                                 $pObject,
                                 $cObj,
                                 $prefixId,
-                                $langObj->getLL(
+                                $languageObj->getLabel(
                                     'list_browseresults_first',
                                     $usedLang,
                                     '<< First',
@@ -669,7 +669,7 @@ class FrontendUtility {
                 } else {
                     $links[] =
                         $cObj->wrap(
-                            $langObj->getLL(
+                            $languageObj->getLabel(
                                 'list_browseresults_first',
                                 $usedLang,
                                 '<< First',
@@ -682,7 +682,7 @@ class FrontendUtility {
 
             if ($alwaysPrev >= 0) { // Link to previous page
                 $previousText =
-                    $langObj->getLL(
+                    $languageObj->getLabel(
                         'list_browseresults_prev',
                         $usedLang,
                         '< Previous',
@@ -733,7 +733,7 @@ class FrontendUtility {
                     } else {
                         $pageText =
                             trim(
-                                $langObj->getLL(
+                                $languageObj->getLabel(
                                     'list_browseresults_page',
                                     $usedLang,
                                     'Page',
@@ -785,7 +785,7 @@ class FrontendUtility {
 
             if ($pointer < $totalPages - 1 || $bShowFirstLast) {
                 $nextText =
-                    $langObj->getLL(
+                    $languageObj->getLabel(
                         'list_browseresults_next',
                         $usedLang,
                         'Next >',
@@ -819,7 +819,7 @@ class FrontendUtility {
                                 $pObject,
                                 $cObj,
                                 $prefixId,
-                                $langObj->getLL(
+                                $languageObj->getLabel(
                                     'list_browseresults_last',
                                     $usedLang,
                                     'Last >>',
@@ -833,7 +833,7 @@ class FrontendUtility {
                 } else {
                     $links[] =
                         $cObj->wrap(
-                            $langObj->getLL(
+                            $languageObj->getLabel(
                                 'list_browseresults_last',
                                 $usedLang,
                                 'Last >>',
@@ -859,10 +859,10 @@ class FrontendUtility {
                 $markerArray['###FROM###'] = $cObj->wrap($count > 0 ? $pR1 : 0,$wrapper['showResultsNumbersWrap']);
                 $markerArray['###TO###'] = $cObj->wrap(min($count, $pR2), $wrapper['showResultsNumbersWrap']);
                 $markerArray['###OUT_OF###'] = $cObj->wrap($count, $wrapper['showResultsNumbersWrap']);
-                $markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . $langObj->getLL('list_browseresults_to', $usedLang, 'to') . ' ' . min($count,$pR2),$wrapper['showResultsNumbersWrap']);
+                $markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . $languageObj->getLabel('list_browseresults_to', $usedLang, 'to') . ' ' . min($count,$pR2),$wrapper['showResultsNumbersWrap']);
                 $markerArray['###CURRENT_PAGE###'] = $cObj->wrap($pointer + 1, $wrapper['showResultsNumbersWrap']);
                 $markerArray['###TOTAL_PAGES###'] = $cObj->wrap($totalPages, $wrapper['showResultsNumbersWrap']);
-                $list_browseresults_displays = $langObj->getLL('list_browseresults_displays_marker', $usedLang, 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
+                $list_browseresults_displays = $languageObj->getLabel('list_browseresults_displays_marker', $usedLang, 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
                 // substitute markers
                 $resultCountMsg = $cObj->substituteMarkerArray($list_browseresults_displays, $markerArray);
             } else {
@@ -871,7 +871,7 @@ class FrontendUtility {
                     str_replace(
                         '###SPAN_BEGIN###',
                         '<span' . static::classParam('browsebox-strong', '', $prefixId) . '>',
-                        $langObj->getLL('list_browseresults_displays', $usedLang, 'Displaying results ###SPAN_BEGIN###%s to %s</span> out of ###SPAN_BEGIN###%s</span>')
+                        $languageObj->getLabel('list_browseresults_displays', $usedLang, 'Displaying results ###SPAN_BEGIN###%s to %s</span> out of ###SPAN_BEGIN###%s</span>')
                     ),
                     $count > 0 ? $pR1 : 0,
                     min($count, $pR2),

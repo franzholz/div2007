@@ -1,4 +1,11 @@
 
+
+2019-09-19 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix: FrontendUtility::listBrowser uses wrong LocalisationBase instead of TranslationBase methods.
+
+2019-09-18 Franz Holzinger  <franz@ttproducts.de>
+    * add new method createFolderIfNotExists
+
 2019-09-17 Franz Holzinger  <franz@ttproducts.de>
      * compatibility: PHP 7.3
 

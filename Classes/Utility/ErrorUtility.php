@@ -43,19 +43,22 @@ namespace JambageCom\Div2007\Utility;
 
 class ErrorUtility {
 
-    static public function getMessage ($langObj, $error_code) {
+    static public function getMessage ($languageObj, array $error_code) {
         $result = '';
         $i = 0;
         $messageArray = array();
+        if (!is_object($languageObj)) {
+            return false;
+        }
 
         foreach ($error_code as $key => $indice) {
             if ($key == 0) {
-                if (method_exists($langObj, 'getLL')) {
-                    $messageArray = explode('|', $message = $langObj->getLL($indice));
-                    $result .= $langObj->getLL('plugin') . ': ' . $messageArray[0];
-                } else if (method_exists($langObj, 'getLabel')) {
-                    $messageArray = explode('|', $message = $langObj->getLabel($indice));
-                    $result .= $langObj->getLabel('plugin') . ': ' . $messageArray[0];
+                if (method_exists($languageObj, 'getLL')) {
+                    $messageArray = explode('|', $message = $languageObj->getLL($indice));
+                    $result .= $languageObj->getLL('plugin') . ': ' . $messageArray[0];
+                } else if (method_exists($languageObj, 'getLabel')) {
+                    $messageArray = explode('|', $message = $languageObj->getLabel($indice));
+                    $result .= $languageObj->getLabel('plugin') . ': ' . $messageArray[0];
                 }
             } else if (isset($messageArray[$i])) {
                 $result .= $indice . $messageArray[$i];

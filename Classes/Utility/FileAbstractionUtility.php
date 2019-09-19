@@ -95,6 +95,25 @@ class FileAbstractionUtility {
         return $result;
     }
 
+    
+    /**
+     * Create folder
+     *
+     * @param $path
+     * @return void
+     * @throws \Exception
+     */
+    static public function createFolderIfNotExists ($path)
+    {
+        $result = true;
+
+        if (!is_dir($path) && !GeneralUtility::mkdir($path)) {
+            $result = false;
+        }
+
+        return $result;
+    }
+
 }
 
 
