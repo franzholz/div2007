@@ -1,4 +1,6 @@
 
+2019-09-20 Franz Holzinger  <franz@ttproducts.de>
+    * new format README.md for the readme file
 
 2019-09-19 Franz Holzinger  <franz@ttproducts.de>
     * bugfix: FrontendUtility::listBrowser uses wrong LocalisationBase instead of TranslationBase methods.
