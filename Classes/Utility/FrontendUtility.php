@@ -42,6 +42,11 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 
 class FrontendUtility {
+    /**
+     * @var TypoScriptFrontendController
+     */
+    static protected $typoScriptFrontendController = null;
+
     static public function test ()
     {
         return true;
@@ -1319,6 +1324,73 @@ class FrontendUtility {
         $name = str_replace(',' , ' ', $name);
         $rc = $apostrophe . addcslashes($name, '<>()@;:\\".[]' . chr('\n')) . $apostrophe;
         return $rc;
+    }
+    
+    /**
+     * Returns content of a file. If it's an image the content of the file is not returned but rather an image tag is.
+     *
+     * @param string $fName The filename, being a TypoScript resource data type
+     * @param string $addParams Additional parameters (attributes). Default is empty alt and title tags.
+     * @return string If jpg,gif,jpeg,png: returns image_tag with picture in. If html,txt: returns content string
+     * @see FILE(), \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer fileResource
+     */
+    static public function fileResource ($fName, $addParams = 'alt="" title=""')
+    {
+        $result = '';
+        $tsfe = static::getTypoScriptFrontendController();
+        $incFile = $tsfe->tmpl->getFileName($fName);
+        if ($incFile && file_exists($incFile)) {
+            $fileInfo = GeneralUtility::split_fileref($incFile);
+            $extension = $fileInfo['fileext'];
+            if (
+                $extension === 'jpg' ||
+                $extension === 'jpeg' ||
+                $extension === 'gif' ||
+                $extension === 'png'
+            ) {
+                $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::generateXhtmlFix();
+                $imgFile = $incFile;
+                $imgInfo = @getimagesize($imgFile);
+                $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . $imgFile) . '" width="' . (int) $imgInfo[0] . '" height="' . (int) $imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
+            } else if (filesize($incFile) < 1024 * 1024) {
+                $result = file_get_contents($incFile);
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Returns the 'border' attribute for an <img> tag only if the doctype is not xhtml_strict, xhtml_11 or html5
+     * or if the config parameter 'disableImgBorderAttr' is not set.
+     *
+     * @param string $borderAttr The border attribute
+     * @return string The border attribute
+     */
+    static public function getBorderAttribute ($borderAttr)
+    {
+        $tsfe = static::getTypoScriptFrontendController();
+        $docType = $tsfe->xhtmlDoctype;
+        if (
+            $docType !== 'xhtml_strict' && $docType !== 'xhtml_11'
+            && $tsfe->config['config']['doctype'] !== 'html5'
+            && !$tsfe->config['config']['disableImgBorderAttr']
+        ) {
+            return $borderAttr;
+        }
+        return '';
+    }
+
+    static public function setTypoScriptFrontendController (TypoScriptFrontendController $typoScriptFrontendController)
+    {
+        static::$typoScriptFrontendController = $typoScriptFrontendController;
+    }
+
+    /**
+     * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     */
+    static protected function getTypoScriptFrontendController ()
+    {
+        return static::$typoScriptFrontendController ?: $GLOBALS['TSFE'];
     }
 }
 
