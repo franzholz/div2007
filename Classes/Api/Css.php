@@ -43,7 +43,7 @@ namespace JambageCom\Div2007\Api;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
-class Css {
+class Css implements \TYPO3\CMS\Core\SingletonInterface {
 
     /**
      * Returns a class-name

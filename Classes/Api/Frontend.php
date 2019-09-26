@@ -2,31 +2,19 @@
 
 namespace JambageCom\Div2007\Api;
 
-/***************************************************************
-*  Copyright notice
-*
-*  (c) 2019 Franz Holzinger (franz@ttproducts.de)
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.HTMLContent.
-*  A copy is found in the textfile GPL.txt and important notices to the license
-*  from the author is found in LICENSE.txt distributed with these scripts.
-*
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+/*
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
+
 /**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
@@ -40,15 +28,25 @@ namespace JambageCom\Div2007\Api;
  *
  */
 
+use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+use TYPO3\CMS\Frontend\Page\PageRepository;
 
 
-class Frontend {
+
+class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
+
+    /**
+     * @var TypoScriptFrontendController
+     */
+    protected $typoScriptFrontendController = null;
 
     /**
     * An "fe_user" object instance. Required for session access.
     *
-    * @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
+    * @var FrontendUserAuthentication
     */
     protected $frontendUser = null;
 
@@ -57,12 +55,18 @@ class Frontend {
     *
     * @return void
     */
-    public function __construct () {
+    public function __construct ($typoScriptFrontendController = '') {
+        if (!empty($typoScriptFrontendController)) {
+            $this->typoScriptFrontendController = $typoScriptFrontendController;
+        } else {
+            $this->typoScriptFrontendController = $GLOBALS['TSFE'];
+        }
+
         if (
-            isset($GLOBALS['TSFE']) &&
-            is_object($GLOBALS['TSFE'])
+            !empty($this->typoScriptFrontendController) &&
+            $this->typoScriptFrontendController instanceof TypoScriptFrontendController
         ) {
-            $this->frontendUser = $GLOBALS['TSFE']->fe_user;
+            $this->frontendUser = $this->typoScriptFrontendController->fe_user;
         }
     }
 
@@ -107,6 +111,31 @@ class Frontend {
                 $this->frontendUser->setKey('ses', 'recs', $recs_array);
             }
         }
+    }
+    
+
+    /**
+     * @return TypoScriptFrontendController
+     */
+    public function getTypoScriptFrontendController ()
+    {
+        if ($this->typoScriptFrontendController instanceof TypoScriptFrontendController) {
+            return $this->typoScriptFrontendController;
+        }
+        
+        // This usually happens when typolink is created by the TYPO3 Backend, where no TSFE object
+        // is there. This functionality is currently completely internal, as these links cannot be
+        // created properly from the Backend.
+        // However, this is added to avoid any exceptions when trying to create a link
+        $this->typoScriptFrontendController = GeneralUtility::makeInstance(
+            TypoScriptFrontendController::class,
+            null,
+            GeneralUtility::_GP('id'),
+            (int)GeneralUtility::_GP('type')
+        );
+        $this->typoScriptFrontendController->sys_page = GeneralUtility::makeInstance(PageRepository::class);
+        $this->typoScriptFrontendController->tmpl = GeneralUtility::makeInstance(TemplateService::class);
+        return $this->typoScriptFrontendController;
     }
 }
 

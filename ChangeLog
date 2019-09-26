@@ -1,4 +1,6 @@
 
+2019-09-26 Franz Holzinger  <franz@ttproducts.de>
+    * new public method: \JambageCom\Div2007\Api\Frontend::getTypoScriptFrontendController usable from everywhere
 
 2019-09-23 Franz Holzinger  <franz@ttproducts.de>
     * new method: \JambageCom\Div2007\Utility\FrontendUtility::fileResource instead of the deprecated $cObject->fileResource .
