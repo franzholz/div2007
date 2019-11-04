@@ -23,7 +23,7 @@
     }
   ],
   "license": [
-    "GPL-2.0+"
+    "GPL-2.0-or-later"
   ],
   "require": {
     "php": ">=5.5.0,<=7.3.99",
@@ -44,7 +44,7 @@
     ]
   },
   "replace": {
-    "div2007": "self.version",
+    "jambagecom/div2007": "self.version",
     "typo3-ter/div2007": "self.version"
   },
   "extra": {

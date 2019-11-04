@@ -1,3 +1,5 @@
+2019-11-04 Franz Holzinger  <franz@ttproducts.de>
+    * modification to composer.json
 
 2019-09-26 Franz Holzinger  <franz@ttproducts.de>
     * new public method: \JambageCom\Div2007\Api\Frontend::getTypoScriptFrontendController usable from everywhere
