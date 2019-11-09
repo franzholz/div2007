@@ -77,14 +77,22 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
      *
      * @param array $recs The data array to merge into/override the current recs values. The $recs array is constructed as [table]][uid] = scalar-value (eg. string/integer).
      * @param int $maxSizeOfSessionData The maximum size of stored session data. If zero, no limit is applied and even confirmation of cookie session is discarded.
-     * @deprecated since TYPO3 v8, will be removed in TYPO3 v9. Automatically feeding a "basket" by magic GET/POST keyword "recs" has been deprecated.
+     * @param boolean $checkCookie The cookie check for write allowance is enabled by default.
      */
-    public function record_registration ($recs, $maxSizeOfSessionData = 0)
+    public function record_registration ($recs, $maxSizeOfSessionData = 0, $checkCookie = true)
     {
         // Storing value ONLY if there is a confirmed cookie set,
         // otherwise a shellscript could easily be spamming the fe_sessions table
         // with bogus content and thus bloat the database
-        if (!$maxSizeOfSessionData || $this->frontendUser->isCookieSet()) {
+        if (
+            is_array($recs) &&
+            !empty($recs) &&
+            (
+                !$maxSizeOfSessionData ||
+                !$checkCookie ||
+                $this->frontendUser->isCookieSet()
+            )
+        ) {
             if ($recs['clear_all']) {
                 $this->frontendUser->setKey('ses', 'recs', []);
             }
