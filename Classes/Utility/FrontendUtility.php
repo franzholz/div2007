@@ -1124,6 +1124,20 @@ class FrontendUtility {
                 $paramsOld = $conf['additionalParams'];
             }
 
+                // fix issue #89686
+            if (
+                version_compare(TYPO3_version, '9.0.0', '>=')
+            ) {
+                if (!isset($conf['language'])) {
+                    $api =
+                        GeneralUtility::makeInstance(\JambageCom\Div2007\Api\Frontend::class);
+                    $sys_language_uid = $api->getLanguageId();
+                    if ($sys_language_uid) {
+                        $conf['language'] = $sys_language_uid;
+                    }
+                }
+            }
+
             if (is_array($urlParameters)) {
                 if (count($urlParameters)) {
                     $paramsNew = GeneralUtility::implodeArrayForUrl('', $urlParameters);
