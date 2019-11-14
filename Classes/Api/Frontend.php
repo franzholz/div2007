@@ -28,6 +28,7 @@ namespace JambageCom\Div2007\Api;
  *
  */
 
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
@@ -144,6 +145,24 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
         $this->typoScriptFrontendController->sys_page = GeneralUtility::makeInstance(PageRepository::class);
         $this->typoScriptFrontendController->tmpl = GeneralUtility::makeInstance(TemplateService::class);
         return $this->typoScriptFrontendController;
+    }
+
+
+    public function getLanguageId () {
+        $result = false;
+
+        if (
+            version_compare(TYPO3_version, '9.4.0', '>=')
+        ) {
+            $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
+            // (previously known as TSFE->sys_language_uid)
+            $result = $languageAspect->getId();
+        } else {
+            $tsfe = $this->getTypoScriptFrontendController();
+            $result = $tsfe->config['config']['sys_language_uid'];
+        }
+
+        return $result;
     }
 }
 
