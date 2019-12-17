@@ -78,8 +78,8 @@ class tx_div2007_staticinfotables {
 
 		if (!is_object($csConvObj)) {
 			// The object may not exist yet, so we need to create it now.
-			$csConvObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_cs');
-		}
+			$csConvObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Charset\CharsetConverter::class);
+        }
 
 		$labelFields = array();
 		if($table && is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'])) {
@@ -99,7 +99,14 @@ class tx_div2007_staticinfotables {
 				if ($local) {
 					$labelField = str_replace ('##', 'local', $field);
 				} else {
-					$labelField = str_replace ('##', $csConvObj->conv_case('utf-8', $lang, 'toLower'), $field);
+                    if (
+                        defined('TYPO3_version') &&
+                        version_compare(TYPO3_version, '8.5.0', '>=')
+                    ) {
+                        $labelField = str_replace('##', mb_strtolower($lang, 'utf-8'), $field);
+                    } else {
+                        $labelField = str_replace('##', $csConvObj->conv_case('utf-8', $lang, 'toLower'), $field);
+					}
 				}
 				if (is_array($GLOBALS['TCA'][$table]['columns'][$labelField])) {
 					$labelFields[] = $labelField;

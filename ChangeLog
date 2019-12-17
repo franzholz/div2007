@@ -1,3 +1,5 @@
+2019-12-17 Franz Holzinger <franz@ttproducts.de>
+    * commpatibility with TYPO3 8.5 Deprecation no. 78670: csConfObj is not usable any more.
 
 2019-11-14 Franz Holzinger <franz@ttproducts.de>
     * fix issue no. 89686: typolink must link to current language

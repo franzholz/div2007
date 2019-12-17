@@ -2061,7 +2061,9 @@ class tx_div2007_alpha5 {
 	static public function getCsConvObj ($bCreateIfNotFound = FALSE) {
 		$csConvObj = FALSE;
 
-		if (is_object($GLOBALS['LANG'])) {
+		if (version_compare(TYPO3_version, '8.5.0', '>=')) {
+            // nothing
+		} else if (is_object($GLOBALS['LANG'])) {
 			$csConvObj = $GLOBALS['LANG']->csConvObj;
 		} elseif (is_object($GLOBALS['TSFE'])) {
 			$csConvObj = $GLOBALS['TSFE']->csConvObj;

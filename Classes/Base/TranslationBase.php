@@ -394,7 +394,7 @@ class TranslationBase {
 
                     // For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset"
                     // and if that is not set, assumed to be that of the individual system languages
-                    if (!$charset) {
+                    if (!$charset && version_compare(TYPO3_version, '8.5.0', '<')) {
                         $charset = $GLOBALS['TSFE']->csConvObj->charSetArray[$languageKey];
                     }
 

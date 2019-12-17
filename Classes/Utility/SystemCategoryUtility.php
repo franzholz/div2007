@@ -139,6 +139,5 @@ class SystemCategoryUtility {
 
 		return $relatedRecords;
 	}
-
 }
 
