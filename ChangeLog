@@ -1,3 +1,7 @@
+2020-01-17 Franz Holzinger <franz@ttproducts.de>
+    * add new class \JambageCom\Div2007\Api\Language for language specific functions.
+    * add method decodeArrayValue to decode a value of a TCA value array.
+
 2019-12-17 Franz Holzinger <franz@ttproducts.de>
     * commpatibility with TYPO3 8.5 Deprecation no. 78670: csConfObj is not usable any more.
 
