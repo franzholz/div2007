@@ -314,7 +314,6 @@ class TranslationBase {
         } else {
             return false;
         }
-        $ext = pathinfo($basePath, PATHINFO_EXTENSION);
 
         if (
             version_compare(TYPO3_version, '7.4.0', '>=')
@@ -324,6 +323,13 @@ class TranslationBase {
 
             /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
             $languageFactory = GeneralUtility::makeInstance($useClassName);
+            $filePath = GeneralUtility::getFileAbsFileName($basePath);
+            
+            if (!file_exists($filePath)) {
+                debug($basePath, 'ERROR: ' . DIV2007_EXT . ' called by "' . $extensionKey . '" - file "' . $basePath . '" cannot be found!');
+                return false;
+            }
+
             $tempLOCAL_LANG = $languageFactory->getParsedData(
                 $basePath,
                 $this->getLocalLangKey(),
