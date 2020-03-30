@@ -80,8 +80,7 @@ class FrontendUtility {
             GeneralUtility::_GP('no_cache'),
             GeneralUtility::_GP('cHash'),
             GeneralUtility::_GP('jumpurl'),
-            GeneralUtility::_GP('MP'),
-            GeneralUtility::_GP('RDCT')
+            GeneralUtility::_GP('MP')
         );
 
         if (
@@ -95,7 +94,6 @@ class FrontendUtility {
         }
 
         $TSFE->connectToDB();
-        $TSFE->sendRedirect();
 
         // Output compression
         // Remove any output produced until now
