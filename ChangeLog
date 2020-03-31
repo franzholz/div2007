@@ -1,6 +1,7 @@
 
 2020-03-31 Franz Holzinger <franz@ttproducts.de>
     * commpatibility with TYPO3 9.5 Deprecation no. 82162 : Replace TYPO3_DLOG constant 
+    * commpatibility with TYPO3 9.5 Deprecation no. 80079 : Replace method Bootstrap::loadExtensionTables by Bootstrap::loadExtTables
 
 2020-03-30 Franz Holzinger <franz@ttproducts.de>
     * commpatibility with TYPO3 9.5 Deprecation no. 82572: - RDCT functionality removed

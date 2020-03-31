@@ -132,7 +132,13 @@ class FrontendUtility {
         // Initialize admin panel since simulation settings are required here:
         if ($TSFE->isBackendUserLoggedIn()) {
             $BE_USER->initializeAdminPanel();
-            \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtensionTables(true);
+            if (
+                version_compare(TYPO3_version, '8.7.0', '>=')
+            ) {
+                \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtTables(true);
+            } else {
+                \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtensionTables(true);
+            }
         } else {
             $callingClassNameBootstrap = '\\TYPO3\\CMS\\Core\\Core\\Bootstrap';
             if (method_exists($callingClassNameBootstrap, 'loadCachedTca')) {
