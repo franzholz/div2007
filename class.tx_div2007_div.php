@@ -5443,9 +5443,9 @@ final class tx_div2007_div {
 	 * The result is meant to make sense to developers during development or debugging of a site.
 	 * The idea is that this function is only a wrapper for external extensions which can set a hook which will be allowed to handle the logging of the information to any format they might wish and with any kind of filter they would like.
 	 * If you want to implement the devLog in your applications, simply add lines like:
-	 *		 if (TYPO3_DLOG)	tx_div2007_div::devLog('[write message in english here]', 'extension key');
+	 *		 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['devLog'])) tx_div2007_div::devLog('[write message in English here]', 'extension key');
 	 *
-	 * @param string $msg Message (in english).
+	 * @param string $msg Message (in English).
 	 * @param string $extKey Extension key (from which extension you are calling the log)
 	 * @param integer $severity Severity: 0 is info, 1 is notice, 2 is warning, 3 is fatal error, -1 is "OK" message
 	 * @param mixed $dataVar Additional data you want to pass to the logger.

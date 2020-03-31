@@ -1,5 +1,9 @@
+
+2020-03-31 Franz Holzinger <franz@ttproducts.de>
+    * commpatibility with TYPO3 9.5 Deprecation no. 82162 : Replace TYPO3_DLOG constant 
+
 2020-03-30 Franz Holzinger <franz@ttproducts.de>
-    * commpatibility with TYPO3 9.5: deprecation 82572 - RDCT functionality removed
+    * commpatibility with TYPO3 9.5 Deprecation no. 82572: - RDCT functionality removed
 
 2020-03-25 Franz Holzinger <franz@ttproducts.de>
     * add new class \JambageCom\Div2007\Database\QueryBuilderApi with a searchWhere method copied from TYPO3 Core. It returns an object \TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression instead of a string.

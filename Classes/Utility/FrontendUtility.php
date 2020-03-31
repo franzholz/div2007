@@ -210,7 +210,7 @@ class FrontendUtility {
             $error->debugOutput();
         }
 
-        if (TYPO3_DLOG) {
+        if (isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['devLog'])) {
             GeneralUtility::devLog('END of div2007 FRONTEND session', 'cms', 0, array('_FLUSH' => true));
         }
     }
