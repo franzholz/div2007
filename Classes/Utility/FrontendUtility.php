@@ -69,7 +69,7 @@ class FrontendUtility {
 
     static public function init ()
     {
-        global $TSFE, $BE_USER, $TYPO3_CONF_VARS;
+        global $TSFE, $BE_USER, $TYPO3_CONF_VARS, $error;
 
         /** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
         $TSFE = GeneralUtility::makeInstance(
@@ -135,6 +135,7 @@ class FrontendUtility {
             if (
                 version_compare(TYPO3_version, '8.7.0', '>=')
             ) {
+                \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadBaseTca(true);
                 \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtTables(true);
             } else {
                 \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtensionTables(true);
