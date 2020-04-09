@@ -31,6 +31,11 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
+use TYPO3\CMS\Core\Routing\SiteMatcher;
+use TYPO3\CMS\Core\Routing\SiteRouteResult;
+use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Site\SiteFinder;
+
 /**
 * front end functions.
 *
@@ -39,6 +44,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 * @package TYPO3
 * @subpackage div2007
 */
+
 
 
 class FrontendUtility {
@@ -67,20 +73,45 @@ class FrontendUtility {
 * @author Kasper Skårhøj <kasperYYYY@typo3.com>
 */
 
-    static public function init ()
+    static public function init (
+        $id = '',
+        $type = '',
+        $noCache = '',
+        $cHash = '',
+        $jumpurl = '',
+        $mp = ''
+    )
     {
         global $TSFE, $BE_USER, $TYPO3_CONF_VARS, $error;
 
+        if (!$id) {
+            $id = GeneralUtility::_GP('id');
+        }
+        if (!$type) {
+            $type = GeneralUtility::_GP('type');
+        }
+        if (!$noCache) {
+            $noCache = GeneralUtility::_GP('no_cache');
+        }
+        if (!$cHash) {
+            $cHash = GeneralUtility::_GP('cHash');
+        }
+        if (!$jumpurl) {
+            $jumpurl = GeneralUtility::_GP('jumpurl');
+        }
+        if (!$mp) {
+            $mp = GeneralUtility::_GP('MP');
+        }
         /** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
         $TSFE = GeneralUtility::makeInstance(
             'TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
             $TYPO3_CONF_VARS,
-            GeneralUtility::_GP('id'),
-            GeneralUtility::_GP('type'),
-            GeneralUtility::_GP('no_cache'),
-            GeneralUtility::_GP('cHash'),
-            GeneralUtility::_GP('jumpurl'),
-            GeneralUtility::_GP('MP')
+            $id,
+            $type,
+            $noCache,
+            $cHash,
+            $jumpurl,
+            $mp
         );
 
         if (
@@ -221,6 +252,38 @@ class FrontendUtility {
             GeneralUtility::devLog('END of div2007 FRONTEND session', 'cms', 0, array('_FLUSH' => true));
         }
     }
+
+    /**
+     * @return int
+     */
+    static public function getPageId ()
+    {
+        $result = 0;
+        $matcher = GeneralUtility::makeInstance(
+            SiteMatcher::class,
+            GeneralUtility::makeInstance(SiteFinder::class)
+        );
+        $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
+        /** @var SiteRouteResult $routeResult */
+        $routeResult = $matcher->matchRequest($request);
+        $site = $routeResult->getSite();
+        if ($site instanceof Site) {
+            $previousResult = $request->getAttribute('routing', null);
+            // Check for the route
+            try {
+                $pageArguments = $site->getRouter()->matchRequest($request, $previousResult);
+            } catch (RouteNotFoundException $e) {
+                return GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
+                    $request,
+                    'The requested page does not exist',
+                    ['code' => PageAccessFailureReasons::PAGE_NOT_FOUND]
+                );
+            }
+            $result = $pageArguments->getPageId();
+        }
+        return $result;
+    }
+
 
     /**
     * Returns a JavaScript <script> section with some function calls to JavaScript functions from "typo3/js/jsfunc.updateform.js" (which is also included by setting a reference in $GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'])

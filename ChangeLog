@@ -1,3 +1,7 @@
+2020-04-09 Franz Holzinger <franz@ttproducts.de>
+    * commpatibility with TYPO3 9.5 Routing: Add a middleWare for Ajax calls to store the original request object and set site, language and routing. Add a method FrontendUtility::getPageId() to get the page id out of the speaking url.
+    * commpatibility with TYPO3 9.5 Routing: Add all parameters for FrontendUtility::init, because the routing enhancer does not allow to read the original GET and POST parameters by GeneralUtility methods.
+    * bugfix: the extension configuration has been read wrongly for TYPO3 < 9.
 
 2020-04-06 Franz Holzinger <franz@ttproducts.de>
     * commpatibility with TYPO3 9.5 Deprecation no. 80079 : Replace method Bootstrap::loadExtensionTables also by Bootstrap::loadBaseTca

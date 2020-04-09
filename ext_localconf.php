@@ -14,7 +14,7 @@ call_user_func(function () {
             \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
         )->get(DIV2007_EXT);
     } else if (isset($extensionConfiguration)) {
-        $extensionConfiguration = unserialize($_EXTCONF);    // unserializing the configuration so we can use it here:
+        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][DIV2007_EXT]);
     }
 
     if (
@@ -65,5 +65,6 @@ call_user_func(function () {
 
     define('DIV2007_LANGUAGE_SUBPATH', '/Resources/Private/Language/');
     define('DIV2007_ICONS_SUBPATH', 'Resources/Public/Images/Icons/');
+    
 });
 
