@@ -4,6 +4,7 @@
 
 This library offers functions for TYPO3 extensions. It provides a modified t3lib_div of TYPO3 4.7.10 and backwards compatibility to TYPO3 6.2 and 4.5. It replaces most of the tslib_pibase methods.
 You find the migration classes for TYPO3 6.x, 7.x and 8.x inside of the extension migration_core.
+Sinve version 1.10.30 a middleware to store the request is provided for Ajax calls. This is required for Ajax calls under TYPO3 9.5. With this you can use the method FrontendUtility::getPageId() to get the current page id out of the speaking url of the routing enhancer.
 
 ## Requirements
 
