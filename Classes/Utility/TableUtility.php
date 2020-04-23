@@ -377,6 +377,9 @@ class TableUtility {
             $result['mmtable'] = $mmTablename;
             $result['local_field'] = $localFieldname;
             $result['foreign_field'] = $foreignFieldname;
+            if (isset($tableConf['foreign_sortby'])) {
+                $result['foreign_sortby'] = $tableConf['foreign_sortby'];
+            }
         }
         return $result;
     }
