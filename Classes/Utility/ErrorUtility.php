@@ -43,7 +43,7 @@ namespace JambageCom\Div2007\Utility;
 
 class ErrorUtility {
 
-    static public function getMessage ($languageObj, array $error_code) {
+    static public function getMessage ($languageObj, array $errorCode) {
         $result = '';
         $i = 0;
         $messageArray = array();
@@ -51,20 +51,36 @@ class ErrorUtility {
             return false;
         }
 
-        foreach ($error_code as $key => $indice) {
+        foreach ($errorCode as $key => $indice) {
             if ($key == 0) {
                 if (method_exists($languageObj, 'getLL')) {
-                    $messageArray = explode('|', $message = $languageObj->getLL($indice));
-                    $result .= $languageObj->getLL('plugin') . ': ' . $messageArray[0];
+                    $message = $languageObj->getLL($indice);
+                    $plugin = $languageObj->getLL('plugin');
+                    if ($message && $plugin) {
+                        $messageArray = explode('|', $message);
+                        $result .= $plugin . ': ' . $messageArray[0];
+                    } else {
+                        break;
+                    }
                 } else if (method_exists($languageObj, 'getLabel')) {
-                    $messageArray = explode('|', $message = $languageObj->getLabel($indice));
-                    $result .= $languageObj->getLabel('plugin') . ': ' . $messageArray[0];
+                    $message = $languageObj->getLabel($indice);
+                    $plugin = $languageObj->getLabel('plugin');
+                    if ($message && $plugin) {
+                        $messageArray = explode('|', $message);
+                        $result .= $plugin . ': ' . $messageArray[0];
+                    } else {
+                        break;
+                    }
                 }
             } else if (isset($messageArray[$i])) {
                 $result .= $indice . $messageArray[$i];
             }
 
             $i++;
+        }
+
+        if ($result == '') {
+            $result = 'ERROR in ' . ($plugin ? $plugin : 'undefined plugin') . ' in call of \JambageCom\Div2007\Utility\ErrorUtility::getMessage: ' . ($message ? $message : ' undefined language code "' . $indice . '"' . implode(',', $errorCode));
         }
 
         return $result;
