@@ -33,8 +33,11 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Routing\SiteRouteResult;
+use TYPO3\CMS\Core\Site\Entity\PseudoSite;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\SiteFinder;
+
+
 
 /**
 * front end functions.
@@ -267,6 +270,7 @@ class FrontendUtility {
         /** @var SiteRouteResult $routeResult */
         $routeResult = $matcher->matchRequest($request);
         $site = $routeResult->getSite();
+
         if ($site instanceof Site) {
             $previousResult = $request->getAttribute('routing', null);
             // Check for the route
@@ -280,10 +284,12 @@ class FrontendUtility {
                 );
             }
             $result = $pageArguments->getPageId();
+        } else {
+            $result = (int) GeneralUtility::_GP('id');
         }
+
         return $result;
     }
-
 
     /**
     * Returns a JavaScript <script> section with some function calls to JavaScript functions from "typo3/js/jsfunc.updateform.js" (which is also included by setting a reference in $GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'])
