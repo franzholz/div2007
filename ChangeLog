@@ -1,4 +1,9 @@
 
+
+
+2020-07-15 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: Method FrontendUtility::getPageId() is supported only under TYPO3 9.
+
 2020-06-17 Franz Holzinger <franz@ttproducts.de>
     * bugfix: Method FrontendUtility::getPageId() must also consider the case without using the routing enhancer.
 

@@ -31,12 +31,6 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
-use TYPO3\CMS\Core\Routing\SiteMatcher;
-use TYPO3\CMS\Core\Routing\SiteRouteResult;
-use TYPO3\CMS\Core\Site\Entity\PseudoSite;
-use TYPO3\CMS\Core\Site\Entity\Site;
-use TYPO3\CMS\Core\Site\SiteFinder;
-
 
 
 /**
@@ -257,21 +251,31 @@ class FrontendUtility {
     }
 
     /**
+     * This method is needed only for Ajax calls.
+     * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId instead.
+     * 
      * @return int
      */
     static public function getPageId ()
     {
         $result = 0;
-        $matcher = GeneralUtility::makeInstance(
-            SiteMatcher::class,
-            GeneralUtility::makeInstance(SiteFinder::class)
-        );
-        $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
-        /** @var SiteRouteResult $routeResult */
-        $routeResult = $matcher->matchRequest($request);
-        $site = $routeResult->getSite();
+        if (
+            version_compare(TYPO3_version, '9.0.0', '>=')
+        ) {
+            $matcher = GeneralUtility::makeInstance(
+                \TYPO3\CMS\Core\Routing\SiteMatcher::class,
+                GeneralUtility::makeInstance(\TYPO3\CMS\Core\Site\SiteFinder::class)
+            );
+            $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
+            /** @var \TYPO3\CMS\Core\Routing\SiteRouteResult $routeResult */
+            $routeResult = $matcher->matchRequest($request);
+            $site = $routeResult->getSite();
+        }
 
-        if ($site instanceof Site) {
+        if (
+            isset($site) &&
+            $site instanceof \TYPO3\CMS\Core\Site\Entity\Site
+        ) {
             $previousResult = $request->getAttribute('routing', null);
             // Check for the route
             try {
