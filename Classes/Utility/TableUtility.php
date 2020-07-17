@@ -347,13 +347,12 @@ class TableUtility {
                 $type = 'select';
             }
 
-            if ($type == 'inline') {
+            if ($type == 'inline' && !isset($tableConf['MM'])) {  // This method is wrong for a mm table.
                 $mmTablename = $tableConf['foreign_table'];
                 $localFieldname = $tableConf['foreign_field'];
                 $foreignFieldname = $tableConf['foreign_selector'];
                 $foreignTableFieldname = $tableConf['foreign_table_field'];
             } else if (
-                $type == 'select' &&
                 isset($tableConf['MM'])
             ) {
                 $mmTablename = $tableConf['MM'];
@@ -365,9 +364,13 @@ class TableUtility {
                 $mmTableConf = $GLOBALS['TCA'][$mmTablename]['columns'][$foreignFieldname]['config'];
             }
 
-            if ($type == 'inline' && is_array($mmTableConf)) {
+            if (
+                $type == 'inline' &&
+                is_array($mmTableConf)  && 
+                !isset($tableConf['MM'] // This method is wrong for a mm table.
+            )) {
                 $foreignTable = $mmTableConf['foreign_table'];
-            } else if ($type == 'select') {
+            } else {
                 $foreignTable = $tableConf['foreign_table'];
             }
 
@@ -381,6 +384,7 @@ class TableUtility {
                 $result['foreign_sortby'] = $tableConf['foreign_sortby'];
             }
         }
+
         return $result;
     }
 

@@ -1,5 +1,7 @@
 
 
+2020-07-17 Franz Holzinger <franz@ttproducts.de>
+    * compatibility bugfix: Method TableUtility::getForeignTableInfo() requires that each tt-table has a TCA config entry MM where the MM table must have the fields uid_local, uid_foreign, sorting and sorting_foreign
 
 2020-07-15 Franz Holzinger <franz@ttproducts.de>
     * bugfix: Method FrontendUtility::getPageId() is supported only under TYPO3 9.
