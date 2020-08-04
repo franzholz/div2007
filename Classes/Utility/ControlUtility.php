@@ -45,7 +45,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ControlUtility {
 
-
     /**
         * Creates a regular expression out of an array of tags
         *
@@ -88,6 +87,64 @@ class ControlUtility {
 
         return $result;
     }
-}
 
+    /**
+    * Recursively looks for stdWrap and executes it
+    *
+    * @param array $conf Current section of configuration to work on
+    * @param integer $level Current level being processed (currently just for tracking; no limit enforced)
+    * @return array Current section of configuration after stdWrap applied
+    */
+    static public function applyStdWrapRecursive (
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
+        array $conf, 
+        $level = 0
+    )
+    {
+        foreach ($conf as $key => $confNextLevel) {
+            if (strpos($key, '.') !== false) {
+                $key = substr($key, 0, -1);
+
+                // descend into all non-stdWrap-subelements first
+                foreach ($confNextLevel as $subKey => $subConfNextLevel) {
+                    if (is_array($subConfNextLevel) && strpos($subKey, '.') !== false && $subKey !== 'stdWrap.') {
+                        $subKey = substr($subKey, 0, -1);
+                        $conf[$key . '.'] = static::applyStdWrapRecursive($cObj, $confNextLevel, $level + 1);
+                    }
+                }
+
+                // now for stdWrap
+                foreach ($confNextLevel as $subKey => $subConfNextLevel) {
+                    if (is_array($subConfNextLevel) && $subKey === 'stdWrap.') {
+                        $conf[$key] = $cObj->stdWrap($conf[$key], $conf[$key . '.']['stdWrap.']);
+                        unset($conf[$key . '.']['stdWrap.']);
+                        if (!count($conf[$key . '.'])) {
+                            unset($conf[$key . '.']);
+                        }
+                    }
+                }
+            }
+        }
+        return $conf;
+    }
+
+    /**
+    * If internal TypoScript property "_DEFAULT_PI_VARS." is set then it will merge the current $piVars array onto these default values.
+    *
+    * @return void
+    */
+    static public function setPiVarDefaults (
+        &$piVars,
+        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
+        array $conf
+    )
+    {
+        if (isset($conf['_DEFAULT_PI_VARS.']) && is_array($conf['_DEFAULT_PI_VARS.'])) {
+            $conf['_DEFAULT_PI_VARS.'] = static::applyStdWrapRecursive($cObj, $conf['_DEFAULT_PI_VARS.']);
+            $tmp = $conf['_DEFAULT_PI_VARS.'];
+            \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($tmp, is_array($piVars) ? $piVars : array());
+            $piVars = $tmp;
+        }
+    }
+}
 
