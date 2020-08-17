@@ -1472,18 +1472,6 @@ class FrontendUtility {
         return '';
     }
 
-    
-    static public function linkTPKeepCtrlVars (
-        \JambageCom\Div2007\Base\BrowserBase $pObject,
-        $cObj,
-        $prefixId,
-        $str,
-        $overruleCtrlVars = array(),
-        $cache = 0,
-        $clearAnyway = 0,
-        $altPageId = 0
-    )
-
     static public function setTypoScriptFrontendController (TypoScriptFrontendController $typoScriptFrontendController)
     {
         static::$typoScriptFrontendController = $typoScriptFrontendController;
