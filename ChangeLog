@@ -1,4 +1,8 @@
 
+
+2020-00-20 Franz Holzinger <franz@ttproducts.de>
+    * compatibility bugfix: Since TYPO3 8.0 the method substituteMarkerArray is member of the class \TYPO3\CMS\Core\Service\MarkerBasedTemplateService.
+    
 2020-08-04 Franz Holzinger <franz@ttproducts.de>
     * add methods to ControlUtility: setPiVarDefaults and applyStdWrapRecursive
 

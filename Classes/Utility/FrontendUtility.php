@@ -597,6 +597,13 @@ class FrontendUtility {
     )
     {
         $usedLang = '';
+        $parser = $cObj;
+        if (
+            defined('TYPO3_version') &&
+            version_compare(TYPO3_version, '8.0.0', '>=')
+        ) {
+            $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        }
         $linkArray = $addQueryString;
             // Initializing variables:
         $pointer = intval($pObject->ctrlVars[$pointerName]);
@@ -942,12 +949,12 @@ class FrontendUtility {
                 $markerArray['###FROM###'] = $cObj->wrap($count > 0 ? $pR1 : 0,$wrapper['showResultsNumbersWrap']);
                 $markerArray['###TO###'] = $cObj->wrap(min($count, $pR2), $wrapper['showResultsNumbersWrap']);
                 $markerArray['###OUT_OF###'] = $cObj->wrap($count, $wrapper['showResultsNumbersWrap']);
-                $markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . $languageObj->getLabel('list_browseresults_to', $usedLang, 'to') . ' ' . min($count,$pR2),$wrapper['showResultsNumbersWrap']);
+                $markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . $languageObj->getLabel('list_browseresults_to', $usedLang, 'to') . ' ' . min($count,$pR2), $wrapper['showResultsNumbersWrap']);
                 $markerArray['###CURRENT_PAGE###'] = $cObj->wrap($pointer + 1, $wrapper['showResultsNumbersWrap']);
                 $markerArray['###TOTAL_PAGES###'] = $cObj->wrap($totalPages, $wrapper['showResultsNumbersWrap']);
                 $list_browseresults_displays = $languageObj->getLabel('list_browseresults_displays_marker', $usedLang, 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
                 // substitute markers
-                $resultCountMsg = $cObj->substituteMarkerArray($list_browseresults_displays, $markerArray);
+                $resultCountMsg = $parser->substituteMarkerArray($list_browseresults_displays, $markerArray);
             } else {
                 // render the resultcount in the "traditional" way using sprintf
                 $resultCountMsg = sprintf(
