@@ -201,6 +201,7 @@ class StatusProviderBase implements StatusProviderInterface
 
         if (
             !ExtensionManagementUtility::isLoaded('saltedpasswords') ||
+            class_exists(SaltedPasswordsUtility::class) &&
             !SaltedPasswordsUtility::isUsageEnabled('FE')
         ) {
             $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:disabled', $this->getExtensionName());
