@@ -12,7 +12,7 @@ Sinve version 1.10.30 a middleware to store the request is provided for Ajax cal
 
 Starting with version 1.8.0 TYPO3 6.2 and PHP 5.5.0 are the minimum requirements to use the extension div2007.
 
-If you run TYPO3 7 oder 8 then you might consider to install also the extension migration_core, if older TYPO3 methods are still used in extensions which did rely on div2007.
+If you run TYPO3 7 oder 8 and older versions of extensions like tt_products, then you might consider to install also the extension migration_core, if older TYPO3 class names are still used in extensions which did rely on div2007.
 
 ## Setup
 
