@@ -28,7 +28,7 @@ abstract class AbstractSessionHandler {
     *
     * @var string
     */
-    protected $sessionKey = 'tx_div2007';
+    protected $sessionKey = DIV2007_EXT;
 
     /**
     * Get session key
@@ -52,9 +52,10 @@ abstract class AbstractSessionHandler {
     /**
     * Get session data
     *
-    * @return data The session data for the captcha extension
+    * @param string $subKey: The subkey of the session key for the extension for which you read or write the session data.
+    * @return data The session data
     */
-    abstract public function getSessionData ();
+    abstract public function getSessionData ($subKey = '');
 
     /**
     * Set session data

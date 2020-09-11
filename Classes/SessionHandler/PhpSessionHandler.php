@@ -37,10 +37,12 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
     /**
     * Get session data
     *
-    * @return array data The session data
+    * @param string $subKey: The subkey of the session key for the extension for which you read or write the session data.
+    * @return data The session data
     */
-    public function getSessionData () {
+    public function getSessionData ($subKey = '')
         $data = [];
+        $result = [];
 
         $sessionKey = $this->getSessionKey();
         if (
@@ -49,7 +51,21 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
         ) {
             $data = $_SESSION[$sessionKey];
         }
-        return $data;
+
+        if (
+            $subKey != '' &&
+            is_array($data) &&
+            isset($data[$subKey])
+        ) {
+            $result = $data[$subKey];
+        } else if (
+            $subKey == '' &&
+            is_array($data)
+        ) {
+            $result = $data;
+        }
+
+        return $result;
     }
 
     /**
