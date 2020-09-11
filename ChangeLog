@@ -1,5 +1,9 @@
 
 
+2020-09-11 Franz Holzinger <franz@ttproducts.de>
+    * bugfix for TYPO3 9.5: Add an option to set dontSetCookie to false and allow Frontend cookies.
+    * new feature: improve method getSessionData of class \JambageCom\Div2007\SessionHandler\Typo3SessionHandler to support subkeys.
+
 2020-09-02 Franz Holzinger <franz@ttproducts.de>
     * bugfix: checkIfSaltedPasswordsAreEnabledInFrontEnd must not rely on the existance of the class SaltedPasswordsUtility
 

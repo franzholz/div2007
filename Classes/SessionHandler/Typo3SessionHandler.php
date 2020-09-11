@@ -24,7 +24,7 @@ namespace JambageCom\Div2007\SessionHandler;
 class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandlerInterface {
 
     /**
-    * The session variable key. You must overwrite this class to make it working.
+    * The session variable key. You must overwrite this class or use the setSessionKey method to make it working.
     *
     * @var string
     */
@@ -42,7 +42,8 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     *
     * @return void
     */
-    public function __construct () {
+    public function __construct ($setCookie = true)
+    {
         if (basename($_SERVER['PHP_SELF']) !== 'phpunit') {
             if (
                 isset($GLOBALS['TSFE']) &&
@@ -53,18 +54,11 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
             } else {
                 $this->frontendUser = \TYPO3\CMS\Frontend\Utility\EidUtility::initFeUser();
             }
-        }
-    }
 
-    /**
-    * Get session data
-    *
-    * @return data The session data
-    */
-    public function getSessionData () {
-        $sessionKey = $this->getSessionKey();
-        $data = $this->frontendUser->getSessionData($sessionKey);
-        return is_array($data) ? $data : array();
+            if ($setCookie) {
+                $this->frontendUser->dontSetCookie = false;
+            }
+        }
     }
 
     /**
@@ -73,12 +67,40 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     * @param array $data: The session data
     * @return void
     */
-    public function setSessionData ($data) {
+    public function setSessionData ($data)
+    {
         if (!is_array($data)) {
             $data = array();
         }
         $sessionKey = $this->getSessionKey();
         $this->frontendUser->setAndSaveSessionData($sessionKey, $data);
+    }
+
+    /**
+    * Get session data
+    *
+    * @param string $subKey: The subkey of the session key for the extension for which you read or write the session data.
+    * @return data The session data
+    */
+    public function getSessionData ($subKey = '')
+    {
+        $result = [];
+        $sessionKey = $this->getSessionKey();
+        $data = $this->frontendUser->getSessionData($sessionKey);
+        if (
+            $subKey != '' &&
+            is_array($data) &&
+            isset($data[$subKey])
+        ) {
+            $result = $data[$subKey];
+        } else if (
+            $subKey == '' &&
+            is_array($data)
+        ) {
+            $result = $data;
+        }
+
+        return $result;
     }
 }
 
