@@ -70,7 +70,7 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     public function setSessionData ($data)
     {
         if (!is_array($data)) {
-            $data = array();
+            $data = [];
         }
         $sessionKey = $this->getSessionKey();
         $this->frontendUser->setAndSaveSessionData($sessionKey, $data);

@@ -40,7 +40,7 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
     * @return array data The session data
     */
     public function getSessionData () {
-        $data = array();
+        $data = [];
 
         $sessionKey = $this->getSessionKey();
         if (
