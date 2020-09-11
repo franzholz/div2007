@@ -1,6 +1,7 @@
 
 
 2020-09-11 Franz Holzinger <franz@ttproducts.de>
+    * new feature: check new div2007 Extension Manager option checkCookieSet. If activated, then session is only written in a positive case of the TYPO3 method FrontendUserAuthentication::isCookieSet. Set maxSessionDataSize = 0 in the Install Tool to override this.
     * bugfix for TYPO3 9.5: Add an option to set dontSetCookie to false and allow Frontend cookies.
     * new feature: improve method getSessionData of class \JambageCom\Div2007\SessionHandler\Typo3SessionHandler to support subkeys.
     * modifiy PhpSessionHandler in the same way as Typo3SessionHandler
