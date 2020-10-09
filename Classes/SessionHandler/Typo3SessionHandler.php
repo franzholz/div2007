@@ -56,15 +56,20 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
             }
 
             if ($setCookie) {
-                $this->frontendUser->dontSetCookie = false;
+                $this->allowCookie();
             }
         }
+    }
+
+    public function allowCookie ()
+    {
+        $this->frontendUser->dontSetCookie = false;
     }
 
     /**
     * Set session data
     *
-    * @param array $data: The session data
+    * @param $data: The session data. It should by an array. Otherwise it will be converted into an array.
     * @return void
     */
     public function setSessionData ($data)
@@ -86,13 +91,14 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     * Get session data
     *
     * @param string $subKey: The subkey of the session key for the extension for which you read or write the session data.
-    * @return data The session data
+    * @return array data The session data
     */
     public function getSessionData ($subKey = '')
     {
         $result = [];
         $sessionKey = $this->getSessionKey();
         $data = $this->frontendUser->getSessionData($sessionKey);
+
         if (
             $subKey != '' &&
             is_array($data) &&

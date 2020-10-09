@@ -1,4 +1,6 @@
 
+2020-10-09 Franz Holzinger <franz@ttproducts.de>
+    * improved TYPO3 session handler with e method allowCookie
 
 2020-09-11 Franz Holzinger <franz@ttproducts.de>
     * new feature: check new div2007 Extension Manager option checkCookieSet. If activated, then session is only written in a positive case of the TYPO3 method FrontendUserAuthentication::isCookieSet. Set maxSessionDataSize = 0 in the Install Tool to override this.
