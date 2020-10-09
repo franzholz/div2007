@@ -1,5 +1,6 @@
 
 2020-10-09 Franz Holzinger <franz@ttproducts.de>
+    * This library should also work under TYPO3 10
     * improved TYPO3 session handler with e method allowCookie
 
 2020-09-11 Franz Holzinger <franz@ttproducts.de>
