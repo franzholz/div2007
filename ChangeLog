@@ -1,3 +1,5 @@
+2020-10-30 Franz Holzinger <franz@ttproducts.de>
+    * fix bug 91733 on forge: matchRequest requires an object which implements the interface Psr\Http\Message\ServerRequestInterface 
 
 2020-10-09 Franz Holzinger <franz@ttproducts.de>
     * This library should also work under TYPO3 10

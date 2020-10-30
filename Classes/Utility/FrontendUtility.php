@@ -258,9 +258,11 @@ class FrontendUtility {
      */
     static public function getPageId ()
     {
+        $site = null;
         $result = 0;
         if (
-            version_compare(TYPO3_version, '9.0.0', '>=')
+            version_compare(TYPO3_version, '9.0.0', '>=') &&
+            is_object($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'])
         ) {
             $matcher = GeneralUtility::makeInstance(
                 \TYPO3\CMS\Core\Routing\SiteMatcher::class,
