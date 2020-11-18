@@ -33,6 +33,7 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 
 
+
 /**
 * front end functions.
 *
@@ -252,25 +253,46 @@ class FrontendUtility {
 
     /**
      * This method is needed only for Ajax calls.
-     * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId instead.
+     * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId instead of this method.
      * 
      * @return int
      */
-    static public function getPageId ()
+    static public function getPageId (...$params)
     {
+        $result = (int) GeneralUtility::_GP('id');
+        if (
+            $result ||
+            version_compare(TYPO3_version, '9.0.0', '<')
+        ) {
+            return $result;
+        }
+
+        $request = null;
         $site = null;
         $result = 0;
+        
         if (
-            version_compare(TYPO3_version, '9.0.0', '>=') &&
+            isset($params['0']) &&
+            $params['0'] instanceof \Psr\Http\Message\ServerRequestInterface
+        ) {
+            $request = $params['0'];
+        }
+
+        if (
+            $request === null &&
             is_object($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'])
         ) {
+            $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
+        }
+        
+        if ($request instanceof \Psr\Http\Message\ServerRequestInterface) {
             $matcher = GeneralUtility::makeInstance(
                 \TYPO3\CMS\Core\Routing\SiteMatcher::class,
                 GeneralUtility::makeInstance(\TYPO3\CMS\Core\Site\SiteFinder::class)
             );
-            $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
             /** @var \TYPO3\CMS\Core\Routing\SiteRouteResult $routeResult */
             $routeResult = $matcher->matchRequest($request);
+            /** @var \TYPO3\CMS\Core\Site\Entity\Site $site */
             $site = $routeResult->getSite();
         }
 
@@ -278,20 +300,21 @@ class FrontendUtility {
             isset($site) &&
             $site instanceof \TYPO3\CMS\Core\Site\Entity\Site
         ) {
-            $previousResult = $request->getAttribute('routing', null);
-            // Check for the route
             try {
-                $pageArguments = $site->getRouter()->matchRequest($request, $previousResult);
-            } catch (RouteNotFoundException $e) {
+                $previousResult = $request->getAttribute('routing', null);
+                $result = $previousResult->getPageId();
+           // Check for the route
+                if (!$result) {
+                    $pageArguments = $site->getRouter()->matchRequest($request, $previousResult);
+                    $result = $pageArguments->getPageId();
+                }
+            } catch (\TYPO3\CMS\Core\Routing\RouteNotFoundException $e) {
                 return GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
                     $request,
                     'The requested page does not exist',
                     ['code' => PageAccessFailureReasons::PAGE_NOT_FOUND]
                 );
             }
-            $result = $pageArguments->getPageId();
-        } else {
-            $result = (int) GeneralUtility::_GP('id');
         }
 
         return $result;
@@ -441,7 +464,7 @@ class FrontendUtility {
     {
         $result = false;
         preg_match_all('/###(TAB_.*)###/', $templateCode, $treffer);
-        $internalMarkerArray = array();
+        $internalMarkerArray = [];
         if (
             isset($treffer) &&
             is_array($treffer) &&
@@ -542,7 +565,7 @@ class FrontendUtility {
     * @param string $table The table that the data record is from.
     * @return void
     */
-    static public function getContentObjectRenderer ($data = array(), $table = '')
+    static public function getContentObjectRenderer ($data = [], $table = '')
     {
         $className = static::getContentObjectRendererClassname();
         $cObj = GeneralUtility::makeInstance($className);	// Local cObj.
@@ -592,10 +615,10 @@ class FrontendUtility {
         $bCSSStyled = true,
         $showResultCount = 1,
         $browseParams = '',
-        $wrapArr = array(),
+        $wrapArr = [],
         $pointerName = 'pointer',
         $hscText = true,
-        $addQueryString = array()
+        $addQueryString = []
     )
     {
         $usedLang = '';
@@ -735,7 +758,7 @@ class FrontendUtility {
                         $maxPages
                     );
             }
-            $links = array();
+            $links = [];
 
                 // Make browse-table/links:
             if ($bShowFirstLast) { // Link to first page
@@ -1088,7 +1111,7 @@ class FrontendUtility {
         $cObj,
         $prefixId,
         $str,
-        $overruleCtrlVars = array(),
+        $overruleCtrlVars = [],
         $cache = 0,
         $clearAnyway = 0,
         $altPageId = 0
@@ -1100,7 +1123,7 @@ class FrontendUtility {
             is_array($overruleCtrlVars) &&
             !$clearAnyway
         ) {
-            $overruledCtrlVars = array();
+            $overruledCtrlVars = [];
             if (
                 isset($pObject->ctrlVars) &&
                 is_array($pObject->ctrlVars)
@@ -1153,12 +1176,12 @@ class FrontendUtility {
         \JambageCom\Div2007\Base\BrowserBase $pObject,
         $cObj,
         $str,
-        $urlParameters = array(),
+        $urlParameters = [],
         $cache = 0,
         $altPageId = 0
     )
     {
-        $conf = array();
+        $conf = [];
         $conf['useCacheHash'] = $pObject->getIsUserIntObject() ? 0 : $cache;
         $conf['no_cache'] = $pObject->getIsUserIntObject() ? 0 : !$cache;
         $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
@@ -1186,9 +1209,9 @@ class FrontendUtility {
         $cObj,
         $label,
         $params,
-        $urlParameters = array(),
+        $urlParameters = [],
         $target = '',
-        $conf = array()
+        $conf = []
     )
     {
         $result = false;
@@ -1254,9 +1277,9 @@ class FrontendUtility {
     static public function getTypoLink_URL (
         $cObj,
         $params,
-        $urlParameters = array(),
+        $urlParameters = [],
         $target = '',
-        $conf = array()
+        $conf = []
     )
     {
         $result = false;

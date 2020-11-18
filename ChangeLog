@@ -1,3 +1,6 @@
+2020-11-18 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: Method FrontendUtility::getPageId() is supported only under TYPO3 9.
+
 2020-10-30 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 9.5 deprecation no. 85833: modifications to saltedpasswords classes
 
