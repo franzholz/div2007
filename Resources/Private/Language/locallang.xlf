@@ -6,6 +6,9 @@
 			<trans-unit id="example_text" xml:space="preserve">
 				<source>Overwrite this example text in your div2007 setup.</source>
 			</trans-unit>
+			<trans-unit id="security.internal_hashed_password_error" xml:space="preserve">
+				<source>Failed to fetch a hashed password</source>
+			</trans-unit>
 			<trans-unit id="security.internal_decrypt_auto_login_failed" xml:space="preserve">
 				<source>Failed to decrypt the auto login password</source>
 			</trans-unit>

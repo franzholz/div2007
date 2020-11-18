@@ -1,4 +1,10 @@
 2020-10-30 Franz Holzinger <franz@ttproducts.de>
+    * compatibility TYPO3 9.5 deprecation no. 85833: modifications to saltedpasswords classes
+
+2020-10-30 Franz Holzinger <franz@ttproducts.de>
+    * workaround for severe change in TYPO3 9.5.22: ExtensionManagementUtility::isLoaded for saltedpasswords must not be true.
+
+2020-10-30 Franz Holzinger <franz@ttproducts.de>
     * fix bug 91733 on forge: matchRequest requires an object which implements the interface Psr\Http\Message\ServerRequestInterface 
 
 2020-10-09 Franz Holzinger <franz@ttproducts.de>

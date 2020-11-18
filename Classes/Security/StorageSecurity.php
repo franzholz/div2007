@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Security;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2020 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -43,8 +43,6 @@ namespace JambageCom\Div2007\Security;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
-use TYPO3\CMS\Saltedpasswords\Salt\SaltFactory;
-use TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility;
 
 use JambageCom\Div2007\Constants\ErrorCode;
 
@@ -61,9 +59,10 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     static protected function getStorageSecurityLevel ()
     {
         $result = 'normal';
+
         if (
-            ExtensionManagementUtility::isLoaded('saltedpasswords') &&
-            SaltedPasswordsUtility::isUsageEnabled('FE')
+            version_compare(TYPO3_version, '9.5.0', '>=') || 
+            class_exists(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::class)
         ) {
             $result = 'salted';
         }
@@ -83,14 +82,33 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
         if ($password != '') {
             switch (self::getStorageSecurityLevel()) {
                 case 'salted':
-                    $objSalt = SaltFactory::getSaltingInstance(null);
+                    $objSalt = null;
+                    
+                    if (class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::class)) {
+                        $objSalt = \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::getSaltingInstance(null);
+                    } else if (class_exists(\TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::class)) {
+                        $objSalt = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(null);
+                    }
+
                     if (is_object($objSalt)) {
                         $encryptedPassword = $objSalt->getHashedPassword($password);
                     } else {
                         $encryptedPassword = false;
                         // Could not get a salting instance from saltedpasswords
-                        // This should not happen: It has been checked on the beginning in the method checkRequirements.
+                        // This must not happen: It has been checked on the beginning in the method checkRequirements that a object to generate a hash must be available. The hash generation must never fail.
+                         
+                            // Failed to decrypt auto login password
+                        $errorMessage =
+                            $GLOBALS['TSFE']->sL(
+                                'LLL:EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_hashed_password_error'
+                            );
+                        GeneralUtility::sysLog(
+                            $errorMessage,
+                            $this->extensionKey,
+                            GeneralUtility::SYSLOG_SEVERITY_ERROR
+                        );
                     }
+
                     break;
                 case 'normal':
                 default:
@@ -181,7 +199,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                                 // Failed to decrypt auto login password
                             $errorMessage =
                                 $GLOBALS['TSFE']->sL(
-                                    'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_decrypt_auto_login_failed'
+                                    'LLL:EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_decrypt_auto_login_failed'
                                 );
                             GeneralUtility::sysLog(
                                 $errorMessage,

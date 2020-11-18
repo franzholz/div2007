@@ -28,7 +28,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
-use TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility;
 
 use JambageCom\Div2007\Utility\StatusUtility;
 
@@ -200,9 +199,9 @@ class StatusProviderBase implements StatusProviderInterface
         $status = Status::OK;
 
         if (
-            !ExtensionManagementUtility::isLoaded('saltedpasswords') ||
-            class_exists(SaltedPasswordsUtility::class) &&
-            !SaltedPasswordsUtility::isUsageEnabled('FE')
+            version_compare(TYPO3_version, '9.5.0', '<') &&
+            ExtensionManagementUtility::isLoaded('saltedpasswords') &&
+            !\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::isUsageEnabled('FE')
         ) {
             $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:disabled', $this->getExtensionName());
             $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:salted_passwords_must_be_enabled', $this->getExtensionName());
@@ -215,5 +214,4 @@ class StatusProviderBase implements StatusProviderInterface
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
         return $result;
     }
-    
 }
