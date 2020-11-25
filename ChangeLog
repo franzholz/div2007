@@ -1,3 +1,8 @@
+
+
+2020-11-25 Franz Holzinger <franz@ttproducts.de>
+    * new constant DIV2007_LANGUAGE_PATH for the language extension path 'LLL:EXT:core/Resources/Private/Language/'
+
 2020-11-18 Franz Holzinger <franz@ttproducts.de>
     * bugfix: Method FrontendUtility::getPageId() is supported only under TYPO3 9.
 

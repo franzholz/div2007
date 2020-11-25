@@ -54,12 +54,19 @@ call_user_func(function () {
 
     // constants for the TCA fields
 
-    if (version_compare(TYPO3_version, '8.0.0', '>=')) {
+    if (version_compare(TYPO3_version, '9.3.0', '>=')) {
+        // 'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
+
+        define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.');
+        define('DIV2007_LANGUAGE_PATH', 'LLL:EXT:core/Resources/Private/Language/');
+    } else if (version_compare(TYPO3_version, '8.0.0', '>=')) {
         // 'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
 
         define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.');
+        define('DIV2007_LANGUAGE_PATH', 'LLL:EXT:lang/Resources/Private/Language/');
     } else {
         // 'label' => 'LLL:EXT:lang/locallang_general.php:LGL.starttime',
+        define('DIV2007_LANGUAGE_PATH', 'LLL:EXT:lang/');
         define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:lang/locallang_general.php:LGL.');
     }
 
