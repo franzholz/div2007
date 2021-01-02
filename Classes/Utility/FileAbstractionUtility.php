@@ -52,7 +52,7 @@ class FileAbstractionUtility {
         $tableName,
         $fieldName,
         array $uidArray = array(),
-        $orderBy = 'sorting'
+        $orderBy = 'sorting_foreign'
     )
     {
         $result = array();

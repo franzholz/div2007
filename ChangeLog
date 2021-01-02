@@ -1,5 +1,8 @@
 
 
+2021-01-02 Franz Holzinger <franz@ttproducts.de>
+    * compatibility TYPO3 9.5: Table sys_file_reference has no sorting column, but a sorting_foreign column.
+
 2020-11-25 Franz Holzinger <franz@ttproducts.de>
     * new constant DIV2007_LANGUAGE_PATH for the language extension path 'LLL:EXT:core/Resources/Private/Language/'
 
