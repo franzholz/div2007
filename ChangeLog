@@ -1,5 +1,8 @@
 
 
+2021-01-18 Franz Holzinger <franz@ttproducts.de>
+    * new feature: add dontLinkActivePage to record browser
+
 2021-01-02 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 9.5: Table sys_file_reference has no sorting column, but a sorting_foreign column.
 
