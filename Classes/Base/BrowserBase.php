@@ -108,7 +108,7 @@ class BrowserBase {
         $this->internal['resCount'] = $resCount;
         $this->internal['limit'] = $limit;
         $this->internal['maxPages'] = $maxPages;
-        $this->internal['dontLinkActivePage'] = $dontLinkActivePage
+        $this->internal['dontLinkActivePage'] = $dontLinkActivePage;
         $this->internal['bShowFirstLast'] = $bShowFirstLast;
         $this->internal['bAlwaysPrev'] = $bAlwaysPrev;
         $this->internal['pagefloat'] = $pagefloat;
