@@ -1461,7 +1461,7 @@ class FrontendUtility {
     {
         $result = '';
         $tsfe = static::getTypoScriptFrontendController();
-        $incFile = $sanitizer->sanitize($fName);
+        $incFile = '';
         if (isset($basketExtra['payment.']['handleScript'])) {
             if (
                 version_compare(TYPO3_version, '9.4.0', '>=')
