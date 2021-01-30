@@ -226,22 +226,6 @@ final class tx_div2007_div {
 		}
 	}
 
-	/**
-	 * Wrapper for the RemoveXSS function.
-	 * Removes potential XSS code from an input string.
-	 *
-	 * Using an external class by Travis Puderbaugh <kallahar@quickwired.com>
-	 *
-	 * @param string $string Input string
-	 * @return string Input string with potential XSS code removed
-	 */
-	static public function removeXSS($string) {
-		require_once(PATH_typo3 . 'contrib/RemoveXSS/RemoveXSS.php');
-		$string = RemoveXSS::process($string);
-		return $string;
-	}
-
-
 	/*************************
 	 *
 	 * IMAGE FUNCTIONS
@@ -1236,23 +1220,6 @@ final class tx_div2007_div {
 		return str_replace('%2F', '/', rawurlencode($str));
 	}
 
-	/**
-	 * Checking syntax of input email address
-	 *
-	 * @param string $email Input string to evaluate
-	 * @return boolean Returns TRUE if the $email address (input string) is valid
-	 */
-	static public function validEmail($email) {
-			// enforce maximum length to prevent libpcre recursion crash bug #52929 in PHP
-			// fixed in PHP 5.3.4; length restriction per SMTP RFC 2821
-		if (strlen($email) > 320) {
-			return FALSE;
-		}
-		require_once(PATH_typo3 . 'contrib/idna/idna_convert.class.php');
-		$IDN = new idna_convert(array('idn_version' => 2008));
-
-		return (filter_var($IDN->encode($email), FILTER_VALIDATE_EMAIL) !== FALSE);
-	}
 
 	/**
 	 * Checks if current e-mail sending method does not accept recipient/sender name
@@ -1492,19 +1459,6 @@ final class tx_div2007_div {
 	 */
 	static public function lcfirst($string) {
 		return self::strtolower(substr($string, 0, 1)) . substr($string, 1);
-	}
-
-	/**
-	 * Checks if a given string is a Uniform Resource Locator (URL).
-	 *
-	 * @param string $url The URL to be validated
-	 * @return boolean Whether the given URL is valid
-	 */
-	static public function isValidUrl($url) {
-		require_once(PATH_typo3 . 'contrib/idna/idna_convert.class.php');
-		$IDN = new idna_convert(array('idn_version' => 2008));
-
-		return (filter_var($IDN->encode($url), FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED) !== FALSE);
 	}
 
 
@@ -2510,27 +2464,6 @@ final class tx_div2007_div {
 		if (preg_match('/^\s*<\?xml([^>]*)\?\>/', $xmlData, $match)) {
 			return self::get_tag_attributes($match[1]);
 		}
-	}
-
-	/**
-	 * Minifies JavaScript
-	 *
-	 * @param string $script Script to minify
-	 * @param string $error Error message (if any)
-	 * @return string Minified script or source string if error happened
-	 */
-	static public function minifyJavaScript($script, &$error = '') {
-		require_once(PATH_typo3 . 'contrib/jsmin/jsmin.php');
-		try {
-			$error = '';
-			$script = trim(JSMin::minify(str_replace(CR, '', $script)));
-		}
-		catch (JSMinException $e) {
-			$error = 'Error while minifying JavaScript: ' . $e->getMessage();
-			self::devLog($error, 'tx_div2007_div', 2,
-				array('JavaScript' => $script, 'Stack trace' => $e->getTrace()));
-		}
-		return $script;
 	}
 
 
@@ -3889,49 +3822,6 @@ final class tx_div2007_div {
 			} // so if a matching filename is found, return FALSE;
 		}
 		return TRUE;
-	}
-
-	/**
-	 * Checks if a given string is a valid frame URL to be loaded in the
-	 * backend.
-	 *
-	 * @param string $url potential URL to check
-	 * @return string either $url if $url is considered to be harmless, or an
-	 *				empty string otherwise
-	 */
-	static public function sanitizeLocalUrl($url = '') {
-		$sanitizedUrl = '';
-		$decodedUrl = rawurldecode($url);
-
-		if (!empty($url) && self::removeXSS($decodedUrl) === $decodedUrl) {
-			$parsedUrl = parse_url($decodedUrl);
-			$testAbsoluteUrl = self::resolveBackPath($decodedUrl);
-			$testRelativeUrl = self::resolveBackPath(
-				self::dirname(self::getIndpEnv('SCRIPT_NAME')) . '/' . $decodedUrl
-			);
-
-				// Pass if URL is on the current host:
-			if (self::isValidUrl($decodedUrl)) {
-				if (self::isOnCurrentHost($decodedUrl) && strpos($decodedUrl, self::getIndpEnv('TYPO3_SITE_URL')) === 0) {
-					$sanitizedUrl = $url;
-				}
-				// Pass if URL is an absolute file path:
-			} elseif (self::isAbsPath($decodedUrl) && self::isAllowedAbsPath($decodedUrl)) {
-				$sanitizedUrl = $url;
-				// Pass if URL is absolute and below TYPO3 base directory:
-			} elseif (strpos($testAbsoluteUrl, self::getIndpEnv('TYPO3_SITE_PATH')) === 0 && substr($decodedUrl, 0, 1) === '/') {
-				$sanitizedUrl = $url;
-				// Pass if URL is relative and below TYPO3 base directory:
-			} elseif (empty($parsedUrl['scheme']) && strpos($testRelativeUrl, self::getIndpEnv('TYPO3_SITE_PATH')) === 0 &&  substr($decodedUrl, 0, 1) !== '/') {
-				$sanitizedUrl = $url;
-			}
-		}
-
-		if (!empty($url) && empty($sanitizedUrl)) {
-			self::sysLog('The URL "' . $url . '" is not considered to be local and was denied.', 'Core', self::SYSLOG_SEVERITY_NOTICE);
-		}
-
-		return $sanitizedUrl;
 	}
 
 	/**
@@ -5462,114 +5352,6 @@ final class tx_div2007_div {
 	}
 
 	/**
-	 * Writes a message to the deprecation log.
-	 *
-	 * @param string $msg Message (in English).
-	 * @return void
-	 */
-	static public function deprecationLog($msg) {
-		if (!$GLOBALS['TYPO3_CONF_VARS']['SYS']['enableDeprecationLog']) {
-			return;
-		}
-
-		$log = $GLOBALS['TYPO3_CONF_VARS']['SYS']['enableDeprecationLog'];
-		$date = date($GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] . ' ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'] . ': ');
-
-			// legacy values (no strict comparison, $log can be boolean, string or int)
-		if ($log === TRUE || $log == '1') {
-			$log = 'file';
-		}
-
-		if (stripos($log, 'file') !== FALSE) {
-				// In case lock is acquired before autoloader was defined:
-			if (class_exists('t3lib_lock') === FALSE) {
-				$pathT3lib = PATH_site . 't3lib/';
-				require_once $pathT3lib . 'class.t3lib_lock.php';
-			}
-				// write a longer message to the deprecation log
-			$destination = self::getDeprecationLogFileName();
-			$lockObject = self::makeInstance('t3lib_lock', $destination, $GLOBALS['TYPO3_CONF_VARS']['SYS']['lockingMode']);
-			/** @var t3lib_lock $lockObject */
-			$lockObject->setEnableLogging(FALSE);
-			$lockObject->acquire();
-			$file = @fopen($destination, 'a');
-			if ($file) {
-				@fwrite($file, $date . $msg . LF);
-				@fclose($file);
-				self::fixPermissions($destination);
-			}
-			$lockObject->release();
-		}
-
-		if (stripos($log, 'devlog') !== FALSE) {
-				// copy message also to the developer log
-			self::devLog($msg, 'Core', self::SYSLOG_SEVERITY_WARNING);
-		}
-
-			// do not use console in login screen
-		if (stripos($log, 'console') !== FALSE && isset($GLOBALS['BE_USER']->user['uid'])) {
-			t3lib_utility_Debug::debug($msg, $date, 'Deprecation Log');
-		}
-	}
-
-	/**
-	 * Gets the absolute path to the deprecation log file.
-	 *
-	 * @return string absolute path to the deprecation log file
-	 */
-	static public function getDeprecationLogFileName() {
-		return PATH_typo3conf .
-				'deprecation_' .
-				self::shortMD5(
-					PATH_site . $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey']
-				) .
-				'.log';
-	}
-
-	/**
-	 * Logs a call to a deprecated function.
-	 * The log message will be taken from the annotation.
-	 * @return void
-	 */
-	static public function logDeprecatedFunction() {
-		if (!$GLOBALS['TYPO3_CONF_VARS']['SYS']['enableDeprecationLog']) {
-			return;
-		}
-
-			// This require_once is needed for deprecation calls
-			// thrown early during bootstrap, if the autoloader is
-			// not instantiated yet. This can happen for example if
-			// ext_localconf triggers a deprecation.
-		require_once 'utility/class.t3lib_utility_debug.php';
-
-		$trail = debug_backtrace();
-
-		if ($trail[1]['type']) {
-			$function = new ReflectionMethod($trail[1]['class'], $trail[1]['function']);
-		} else {
-			$function = new ReflectionFunction($trail[1]['function']);
-		}
-
-		$msg = '';
-		if (preg_match('/@deprecated\s+(.*)/', $function->getDocComment(), $match)) {
-			$msg = $match[1];
-		}
-
-			// trigger PHP error with a short message: <function> is deprecated (called from <source>, defined in <source>)
-		$errorMsg = 'Function ' . $trail[1]['function'];
-		if ($trail[1]['class']) {
-			$errorMsg .= ' of class ' . $trail[1]['class'];
-		}
-		$errorMsg .= ' is deprecated (called from ' . $trail[1]['file'] . '#' . $trail[1]['line'] . ', defined in ' . $function->getFileName() . '#' . $function->getStartLine() . ')';
-
-			// write a longer message to the deprecation log: <function> <annotion> - <trace> (<source>)
-		$logMsg = $trail[1]['class'] . $trail[1]['type'] . $trail[1]['function'];
-		$logMsg .= '() - ' . $msg.' - ' . t3lib_utility_Debug::debugTrail();
-		$logMsg .= ' (' . substr($function->getFileName(), strlen(PATH_site)) . '#' . $function->getStartLine() . ')';
-		self::deprecationLog($logMsg);
-	}
-
-	/**
 	 * Converts a one dimensional array to a one line string which can be used for logging or debugging output
 	 * Example: "loginType: FE; refInfo: Array; HTTP_HOST: www.example.org; REMOTE_ADDR: 192.168.1.5; REMOTE_HOST:; security_level:; showHiddenRecords: 0;"
 	 *
@@ -5698,5 +5480,3 @@ final class tx_div2007_div {
 		echo $obContent;
 	}
 }
-
-?>
