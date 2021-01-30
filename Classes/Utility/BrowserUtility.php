@@ -472,9 +472,6 @@ class BrowserUtility {
     }
 
     /**
-     * deprecated:
-     * use BrowserUtility::autoCache instead
-     *
      * Returns true if the array $inArray contains only values allowed to be cached based on the configuration in $this->pi_autoCacheFields
      * Used by static::linkTPKeepCtrlVars
      * This is an advanced form of evaluation of whether a URL should be cached or not.
