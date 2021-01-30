@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
 
 
 
@@ -1462,7 +1463,9 @@ class FrontendUtility {
     {
         $result = '';
         $tsfe = static::getTypoScriptFrontendController();
-        $incFile = $tsfe->tmpl->getFileName($fName);
+        $sanitizer = GeneralUtility::makeInstance(FilePathSanitizer::class);
+        $incFile = $sanitizer->sanitize($fName);
+
         if ($incFile && file_exists($incFile)) {
             $fileInfo = GeneralUtility::split_fileref($incFile);
             $extension = $fileInfo['fileext'];

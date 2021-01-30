@@ -1,6 +1,8 @@
 
 2021-01-30 Franz Holzinger <franz@ttproducts.de>
-    * remove functions with wrong require_once calls from tx_div2007_div.
+    * remove functions removeXSS, validEmail, isValidUrl, minifyJavaScript sanitizeLocalUrl, deprecationLog, logDeprecatedFunction2021-01-29 Franz Holzinger <franz@ttproducts.de>
+    * compatibility TYPO3 10.4 deprecation 85445: Replace TemplateService->getFileName by TYPO3\CMS\Frontend\Resource\FilePathSanitizer object method sanitize.
+ containing wrong require_once calls from tx_div2007_div.
 
 2021-01-18 Franz Holzinger <franz@ttproducts.de>
     * new feature: add dontLinkActivePage to record browser
