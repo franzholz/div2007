@@ -30,8 +30,6 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
-
 
 
 
@@ -1463,8 +1461,17 @@ class FrontendUtility {
     {
         $result = '';
         $tsfe = static::getTypoScriptFrontendController();
-        $sanitizer = GeneralUtility::makeInstance(FilePathSanitizer::class);
         $incFile = $sanitizer->sanitize($fName);
+        if (isset($basketExtra['payment.']['handleScript'])) {
+            if (
+                version_compare(TYPO3_version, '9.4.0', '>=')
+            ) {
+                $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+                $incFile = $sanitizer->sanitize($fName);
+            } else {
+                $incFile = $GLOBALS['TSFE']->tmpl->getFileName($fName);
+            }
+        }
 
         if ($incFile && file_exists($incFile)) {
             $fileInfo = GeneralUtility::split_fileref($incFile);
