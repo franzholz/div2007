@@ -434,10 +434,12 @@ class FrontendUtility {
         }
 
         $lookupFile = explode('?', $filename);
+        $scriptPath = (defined('PATH_thisScript') ? PATH_thisScript : \TYPO3\CMS\Core\Core\Environment::getCurrentScript() );
+
         $path =
             GeneralUtility::resolveBackPath(
                 GeneralUtility::dirname(
-                    PATH_thisScript
+                    $scriptPath
                 ) .
                 '/' .
                 $lookupFile[0]
