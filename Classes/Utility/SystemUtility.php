@@ -219,7 +219,11 @@ class SystemUtility {
                                     $i++;
                                     $param2 = substr($str, $i, $param1);
                                     $fixPos = strpos($param2, '";');
-                                    if ($fixPos !== false && in_array($param2{$fixPos + 2}, $codeArray)) {
+                                    if (
+                                        $fixPos !== false &&
+                                        in_array(substr($param2, $fixPos + 2, 1), $codeArray)
+                                    )
+                                    {
                                         $i += $fixPos; // fix wrong string length if it is really shorter now
                                         $param2 = substr($param2, 0, $fixPos);
                                     } else {
