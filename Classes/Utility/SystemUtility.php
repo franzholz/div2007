@@ -203,7 +203,7 @@ class SystemUtility {
                             } else {
                                 $var = array();
                             }
-                            if ($str{$i} == '{') {
+                            if (substr($str, $i, 1) == '{') {
                                 $i++;
                                 $controlIndex++;
                                 $controlArray[$controlIndex] = $ch;
