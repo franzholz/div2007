@@ -4,6 +4,7 @@
     * compatibility: replace the method \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath by execution of \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix with parameter \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath
     * compatibility PHP 7.4: PHP Runtime Deprecation Notice: Array and string offset access syntax with curly braces is deprecated
     * deprecation no. 85285: PATH_thisScript must be replaced by \TYPO3\CMS\Core\Core\Environment::getCurrentScript()
+    * deprecation no. 85878: \TYPO3\CMS\Frontend\Utility\EidUtility::initFeUser does not exist any more. Raise a RuntimeException in TYPO3 10.
 
 2021-01-30 Franz Holzinger <franz@ttproducts.de>
     * remove functions removeXSS, validEmail, isValidUrl, minifyJavaScript sanitizeLocalUrl, deprecationLog, logDeprecatedFunction2021-01-29 Franz Holzinger <franz@ttproducts.de>
