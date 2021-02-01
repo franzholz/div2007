@@ -188,9 +188,9 @@ class SystemUtility {
         $controlData = array();
         $controlIndex = 0;
         while ($i < $len) {
-            $ch = $str{$i};
+            $ch = substr($str, $i, 1);
             $i++;
-            $next = $str{$i};
+            $next = substr($str, $i, 1);
             if ($next == ':') {
                 $i++;
                 $paramPos = strpos($str, ':', $i);
@@ -215,7 +215,7 @@ class SystemUtility {
                         break;
                         case 's':
                             if (isset($var)) {
-                                if ($str{$i} == '"') {
+                                if (substr($str, $i, 1) == '"') {
                                     $i++;
                                     $param2 = substr($str, $i, $param1);
                                     $fixPos = strpos($param2, '";');
@@ -226,7 +226,10 @@ class SystemUtility {
                                         $i += $param1;
                                     }
 
-                                    if ($str{$i} == '"' && $str{$i + 1} == ';') {
+                                    if (
+                                        substr($str, $i, 1) == '"' &&
+                                        substr($str, $i + 1, 1) == ';'
+                                    ) {
                                         $i += 2;
                                         if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k'] == '' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
                                             $controlData[$controlIndex]['k'] = $param2;

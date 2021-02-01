@@ -2,6 +2,7 @@
 2021-02-01 Franz Holzinger <franz@ttproducts.de>
     * Remove file class.tx_div2007_alpha.php with class tx_div2007_alpha. Use the class tx_div2007_alpha5 instead of it.
     * compatibility: replace the method \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath by execution of \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix with parameter \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath
+    * compatibility PHP 7.4: PHP Runtime Deprecation Notice: Array and string offset access syntax with curly braces is deprecated
 
 2021-01-30 Franz Holzinger <franz@ttproducts.de>
     * remove functions removeXSS, validEmail, isValidUrl, minifyJavaScript sanitizeLocalUrl, deprecationLog, logDeprecatedFunction2021-01-29 Franz Holzinger <franz@ttproducts.de>
