@@ -126,9 +126,13 @@ class ExtensionUtility {
 
             if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {
                 if ($relative) {
-                    $result =
-                        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath(
+                    $extensionPath = 
+                        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(
                             $extensionKey
+                        );
+                    $result =
+                        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::stripPathSitePrefix(
+                            $extensionPath
                         ) . $relativePath;
                 } else {
                     $result =

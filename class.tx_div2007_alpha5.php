@@ -2466,15 +2466,6 @@ class tx_div2007_alpha5 {
 	) {
 		$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
 
-		if (
-			class_exists($emClass) &&
-			method_exists($emClass, 'extPath')
-		) {
-			// nothing
-		} else {
-			$emClass = 't3lib_extMgm';
-		}
-
 			// Get language version
 		$helpTemplate_lang='';
 		if ($langObj->LLkey) {
@@ -2487,8 +2478,9 @@ class tx_div2007_alpha5 {
 
 		$helpTemplate = $helpTemplate_lang ? $helpTemplate_lang : $cObj->getSubpart($helpTemplate,'###TEMPLATE_DEFAULT###');
 			// Markers and substitution:
-
-		$markerArray['###PATH###'] = call_user_func($emClass . '::siteRelPath', $extKey);
+    
+        $extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey);
+		$markerArray['###PATH###'] =     \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix($extensionPath);
 		$markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<b>' . $errorMessage . '</b><br/>' : '');
 		$markerArray['###CODE###'] = $theCode;
 		$rc = $cObj->substituteMarkerArray($helpTemplate, $markerArray);

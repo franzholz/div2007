@@ -429,8 +429,7 @@ class FrontendUtility {
         $path = '';
 
         if (empty($filename)) {
-            $filename =
-                ExtensionManagementUtility::siteRelPath(DIV2007_EXT) .
+            $filename = PATH_FE_DIV2007_REL .
                 $defaultPath . $defaultBasename;
         }
 
