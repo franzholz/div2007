@@ -6,7 +6,6 @@ $extensionPath = call_user_func($emClass . '::extPath', $key, $script);
 
 return array(
 	'tx_div2007' => $extensionPath . 'class.tx_div2007.php',
-	'tx_div2007_alpha' => $extensionPath . 'class.tx_div2007_alpha.php',
 	'tx_div2007_alpha5' => $extensionPath . 'class.tx_div2007_alpha5.php',
 	'tx_div2007_alpha_browse_base' => $extensionPath . 'class.tx_div2007_alpha_browse_base.php',
 	'tx_div2007_alpha_language_base' => $extensionPath . 'class.tx_div2007_alpha_language_base.php',

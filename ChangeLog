@@ -1,4 +1,7 @@
 
+2021-02-01 Franz Holzinger <franz@ttproducts.de>
+    * Remove file class.tx_div2007_alpha.php with class tx_div2007_alpha. Use the class tx_div2007_alpha5 instead of it.
+
 2021-01-30 Franz Holzinger <franz@ttproducts.de>
     * remove functions removeXSS, validEmail, isValidUrl, minifyJavaScript sanitizeLocalUrl, deprecationLog, logDeprecatedFunction2021-01-29 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 10.4 deprecation 85445: Replace TemplateService->getFileName by TYPO3\CMS\Frontend\Resource\FilePathSanitizer object method sanitize.
