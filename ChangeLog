@@ -1,7 +1,7 @@
 
 
-parse_charset
 2021-02-02 Franz Holzinger <franz@ttproducts.de>
+    * add language labels for the record browser
     * deprecation no. 85122: Replace $csConvObj->parse_charset by trim(strtolower())
 
 2021-02-01 Franz Holzinger <franz@ttproducts.de>

@@ -45,6 +45,30 @@
 			<trans-unit id="privacy_policy.hint_1" xml:space="preserve">
 				<source>You have the right to renounce the agreement to the usage of your personal data at any time via email.</source>
 			</trans-unit>
+			<trans-unit id="list_browseresults_first" xml:space="preserve">
+				<source>&lt;&lt; First</source>
+			</trans-unit>
+			<trans-unit id="list_browseresults_prev" xml:space="preserve">
+				<source>&lt; Previous</source>
+			</trans-unit>
+			<trans-unit id="list_browseresults_page" xml:space="preserve">
+				<source>Page</source>
+			</trans-unit>
+			<trans-unit id="list_browseresults_next" xml:space="preserve">
+				<source>Next &gt;</source>
+			</trans-unit>
+			<trans-unit id="list_browseresults_last" xml:space="preserve">
+				<source>Last &gt;&gt;</source>
+			</trans-unit>
+			<trans-unit id="list_browseresults_to" xml:space="preserve">
+				<source>to</source>
+			</trans-unit>
+			<trans-unit id="list_browseresults_displays_marker" xml:space="preserve">
+				<source>Displaying results ###FROM### to ###TO### out of ###OUT_OF###</source>
+			</trans-unit>
+			<trans-unit id="list_browseresults_displays" xml:space="preserve">
+				<source>Displaying results ###SPAN_BEGIN###%s to %s&lt;/span&gt; out of ###SPAN_BEGIN###%s&lt;/span&gt;</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
