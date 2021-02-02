@@ -675,7 +675,7 @@ class tx_div2007_core {
             /** @var \TYPO3\CMS\Core\Charset\CharsetConverter $charsetConverter */
             $charsetConverter = call_user_func($useClassName . '::makeInstance', $useConverterClassName);
 
-            $result = $charsetConverter->conv($str, $charsetConverter->parse_charset($from), 'utf-8');
+            $result = $charsetConverter->conv($str, trim(strtolower($from)), 'utf-8');
 
             if (!$result) {
                 $result = $str;

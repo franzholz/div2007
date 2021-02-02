@@ -1,4 +1,9 @@
 
+
+parse_charset
+2021-02-02 Franz Holzinger <franz@ttproducts.de>
+    * deprecation no. 85122: Replace $csConvObj->parse_charset by trim(strtolower())
+
 2021-02-01 Franz Holzinger <franz@ttproducts.de>
     * Remove file class.tx_div2007_alpha.php with class tx_div2007_alpha. Use the class tx_div2007_alpha5 instead of it.
     * compatibility: replace the method \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath by execution of \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix with parameter \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath
