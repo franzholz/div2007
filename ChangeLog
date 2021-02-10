@@ -1,4 +1,6 @@
-
+2021-02-11 Franz Holzinger <franz@ttproducts.de>
+    * compatibility TYPO3 10.4: The $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT] array components must not have a trailing dot inside of the key.
+    * compatibility TYPO3 10.4: Use the Symfony classes \Symfony\Component\Mime\Email and \Symfony\Component\Mime to send emails.
 
 2021-02-02 Franz Holzinger <franz@ttproducts.de>
     * add language labels for the record browser

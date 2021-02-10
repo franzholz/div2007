@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2021 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -83,9 +83,13 @@ class MailUtility {
         $defaultSubject = ''
     ) {
         $result = true;
+		$debug = 
+            (version_compare(TYPO3_version, '10.0.0', '>=') ? 
+                $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug']['mail'] :
+                $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug.']['mail']
+            );
         if (
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug.']) &&
-            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug.']['mail']
+            $debug
         ) {
             debug ($toEMail, '$toEMail'); // keep this
             debug ($subject, '$subject'); // keep this
@@ -185,16 +189,44 @@ class MailUtility {
         }
 
         $mail = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Mail\MailMessage::class);
-        $mail->setCharset($charset)
-            ->setTo($toEMail)
-            ->setFrom(array($fromEMail => $fromName))
-            ->setReturnPath($returnPath)
-            ->setSubject($subject)
-            ->setBody($HTMLContent, 'text/HTMLContent')
-            ->addPart($PLAINContent, 'text/plain');
+            // HTML
+        if (trim($HTMLContent)) {
+            $HTMLContent = static::embedMedia($mail, $HTMLContent);
+        }
+
+        if ($mail instanceof \Swift_Message) {
+            $mail->setCharset($charset)
+                ->setTo($toEMail)
+                ->setFrom(array($fromEMail => $fromName))
+                ->setSubject($subject)
+                ->setBody($HTMLContent, 'text/HTMLContent')
+                ->addPart($PLAINContent, 'text/plain');
+        } else if ($mail instanceof \Symfony\Component\Mime\Email) {
+            $mail
+                ->setTo($toEMail)
+                ->from(new \Symfony\Component\Mime\Address($fromEMail, $fromName))
+                ->subject($subject)
+                ->html($HTMLContent)
+                ->text($PLAINContent);
+        } else {
+            throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . get_class($mail) . '. ', 1612276260 
+            ); 
+        }
+
+        if ($returnPath) {
+            if ($mail instanceof \Swift_Message) {
+                $mail->setReturnPath($returnPath);
+            } else {
+                $mail->returnPath($returnPath);
+            }
+        }
 
         if ($replyTo) {
-            $mail->setReplyTo(array($replyTo => $fromEmail));
+            if ($mail instanceof \Swift_Message) {
+                $mail->setReplyTo(array($replyTo => $fromEmail));
+            } else {
+                $mail->replyTo($replyTo);
+            }
         }
 
         if (isset($attachment)) {
@@ -206,15 +238,13 @@ class MailUtility {
 
             foreach ($attachmentArray as $theAttachment) {
                 if (file_exists($theAttachment)) {
-                    $mail->attach(\Swift_Attachment::fromPath($theAttachment));
+                    if ($mail instanceof \Swift_Message) {
+                        $mail->attach(\Swift_Attachment::fromPath($theAttachment));
+                    } else {
+                        $mail->attachFromPath($theAttachment);
+                    }
                 }
             }
-        }
-
-            // HTML
-        if (trim($HTMLContent)) {
-            $HTMLContent = static::embedMedia($mail, $HTMLContent);
-            $mail->setBody($HTMLContent, 'text/html', $charset);
         }
 
         if ($bcc != '') {
@@ -286,7 +316,7 @@ class MailUtility {
                 $absFilename = GeneralUtility::getFileAbsFileName($signerXmlFilename);
                 $handle = fopen($absFilename, 'rt');
                 if ($handle === false) {
-                    throw new \Exception(DIV2007_EXT . ': File not found ("' . $absFilename . '")');
+                    throw new \Exception(DIV2007_EXT . ': DKIM Signer XML file not found ("' . $absFilename . '")');
                 }
 
                 if ($fileExtension == 'xml') {
@@ -329,10 +359,10 @@ class MailUtility {
                             }
                         }
                     } else {
-                        throw new \Exception($extKey . ': The file "' . $absFilename . '" is not XML valid.');
+                        throw new \Exception($extKey . ': The DKIM Signer XML file "' . $absFilename . '" is not XML valid.');
                     }
                 } else {
-                    throw new \Exception($extKey . ': The file "' . $absFilename . '" has an invalid extension.');
+                    throw new \Exception($extKey . ': The DKIM Signer XML file "' . $absFilename . '" has an invalid extension.');
                 }
             }
 
@@ -353,20 +383,34 @@ class MailUtility {
                     throw new \Exception(DIV2007_EXT . ': Signer file not found ("' . $absFilename . '")');
                 }
 
-                //  create a signer
-                $signer = \Swift_Signers_DKIMSigner::newInstance(
-                    file_get_contents($absFilename),
-                    $signerRow['domain'],
-                    $signerRow['selector']
-                );
+                if (class_exists(\Symfony\Component\Mime\Crypto\DkimSigner::class)) {
+                    $signer = GeneralUtility::makeInstance(
+                        \Symfony\Component\Mime\Crypto\DkimSigner::class,
+                        $absFilename,
+                        $signerRow['domain'],
+                        $signerRow['selector']
+                    );
+                    $mail = $signer->sign($mail);
+                } else if (class_exists(\Swift_Signers_DKIMSigner::class)) {
+                    //  create a signer
+                    $signer = \Swift_Signers_DKIMSigner::newInstance(
+                        file_get_contents($absFilename),
+                        $signerRow['domain'],
+                        $signerRow['selector']
+                    );
 
-                // ignore the additional headers
-                $signer->ignoreHeader('Content-Transfer-Encoding');
-                $signer->ignoreHeader('X-Swift-Return-Path');
-                $signer->ignoreHeader('X-Mailer');
-                
-                // add the signer
-                $mail->attachSigner($signer);
+                    // ignore the additional headers
+                    $signer->ignoreHeader('Content-Transfer-Encoding');
+                    $signer->ignoreHeader('X-Swift-Return-Path');
+                    $signer->ignoreHeader('X-Mailer');
+                    if ($mail instanceof \Swift_Message) {
+                        // add the signer
+                        $mail->attachSigner($signer);
+                    }
+                } else {
+                    throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: no mail signer class found.', 1612340604 
+                    );
+                }
             }
 
             if (
@@ -382,9 +426,8 @@ class MailUtility {
                         debug ('MailUtility::send undelivered: ' . implode(',', $undelivered)); // keep this
                     }
                 }
-            } elseif (method_exists($mail, 'sendTheMail')) {
-                $mail->sendTheMail();
             } else {
+                // This must never be reached:
                 $result = false;
             }
         }
@@ -424,9 +467,16 @@ class MailUtility {
         }
 
         foreach ($media as $key => $source) {
+            $embedded = '';
+            if ($mail instanceof \Swift_Message) {
+                $embedded = $mail->embed(\Swift_Image::fromPath(PATH_site . $source));
+            } else {
+                $embedded = $mail->embedFromPath(PATH_site . $source);
+            }
+
             $substitutedHtmlContent = str_replace(
                 '"' . $source . '"',
-                '"' . $mail->embed(\Swift_Image::fromPath(PATH_site . $source)) . '"',
+                '"' . $embedded . '"',
                 $substitutedHtmlContent
             );
         }
