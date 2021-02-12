@@ -89,7 +89,8 @@ class MailUtility {
                 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug.']['mail']
             );
         if (
-            $debug
+            $debug == 'DEBUG_AND_SEND' ||
+            $debug == 'DEBUG'
         ) {
             debug ($toEMail, '$toEMail'); // keep this
             debug ($subject, '$subject'); // keep this
@@ -97,6 +98,12 @@ class MailUtility {
             debug ($HTMLContent, '$HTMLContent'); // keep this
             debug ($fromEMail, '$fromEMail'); // keep this
             debug ($fromName, '$fromName'); // keep this
+        }
+        
+        if (
+            $debug == 'NO' ||
+            $debug == 'DEBUG'
+        ) {
             return $result;
         }
 
@@ -198,16 +205,24 @@ class MailUtility {
             $mail->setCharset($charset)
                 ->setTo($toEMail)
                 ->setFrom(array($fromEMail => $fromName))
-                ->setSubject($subject)
-                ->setBody($HTMLContent, 'text/HTMLContent')
-                ->addPart($PLAINContent, 'text/plain');
+                ->setSubject($subject);
+            if ($HTMLContent != '') {
+                $mail->setBody($HTMLContent, 'text/HTMLContent');
+            }
+            if ($PLAINContent != '') {
+                $mail->addPart($PLAINContent, 'text/plain');
+            }
         } else if ($mail instanceof \Symfony\Component\Mime\Email) {
             $mail
                 ->setTo($toEMail)
                 ->from(new \Symfony\Component\Mime\Address($fromEMail, $fromName))
-                ->subject($subject)
-                ->html($HTMLContent)
-                ->text($PLAINContent);
+                ->subject($subject);
+            if ($HTMLContent != '') {
+                $mail->html($HTMLContent);
+            }
+            if ($PLAINContent != '') {
+                $mail->text($PLAINContent);
+            }
         } else {
             throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . get_class($mail) . '. ', 1612276260 
             ); 
@@ -269,6 +284,7 @@ class MailUtility {
 
                 if (method_exists($hookObj, 'sendMail')) {
                     $result = $hookObj->sendMail(
+                        $mail,
                         $toEMail,
                         $subject,
                         $PLAINContent,
@@ -415,15 +431,34 @@ class MailUtility {
 
             if (
                 method_exists($mail, 'send') &&
-                method_exists($mail, 'isSent')
+                method_exists($mail, 'isSent') &&
+                !$mail->isSent()
             ) {
-                $mail->send(); // TODO: debug and test mode to not send an email
-                $result = $mail->isSent();
-                if (!$result) {
-                    debug ('MailUtility::send exited with error 6'); // keep this
-                    $undelivered = $mail->getFailedRecipients();
-                    if (is_array($undelivered)) {
-                        debug ('MailUtility::send undelivered: ' . implode(',', $undelivered)); // keep this
+                try {
+                    $resultSend = $mail->send(); // TODO: debug and test mode to not send an email
+                    if (
+                        (
+                            $debug == 'DEBUG_AND_SEND' ||
+                            $debug == 'DEBUG'
+                        ) &&
+                        is_object($resultSend) &&
+                        $resultSend instanceof \Symfony\Component\Mailer\SentMessage
+                    ) {
+                        debug ($resultSend->getOriginalMessage(), 'MailUtility::send original message'); // keep this
+                        debug ($resultSend->getDebug(), 'MailUtility::send debug'); // keep this                
+                    }
+                    $result = $mail->isSent();
+                    if (!$result) {
+                        debug ('MailUtility::send exited with error 6'); // keep this
+                        $undelivered = $mail->getFailedRecipients();
+                        if (is_array($undelivered)) {
+                            debug ('MailUtility::send undelivered: ' . implode(',', $undelivered)); // keep this
+                        }
+                    }
+                }
+                catch (Exception $e) {
+                    if ($e instanceof \Symfony\Component\Mailer\Exception\TransportException) {
+                        debug ($e->getDebug(), 'MailUtility::send Exception debug'); // keep this       
                     }
                 }
             } else {

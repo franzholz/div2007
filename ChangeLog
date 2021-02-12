@@ -1,3 +1,6 @@
+2021-02-12 Franz Holzinger <franz@ttproducts.de>
+    * compatibility TYPO3 10.4: Improved possibilities to generate a debug output inside of the MailUtility, esp. for the the Symfony class \Symfony\Component\Mime\Email.
+
 2021-02-11 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 10.4: The $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT] array components must not have a trailing dot inside of the key.
     * compatibility TYPO3 10.4: Use the Symfony classes \Symfony\Component\Mime\Email and \Symfony\Component\Mime to send emails.

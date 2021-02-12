@@ -1,7 +1,7 @@
   # cat=dkim/enable; type=string; label=DKIM Signer File: Path to the XML file which contains all the information needed for DKIM for multiple domains. You must also setup your DNS records: https://support.dnsimple.com/articles/dkim-record/. See the file div2007/Resources/Private/Examples/dkim_domains.xml as an example.
 dkimFile = 
-  # cat=debug/enable; type=boolean; label=Debug Mails: If set then instead of sending the emails a debug output is generated.
-debug.mail = 
+  # cat=debug/enable; type=options[Off=OFF,Debug instead of sending an email=DEBUG,Debug and send email=DEBUG_AND_SEND,Send no Emal=NO]; label=Debug Mails: Generate a debug output before emails are sent.
+debug.mail = OFF
   # cat=debug/enable; type=boolean; label=Check Cookie Set: If set then the TYPO3 method isCookieSet is checked before a cookie can be generated and a TYPO3 session be used. Set this to 1 for GDPR compliance. However you must additionally install an extension which provides the feature of a cookie consent.
 checkCookieSet = 0
 
