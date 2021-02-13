@@ -1,3 +1,7 @@
+
+2021-02-13 Franz Holzinger <franz@ttproducts.de>
+    * New feature: use \JambageCom\Div2007\Api\StaticInfoTablesApi instead of \JambageCom\Div2007\Utility\StaticInfoTablesUtility. More methods from \SJBR\StaticInfoTables\PiBaseApi have been forked into div2007, because they shall be available also for the TYPO3 backend. See issue no. 93504 on forge. 
+
 2021-02-12 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 10.4: Improved possibilities to generate a debug output inside of the MailUtility, esp. for the the Symfony class \Symfony\Component\Mime\Email.
 

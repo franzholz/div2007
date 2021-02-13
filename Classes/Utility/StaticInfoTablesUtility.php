@@ -16,7 +16,7 @@ namespace JambageCom\Div2007\Utility;
  */
 
 /**
- *
+ * deprecated. Use the class \JambageCom\Div2007\Api\StaticInfoTablesApi instead.
  * functions for the TYPO3 extension static_info_tables
  *
  * attention: This class must also work under TYPO3 6.2
