@@ -473,7 +473,7 @@ class MailUtility {
     /**
     * Embeds media into the mail message
     *
-    * @param TYPO3\CMS\Core\Mail\MailMessage (TYPO3 4.x: t3lib_mail_Message) $mail: mail message
+    * @param TYPO3\CMS\Core\Mail\MailMessage $mail: mail message
     * @param string $htmlContent: the HTML content of the message
     * @return string the subtituted HTML content
     */
@@ -506,7 +506,8 @@ class MailUtility {
             if ($mail instanceof \Swift_Message) {
                 $embedded = $mail->embed(\Swift_Image::fromPath(PATH_site . $source));
             } else {
-                $embedded = $mail->embedFromPath(PATH_site . $source);
+                $mail->embedFromPath(\TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/' . $source, 'key' . $key);
+                $embedded = 'cid:key' . $key;
             }
 
             $substitutedHtmlContent = str_replace(
