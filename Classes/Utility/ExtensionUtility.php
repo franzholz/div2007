@@ -131,7 +131,7 @@ class ExtensionUtility {
                             $extensionKey
                         );
                     $result =
-                        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::stripPathSitePrefix(
+                        \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(
                             $extensionPath
                         ) . $relativePath;
                 } else {
