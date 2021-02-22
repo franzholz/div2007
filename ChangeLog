@@ -1,3 +1,7 @@
+
+2021-02-22 Franz Holzinger <franz@ttproducts.de>
+    * add new class \JambageCom\Div2007\Utility\CompatibilityUtility to fix compatibility problems over several versions of TYPO3
+
 2021-02-18 Franz Holzinger <franz@ttproducts.de>
     * bugfix MailUtility: embedMedia did not work with \Symfony\Component\Mime\Email.
 
