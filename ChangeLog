@@ -1,4 +1,8 @@
 
+
+2021-03-03 Franz Holzinger <franz@ttproducts.de>
+    * add new method isLoggedIn for class \JambageCom\Div2007\Utility\CompatibilityUtility to fix compatibility problems for the check if a front end user is logged in.
+
 2021-02-22 Franz Holzinger <franz@ttproducts.de>
     * add new class \JambageCom\Div2007\Utility\CompatibilityUtility to fix compatibility problems over several versions of TYPO3
 

@@ -34,7 +34,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CompatibilityUtility {
 
-    static public function getPageRepository()
+    static public function getPageRepository ()
     {
         $classname = '';
         if (
@@ -47,6 +47,21 @@ class CompatibilityUtility {
         }
         $pageRepository = GeneralUtility::makeInstance($classname);
         return $pageRepository;
+    }
+    
+    static public function isLoggedIn ()
+    {
+        $result = false;
+        if (
+            defined('TYPO3_version') &&
+            version_compare(TYPO3_version, '9.5.0', '>=')
+        ) {
+            $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
+            $result = $context->getPropertyFromAspect('frontend.user', 'isLoggedIn');
+        } else if (is_object($GLOBALS['TSFE'])) {
+            $result = $GLOBALS['TSFE']->loginUser;
+        }
+        return $result;
     }
 }
 
