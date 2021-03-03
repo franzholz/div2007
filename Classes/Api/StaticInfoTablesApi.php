@@ -71,7 +71,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     */
     public function init ($conf = []) {
         $result = true;
-        if (!$this->hasBeenInitialized) {
+        if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
+            $result = false;
+        } else if (!$this->hasBeenInitialized) {
             Locales::initialize();
 
             if (is_object($GLOBALS['TSFE'])) {
@@ -145,6 +147,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
      */
     public function getStaticInfoName ($type = 'COUNTRIES', $code, $country = '', $countrySubdivision = '', $local = false)
     {
+        if (!$this->isActive ()) {
+            return false;
+        }
         $names = false;
         if (in_array($type, $this->types) && trim($code)) {
             $codeArray = GeneralUtility::trimExplode(',', ($code));
@@ -193,6 +198,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
      */
     public function buildStaticInfoSelector ($type = 'COUNTRIES', $name = '', $class = '', $selectedArray = [], $country = '', $submit = 0, $id = '', $title = '', $addWhere = '', $lang = '', $local = false, $mergeArray = [], $size = 1, &$outSelectedArray = [])
     {
+        if (!$this->isActive ()) {
+            return false;
+        }
         $selector = '';
 
         if (isset($selectedArray) && !is_array($selectedArray)) {
@@ -267,6 +275,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
      */
     public function initCountries ($param = 'UN', $lang = '', $local = false, $addWhere = '')
     {
+        if (!$this->isActive ()) {
+            return false;
+        }
         $nameArray = [];
         $table = $this->tables['COUNTRIES'];
         if (!$lang) {
@@ -343,6 +354,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
      */
     public function initCountrySubdivisions ($param, $addWhere='')
     {
+        if (!$this->isActive ()) {
+            return false;
+        }
         $nameArray = [];
         $table = $this->tables['SUBDIVISIONS'];
         $lang = LocalizationUtility::getCurrentLanguage();
@@ -397,6 +411,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
      */
     public function initCurrencies ($addWhere='')
     {
+        if (!$this->isActive ()) {
+            return false;
+        }
         $nameArray = [];
         $table = $this->tables['CURRENCIES'];
         $lang = LocalizationUtility::getCurrentLanguage();
@@ -439,6 +456,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     */
     static public function getCurrentLanguage () {
 
+        if (!$this->isActive ()) {
+            return false;
+        }
         if (is_object($GLOBALS['TSFE'])) {
             $langCodeT3 = $GLOBALS['TSFE']->lang;
         } elseif (is_object($GLOBALS['LANG'])) {
@@ -485,6 +505,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
      */
     public function loadCurrencyInfo($currencyCode)
     {
+        if (!$this->isActive ()) {
+            return false;
+        }
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->currencyRepository = $objectManager->get(CurrencyRepository::class);
 
@@ -522,6 +545,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
      */
     public function formatAmount($amount, $displayCurrencyCode = '')
     {
+        if (!$this->isActive ()) {
+            return false;
+        }
         $formatedAmount = '';
         if ($displayCurrencyCode === 'LEFT') {
             $formatedAmount .= $this->currencyInfo['cu_iso_3'] . chr(32);
@@ -545,7 +571,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     * @return	string		field name
     */
     static public function getTCAlabelField ($table, $bLoadTCA = true, $lang = '', $local = false) {
-
+        if (!$this->isActive ()) {
+            return false;
+        }
         $labelFields = array();
         if(
             $table &&
@@ -603,6 +631,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     * @return	string		field name
     */
     static public function getIsoCodeField ($table, $isoCode, $bLoadTCA = false, $index = 0) {
+        if (!$this->isActive ()) {
+            return false;
+        }
         $result = false;
 
         if (
@@ -633,7 +664,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     * @return	string		short title
     */
     static public function getTitleFromIsoCode ($table, $isoCode, $lang = '', $local = false) {
-
+        if (!$this->isActive ()) {
+            return false;
+        }
         $title = '';
         $titleFields = static::getTCAlabelField($table, true, $lang, $local);
         if (count ($titleFields)) {
@@ -694,6 +727,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     */
     static public function fetchCountries ($country, $iso2 = '', $iso3 = '', $isonr = '') {
 
+        if (!$this->isActive ()) {
+            return false;
+        }
         $resultArray = array();
         $where = '';
 
