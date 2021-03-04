@@ -70,6 +70,8 @@ class FrontendUtility {
 * @author Kasper Skårhøj <kasperYYYY@typo3.com>
 */
 
+
+
     static public function init (
         $id = '',
         $type = '',
@@ -80,6 +82,13 @@ class FrontendUtility {
     )
     {
         global $TSFE, $BE_USER, $TYPO3_CONF_VARS, $error;
+
+        if (
+            version_compare(TYPO3_version, '10.4.0', '>=')
+        ) {
+            // you must use a Middleware instead of Ajax eID at the position where $GLOBALS['TSFE'] is already present
+            return false;
+        }
 
         if (!$id) {
             $id = GeneralUtility::_GP('id');
@@ -121,7 +130,14 @@ class FrontendUtility {
             $TSFE->pageUnavailableAndExit('This page is temporarily unavailable.');
         }
 
-        $TSFE->connectToDB();
+        if (
+            version_compare(TYPO3_version, '9.5.0', '>=') &&
+            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('typo3db_legacy')
+        ) {
+            $GLOBALS['TYPO3_DB']->connectDB();
+        } else {
+            $TSFE->connectToDB();
+        }
 
         // Output compression
         // Remove any output produced until now
