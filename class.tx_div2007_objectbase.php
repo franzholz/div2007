@@ -54,6 +54,7 @@
  * @since      0.1
  */
 
+ // deprecated: will be removed in 2024
 
 /**
  * Parent class for tx_div2007_object

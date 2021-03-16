@@ -34,6 +34,7 @@
  * @author	Franz Holzinger <franz@ttproducts.de>
  */
 
+ // deprecated: will be removed in 2024
 
 class tx_div2007_store {
 	protected $cObj; // currently stored cObject

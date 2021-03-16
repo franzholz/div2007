@@ -61,6 +61,9 @@
  * @subpackage div2007
  */
 
+ 
+ // deprecated: will be removed in 2024
+
 class tx_div2007_configurations extends tx_div2007_object {
 
 	// -------------------------------------------------------------------------------------

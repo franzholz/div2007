@@ -36,7 +36,8 @@
  * @since      0.1
  */
 
-// require_once(PATH_BE_div2007 . 'class.tx_div2007.php');
+
+ // deprecated: will be removed in 2024
 
 /**
  * Collection of functions to load t3 classes and instanciate them.

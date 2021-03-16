@@ -40,6 +40,9 @@
  * @since      0.1
  */
 
+ 
+ // deprecated: will be removed in 2024
+
 /**
  * Collection of static functions to work in cooperation with the extension lib (lib/div)
  *
@@ -740,4 +743,3 @@ class tx_div2007 {
 
 }
 
-?>

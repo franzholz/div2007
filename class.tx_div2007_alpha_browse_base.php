@@ -37,6 +37,7 @@
  *
  */
 
+ // deprecated: will be removed in 2024
 
 	// this class must be overridden and filled out. You can use the init method.
 class tx_div2007_alpha_browse_base {

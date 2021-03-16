@@ -39,6 +39,7 @@
  *
  */
 
+// deprecated: will be removed in 2024
 
 
 class tx_div2007_alpha_language_base {

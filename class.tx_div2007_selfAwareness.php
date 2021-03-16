@@ -25,6 +25,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+ // deprecated: will be removed in 2024
+
 /**
  * Provide some typical information for all objects of this library
  *

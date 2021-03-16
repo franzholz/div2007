@@ -1,4 +1,6 @@
 
+2021-03-16 Franz Holzinger <franz@ttproducts.de>
+    * deprecate the class files which do not have a namespace. They will be removed in 2024 or later. You must now start to modify your extensions to have a replacement for them. Only the file tx_div2007_div.php will still remain.
 
 2021-03-04 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 10.4: disallow FrontendUtility::init

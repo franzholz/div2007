@@ -29,6 +29,9 @@
  * @since      0.1
  */
 
+ // deprecated: will be removed in 2024
+
+ 
 /**
  * This class is a wrapper around TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink
  *

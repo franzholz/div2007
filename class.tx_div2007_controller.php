@@ -29,6 +29,10 @@
  * @since      0.1
  */
 
+ 
+ // deprecated: will be removed in 2024
+
+
 /**
  * The class that controls request and response processing.
  *
@@ -88,6 +92,7 @@
  * @package    TYPO3
  * @subpackage div2007
  */
+ 
 class tx_div2007_controller extends tx_div2007_object {
 
 	public $contextClassName = 'tx_div2007_context';

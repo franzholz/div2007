@@ -21,6 +21,11 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+
+
+ // deprecated: will be removed in 2024
+
+
 /**
  * Misc functions to access the static info tables
  * This has been copied from class.self.php Version-2-3-2 $Id:55590

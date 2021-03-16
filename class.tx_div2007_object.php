@@ -55,6 +55,8 @@
  */
 
 
+ // deprecated: will be removed in 2024
+
 
 /**
  * This is the "pluripotent stem cell" of div2007.
@@ -109,8 +111,6 @@
  * @subpackage div2007
  * @see        tx_div2007_objectBase
  */
-
-// require_once (PATH_BE_div2007 . 'class.tx_div2007_objectbase.php');
 
 
 
