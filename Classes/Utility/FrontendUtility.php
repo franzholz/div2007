@@ -1479,7 +1479,10 @@ class FrontendUtility {
         $result = '';
         $tsfe = static::getTypoScriptFrontendController();
         $incFile = '';
-        if (isset($basketExtra['payment.']['handleScript'])) {
+        if (
+            $fName != '' &&
+            isset($basketExtra['payment.']['handleScript'])
+        ) {
             if (
                 version_compare(TYPO3_version, '9.4.0', '>=')
             ) {
