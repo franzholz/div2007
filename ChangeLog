@@ -1,3 +1,6 @@
+2021-03-27 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: MailUtility must embed the media files with the filepath not containig the http protocol and the domain name.
+    * improvement: The keys for the media shall be the file names without path. Maybe numbers shall be appended if 2 names are identical.
 
 2021-03-16 Franz Holzinger <franz@ttproducts.de>
     * deprecate the class files which do not have a namespace. They will be removed in 2024 or later. You must now start to modify your extensions to have a replacement for them. Only the file tx_div2007_div.php will still remain.

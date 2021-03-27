@@ -483,6 +483,9 @@ class MailUtility {
     )
     {
         $substitutedHtmlContent = $htmlContent;
+        if (is_object($GLOBALS['TYPO3_REQUEST'])) {
+            $normalizedParams = $GLOBALS['TYPO3_REQUEST']->getAttribute('normalizedParams');
+        }
         $media = array();
         $attribRegex = static::makeTagRegex(array('img', 'embed', 'audio', 'video'));
             // Split the document by the beginning of the above tags
@@ -497,7 +500,20 @@ class MailUtility {
                 // Fetches the attributes for the tag
             $attributes = static::getTagAttributes($reg[0]);
             if ($attributes['src'] != '' && $attributes['src'] != 'clear.gif') {
-                $media[] = $attributes['src'];
+                $httpDomain = '';
+                if (is_object($normalizedParams)) {
+                    $httpDomain = $normalizedParams->getSiteUrl();
+                } else {
+                    $httpDomain = GeneralUtility::getIndpEnv('REQUEST_URI');
+                }
+                $filename = str_replace($httpDomain, '', $attributes['src']);
+                $key = basename($filename);
+                $j = '';
+                while (isset($media[$key . $j]) && $j < 20) {
+                    $j = intval($j);
+                    $j++;
+                }
+                $media[$key] = $filename;
             }
         }
 
@@ -506,8 +522,8 @@ class MailUtility {
             if ($mail instanceof \Swift_Message) {
                 $embedded = $mail->embed(\Swift_Image::fromPath(PATH_site . $source));
             } else {
-                $mail->embedFromPath(\TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/' . $source, 'key' . $key);
-                $embedded = 'cid:key' . $key;
+                $mail->embedFromPath(\TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/' . $source, $key);
+                $embedded = 'cid:' . $key;
             }
 
             $substitutedHtmlContent = str_replace(
