@@ -43,12 +43,12 @@
  * @subpackage div2007
  */
 class tx_div2007_viewBase extends tx_div2007_object {
-	var $pathToTemplateDirectory = '';
-	var $dateFormatKey = 'dateFormat';
-	var $floatFormatKey = 'floatFormat';
-	var $parseFuncTextKey = 'parseFuncText';
-	var $parseFuncRteKey = 'parseFuncRte';
-	var $timeFormatKey = 'timeFormat';
+	public $pathToTemplateDirectory = '';
+	public $dateFormatKey = 'dateFormat';
+	public $floatFormatKey = 'floatFormat';
+	public $parseFuncTextKey = 'parseFuncText';
+	public $parseFuncRteKey = 'parseFuncRte';
+	public $timeFormatKey = 'timeFormat';
 
 	//------------------------------------------------------------------------------------
 	// Setters
