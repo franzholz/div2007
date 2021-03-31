@@ -1,3 +1,6 @@
+2021-03-31 Franz Holzinger <franz@ttproducts.de>
+    * remove support for TYPO3 6.2
+
 2021-03-27 Franz Holzinger <franz@ttproducts.de>
     * bugfix: MailUtility must embed the media files with the filepath not containig the http protocol and the domain name.
     * improvement: The keys for the media shall be the file names without path. Maybe numbers shall be appended if 2 names are identical.
