@@ -1477,11 +1477,9 @@ class FrontendUtility {
     static public function fileResource ($fName, $addParams = 'alt="" title=""')
     {
         $result = '';
-        $tsfe = static::getTypoScriptFrontendController();
         $incFile = '';
         if (
-            $fName != '' &&
-            isset($basketExtra['payment.']['handleScript'])
+            $fName != ''
         ) {
             if (
                 version_compare(TYPO3_version, '9.4.0', '>=')
@@ -1502,6 +1500,7 @@ class FrontendUtility {
                 $extension === 'gif' ||
                 $extension === 'png'
             ) {
+                $tsfe = static::getTypoScriptFrontendController();
                 $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::generateXhtmlFix();
                 $imgFile = $incFile;
                 $imgInfo = @getimagesize($imgFile);
