@@ -1427,19 +1427,35 @@ class FrontendUtility {
     ) {
         $absRefPrefix = '';
         $absRefPrefixDomain = '';
-        $bSetAbsRefPrefix = FALSE;
+        $bSetAbsRefPrefix = false;
         if ($GLOBALS['TSFE']->absRefPrefix != '') {
             $absRefPrefix = $GLOBALS['TSFE']->absRefPrefix;
         } else {
-            $bSetAbsRefPrefix = TRUE;
-            $absRefPrefix = GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+            $bSetAbsRefPrefix = true;
         }
 
-        if ($domain != '') {
-            $absRefPrefixArray = explode('?', $absRefPrefix);
-            $protocollArray = explode('//', $absRefPrefixArray['0']);
-            $absRefPrefixArray['0'] = $protocollArray['0'] . '//' . $domain;
-            $absRefPrefixDomain = implode('?', $absRefPrefixArray);
+        $normalizedParams = null;
+        if (is_object($GLOBALS['TYPO3_REQUEST'])) {
+            $normalizedParams = $GLOBALS['TYPO3_REQUEST']->getAttribute('normalizedParams');
+        }
+        if (is_object($normalizedParams)) {
+            $absRefPrefixDomain = $normalizedParams->getSiteUrl();
+        } else {
+            $absRefPrefixDomain = GeneralUtility::getIndpEnv('REQUEST_URI');
+        }
+
+        if (
+            $domain != '' && 
+            !$bSetAbsRefPrefix
+        ) {
+            $parse = [];
+            if ($absRefPrefix != '/') {
+                $parse = parse_url($absRefPrefix);
+                $absRefPrefixDomain = $absRefPrefix;
+            } else {
+                $parse = parse_url($absRefPrefixDomain);
+            }
+            $absRefPrefixDomain = str_replace($parse['host'], $domain, $absRefPrefixDomain);
         }
 
         if ($bSetAbsRefPrefix) {
@@ -1448,13 +1464,17 @@ class FrontendUtility {
             }
             $fixImgCode = str_replace('index.php', $absRefPrefix . 'index.php', $imageCode);
             $fixImgCode = str_replace('src="', 'src="' . $absRefPrefix, $fixImgCode);
+            $fixImgCode = str_replace('"fileadmin/', '"' . $absRefPrefix . 'fileadmin/', $fixImgCode);
             $fixImgCode = str_replace('"uploads/', '"' . $absRefPrefix . 'uploads/', $fixImgCode);
+            $fixImgCode = str_replace('"typo3conf/', '"' . $absRefPrefix . 'typo3conf/', $fixImgCode);
             $imageCode = $fixImgCode;
         } else {
             if ($absRefPrefixDomain != '') {
                 $fixImgCode = str_replace($absRefPrefix . 'index.php', $absRefPrefixDomain . 'index.php', $imageCode);
                 $fixImgCode = str_replace('src="' . $absRefPrefix, 'src="' . $absRefPrefixDomain, $fixImgCode);
                 $fixImgCode = str_replace('"' . $absRefPrefix . 'uploads/', '"' . $absRefPrefixDomain . 'uploads/', $fixImgCode);
+                $fixImgCode = str_replace('"' . $absRefPrefix . 'fileadmin/', '"' . $absRefPrefixDomain . 'fileadmin/', $fixImgCode);
+                $fixImgCode = str_replace('"' . $absRefPrefix . 'typo3conf/', '"' . $absRefPrefixDomain . 'typo3conf/', $fixImgCode);
                 $imageCode = $fixImgCode;
             }
         }
