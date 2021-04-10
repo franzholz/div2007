@@ -117,7 +117,7 @@ class MailUtility {
 
         if (!is_array($toEMail) && trim($toEMail)) {
             $emailArray = GeneralUtility::trimExplode(',', $toEMail);
-            $toEMail = array();
+            $toEMail = [];
             foreach ($emailArray as $email) {
                 $toEMail[] = $email;
             }
@@ -125,7 +125,7 @@ class MailUtility {
 
         if (is_array($toEMail) && count($toEMail)) {
             $emailArray = $toEMail;
-            $errorEmailArray = array();
+            $errorEmailArray = [];
             foreach ($toEMail as $k => $v) {
                 if (
                     (
@@ -350,7 +350,7 @@ class MailUtility {
 
                             if ($tag == 'Row') {
                                 $objRowDetails = $myRow->childNodes;
-                                $xmlRow = array();
+                                $xmlRow = [];
                                 $count = 0;
 
                                 foreach ($objRowDetails as $rowDetail) {
@@ -486,13 +486,13 @@ class MailUtility {
         if (is_object($GLOBALS['TYPO3_REQUEST'])) {
             $normalizedParams = $GLOBALS['TYPO3_REQUEST']->getAttribute('normalizedParams');
         }
-        $media = array();
-        $attribRegex = static::makeTagRegex(array('img', 'embed', 'audio', 'video'));
+        $media = [];
+        $attribRegex = static::makeTagRegex(['img', 'embed', 'audio', 'video']);
             // Split the document by the beginning of the above tags
         $codepieces = preg_split($attribRegex, $htmlContent);
         $len = strlen($codepieces[0]);
         $pieces = count($codepieces);
-        $reg = array();
+        $reg = [];
         for ($i = 1; $i < $pieces; $i++) {
             $tag = strtolower(strtok(substr($htmlContent, $len + 1, 10), ' '));
             $len += strlen($tag) + strlen($codepieces[$i]) + 2;
@@ -509,7 +509,7 @@ class MailUtility {
                 $filename = str_replace($httpDomain, '', $attributes['src']);
                 $key = basename($filename);
                 $j = '';
-                while (isset($media[$key . $j]) && $j < 20) {
+                while (isset($media[$key . $j]) && $j < 30) {
                     $j = intval($j);
                     $j++;
                 }
@@ -517,8 +517,9 @@ class MailUtility {
             }
         }
 
-        foreach ($media as $key => $source) {
+        foreach ($media as $key => $filename) {
             $embedded = '';
+            $source = ltrim($filename, '/');
             if ($mail instanceof \Swift_Message) {
                 $embedded = $mail->embed(\Swift_Image::fromPath(PATH_site . $source));
             } else {
@@ -527,12 +528,11 @@ class MailUtility {
             }
 
             $substitutedHtmlContent = str_replace(
-                '"' . $source . '"',
+                '"' . $filename . '"',
                 '"' . $embedded . '"',
                 $substitutedHtmlContent
             );
         }
-
         return $substitutedHtmlContent;
     }
 
@@ -543,7 +543,7 @@ class MailUtility {
     * @return	string		the regular expression
     */
     static public function makeTagRegex (array $tags) {
-        $regexpArray = array();
+        $regexpArray = [];
         foreach ($tags as $tag) {
             $regexpArray[] = '<' . $tag . '[[:space:]]';
         }
@@ -558,7 +558,7 @@ class MailUtility {
     * @return array array with attributes as keys in lower-case
     */
     static public function getTagAttributes ($tag) {
-        $attributes = array();
+        $attributes = [];
         $tag = ltrim(preg_replace('/^<[^ ]*/', '', trim($tag)));
         $tagLen = strlen($tag);
         $safetyCounter = 100;
@@ -610,7 +610,7 @@ class MailUtility {
         // gets domain name
         list($username, $domain) = explode('@', $email);
         // checks for if MX records in the DNS
-        $mxhosts = array();
+        $mxhosts = [];
         if(!getmxrr($domain, $mxhosts)) {
             // no mx records, ok to check domain
             if (@fsockopen($domain, 25, $errno, $errstr, 30)) {

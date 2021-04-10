@@ -1428,7 +1428,10 @@ class FrontendUtility {
         $absRefPrefix = '';
         $absRefPrefixDomain = '';
         $bSetAbsRefPrefix = false;
-        if ($GLOBALS['TSFE']->absRefPrefix != '') {
+        if (
+            $GLOBALS['TSFE']->absRefPrefix != '' &&
+            $GLOBALS['TSFE']->absRefPrefix != '/'
+        ) {
             $absRefPrefix = $GLOBALS['TSFE']->absRefPrefix;
         } else {
             $bSetAbsRefPrefix = true;
@@ -1449,35 +1452,20 @@ class FrontendUtility {
             !$bSetAbsRefPrefix
         ) {
             $parse = [];
-            if ($absRefPrefix != '/') {
-                $parse = parse_url($absRefPrefix);
-                $absRefPrefixDomain = $absRefPrefix;
-            } else {
-                $parse = parse_url($absRefPrefixDomain);
-            }
+            $parse = parse_url($absRefPrefix);
+            $absRefPrefixDomain = $absRefPrefix;
             $absRefPrefixDomain = str_replace($parse['host'], $domain, $absRefPrefixDomain);
         }
 
         if ($bSetAbsRefPrefix) {
-            if ($absRefPrefixDomain != '') {
-                $absRefPrefix = $absRefPrefixDomain . '/';
-            }
-            $fixImgCode = str_replace('index.php', $absRefPrefix . 'index.php', $imageCode);
-            $fixImgCode = str_replace('src="', 'src="' . $absRefPrefix, $fixImgCode);
-            $fixImgCode = str_replace('"fileadmin/', '"' . $absRefPrefix . 'fileadmin/', $fixImgCode);
-            $fixImgCode = str_replace('"uploads/', '"' . $absRefPrefix . 'uploads/', $fixImgCode);
-            $fixImgCode = str_replace('"typo3conf/', '"' . $absRefPrefix . 'typo3conf/', $fixImgCode);
-            $imageCode = $fixImgCode;
-        } else {
-            if ($absRefPrefixDomain != '') {
-                $fixImgCode = str_replace($absRefPrefix . 'index.php', $absRefPrefixDomain . 'index.php', $imageCode);
-                $fixImgCode = str_replace('src="' . $absRefPrefix, 'src="' . $absRefPrefixDomain, $fixImgCode);
-                $fixImgCode = str_replace('"' . $absRefPrefix . 'uploads/', '"' . $absRefPrefixDomain . 'uploads/', $fixImgCode);
-                $fixImgCode = str_replace('"' . $absRefPrefix . 'fileadmin/', '"' . $absRefPrefixDomain . 'fileadmin/', $fixImgCode);
-                $fixImgCode = str_replace('"' . $absRefPrefix . 'typo3conf/', '"' . $absRefPrefixDomain . 'typo3conf/', $fixImgCode);
-                $imageCode = $fixImgCode;
-            }
+            $absRefPrefix = '/';
         }
+        $fixImgCode = str_replace($absRefPrefix . 'index.php', $absRefPrefixDomain . 'index.php', $imageCode);
+        $fixImgCode = str_replace('src="' . $absRefPrefix, 'src="' . $absRefPrefixDomain, $fixImgCode);
+        $fixImgCode = str_replace('"' . $absRefPrefix . 'fileadmin/', '"' . $absRefPrefixDomain . 'fileadmin/', $fixImgCode);
+        $fixImgCode = str_replace('"' . $absRefPrefix . 'uploads/', '"' . $absRefPrefixDomain . 'uploads/', $fixImgCode);
+        $fixImgCode = str_replace('"' . $absRefPrefix . 'typo3conf/', '"' . $absRefPrefixDomain . 'typo3conf/', $fixImgCode);
+        $imageCode = $fixImgCode;
     }
 
     static public function slashName ($name, $apostrophe='"') {

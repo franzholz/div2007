@@ -1,4 +1,5 @@
-
+2021-04-10 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: MailUtility embedded media files shall not have a leading slash 
 
 2021-04-08 Franz Holzinger <franz@ttproducts.de>
     * bugfix and compatibility TYPO3 10: FrontendUtility::fixImageCodeAbsRefPrefix must consider speaking urls. TYPO3 10 uses the folder fileadmin/user_upload for images.
