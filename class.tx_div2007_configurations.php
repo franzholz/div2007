@@ -29,6 +29,8 @@
  * @since      0.1
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * A class to load, transport and deliver the setup parameters.
  *
@@ -112,7 +114,7 @@ class tx_div2007_configurations extends tx_div2007_object {
 		if (is_array($xmlOrArray)) {
 			$array = $xmlOrArray;
 		} else {
-			$array = t3lib_div::xml2array($xmlOrArray);
+			$array = GeneralUtility::xml2array($xmlOrArray);
 		}
 		$data = $array['data'];
 		//

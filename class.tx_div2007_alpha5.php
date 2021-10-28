@@ -879,15 +879,6 @@ class tx_div2007_alpha5 {
 		$emClass = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
 
 		if (
-			class_exists($emClass) &&
-			method_exists($emClass, 'extPath')
-		) {
-			// nothing
-		} else {
-			$emClass = 't3lib_extMgm';
-		}
-
-		if (
 			is_object($langObj) &&
 			isset($langObj->LOCAL_LANG) &&
 			is_array($langObj->LOCAL_LANG)
@@ -2055,10 +2046,10 @@ class tx_div2007_alpha5 {
 
 
 	/**
-	 * Fetches the character set conversion object of class t3lib_cs
+	 * Fetches the character set conversion object
 	 *
 	 * @param	boolean		if TRUE, then the object will be created if no such object is present
-	 * @return	object/boolean		Object of class t3lib_cs or FALSE
+	 * @return	object/boolean		Object or FALSE
 	 */
 	static public function getCsConvObj ($bCreateIfNotFound = FALSE) {
 		$csConvObj = FALSE;
@@ -2069,8 +2060,6 @@ class tx_div2007_alpha5 {
 			$csConvObj = $GLOBALS['LANG']->csConvObj;
 		} elseif (is_object($GLOBALS['TSFE'])) {
 			$csConvObj = $GLOBALS['TSFE']->csConvObj;
-		} elseif ($bCreateIfNotFound) {
-			$csConvObj = self::makeInstance('t3lib_cs');
 		}
 
 		return $csConvObj;
@@ -2258,8 +2247,6 @@ class tx_div2007_alpha5 {
 				method_exists($emClass, 'extPath')
 			) {
 				// nothing
-			} else {
-				$emClass = 't3lib_extMgm';
 			}
 			$path = call_user_func($emClass . '::extPath', $extKey);
 		}
