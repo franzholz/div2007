@@ -27,7 +27,7 @@
 /**
  * Contains classes for Content Rendering based on TypoScript Template configuration
  *
- * class tslib_cObj	All main TypoScript features, rendering of content objects (cObjects). This class is the backbone of TypoScript Template rendering.
+ * class \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer	All main TypoScript features, rendering of content objects (cObjects). This class is the backbone of TypoScript Template rendering.
  *
  * @package    TYPO3
  * @subpackage div2007
@@ -37,7 +37,7 @@
 
 // deprecated: will be removed in 2024
 
-class tx_div2007_cobj extends tslib_cObj {
+class tx_div2007_cobj extends \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer {
 
 }
 

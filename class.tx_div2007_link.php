@@ -199,7 +199,7 @@ class tx_div2007_link {
 	 * pararmeterValue is the value of one array element.
 	 *
 	 * Usually you set the incomming piVars here you wan't to forward.
-	 * Like in tslib_pibase::pi_linkTP_keepPIvars the element DATA is unset during processing.
+	 * Like in \TYPO3\CMS\Frontend\Plugin\AbstractPlugin::pi_linkTP_keepPIvars the element DATA is unset during processing.
 	 *
 	 * @param	mixed		parameters
 	 * @return	object		self

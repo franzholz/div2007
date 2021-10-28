@@ -32,6 +32,8 @@
  
  // deprecated: will be removed in 2024
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 /**
  * The class that controls request and response processing.
@@ -46,12 +48,12 @@
  * Controllers of this kind can be used as plugin. Plugins are called from TS Setup
  * in the typical plugin position <samp> tt_content.list.20.pluginKey </samp>.
  *
- * The pluginKey is defined by the function t3lib_extMgm::addPlugin() within the file ext_tables.php
+ * The pluginKey is defined by the function \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPlugin() within the file ext_tables.php
  * as second element of the array that is handled as first parameter to the function:
  *
- *    <samp>t3lib_extMgm::addPlugin(array(pluginLabel,pluginKey), list_type)</samp>
+ *    <samp>\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPlugin(array(pluginLabel,pluginKey), list_type)</samp>
  *
- * Just like tslib::pi_base() you can also use this controller as content element
+ * Just like \TYPO3\CMS\Frontend\Plugin\AbstractPlugin() you can also use this controller as content element
  * or as simpel USER_(INT) called from typoScript.
  *
  *
@@ -73,7 +75,7 @@
  * <b> The parameter array name: designator </b>
  *
  * According to the coding guidelines parameters of plugins have to be send as array with a unique
- * identifier to keep them in their own namespace. In tslib_pibase this identifier is called:
+ * identifier to keep them in their own namespace. In \TYPO3\CMS\Frontend\Plugin\AbstractPlugin this identifier is called:
  * $prefixId. In tx_lib it is called $designator.
  *
  * The easy way is to share a common designator throughout a whole extension. Unless the designator is
@@ -241,7 +243,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	public function _buildController ($controllerAndAction) {
 		list($controllerName, $action) = $controllerAndAction;
 		$this->action = $action;
-		$controller = t3lib_div::makeInstance($controllerName);
+		$controller = GeneralUtility::makeInstance($controllerName);
 		// Set all values to the new controller
 		foreach(array_keys(get_class_vars(get_class($this))) as $key) {
 			$controller->$key = $this->$key;
@@ -275,12 +277,12 @@ class tx_div2007_controller extends tx_div2007_object {
 	/**
 	 * Creates a configurations object using the array given as parameter.
 	 *
-	 * @param	array		the local configuration array provided by the outer tslib framework
+	 * @param	array		the local configuration array provided by the outer \TYPO3\CMS\Frontend\Plugin\AbstractPlugin framework
 	 * @return  the configuration object
 	 * @access	protected
 	 */
 	public function _createConfigurations ($configurationArray) {
-		$object = t3lib_div::makeInstance($this->configurationsClassName);
+		$object = GeneralUtility::makeInstance($this->configurationsClassName);
 		$object->controller($this);
 		$object->setTypoScriptConfiguration($configurationArray);
 		if(is_object($this->cObj)) {
@@ -296,7 +298,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	 * @access	protected
 	 */
 	public function _createContext () {
-		$object = t3lib_div::makeInstance($this->contextClassName);
+		$object = GeneralUtility::makeInstance($this->contextClassName);
 		$object->controller($this);
 		if(is_object($this->cObj)) {
 			$object->setContentObject($this->cObj);
@@ -311,7 +313,7 @@ class tx_div2007_controller extends tx_div2007_object {
 	 * @access	protected
 	 */
 	public function _createParameters () {
-		$classObject = t3lib_div::makeInstance($this->parametersClassName, $this);
+		$classObject = GeneralUtility::makeInstance($this->parametersClassName, $this);
 		return $classObject;
 	}
 

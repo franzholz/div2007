@@ -81,16 +81,6 @@ class tx_div2007_core {
 		) {
 			$useClassName = substr($callingClassName, 1);
 			$result = call_user_func($useClassName . '::convertVersionNumberToInteger', TYPO3_version);
-		} else if (
-			class_exists('t3lib_utility_VersionNumber') &&
-			method_exists('t3lib_utility_VersionNumber', 'convertVersionNumberToInteger')
-		) {
-			$result = t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version);
-		} else if (
-			class_exists('t3lib_div') &&
-			method_exists('t3lib_div', 'int_from_ver')
-		) {
-			$result = t3lib_div::int_from_ver(TYPO3_version);
 		}
 		return $result;
 	}
@@ -107,16 +97,6 @@ class tx_div2007_core {
 		) {
 			$useClassName = substr($callingClassName, 1);
 			$result = call_user_func($useClassName . '::canBeInterpretedAsInteger', $var);
-		} else if (
-			class_exists('t3lib_utility_Math') &&
-			method_exists('t3lib_utility_Math', 'canBeInterpretedAsInteger')
-		) {
-			$result = t3lib_utility_Math::canBeInterpretedAsInteger($var);
-		} else if (
-			class_exists('t3lib_div') &&
-			method_exists('t3lib_div', 'testInt')
-		) {
-			$result = t3lib_div::testInt($var);
 		}
 
 		return $result;
@@ -132,16 +112,6 @@ class tx_div2007_core {
 		) {
 			$useClassName = substr($callingClassName, 1);
 			$result = call_user_func($useClassName . '::forceIntegerInRange', $theInt, $min, $max, $zeroValue);
-		} else if (
-			class_exists('t3lib_utility_Math') &&
-			method_exists('t3lib_utility_Math', 'forceIntegerInRange')
-		) {
-			$result = t3lib_utility_Math::forceIntegerInRange($theInt, $min, $max, $zeroValue);
-		} else if (
-			class_exists('t3lib_div') &&
-			method_exists('t3lib_div', 'intInRange')
-		) {
-			$result = t3lib_div::intInRange($theInt, $min, $max, $zeroValue);
 		}
 		return $result;
 	}
@@ -156,16 +126,6 @@ class tx_div2007_core {
 		) {
 			$useClassName = substr($callingClassName, 1);
 			$result = call_user_func($useClassName . '::convertToPositiveInteger', $theInt);
-		} else if (
-			class_exists('t3lib_utility_Math') &&
-			method_exists('t3lib_utility_Math', 'convertToPositiveInteger')
-		) {
-			$result = t3lib_utility_Math::convertToPositiveInteger($theInt);
-		} else if (
-			class_exists('t3lib_div') &&
-			method_exists('t3lib_div', 'intval_positive')
-		) {
-			$result = t3lib_div::intval_positive($theInt);
 		}
 
 		return $result;
@@ -197,11 +157,6 @@ class tx_div2007_core {
             $callingClassName2 = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
             $useClassName2 = substr($callingClassName2, 1);
             $result = call_user_func($useClassName2 . '::makeInstance', $useClassName);
-		} else if (
-			class_exists('t3lib_parsehtml')
-		) {
-			$useClassName = 't3lib_parsehtml';
-            $result = t3lib_div::makeInstance($useClassName);
 		}
 
 		return $result;
@@ -221,11 +176,6 @@ class tx_div2007_core {
             $callingClassName2 = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
             $useClassName2 = substr($callingClassName2, 1);
             $result = call_user_func($useClassName2 . '::makeInstance', $useClassName);
-        } else if (
-			class_exists('t3lib_tsparser')
-		) {
-			$useClassName = 't3lib_tsparser';
-            $result = t3lib_div::makeInstance($useClassName);
         }
 
 		return $result;
@@ -246,11 +196,6 @@ class tx_div2007_core {
             $callingClassName2 = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
             $useClassName2 = substr($callingClassName2, 1);
             $result = call_user_func($useClassName2 . '::makeInstance', $useClassName);
-        } else if (
-			class_exists('t3lib_mail_Message')
-		) {
-			$useClassName = 't3lib_mail_Message';
-            $result = t3lib_div::makeInstance($useClassName);
         }
 
 		return $result;
@@ -266,10 +211,6 @@ class tx_div2007_core {
 			class_exists($callingClassName)
 		) {
 			$useClassName = substr($callingClassName, 1);
-		} else if (
-			class_exists('t3lib_cache')
-		) {
-			$useClassName = 't3lib_cache';
 		}
 
 		if (method_exists($useClassName, 'initializeCachingFramework')) {
@@ -289,16 +230,6 @@ class tx_div2007_core {
 		) {
             $useClassName = substr($callingClassName, 1);
 			call_user_func($useClassName . '::debug', $var, $header, $group);
-		} else if (
-			class_exists('t3lib_utility_Debug') &&
-			method_exists('t3lib_utility_Debug', 'debug')
-		) {
-			t3lib_utility_Debug::debug($var, $header, $group);
-		} else if (
-			class_exists('t3lib_div') &&
-			method_exists('t3lib_div', 'debug')
-		) {
-			t3lib_div::debug($var, $header, $group);
 		}
 	}
 
@@ -312,16 +243,6 @@ class tx_div2007_core {
 		) {
             $useClassName = substr($callingClassName, 1);
 			$result = call_user_func($useClassName . '::debugTrail');
-		} else if (
-			class_exists('t3lib_utility_Debug') &&
-			method_exists('t3lib_utility_Debug', 'debugTrail')
-		) {
-			$result = t3lib_utility_Debug::debugTrail();
-		} else if (
-			class_exists('t3lib_div') &&
-			method_exists('t3lib_div', 'debugTrail')
-		) {
-			$result = t3lib_div::debugTrail();
 		}
 
 		return $result;
@@ -340,10 +261,6 @@ class tx_div2007_core {
 			class_exists($callingClassName)
 		) {
 			$useClassName = substr($callingClassName, 1);
-		} else if (
-			class_exists('t3lib_BEfunc')
-		) {
-			$useClassName = 't3lib_BEfunc';
 		}
 
 		if (method_exists($useClassName, 'getTCAtypes')) {
@@ -363,10 +280,6 @@ class tx_div2007_core {
 			class_exists($callingClassName)
 		) {
 			$useClassName = substr($callingClassName, 1);
-		} else if (
-			class_exists('t3lib_BEfunc')
-		) {
-			$useClassName = 't3lib_BEfunc';
 		}
 
 		if (method_exists($useClassName, 'getRecord')) {
@@ -386,10 +299,6 @@ class tx_div2007_core {
 			class_exists($callingClassName)
 		) {
 			$useClassName = substr($callingClassName, 1);
-		} else if (
-			class_exists('t3lib_BEfunc')
-		) {
-			$useClassName = 't3lib_BEfunc';
 		}
 
 		if (method_exists($useClassName, 'deleteClause')) {
@@ -409,10 +318,6 @@ class tx_div2007_core {
 			class_exists($callingClassName)
 		) {
 			$useClassName = substr($callingClassName, 1);
-		} else if (
-			class_exists('t3lib_BEfunc')
-		) {
-			$useClassName = 't3lib_BEfunc';
 		}
 
 		if (method_exists($useClassName, 'getTCEFORM_TSconfig')) {
@@ -438,15 +343,6 @@ class tx_div2007_core {
             $useClassName2 = substr($callingClassName2, 1);
             $cacheHash = call_user_func($useClassName2 . '::makeInstance', $useClassName);
 			$result = $cacheHash->calculateCacheHash($params);
-		} else if (
-			class_exists('t3lib_cacheHash')
-		) {
-			$cacheHash = t3lib_div::makeInstance('t3lib_cacheHash');
-			$result = $cacheHash->calculateCacheHash($params);
-		} else if (
-			class_exists('t3lib_div')
-		) {
-			$result = t3lib_div::cHashParams(implode('&', $params));
 		}
 
 		return $result;
@@ -463,16 +359,10 @@ class tx_div2007_core {
 	*/
 
 	static public function generateHash (array $params, $limit = 20) {
-		$result = FALSE;
 		$typoVersion = self::getTypoVersion();
 
-		if ($typoVersion < 4007000) {
-			$regHash_array = t3lib_div::cHashParams(t3lib_div::implodeArrayForUrl('', $params));
-			$result = t3lib_div::shortMD5(serialize($regHash_array), $limit);
-		} else {
-			$regHash_calc = self::calculateCacheHash($params);
-			$result = substr($regHash_calc, 0, $limit);
-		}
+        $regHash_calc = self::calculateCacheHash($params);
+        $result = substr($regHash_calc, 0, $limit);
 		return $result;
 	}
 
@@ -497,15 +387,7 @@ class tx_div2007_core {
 	 * @return boolean TRUE if the TYPO3 call to mergeRecursiveWithOverrule has been executed
 	 */
 	static public function mergeRecursiveWithOverrule (array &$original, array $overrule, $addKeys = TRUE, $includeEmptyValues = TRUE, $enableUnsetFeature = TRUE) {
-		$result = TRUE;
-		if (
-			version_compare(TYPO3_version, '6.2.0', '<') ||
-			version_compare(phpversion(), '5.3.0', '<')
-		) {
-			$original = t3lib_div::array_merge_recursive_overrule($original, $overrule, !$addKeys, $includeEmptyValues, $enableUnsetFeature);
-		} else {
-			$result = tx_div2007_core_php53::mergeRecursiveWithOverrule($original, $overrule, $addKeys, $includeEmptyValues, $enableUnsetFeature);
-		}
+        $result = tx_div2007_core_php53::mergeRecursiveWithOverrule($original, $overrule, $addKeys, $includeEmptyValues, $enableUnsetFeature);
 		return $result;
 	}
 
@@ -532,18 +414,11 @@ class tx_div2007_core {
 
         $templateClassName = '\\TYPO3\\CMS\\Core\\Service\\MarkerBasedTemplateService';
 
-        if (
-            version_compare(TYPO3_version, '7.0.0', '>=') &&
-            class_exists($templateClassName)
-        ) {
-            $utilityClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
-            $useClassName = substr($utilityClassName, 1);
-            $useTemplateClassName = substr($templateClassName, 1);
-            $object = call_user_func($useClassName . '::makeInstance', $useTemplateClassName);
-            $result = $object->getSubpart($content, $marker);
-        } else {
-            $result = t3lib_parsehtml::getSubpart($content, $marker);
-        }
+        $utilityClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+        $useClassName = substr($utilityClassName, 1);
+        $useTemplateClassName = substr($templateClassName, 1);
+        $object = call_user_func($useClassName . '::makeInstance', $useTemplateClassName);
+        $result = $object->getSubpart($content, $marker);
         return $result;
     }
 
@@ -718,10 +593,6 @@ class tx_div2007_core {
             method_exists($callingClassName, 'compat_version')
         ) {
             $useClassName = substr($callingClassName, 1);
-        } else if (
-            class_exists('t3lib_BEfunc')
-        ) {
-            $useClassName = 't3lib_BEfunc';
         }
 
         if (

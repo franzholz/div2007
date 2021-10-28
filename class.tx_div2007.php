@@ -50,29 +50,8 @@
  * This is a library that results of the work of the Extension Coordination Team (ECT).
  *
  * In this class we collect diverse static functions that are usefull for extension development,
- * but that didn't made their way into t3lib_div. A part of the functions are peer functions
- * to classes of the extension lib.
+ * but that didn't made their way into TYPO3 classes.
  *
- * <b>Contribute your own functions</b>
- *
- * You are invited to share your own most usefull functions with the world of TYPO3 developers.
- *
- * Advantages for you:
- * - You don't need to spoil the TER with new extensions only to provide a few functions.
- * - You don't need to bother with the maintainance of an individual extension.
- * - You have a unique short extension kex (tx_div2007) to access the different contributed functions.
- * - It is more likely that others will really use your contribution, because this library is
- *   documented in books and magazines.
- * - Your function will become a common standard.
- *
- * You can contribute via the SVN repository, by becomming a member of the project typo3xdev
- * on sourceforge.net. Please ask the project admin (Andreas Otto) for a membership to
- * {@link http://sourceforge.net/projects/typo3xdev/ typo3xdev project on Sourceforge}.
- *
- * This collection of functions is "moderated". We want to keep the style coherent and the quality high.
- * So we will not automatically accept any contribution as it is.  We will check if your contribution
- * is usefull and adheres to the coding guidelines. We will maybe keep the leading idea of your contribution
- * but we may adapt it to fit into the style of this exension. Anyway we thank you for all your contributions.
  *
  * Style guidelines in short
  *
@@ -145,57 +124,6 @@
 class tx_div2007 {
 
 	/**
-	 * Do a recursive require_once for all classes of an extension or subdirectory
-	 *
-	 * This function is a workaround for the __autoload() function from PHP5.
-	 * - Limitation: Doesn't work for "intra extension inheritance". (see below)
-	 * - Disadvantage: All classfiles are required, even if not used.
-	 * - Advantage: It doesn't require the same __autoload pattern for all extensions.
-	 * - Alternative: tx_div2007::load() to require on demand.
-	 *
-	 * Usage example:
-	 *
-	 * In ext_localconf.php
-	 * <code>
-	 *    require_once(PATH_BE_div2007 . 'class.tx_div2007.php');
-	 *    if(TYPO3_MODE == 'FE') tx_div2007::autoLoadAll($_EXTKEY);
-	 * </code>
-	 *
-	 * Intra extension inheritance limitation:
-	 *
-	 * This function doesn't work trustworthy, for classes that inherit from other
-	 * classes within the same extension, because it doesn't respect the required
-	 * order. Workaround: Use tx_div2007::load() to require an extension internal
-	 * class as parent.
-	 *
-	 * @todo    Improve Intra extension inheritance limitation
-	 * @see     tx_div2007::load()
-	 *
-	 * @param	string		preg pattern matching the filenames to require
-	 * @param	string		extension Key
-	 * @param	string		subdirectory
-	 * @return	void
-	 */
-	static public function autoLoadAll ($extensionKey, $subdirectory = '', $pregFileNamePattern = '/^class[.]tx_(.*)[.]php$/') {
-		// Format subdirectory first to '.../' or ''
-		preg_match('/^\/?(.*)\/?$/', $subdirectory, $matches);
-		$subdirectory = strlen($matches[1]) ? $matches[1] . '/' : '';
-		$path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey) . $subdirectory;
-		if(is_dir($path)) {
-			$handle = opendir($path);
-			while($entry = readdir($handle)) {
-				if(preg_match($pregFileNamePattern, $entry)) {
-					require_once($path . $entry);
-				} elseif(is_dir($path . $entry) && !preg_match('/\./', $entry)) {
-					self::autoLoadAll($extensionKey, $subdirectory . $entry, $pregFileNamePattern);
-				}
-			}
-		} else {
-			die('No such directory: ' . $path . ' in ' . __FILE__ . ' line ' . __LINE__);
-		}
-	}
-
-	/**
 	 * Using the browser session
 	 *
 	 * The browser session is bound to the browser not to the frontend user.
@@ -216,23 +144,6 @@ class tx_div2007 {
 		return $GLOBALS['TSFE']->fe_user->getKey('ses', $key);
 	}
 
-	/**
-	 * Clear all caches
-	 *
-	 * WARNING: Only use during development!!!!
-	 * It's not a runtime function. If you use it during development keep in mind,
-	 * that functionality may depend on the cached content. So the use can lead to
-	 * irritating results.
-	 *
-	 * @return	void
-	 */
-	static public function clearAllCaches () {
-		$pathT3lib = PATH_site . 't3lib/';
-		require_once($pathT3lib . 'class.t3lib_tcemain.php');
-		$tce = new t3lib_tcemain();
-		$tce->admin = true;
-		$tce->clear_cacheCmd('all');
-	}
 
 	/**
 	 * Get the database object TYPO3_DB
@@ -301,35 +212,8 @@ class tx_div2007 {
 		}
 		static $cObject;
 		if(!is_object($cObject))
-		  require_once(PATH_tslib.'class.tslib_content.php');
-			$cObject = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
+			$cObject = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::class);
 		return	$cObject;
-	}
-
-	/**
-	 * Get an instance of the T3 core engine (TCE)
-	 *
-	 * This function requires that a BE user is logged in.
-	 * You can log in a BE user into the FE i.e. by using
-	 * the extension "simulatebe". Alternatively you can
-	 * work with a "faked" $BE_USER object.
-	 *
-	 * @return	object		TCE
-	 */
-	static public function findTce () {
-		global $BE_USER, $TCA, $PAGES_TYPES, $ICON_TYPES, $LANG_GENERAL_LABELS, $TBE_STYLES, $TBE_MODULES, $FILEICONS;
-		ob_start();
-		$pathT3lib = PATH_site . 't3lib/';
-		require_once($pathT3lib . 'stddb/tables.php');
-		require_once($pathT3lib . 'stddb/load_ext_tables.php');
-		require_once($pathT3lib . 'class.t3lib_tcemain.php');
-		ob_end_clean();
-		if(!isset($tce)) {
-			static $tce; // Singleton.
-			$tce = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_tcemain');
-			$tce->stripslashes_value = 0;
-		}
-		return $tce;
 	}
 
 	/**
@@ -411,7 +295,7 @@ class tx_div2007 {
 				}
 			}
 		} else {
-			$packageManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Package\\PackageManager');
+			$packageManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Package\PackageManager::class);
 			foreach ($packageManager->getActivePackages() as $package) {
 				$packageKey = $package->getPackageKey();
 				if (
@@ -514,7 +398,6 @@ class tx_div2007 {
 	 * @see     tx_div2007_loader
 	 */
 	static public function loadClass ($classNameOrPathInformation) {
-		require_once(PATH_BE_div2007 . 'class.tx_div2007_t3Loader.php');
 		if(tx_div2007_t3Loader::load($classNameOrPathInformation)) {
 			return true;
 		}
@@ -602,16 +485,6 @@ class tx_div2007 {
 		return self::browserSession($key, $value);
 	}
 
-	/**
-	 * Get an instance of the T3 core engine (TCE)
-	 * Alias for the function findTce()
-	 *
-	 * @return object TYPO3_DB
-	 * @see tx_div2007::findTce()
-	 */
-	static public function tce (){
-		return self::findTce();
-	}
 
 	/**
 	 * Converts the given mixed data into an hashArray

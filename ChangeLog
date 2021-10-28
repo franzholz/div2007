@@ -1,3 +1,14 @@
+
+2021-10-28 Franz Holzinger <franz@ttproducts.de>
+    * compatibility: remove support for PHP 5
+    * remove functions from tx_div2007: 
+      clearAllCaches, findTce, tce, autoLoadAll
+    * remove functions from tx_div2007_div: 
+      loadTCA
+    * remove class class.tx_div2007_core_php53
+    * replace all t3lib classes by its new pendants
+    * remove file ext_autoload.php
+
 2021-05-28 Franz Holzinger <franz@ttproducts.de>
     * bugfix: undo wrong replacements of html by HTMLContent.
 
@@ -484,7 +495,7 @@
 	 * add the function getForeignTableInfo to the TableUtility.php. This is needed for IRRE mm tables.
 
 20-10-16 Franz Holzinger  <franz@ttproducts.de>
-	* bugfix for PHP 7: Non-static method TYPO3\\CMS\\Frontend\\Page\\CacheHashCalculator::calculateCacheHash() should not be called statically
+	* bugfix for PHP 7: Non-static method \TYPO3\CMS\Frontend\Page\CacheHashCalculator::calculateCacheHash() should not be called statically
 
 20-09-16 Franz Holzinger  <franz@ttproducts.de>
 	 * feature: Add a tab API addTab to the FrontendUtility. It bases on the files tab.css and jsfunc.tab.js. Use the subpart markers ###TAB_HEADER_1###, ... ###TAB_HEADER_n### and ###TAB_BOX_1###, ... ###TAB_BOX_n### inside of the subpart marker ###TAB_MENU### to generate your tab menu.

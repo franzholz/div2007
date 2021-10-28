@@ -176,18 +176,11 @@ class tx_div2007_email {
 				isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
 				is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
 				array_search(
-					't3lib_mail_SwiftMailerAdapter',
+					\TYPO3\CMS\Core\Mail\SwiftMailerAdapter::class,
 					$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']
 				) !== FALSE
 			)
 		) {
-			if (
-				version_compare(TYPO3_version, '6.0.0', '<') &&
-				preg_match('#[/\(\)\\<>,;:@\.\]\[]#', $fromName)
-			) {
-				$fromName = '"' . $fromName . '"';
-			}
-
 			$mail = tx_div2007_core::newMailMessage();
 			$mail->setTo($toEMail)
 				->setFrom(array($fromEMail => $fromName))
@@ -222,98 +215,6 @@ class tx_div2007_email {
 			if ($bcc != '') {
 				$mail->addBcc($bcc);
 			}
-		} else if (class_exists('t3lib_htmlmail')) {
-			$fromName = tx_div2007_alpha5::slashName($fromName);
-
-			if (is_array($toEMail)) {
-				$emailArray = array();
-				foreach($toEMail as $k => $v) {
-					if (!is_numeric($k) && $v != '') {
-						$emailArray[] = tx_div2007_alpha5::slashName($v) . ' <' . $k . '>';
-					} else if (is_numeric($k)) {
-						$emailArray[] = $v;
-					} else {
-						$emailArray[] = $k;
-					}
-				}
-				$toEMail = implode(',', $emailArray);
-			}
-
-			$mail = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_htmlmail');
-			$mail->start();
-			$mail->mailer = 'TYPO3 HTMLMail';
-			// $mail->useBase64(); TODO
-			$PLAINContent = html_entity_decode($PLAINContent);
-			if ($mail->linebreak == chr(10)) {
-				$PLAINContent =
-					str_replace(
-						chr(13) . chr(10),
-						$mail->linebreak,
-						$PLAINContent
-					);
-			}
-
-			$mail->subject = $subject;
-			$mail->from_email = $fromEMail;
-			if ($returnPath != '') {
-				$mail->returnPath = $returnPath;
-			}
-			$mail->from_name = $fromName;
-			if ($replyTo) {
-				$mail->replyto_email = $replyTo;
-				$mail->replyto_name = $mail->from_name;
-			}
-			$mail->organisation = '';
-
-			if (isset($attachment)) {
-				if (is_array($attachment)) {
-					$attachmentArray = $attachment;
-				} else {
-					$attachmentArray = array($attachment);
-				}
-				foreach ($attachmentArray as $theAttachment) {
-					if (file_exists($theAttachment)) {
-						$mail->attach(Swift_Attachment::fromPath($theAttachment));
-					}
-				}
-			}
-
-			if ($HTMLContent) {
-				$mail->theParts['html']['content'] = $HTMLContent;
-				$mail->theParts['html']['path'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST') . '/';
-				$mail->extractMediaLinks();
-				$mail->extractHyperLinks();
-				$mail->fetchHTMLMedia();
-				$mail->substMediaNamesInHTML(0);	// 0 = relative
-				$mail->substHREFsInHTML();
-				$mail->setHtml(
-					$mail->encodeMsg($mail->theParts['html']['content'])
-				);
-			}
-
-			if ($PLAINContent) {
-				$mail->addPlain($PLAINContent);
-			}
-			$mail->setHeaders();
-
-			if ($bcc != '') {
-				$mail->add_header('Bcc: ' . $bcc);
-			}
-
-			if (isset($attachment) && is_array($attachment) && count($attachment)) {
-				if (
-					isset($mail->theParts) &&
-					is_array($mail->theParts) &&
-					isset($mail->theParts['attach']) &&
-					is_array($mail->theParts['attach'])
-				) {
-					foreach ($mail->theParts['attach'] as $k => $media) {
-						$mail->theParts['attach'][$k]['filename'] = basename($media['filename']);
-					}
-				}
-			}
-			$mail->setContent();
-			$mail->setRecipient(explode(',', $toEMail));
 		} else {
 			$result = FALSE;
 			debug ('tx_div2007_email::sendMail exited with error 4'); // keep this

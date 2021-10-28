@@ -57,7 +57,7 @@ class StaticInfoTablesUtility {
                 $sitVersion = $eInfo['version'];
                 $class = '';
                 if (version_compare($sitVersion, '6.0.0', '>=')) {
-                    $class = 'SJBR\\StaticInfoTables\\PiBaseApi';
+                    $class = \SJBR\StaticInfoTables\PiBaseApi::class;
                 } else {
                     return false;
                 }

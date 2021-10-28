@@ -64,7 +64,7 @@ final class tx_div2007_div {
 	 * Singleton instances returned by makeInstance, using the class names as
 	 * array keys
 	 *
-	 * @var array<t3lib_Singleton>
+	 * @var array<\TYPO3\CMS\Core\SingletonInterface>
 	 */
 	static protected $singletonInstances = array();
 
@@ -261,7 +261,7 @@ final class tx_div2007_div {
 					// rename could fail, if a simultaneous thread is currently working on the same thing
 				if (@rename($theFile, $temporaryName)) {
 					$cmd = self::imageMagickCommand('convert', '"' . $temporaryName . '" "' . $theFile . '"', $gfxConf['im_path_lzw']);
-					t3lib_utility_Command::exec($cmd);
+					\TYPO3\CMS\Core\Utility\CommandUtility::exec($cmd);
 					unlink($temporaryName);
 				}
 
@@ -297,7 +297,7 @@ final class tx_div2007_div {
 				&& @is_file($theFile)) { // IM
 			$newFile = substr($theFile, 0, -4) . '.gif';
 			$cmd = self::imageMagickCommand('convert', '"' . $theFile . '" "' . $newFile . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
-			t3lib_utility_Command::exec($cmd);
+			\TYPO3\CMS\Core\Utility\CommandUtility::exec($cmd);
 			$theFile = $newFile;
 			if (@is_file($newFile)) {
 				self::fixPermissions($newFile);
@@ -327,7 +327,7 @@ final class tx_div2007_div {
 			} else {
 				$newFile = PATH_site . 'typo3temp/readPG_' . md5($theFile . '|' . filemtime($theFile)) . ($output_png ? '.png' : '.gif');
 				$cmd = self::imageMagickCommand('convert', '"' . $theFile . '" "' . $newFile . '"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path']);
-				t3lib_utility_Command::exec($cmd);
+				\TYPO3\CMS\Core\Utility\CommandUtility::exec($cmd);
 				if (@is_file($newFile)) {
 					self::fixPermissions($newFile);
 					return $newFile;
@@ -359,7 +359,7 @@ final class tx_div2007_div {
 			return $GLOBALS['TSFE']->csConvObj->crop($charSet, $string, $chars, $appendString);
 		} else {
 				// this case should not happen
-			$csConvObj = self::makeInstance('t3lib_cs');
+			$csConvObj = self::makeInstance(\TYPO3\CMS\Core\Charset\CharsetConverter::class);
 			return $csConvObj->crop('utf-8', $string, $chars, $appendString);
 		}
 	}
@@ -371,10 +371,10 @@ final class tx_div2007_div {
 	 * @param string $newlineChar The string to implode the broken lines with (default/typically \n)
 	 * @param integer $lineWidth The line width
 	 * @return string reformatted text
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Mail::breakLinesForEmail()
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use \TYPO3\CMS\Core\Utility\MailUtility::breakLinesForEmail()
 	 */
 	static public function breakLinesForEmail($str, $newlineChar = LF, $lineWidth = 76) {
-		return t3lib_utility_Mail::breakLinesForEmail($str, $newlineChar, $lineWidth);
+		return \TYPO3\CMS\Core\Utility\MailUtility::breakLinesForEmail($str, $newlineChar, $lineWidth);
 	}
 
 	/**
@@ -840,10 +840,10 @@ final class tx_div2007_div {
 	 * @param integer $max Higher limit
 	 * @param integer $zeroValue Default value if input is FALSE.
 	 * @return integer The input value forced into the boundaries of $min and $max
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::forceIntegerInRange() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange() instead
 	 */
 	static public function intInRange($theInt, $min, $max = 2000000000, $zeroValue = 0) {
-		return t3lib_utility_Math::forceIntegerInRange($theInt, $min, $max, $zeroValue);
+		return \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($theInt, $min, $max, $zeroValue);
 	}
 
 	/**
@@ -851,10 +851,10 @@ final class tx_div2007_div {
 	 *
 	 * @param integer $theInt Integer string to process
 	 * @return integer
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::convertToPositiveInteger() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger() instead
 	 */
 	static public function intval_positive($theInt) {
-		return t3lib_utility_Math::convertToPositiveInteger($theInt);
+		return \TYPO3\CMS\Core\Utility\MathUtility::convertToPositiveInteger($theInt);
 	}
 
 	/**
@@ -862,10 +862,10 @@ final class tx_div2007_div {
 	 *
 	 * @param string $verNumberStr Version number on format x.x.x
 	 * @return integer Integer version of version number (where each part can count to 999)
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.1 - Use t3lib_utility_VersionNumber::convertVersionNumberToInteger() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.1 - Use \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger() instead
 	 */
 	static public function int_from_ver($verNumberStr) {
-		return t3lib_utility_VersionNumber::convertVersionNumberToInteger($verNumberStr);
+		return \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger($verNumberStr);
 	}
 
 	/**
@@ -879,7 +879,7 @@ final class tx_div2007_div {
 	static public function compat_version($verNumberStr) {
 		$currVersionStr = $GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version'] ? $GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version'] : TYPO3_branch;
 
-		if (t3lib_utility_VersionNumber::convertVersionNumberToInteger($currVersionStr) < t3lib_utility_VersionNumber::convertVersionNumberToInteger($verNumberStr)) {
+		if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger($currVersionStr) < \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger($verNumberStr)) {
 			return FALSE;
 		} else {
 			return TRUE;
@@ -1050,7 +1050,7 @@ final class tx_div2007_div {
 	 *
 	 * @param mixed $var Any input variable to test
 	 * @return boolean Returns TRUE if string is an integer
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::canBeInterpretedAsInteger() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger() instead
 	 */
 	static public function testInt($var) {
 		return tx_div2007_core::testInt($var);
@@ -1119,7 +1119,7 @@ final class tx_div2007_div {
 	 * @param string $string Input string, eg "123 + 456 / 789 - 4"
 	 * @param string $operators Operators to split by, typically "/+-*"
 	 * @return array Array with operators and operands separated.
-	 * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::calc(), tslib_gifBuilder::calcOffset()
+	 * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::calc(), \TYPO3\CMS\Frontend\Imaging\GifBuilder::calcOffset()
 	 */
 	static public function splitCalc($string, $operators) {
 		$res = Array();
@@ -1141,10 +1141,10 @@ final class tx_div2007_div {
 	 * @param string $string Input string, eg "123 + 456 / 789 - 4"
 	 * @return integer Calculated value. Or error string.
 	 * @see calcParenthesis()
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::calculateWithPriorityToAdditionAndSubtraction() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use \TYPO3\CMS\Core\Utility\MathUtility::calculateWithPriorityToAdditionAndSubtraction() instead
 	 */
 	static public function calcPriority($string) {
-		return t3lib_utility_Math::calculateWithPriorityToAdditionAndSubtraction($string);
+		return \TYPO3\CMS\Core\Utility\MathUtility::calculateWithPriorityToAdditionAndSubtraction($string);
 	}
 
 	/**
@@ -1153,10 +1153,10 @@ final class tx_div2007_div {
 	 * @param string $string Input string, eg "(123 + 456) / 789 - 4"
 	 * @return integer Calculated value. Or error string.
 	 * @see calcPriority(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::stdWrap()
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use t3lib_utility_Math::calculateWithParentheses() instead
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - Use \TYPO3\CMS\Core\Utility\MathUtility::calculateWithParentheses() instead
 	 */
 	static public function calcParenthesis($string) {
-		return t3lib_utility_Math::calculateWithParentheses($string);
+		return \TYPO3\CMS\Core\Utility\MathUtility::calculateWithParentheses($string);
 	}
 
 	/**
@@ -1242,7 +1242,7 @@ final class tx_div2007_div {
 	 *
 	 * @param string $address Address to adjust
 	 * @return string Adjusted address
-	 * @see	t3lib_::isBrokenEmailEnvironment()
+	 * @see	self::isBrokenEmailEnvironment()
 	 */
 	static public function normalizeMailAddress($address) {
 		if (self::isBrokenEmailEnvironment() && FALSE !== ($pos1 = strrpos($address, '<'))) {
@@ -2171,7 +2171,7 @@ final class tx_div2007_div {
 			if (isset($options['grandParentTagMap'][$stackData['grandParentTagName'] . '/' . $stackData['parentTagName']])) { // Use tag based on grand-parent + parent tag name
 				$attr .= ' index="' . htmlspecialchars($tagName) . '"';
 				$tagName = (string) $options['grandParentTagMap'][$stackData['grandParentTagName'] . '/' . $stackData['parentTagName']];
-			} elseif (isset($options['parentTagMap'][$stackData['parentTagName'] . ':_IS_NUM']) && t3lib_utility_Math::canBeInterpretedAsInteger($tagName)) { // Use tag based on parent tag name + if current tag is numeric
+			} elseif (isset($options['parentTagMap'][$stackData['parentTagName'] . ':_IS_NUM']) && \TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($tagName)) { // Use tag based on parent tag name + if current tag is numeric
 				$attr .= ' index="' . htmlspecialchars($tagName) . '"';
 				$tagName = (string) $options['parentTagMap'][$stackData['parentTagName'] . ':_IS_NUM'];
 			} elseif (isset($options['parentTagMap'][$stackData['parentTagName'] . ':' . $tagName])) { // Use tag based on parent tag name + current tag
@@ -2283,12 +2283,12 @@ final class tx_div2007_div {
 			$array = $firstLevelCache[$identifier];
 		} else {
 				// look up in second level cache
-			$cacheContent = t3lib_pageSelect::getHash($identifier, 0);
+			$cacheContent = \TYPO3\CMS\Frontend\Page\PageRepository::getHash($identifier, 0);
 			$array = unserialize($cacheContent);
 
 			if ($array === FALSE) {
 				$array = self::xml2arrayProcess($string, $NSprefix, $reportDocTag);
-				t3lib_pageSelect::storeHash($identifier, serialize($array), 'ident_xml2array');
+				\TYPO3\CMS\Frontend\Page\PageRepository::storeHash($identifier, serialize($array), 'ident_xml2array');
 			}
 				// store content in first level cache
 			$firstLevelCache[$identifier] = $array;
@@ -3935,13 +3935,13 @@ final class tx_div2007_div {
 	 *
 	 * @param string $addQueryParams Query-parameters: "&xxx=yyy&zzz=uuu"
 	 * @return array Array with key/value pairs of query-parameters WITHOUT a certain list of variable names (like id, type, no_cache etc.) and WITH a variable, encryptionKey, specific for this server/installation
-	 * @see tslib_fe::makeCacheHash(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink(), tx_div2007_div::calculateCHash()
-	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 6.1 - use t3lib_cacheHash instead
+	 * @see \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::makeCacheHash(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink(), tx_div2007_div::calculateCHash()
+	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 6.1 - use \TYPO3\CMS\Frontend\Page\CacheHashCalculator instead
 	 */
 	static public function cHashParams($addQueryParams) {
 		$params = explode('&', substr($addQueryParams, 1)); // Splitting parameters up
-		/* @var $cacheHash t3lib_cacheHash */
-		$cacheHash = self::makeInstance('t3lib_cacheHash');
+		/* @var $cacheHash \TYPO3\CMS\Frontend\Page\CacheHashCalculator */
+		$cacheHash = self::makeInstance(\TYPO3\CMS\Frontend\Page\CacheHashCalculator::class);
 		$pA = $cacheHash->getRelevantParameters($addQueryParams);
 
 			// Hook: Allows to manipulate the parameters which are taken to build the chash:
@@ -3969,11 +3969,11 @@ final class tx_div2007_div {
 	 * @param string $addQueryParams Query-parameters: "&xxx=yyy&zzz=uuu"
 	 * @return string Hash of all the values
 	 * @see tx_div2007_div::cHashParams(), tx_div2007_div::calculateCHash()
-	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 6.1 - use t3lib_cacheHash instead
+	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 6.1 - use \TYPO3\CMS\Frontend\Page\CacheHashCalculator instead
 	 */
 	static public function generateCHash($addQueryParams) {
-		/* @var $cacheHash t3lib_cacheHash */
-		$cacheHash = self::makeInstance('t3lib_cacheHash');
+		/* @var $cacheHash \TYPO3\CMS\Frontend\Page\CacheHashCalculator */
+		$cacheHash = self::makeInstance(\TYPO3\CMS\Frontend\Page\CacheHashCalculator::class);
 		return $cacheHash->generateForParameters($addQueryParams);
 	}
 
@@ -3982,11 +3982,11 @@ final class tx_div2007_div {
 	 *
 	 * @param array $params Array of key-value pairs
 	 * @return string Hash of all the values
-	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 6.1 - use t3lib_cacheHash instead
+	 * @deprecated since TYPO3 4.7 - will be removed in TYPO3 6.1 - use \TYPO3\CMS\Frontend\Page\CacheHashCalculator instead
 	 */
 	static public function calculateCHash($params) {
-		/* @var $cacheHash t3lib_cacheHash */
-		$cacheHash = self::makeInstance('t3lib_cacheHash');
+		/* @var $cacheHash \TYPO3\CMS\Frontend\Page\CacheHashCalculator */
+		$cacheHash = self::makeInstance(\TYPO3\CMS\Frontend\Page\CacheHashCalculator::class);
 		return $cacheHash->calculateCacheHash($params);
 	}
 
@@ -4026,8 +4026,8 @@ final class tx_div2007_div {
 	 *						 Otherwise an empty array and it is FALSE in error case.
 	 */
 	static public function readLLfile($fileRef, $langKey, $charset = '', $errorMode = 0) {
-		/** @var $languageFactory t3lib_l10n_Factory */
-		$languageFactory = self::makeInstance('t3lib_l10n_Factory');
+		/** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
+		$languageFactory = self::makeInstance(\TYPO3\CMS\Core\Localization\LocalizationFactory::class);
 		return $languageFactory->getParsedData($fileRef, $langKey, $charset, $errorMode);
 	}
 
@@ -4039,7 +4039,7 @@ final class tx_div2007_div {
 	 * @param string $langKey TYPO3 language key, eg. "dk" or "de" or "default"
 	 * @param string $charset Character set (optional)
 	 * @return array LOCAL_LANG array in return.
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - use t3lib_l10n_parser_Llphp::getParsedData() from now on
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - use \TYPO3\CMS\Core\Localization\Parser\LocallangXmlParser::getParsedData() from now on
 	 */
 	static public function readLLPHPfile($fileRef, $langKey, $charset = '') {
 		if (is_object($GLOBALS['LANG'])) {
@@ -4047,7 +4047,7 @@ final class tx_div2007_div {
 		} elseif (is_object($GLOBALS['TSFE'])) {
 			$csConvObj = $GLOBALS['TSFE']->csConvObj;
 		} else {
-			$csConvObj = self::makeInstance('t3lib_cs');
+			$csConvObj = self::makeInstance(\TYPO3\CMS\Core\Charset\CharsetConverter::class);
 		}
 
 		if (@is_file($fileRef) && $langKey) {
@@ -4121,7 +4121,7 @@ final class tx_div2007_div {
 	 * @param string $langKey TYPO3 language key, eg. "dk" or "de" or "default"
 	 * @param string $charset Character set (optional)
 	 * @return array LOCAL_LANG array in return.
-	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - use t3lib_l10n_parser_Llxml::getParsedData() from now on
+	 * @deprecated since TYPO3 4.6, will be removed in TYPO3 6.0 - use \TYPO3\CMS\Core\Localization\Parser\LocallangXmlParser::getParsedData() from now on
 	 */
 	static public function readLLXMLfile($fileRef, $langKey, $charset = '') {
 		if (is_object($GLOBALS['LANG'])) {
@@ -4129,7 +4129,7 @@ final class tx_div2007_div {
 		} elseif (is_object($GLOBALS['TSFE'])) {
 			$csConvObj = $GLOBALS['TSFE']->csConvObj;
 		} else {
-			$csConvObj = self::makeInstance('t3lib_cs');
+			$csConvObj = self::makeInstance(\TYPO3\CMS\Core\Charset\CharsetConverter::class);
 		}
 
 		$LOCAL_LANG = NULL;
@@ -4336,41 +4336,6 @@ final class tx_div2007_div {
 		}
 	}
 
-
-	/**
-	 * Loads the $GLOBALS['TCA'] (Table Configuration Array) for the $table
-	 *
-	 * Requirements:
-	 * 1) must be configured table (the ctrl-section configured),
-	 * 2) columns must not be an array (which it is always if whole table loaded), and
-	 * 3) there is a value for dynamicConfigFile (filename in typo3conf)
-	 *
-	 * Note: For the frontend this loads only 'ctrl' and 'feInterface' parts.
-	 * For complete TCA use $GLOBALS['TSFE']->includeTCA() instead.
-	 *
-	 * @param string $table Table name for which to load the full TCA array part into $GLOBALS['TCA']
-	 * @return void
-	 */
-	static public function loadTCA($table) {
-			//needed for inclusion of the dynamic config files.
-		global $TCA;
-		if (isset($TCA[$table])) {
-			$tca = &$TCA[$table];
-			if (!$tca['columns']) {
-				$dcf = $tca['ctrl']['dynamicConfigFile'];
-				if ($dcf) {
-					if (!strcmp(substr($dcf, 0, 6), 'T3LIB:')) {
-						$pathT3lib = PATH_site . 't3lib/';
-						include($pathT3lib . 'stddb/' . substr($dcf, 6));
-					} elseif (self::isAbsPath($dcf) && @is_file($dcf)) { // Absolute path...
-						include($dcf);
-					} else {
-						include(PATH_typo3conf . $dcf);
-					}
-				}
-			}
-		}
-	}
 
 	/**
 	 * Looks for a sheet-definition in the input data structure array. If found it will return the data structure for the sheet given as $sheet (if found).
@@ -4709,7 +4674,7 @@ final class tx_div2007_div {
 		}
 
 			// Register new singleton instance
-		if ($instance instanceof t3lib_Singleton) {
+		if ($instance instanceof \TYPO3\CMS\Core\SingletonInterface) {
 			self::$singletonInstances[$finalClassName] = $instance;
 		}
 
@@ -4744,11 +4709,11 @@ final class tx_div2007_div {
 	 * @see makeInstance
 	 * @param string $className
 	 *        the name of the class to set, must not be empty
-	 * @param t3lib_Singleton $instance
+	 * @param \TYPO3\CMS\Core\SingletonInterface $instance
 	 *        the instance to set, must be an instance of $className
 	 * @return void
 	 */
-	static public function setSingletonInstance($className, t3lib_Singleton $instance) {
+	static public function setSingletonInstance($className, \TYPO3\CMS\Core\SingletonInterface $instance) {
 		self::checkInstanceClassName($className, $instance);
 		self::$singletonInstances[$className] = $instance;
 	}
@@ -4763,7 +4728,7 @@ final class tx_div2007_div {
 	 * Warning: This is a helper method for unit tests. Do not call this directly in production code!
 	 *
 	 * @see makeInstance
-	 * @throws InvalidArgumentException if class extends t3lib_Singleton
+	 * @throws InvalidArgumentException if class extends \TYPO3\CMS\Core\SingletonInterface
 	 * @param string $className
 	 *        the name of the class to set, must not be empty
 	 * @param object $instance
@@ -4773,9 +4738,9 @@ final class tx_div2007_div {
 	static public function addInstance($className, $instance) {
 		self::checkInstanceClassName($className, $instance);
 
-		if ($instance instanceof t3lib_Singleton) {
+		if ($instance instanceof \TYPO3\CMS\Core\SingletonInterface) {
 			throw new InvalidArgumentException(
-				'$instance must not be an instance of t3lib_Singleton. ' .
+				'$instance must not be an instance of \TYPO3\CMS\Core\SingletonInterface. ' .
 					'For setting singletons, please use setSingletonInstance.',
 				1288969325
 			);
@@ -4870,7 +4835,7 @@ final class tx_div2007_div {
 					if (is_object($obj)) {
 						if (!@is_callable(array($obj, 'init'))) {
 								// use silent logging??? I don't think so.
-							die ('Broken service:' . t3lib_utility_Debug::viewArray($info));
+							die ('Broken service:' . \TYPO3\CMS\Core\Utility\DebugUtility::viewArray($info));
 						}
 						$obj->info = $info;
 						if ($obj->init()) { // service available?
@@ -4995,7 +4960,7 @@ final class tx_div2007_div {
 			// So we stick to LF in all cases.
 		$headers = trim(implode(LF, self::trimExplode(LF, $headers, TRUE))); // Make sure no empty lines are there.
 
-		return t3lib_utility_Mail::mail($email, $subject, $message, $headers);
+		return \TYPO3\CMS\Core\Utility\MailUtility::mail($email, $subject, $message, $headers);
 	}
 
 	/**
@@ -5226,7 +5191,7 @@ final class tx_div2007_div {
 			}
 		}
 
-		$GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLogLevel'] = t3lib_utility_Math::forceIntegerInRange($GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLogLevel'], 0, 4);
+		$GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLogLevel'] = \TYPO3\CMS\Core\Utility\MathUtility::forceIntegerInRange($GLOBALS['TYPO3_CONF_VARS']['SYS']['systemLogLevel'], 0, 4);
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['systemLogInit'] = TRUE;
 	}
 
@@ -5285,8 +5250,8 @@ final class tx_div2007_div {
 
 				// write message to a file
 			if ($type == 'file') {
-				$lockObject = self::makeInstance('t3lib_lock', $destination, $GLOBALS['TYPO3_CONF_VARS']['SYS']['lockingMode']);
-				/** @var t3lib_lock $lockObject */
+				$lockObject = self::makeInstance(\TYPO3\CMS\Core\Locking\Locker::class, $destination, $GLOBALS['TYPO3_CONF_VARS']['SYS']['lockingMode']);
+				/** @var \TYPO3\CMS\Core\Locking\Locker $lockObject */
 				$lockObject->setEnableLogging(FALSE);
 				$lockObject->acquire();
 				$file = fopen($destination, 'a');
@@ -5301,10 +5266,10 @@ final class tx_div2007_div {
 			elseif ($type == 'mail') {
 				list($to, $from) = explode('/', $destination);
 				if (!self::validEmail($from)) {
-					$from = t3lib_utility_Mail::getSystemFrom();
+					$from = \TYPO3\CMS\Core\Utility\MailUtility::getSystemFrom();
 				}
-				/** @var $mail t3lib_mail_Message */
-				$mail = self::makeInstance('t3lib_mail_Message');
+				/** @var $mail \TYPO3\CMS\Core\Mail\MailMessage */
+				$mail = self::makeInstance(\TYPO3\CMS\Core\Mail\MailMessage::class);
 				$mail->setTo($to)
 						->setFrom($from)
 						->setSubject('Warning - error in TYPO3 installation')
@@ -5383,7 +5348,7 @@ final class tx_div2007_div {
 	 * @return string Compiled command that deals with IM6 & GraphicsMagick
 	 */
 	static public function imageMagickCommand($command, $parameters, $path = '') {
-		return t3lib_utility_Command::imageMagickCommand($command, $parameters, $path);
+		return \TYPO3\CMS\Core\Utility\CommandUtility::imageMagickCommand($command, $parameters, $path);
 	}
 
 	/**
@@ -5434,7 +5399,7 @@ final class tx_div2007_div {
 	 *				will not be empty
 	 */
 	static public function quoteJSvalue($value) {
-		$escapedValue = self::makeInstance('t3lib_codec_JavaScriptEncoder')->encode($value);
+		$escapedValue = self::makeInstance(\TYPO3\CMS\Core\Encoder\JavaScriptEncoder::class)->encode($value);
 		return '\'' . $escapedValue . '\'';
 	}
 

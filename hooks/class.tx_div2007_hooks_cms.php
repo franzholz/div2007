@@ -40,7 +40,7 @@
  // deprecated: will be removed in 2024
 
 
-class tx_div2007_hooks_cms implements t3lib_Singleton {
+class tx_div2007_hooks_cms implements \TYPO3\CMS\Core\SingletonInterface {
 	public $extKey = '';	// extension key must be overridden
 
 	/**
@@ -53,14 +53,6 @@ class tx_div2007_hooks_cms implements t3lib_Singleton {
 
 	public function pmDrawItem ($params, $pObj) {
 		$callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\ExtensionManagementUtility';
-
-		if (
-			class_exists($callingClassName)
-		) {
-			// nothing
-		} else {
-			$callingClassName = 't3lib_extMgm';
-		}
 
 		if (
 			$this->extKey != '' &&

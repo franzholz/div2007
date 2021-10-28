@@ -59,19 +59,6 @@ The resulting tokens are trimmed. Whitespace inside the token is kept.
 The list of names: ''David Copperfiel, Mr. Wickfield, Uriah Heep''
 would be splitted into 3 tokens.
 
-=== findTce ===
-
-==== Definition ====
-
-Get an instance of the TCE.
-
-==== Comment ====
-
-Use the features of the TCE also from the frontend.
-Useful to do INSERT and UPDATE queries in full accordance
-with the T3 constraints, but not very fast.
-A backend user must be logged in or be faked.
-
 === getDataBase ===
 
 ==== Definition ====
@@ -191,12 +178,6 @@ See ''tx_div2007::getSiteRelativeExtensionPath()''.
 ==== Definition ====
 
 This is an alias for the function ''tx_div2007::browserSession()''.
-
-=== tce ===
-
-==== Definition ====
-
-This is an alias for the function ''tx_div2007::findTce()''.
 
 === toHashArray ===
 

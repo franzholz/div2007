@@ -64,8 +64,8 @@ class FrontendUtility {
 * constants, includes libraries and does a little logic here and there in order
 * to instantiate the right classes to create the webpage.
 *
-* All the real data processing goes on in the "tslib/" classes which this script
-* will include and use as needed.
+* All the real data processing goes on in the library classes which this script
+* will use as needed.
 *
 * @author Kasper Skårhøj <kasperYYYY@typo3.com>
 */
@@ -110,7 +110,7 @@ class FrontendUtility {
         }
         /** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
         $TSFE = GeneralUtility::makeInstance(
-            'TYPO3\\CMS\\Frontend\\Controller\\TypoScriptFrontendController',
+            \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class,
             $TYPO3_CONF_VARS,
             $id,
             $type,
@@ -150,7 +150,7 @@ class FrontendUtility {
                 // Prevent errors if ini_set() is unavailable (safe mode)
                 @ini_set('zlib.output_compression_level', $TYPO3_CONF_VARS['FE']['compressionLevel']);
             }
-            ob_start(array(GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Utility\\CompressionUtility'), 'compressionOutputHandler'));
+            ob_start(array(GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Utility\CompressionUtility::class), 'compressionOutputHandler'));
         }
 
         // FE_USER
@@ -185,7 +185,7 @@ class FrontendUtility {
                 \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtensionTables(true);
             }
         } else {
-            $callingClassNameBootstrap = '\\TYPO3\\CMS\\Core\\Core\\Bootstrap';
+            $callingClassNameBootstrap = \TYPO3\CMS\Core\Core\Bootstrap::class;
             if (method_exists($callingClassNameBootstrap, 'loadCachedTca')) {
                 \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
             } else {
@@ -557,16 +557,12 @@ class FrontendUtility {
     static public function getContentObjectRendererClassname ()
     {
         $useClassName = false;
-        $callingClassName = '\\TYPO3\\CMS\\Frontend\\ContentObject\\ContentObjectRenderer';
+        $callingClassName = \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::class;
 
         if (
             class_exists($callingClassName)
         ) {
             $useClassName = substr($callingClassName, 1);
-        } else if (
-            class_exists('tslib_cObj')
-        ) {
-            $useClassName = 'tslib_cObj';
         }
 
         return $useClassName;
@@ -1328,7 +1324,7 @@ class FrontendUtility {
     }
 
     /**
-    * This is the original pi_RTEcssText from tslib_pibase
+    * This is the original pi_RTEcssText from the former tslib_pibase
     * Will process the input string with the parseFunc function from TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
     * This is useful for rendering of content in RTE fields where the transformation mode is set to "ts_css" or so.
     * Notice that this requires the use of "css_styled_content" to work right.

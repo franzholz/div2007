@@ -48,9 +48,7 @@ class TcaUtility {
 	 */
 	static public function removeField (&$tableTca, $fieldList) {
 
-		$divClass = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
-
-		$fieldArray = call_user_func($divClass . '::trimExplode', ',', $fieldList, 1);
+		$fieldArray = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $fieldList, 1);
 
 		$tmpArray = explode(',', $tableTca['interface']['showRecordFieldList']);
 		$tmpArray = array_diff($tmpArray, $fieldArray);

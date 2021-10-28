@@ -157,7 +157,7 @@ class tx_div2007_selfAwareness {
 	 */
 	public function findCObject () {
 		if(!$this->cObjectSingleton) {
-			$this->cObjectSingleton = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer');
+			$this->cObjectSingleton = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::class);
 		}
 		return	$this->cObjectSingleton;
 	}
@@ -178,7 +178,7 @@ class tx_div2007_selfAwareness {
 	 * Return the default designator.
 	 *
 	 * A designator is the name of the parameter array of forms and url and may by used for
-	 * other identification purpuses. In tslib_pibase it is called prefixId.
+	 * other identification purpuses. In \TYPO3\CMS\Frontend\Plugin\AbstractPlugin it is called prefixId.
 	 *
 	 * A default designator can be set as class variable.
 	 * It defaults to the extension key of the controller.

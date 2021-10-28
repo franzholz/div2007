@@ -64,7 +64,7 @@ class FileAbstractionUtility {
                 $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                     '*',
                     'sys_file_reference',
-                    $where_clause,
+                    $where_clause,  
                     '',
                     $orderBy,
                     '',
@@ -82,7 +82,7 @@ class FileAbstractionUtility {
     ) {
         $result = false;
 
-        $storageRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\StorageRepository');
+        $storageRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\StorageRepository::class);
         $storage = $storageRepository->findByUid(1);
         $resourceFactory = \TYPO3\CMS\Core\Resource\ResourceFactory::getInstance();
         $fileObj = $resourceFactory->getFileReferenceObject(intval($fileReferenceUid));

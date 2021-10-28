@@ -315,35 +315,23 @@ class TranslationBase {
             return false;
         }
 
-        if (
-            version_compare(TYPO3_version, '7.4.0', '>=')
-        ) {
-            $callingClassName = '\\TYPO3\\CMS\\Core\\Localization\\LocalizationFactory';
-            $useClassName = substr($callingClassName, 1);
+        $callingClassName = \TYPO3\CMS\Core\Localization\LocalizationFactory::class;
+        $useClassName = substr($callingClassName, 1);
 
-            /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
-            $languageFactory = GeneralUtility::makeInstance($useClassName);
-            $filePath = GeneralUtility::getFileAbsFileName($basePath);
-            
-            if (!file_exists($filePath)) {
-                debug($basePath, 'ERROR: ' . DIV2007_EXT . ' called by "' . $extensionKey . '" - file "' . $basePath . '" cannot be found!'); // keep this
-                return false;
-            }
-
-            $tempLOCAL_LANG = $languageFactory->getParsedData(
-                $basePath,
-                $this->getLocalLangKey(),
-                'UTF-8'
-            );
-        } else {
-                // Read the strings in the required charset (since TYPO3 4.2)
-            $tempLOCAL_LANG =
-                GeneralUtility::readLLfile(
-                    $basePath,
-                    $this->getLocalLangKey(),
-                    $GLOBALS['TSFE']->renderCharset
-                );
+        /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
+        $languageFactory = GeneralUtility::makeInstance($useClassName);
+        $filePath = GeneralUtility::getFileAbsFileName($basePath);
+        
+        if (!file_exists($filePath)) {
+            debug($basePath, 'ERROR: ' . DIV2007_EXT . ' called by "' . $extensionKey . '" - file "' . $basePath . '" cannot be found!'); // keep this
+            return false;
         }
+
+        $tempLOCAL_LANG = $languageFactory->getParsedData(
+            $basePath,
+            $this->getLocalLangKey(),
+            'UTF-8'
+        );
 
         if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
             foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
