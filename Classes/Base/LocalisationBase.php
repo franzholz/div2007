@@ -289,10 +289,9 @@ class LocalisationBase {
         }
 
         $callingClassName = \TYPO3\CMS\Core\Localization\LocalizationFactory::class;
-        $useClassName = substr($callingClassName, 1);
 
         /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
-        $languageFactory = GeneralUtility::makeInstance($useClassName);
+        $languageFactory = GeneralUtility::makeInstance($callingClassName);
         $tempLOCAL_LANG = $languageFactory->getParsedData(
             $basePath,
             $this->getLLkey(),
