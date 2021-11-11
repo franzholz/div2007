@@ -1,3 +1,6 @@
+2021-11-11 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: ErrorUtility::getMessage must only return HTML encoded error indices for security reasons.
+    * bugfix: return correct class in getContentObjectRendererClassname.
 
 2021-10-28 Franz Holzinger <franz@ttproducts.de>
     * compatibility: remove support for PHP 5

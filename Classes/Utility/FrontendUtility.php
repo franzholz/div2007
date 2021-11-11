@@ -559,13 +559,7 @@ class FrontendUtility {
         $useClassName = false;
         $callingClassName = \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::class;
 
-        if (
-            class_exists($callingClassName)
-        ) {
-            $useClassName = substr($callingClassName, 1);
-        }
-
-        return $useClassName;
+        return $callingClassName;
     }
 
     /**
@@ -580,7 +574,7 @@ class FrontendUtility {
     static public function getContentObjectRenderer ($data = [], $table = '')
     {
         $className = static::getContentObjectRendererClassname();
-        $cObj = GeneralUtility::makeInstance($className);	// Local cObj.
+        $cObj = GeneralUtility::makeInstance($className);	// local cObj
         $cObj->start($data, $table);
 
         return $cObj;
