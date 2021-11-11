@@ -387,8 +387,8 @@ class tx_div2007_core {
 	 * @return boolean TRUE if the TYPO3 call to mergeRecursiveWithOverrule has been executed
 	 */
 	static public function mergeRecursiveWithOverrule (array &$original, array $overrule, $addKeys = TRUE, $includeEmptyValues = TRUE, $enableUnsetFeature = TRUE) {
-        $result = tx_div2007_core_php53::mergeRecursiveWithOverrule($original, $overrule, $addKeys, $includeEmptyValues, $enableUnsetFeature);
-		return $result;
+        \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($original, $overrule, $addKeys, $includeEmptyValues, $enableUnsetFeature);
+		return true;
 	}
 
     /**
