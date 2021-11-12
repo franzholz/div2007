@@ -1,3 +1,6 @@
+2021-11-11 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: ErrorUtility::getMessage must only return HTML encoded error indices for security reasons.
+
 2021-05-28 Franz Holzinger <franz@ttproducts.de>
     * bugfix: undo wrong replacements of html by HTMLContent.
 

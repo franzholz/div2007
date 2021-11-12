@@ -73,14 +73,14 @@ class ErrorUtility {
                     }
                 }
             } else if (isset($messageArray[$i])) {
-                $result .= $indice . $messageArray[$i];
+                $result .= $indice . htmlspecialchars($messageArray[$i]);
             }
 
             $i++;
         }
 
         if ($result == '') {
-            $result = 'ERROR in ' . ($plugin ? $plugin : 'undefined plugin') . ' in call of \JambageCom\Div2007\Utility\ErrorUtility::getMessage: ' . ($message ? $message : ' undefined language code "' . $indice . '"' . implode(',', $errorCode));
+            $result = 'ERROR in ' . ($plugin ? $plugin : 'undefined plugin') . ' in call of \JambageCom\Div2007\Utility\ErrorUtility::getMessage: ' . ($message ? $message : ' undefined language code "' . htmlspecialchars($indice) . '"' . htmlspecialchars(implode(',', $errorCode)));
         }
 
         return $result;
