@@ -1,5 +1,6 @@
 
-
+2021-11-16 Franz Holzinger <franz@ttproducts.de>
+    * This should work with TYPO3 11 .
 
 2021-11-15 Franz Holzinger <franz@ttproducts.de>
     * new feature for compatibility with TYPO3 10: add method clearPageCacheContent_pidList to SystemUtility
