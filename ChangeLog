@@ -1,3 +1,9 @@
+
+
+
+2021-11-15 Franz Holzinger <franz@ttproducts.de>
+    * new feature for compatibility with TYPO3 10: add method clearPageCacheContent_pidList to SystemUtility
+
 2021-11-11 Franz Holzinger <franz@ttproducts.de>
     * bugfix: ErrorUtility::getMessage must only return HTML encoded error indices for security reasons.
     * bugfix: return correct class in getContentObjectRendererClassname.

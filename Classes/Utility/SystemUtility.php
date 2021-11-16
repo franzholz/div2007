@@ -27,6 +27,7 @@ namespace JambageCom\Div2007\Utility;
  *
  */
 
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 use JambageCom\Div2007\Utility\TableUtility;
@@ -289,6 +290,28 @@ class SystemUtility {
             $result = eval('return ' . $evalStr);
         }
         return $result;
+    }
+    
+    /**
+     * Initializes the caching system.
+     */
+    static protected function getPageCache()
+    {
+        return GeneralUtility::makeInstance(CacheManager::class)->getCache('cache_pages');
+    }
+
+    /**
+     * Clears cache content for a list of page ids
+     *
+     * @param string $pidList A list of INTEGER numbers which points to page uids for which to clear entries in the cache_pages cache (page content cache)
+     */
+    static public function clearPageCacheContent_pidList($pidList)
+    {
+        $pageCache = static::getPageCache();
+        $pageIds = GeneralUtility::trimExplode(',', $pidList);
+        foreach ($pageIds as $pageId) {
+            $pageCache->flushByTag('pageId_' . (int)$pageId);
+        }
     }
 }
 
