@@ -1,3 +1,6 @@
+2021-11-30 Franz Holzinger <franz@ttproducts.de>
+    * bugfix: Countries and subdivisions must be initialized in the init method of StaticInfoTablesApi, because internal arrays are used inside of some methods from this init method.
+
 2021-11-11 Franz Holzinger <franz@ttproducts.de>
     * bugfix: ErrorUtility::getMessage must only return HTML encoded error indices for security reasons.
 
