@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2018-03-06T12:15:00Z" product-name="div2007" target-language="uk">
+    <header/>
+    <body>
+      <trans-unit id="Conflicting_extensions_installed" xml:space="preserve">
+				<source>Conflicting extensions installed</source>
+			<target state="needs-translation">Conflicting extensions installed</target></trans-unit>
+      <trans-unit id="none" xml:space="preserve">
+				<source>None</source>
+			<target state="needs-translation">None</target></trans-unit>
+      <trans-unit id="keys" xml:space="preserve">
+				<source>Extension keys:</source>
+			<target state="needs-translation">Extension keys:</target></trans-unit>
+      <trans-unit id="uninstall" xml:space="preserve">
+				<source>Conflicting extensions should be uninstalled for %s to function correctly.</source>
+			<target state="needs-translation">Conflicting extensions should be uninstalled for %s to function correctly.</target></trans-unit>
+      <trans-unit id="Required_extensions_not_installed" xml:space="preserve">
+				<source>Required extensions not installed</source>
+			<target state="needs-translation">Required extensions not installed</target></trans-unit>
+      <trans-unit id="install" xml:space="preserve">
+				<source>Required extensions should be installed for %s to function correctly.</source>
+			<target state="needs-translation">Required extensions should be installed for %s to function correctly.</target></trans-unit>
+      <trans-unit id="Front_end_login_security_level" xml:space="preserve">
+				<source>Front end login security level</source>
+			<target state="needs-translation">Front end login security level</target></trans-unit>
+      <trans-unit id="must_be_normal_or_rsa" xml:space="preserve">
+				<source>Use the Install tool to set the front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) to "", "normal" or "rsa".</source>
+			<target state="needs-translation">Use the Install tool to set the front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) to "", "normal" or "rsa".</target></trans-unit>
+      <trans-unit id="Salted_passwords_in_front_end" xml:space="preserve">
+				<source>Salted passwords in front end</source>
+			<target state="needs-translation">Salted passwords in front end</target></trans-unit>
+      <trans-unit id="Global_variables_in_front_end" xml:space="preserve">
+				<source>Global variables in front end</source>
+			<target state="needs-translation">Global variables in front end</target></trans-unit>
+      <trans-unit id="enabled" xml:space="preserve">
+				<source>Enabled</source>
+			<target state="needs-translation">Enabled</target></trans-unit>
+      <trans-unit id="disabled" xml:space="preserve">
+				<source>Disabled</source>
+			<target state="needs-translation">Disabled</target></trans-unit>
+      <trans-unit id="global_variable_must_be_set" xml:space="preserve">
+				<source>For %s to function correctly, the global variable %s must have the value "%s".</source>
+			<target state="needs-translation">For %s to function correctly, the global variable %s must have the value "%s".</target></trans-unit>
+      <trans-unit id="salted_passwords_must_be_enabled" xml:space="preserve">
+				<source>For %s to function correctly, extension "saltedpasswords" must be installed and must be configured so that salted passwords are enabled in front end. Note that if front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) is not set to "", "normal" or "rsa", then salted passwords cannot be enabled in front end.</source>
+			<target state="needs-translation">For %s to function correctly, extension "saltedpasswords" must be installed and must be configured so that salted passwords are enabled in front end. Note that if front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) is not set to "", "normal" or "rsa", then salted passwords cannot be enabled in front end.</target></trans-unit>
+    </body>
+  </file>
+</xliff>
