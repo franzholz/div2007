@@ -5,70 +5,70 @@
     <body>
       <trans-unit id="example_text" xml:space="preserve">
 				<source>Overwrite this example text in your div2007 setup.</source>
-			<target state="needs-translation">Overwrite this example text in your div2007 setup.</target></trans-unit>
+			<target state="translated">Überschreiben Sie diesen Beispieltext in Ihrem div2007 Setup.</target></trans-unit>
       <trans-unit id="security.internal_hashed_password_error" xml:space="preserve">
 				<source>Failed to fetch a hashed password</source>
-			<target state="needs-translation">Failed to fetch a hashed password</target></trans-unit>
+			<target state="translated">Fehler beim Abrufen eines gehashten Passworts</target></trans-unit>
       <trans-unit id="security.internal_decrypt_auto_login_failed" xml:space="preserve">
 				<source>Failed to decrypt the auto login password</source>
-			<target state="needs-translation">Failed to decrypt the auto login password</target></trans-unit>
+			<target state="translated">Fehler beim Entschlüsseln des Auto-Login-Passworts</target></trans-unit>
       <trans-unit id="security.internal_rsaauth_process_incoming_field_failed" xml:space="preserve">
 				<source>RSA auth service failed to process incoming field "%s"</source>
-			<target state="needs-translation">RSA auth service failed to process incoming field "%s"</target></trans-unit>
+			<target state="translated">RSA Authentifizierungsdienst konnte eingehendes Feld "%s " nicht verarbeiten</target></trans-unit>
       <trans-unit id="security.internal_rsaauth_retrieve_private_key_failed" xml:space="preserve">
 				<source>RSA auth service failed to retrieve private key</source>
-			<target state="needs-translation">RSA auth service failed to retrieve private key</target></trans-unit>
+			<target state="translated">RSA Authentifizierungsdienst konnte den privaten Schlüssel nicht abrufen</target></trans-unit>
       <trans-unit id="security.internal_rsaauth_backend_not_available" xml:space="preserve">
 				<source>Required RSA auth backend not available</source>
-			<target state="needs-translation">Required RSA auth backend not available</target></trans-unit>
+			<target state="translated">Benötigtes RSA Auth Backend nicht verfügbar</target></trans-unit>
       <trans-unit id="error.internal_required_extension_missing" xml:space="preserve">
 				<source>The extension "%1$s" is required and must be installed</source>
-			<target state="needs-translation">The extension "%1$s" is required and must be installed</target></trans-unit>
+			<target state="translated">Die Erweiterung "%1$s" ist erforderlich und muss installiert sein</target></trans-unit>
       <trans-unit id="privacy_policy.title" xml:space="preserve">
 				<source>Privacy Policy</source>
-			<target state="needs-translation">Privacy Policy</target></trans-unit>
+			<target state="translated">Datenschutzerklärung</target></trans-unit>
       <trans-unit id="privacy_policy.acknowledgement" xml:space="preserve">
 				<source>Privacy Policy Acknowledgement</source>
-			<target state="needs-translation">Privacy Policy Acknowledgement</target></trans-unit>
+			<target state="translated">Bestätigung der Datenschutzrichtlinie</target></trans-unit>
       <trans-unit id="privacy_policy.approval_required" xml:space="preserve">
 				<source>Before you can continue, your approval to this website's privacy policy is required</source>
-			<target state="needs-translation">Before you can continue, your approval to this website's privacy policy is required</target></trans-unit>
+			<target state="translated">Bevor Sie fortfahren können, ist Ihre Zustimmung zu den Datenschutzrichtlinien dieser Website erforderlich</target></trans-unit>
       <trans-unit id="privacy_policy.acknowledged" xml:space="preserve">
 				<source>I acknowledge and agree to the privacy policy.</source>
-			<target state="needs-translation">I acknowledge and agree to the privacy policy.</target></trans-unit>
+			<target state="translated">Ich habe die Datenschutzrichtlinie gelesen und akzeptiere sie.</target></trans-unit>
       <trans-unit id="privacy_policy.acknowledged_2" xml:space="preserve">
 				<source>I agree for any data I transmit through this site, that you can use them in accordance with its Privacy Policy.</source>
-			<target state="needs-translation">I agree for any data I transmit through this site, that you can use them in accordance with its Privacy Policy.</target></trans-unit>
+			<target state="translated">Ich stimme für alle von mir über diese Webseite übertragenen Daten zu, dass Sie diese gemäß der Datenschutzrichtlinie verwenden dürfen.</target></trans-unit>
       <trans-unit id="privacy_policy.hint" xml:space="preserve">
 				<source>Hint</source>
-			<target state="needs-translation">Hint</target></trans-unit>
+			<target state="translated">Hinweis</target></trans-unit>
       <trans-unit id="privacy_policy.hint_1" xml:space="preserve">
 				<source>You have the right to renounce the agreement to the usage of your personal data at any time via email.</source>
-			<target state="needs-translation">You have the right to renounce the agreement to the usage of your personal data at any time via email.</target></trans-unit>
+			<target state="translated">Sie haben das Recht die Zustimmung zur Nutzung Ihrer Daten jederzeit per Email zu widerrufen.</target></trans-unit>
       <trans-unit id="list_browseresults_first" xml:space="preserve">
 				<source>&lt;&lt; First</source>
-			<target state="needs-translation">&lt;&lt; First</target></trans-unit>
+			<target state="translated">&lt;&lt; Erste</target></trans-unit>
       <trans-unit id="list_browseresults_prev" xml:space="preserve">
 				<source>&lt; Previous</source>
-			<target state="needs-translation">&lt; Previous</target></trans-unit>
+			<target state="translated">&lt; Vorige</target></trans-unit>
       <trans-unit id="list_browseresults_page" xml:space="preserve">
 				<source>Page</source>
-			<target state="needs-translation">Page</target></trans-unit>
+			<target state="translated">Seite</target></trans-unit>
       <trans-unit id="list_browseresults_next" xml:space="preserve">
 				<source>Next &gt;</source>
-			<target state="needs-translation">Next &gt;</target></trans-unit>
+			<target state="translated">Nächste &gt;</target></trans-unit>
       <trans-unit id="list_browseresults_last" xml:space="preserve">
 				<source>Last &gt;&gt;</source>
-			<target state="needs-translation">Last &gt;&gt;</target></trans-unit>
+			<target state="translated">Letzte &gt;&gt;</target></trans-unit>
       <trans-unit id="list_browseresults_to" xml:space="preserve">
 				<source>to</source>
-			<target state="needs-translation">to</target></trans-unit>
+			<target state="translated">bis</target></trans-unit>
       <trans-unit id="list_browseresults_displays_marker" xml:space="preserve">
 				<source>Displaying results ###FROM### to ###TO### out of ###OUT_OF###</source>
-			<target state="needs-translation">Displaying results ###FROM### to ###TO### out of ###OUT_OF###</target></trans-unit>
+			<target state="translated">Anzeige Ergebnisse ###FROM### bis ###TO### von ###OUT_OF###</target></trans-unit>
       <trans-unit id="list_browseresults_displays" xml:space="preserve">
 				<source>Displaying results ###SPAN_BEGIN###%s to %s&lt;/span&gt; out of ###SPAN_BEGIN###%s&lt;/span&gt;</source>
-			<target state="needs-translation">Displaying results ###SPAN_BEGIN###%s to %s&lt;/span&gt; out of ###SPAN_BEGIN###%s&lt;/span&gt;</target></trans-unit>
+			<target state="translated">Anzeige Ergebnisse ###SPAN_BEGIN###%s bis %s&lt;/span&gt; von ###SPAN_BEGIN###%s&lt;/span&gt;</target></trans-unit>
     </body>
   </file>
 </xliff>
