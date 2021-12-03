@@ -8,25 +8,25 @@
 			<target state="needs-translation">Conflicting extensions installed</target></trans-unit>
       <trans-unit id="none" xml:space="preserve">
 				<source>None</source>
-			<target state="needs-translation">None</target></trans-unit>
+			<target state="translated">Kein</target></trans-unit>
       <trans-unit id="keys" xml:space="preserve">
 				<source>Extension keys:</source>
-			<target state="needs-translation">Extension keys:</target></trans-unit>
+			<target state="translated">Erweiterungsschlüssel:</target></trans-unit>
       <trans-unit id="uninstall" xml:space="preserve">
 				<source>Conflicting extensions should be uninstalled for %s to function correctly.</source>
-			<target state="needs-translation">Conflicting extensions should be uninstalled for %s to function correctly.</target></trans-unit>
+			<target state="translated">Widersprüchliche Erweiterungen sollten deinstalliert werden, damit %s korrekt funktioniert.</target></trans-unit>
       <trans-unit id="Required_extensions_not_installed" xml:space="preserve">
 				<source>Required extensions not installed</source>
-			<target state="needs-translation">Required extensions not installed</target></trans-unit>
+			<target state="translated">Benötigte Erweiterung »%s« ist nicht installiert</target></trans-unit>
       <trans-unit id="install" xml:space="preserve">
 				<source>Required extensions should be installed for %s to function correctly.</source>
-			<target state="needs-translation">Required extensions should be installed for %s to function correctly.</target></trans-unit>
+			<target state="translated">Widersprüchliche Erweiterungen sollten deinstalliert werden, damit %s korrekt funktioniert.</target></trans-unit>
       <trans-unit id="Front_end_login_security_level" xml:space="preserve">
 				<source>Front end login security level</source>
-			<target state="needs-translation">Front end login security level</target></trans-unit>
+			<target state="translated">Front-Login-Sicherheitslevel</target></trans-unit>
       <trans-unit id="must_be_normal_or_rsa" xml:space="preserve">
 				<source>Use the Install tool to set the front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) to "", "normal" or "rsa".</source>
-			<target state="needs-translation">Use the Install tool to set the front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) to "", "normal" or "rsa".</target></trans-unit>
+			<target state="translated">Benutzen Sie das Installationswerkzeug, um das Front-End-Sicherheitslevel ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) auf "", "normal" oder "rsa" zu setzen.</target></trans-unit>
       <trans-unit id="Salted_passwords_in_front_end" xml:space="preserve">
 				<source>Salted passwords in front end</source>
 			<target state="needs-translation">Salted passwords in front end</target></trans-unit>
@@ -35,13 +35,13 @@
 			<target state="needs-translation">Global variables in front end</target></trans-unit>
       <trans-unit id="enabled" xml:space="preserve">
 				<source>Enabled</source>
-			<target state="needs-translation">Enabled</target></trans-unit>
+			<target state="translated">Aktiviert</target></trans-unit>
       <trans-unit id="disabled" xml:space="preserve">
 				<source>Disabled</source>
-			<target state="needs-translation">Disabled</target></trans-unit>
+			<target state="translated">Deaktiviert</target></trans-unit>
       <trans-unit id="global_variable_must_be_set" xml:space="preserve">
 				<source>For %s to function correctly, the global variable %s must have the value "%s".</source>
-			<target state="needs-translation">For %s to function correctly, the global variable %s must have the value "%s".</target></trans-unit>
+			<target state="translated">Damit %s korrekt funktioniert, muss die globale Variable %s den Wert "%s " haben.</target></trans-unit>
       <trans-unit id="salted_passwords_must_be_enabled" xml:space="preserve">
 				<source>For %s to function correctly, extension "saltedpasswords" must be installed and must be configured so that salted passwords are enabled in front end. Note that if front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) is not set to "", "normal" or "rsa", then salted passwords cannot be enabled in front end.</source>
 			<target state="needs-translation">For %s to function correctly, extension "saltedpasswords" must be installed and must be configured so that salted passwords are enabled in front end. Note that if front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) is not set to "", "normal" or "rsa", then salted passwords cannot be enabled in front end.</target></trans-unit>
