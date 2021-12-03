@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="messages" date="2018-03-30T12:00:00Z" product-name="div2007" target-language="hu">
+    <header/>
+    <body>
+      <trans-unit id="example_text" xml:space="preserve">
+				<source>Overwrite this example text in your div2007 setup.</source>
+			<target state="needs-translation">Overwrite this example text in your div2007 setup.</target></trans-unit>
+      <trans-unit id="security.internal_hashed_password_error" xml:space="preserve">
+				<source>Failed to fetch a hashed password</source>
+			<target state="needs-translation">Failed to fetch a hashed password</target></trans-unit>
+      <trans-unit id="security.internal_decrypt_auto_login_failed" xml:space="preserve">
+				<source>Failed to decrypt the auto login password</source>
+			<target state="needs-translation">Failed to decrypt the auto login password</target></trans-unit>
+      <trans-unit id="security.internal_rsaauth_process_incoming_field_failed" xml:space="preserve">
+				<source>RSA auth service failed to process incoming field "%s"</source>
+			<target state="needs-translation">RSA auth service failed to process incoming field "%s"</target></trans-unit>
+      <trans-unit id="security.internal_rsaauth_retrieve_private_key_failed" xml:space="preserve">
+				<source>RSA auth service failed to retrieve private key</source>
+			<target state="needs-translation">RSA auth service failed to retrieve private key</target></trans-unit>
+      <trans-unit id="security.internal_rsaauth_backend_not_available" xml:space="preserve">
+				<source>Required RSA auth backend not available</source>
+			<target state="needs-translation">Required RSA auth backend not available</target></trans-unit>
+      <trans-unit id="error.internal_required_extension_missing" xml:space="preserve">
+				<source>The extension "%1$s" is required and must be installed</source>
+			<target state="needs-translation">The extension "%1$s" is required and must be installed</target></trans-unit>
+      <trans-unit id="privacy_policy.title" xml:space="preserve">
+				<source>Privacy Policy</source>
+			<target state="needs-translation">Privacy Policy</target></trans-unit>
+      <trans-unit id="privacy_policy.acknowledgement" xml:space="preserve">
+				<source>Privacy Policy Acknowledgement</source>
+			<target state="needs-translation">Privacy Policy Acknowledgement</target></trans-unit>
+      <trans-unit id="privacy_policy.approval_required" xml:space="preserve">
+				<source>Before you can continue, your approval to this website's privacy policy is required</source>
+			<target state="needs-translation">Before you can continue, your approval to this website's privacy policy is required</target></trans-unit>
+      <trans-unit id="privacy_policy.acknowledged" xml:space="preserve">
+				<source>I acknowledge and agree to the privacy policy.</source>
+			<target state="needs-translation">I acknowledge and agree to the privacy policy.</target></trans-unit>
+      <trans-unit id="privacy_policy.acknowledged_2" xml:space="preserve">
+				<source>I agree for any data I transmit through this site, that you can use them in accordance with its Privacy Policy.</source>
+			<target state="needs-translation">I agree for any data I transmit through this site, that you can use them in accordance with its Privacy Policy.</target></trans-unit>
+      <trans-unit id="privacy_policy.hint" xml:space="preserve">
+				<source>Hint</source>
+			<target state="needs-translation">Hint</target></trans-unit>
+      <trans-unit id="privacy_policy.hint_1" xml:space="preserve">
+				<source>You have the right to renounce the agreement to the usage of your personal data at any time via email.</source>
+			<target state="needs-translation">You have the right to renounce the agreement to the usage of your personal data at any time via email.</target></trans-unit>
+      <trans-unit id="list_browseresults_first" xml:space="preserve">
+				<source>&lt;&lt; First</source>
+			<target state="needs-translation">&lt;&lt; First</target></trans-unit>
+      <trans-unit id="list_browseresults_prev" xml:space="preserve">
+				<source>&lt; Previous</source>
+			<target state="needs-translation">&lt; Previous</target></trans-unit>
+      <trans-unit id="list_browseresults_page" xml:space="preserve">
+				<source>Page</source>
+			<target state="needs-translation">Page</target></trans-unit>
+      <trans-unit id="list_browseresults_next" xml:space="preserve">
+				<source>Next &gt;</source>
+			<target state="needs-translation">Next &gt;</target></trans-unit>
+      <trans-unit id="list_browseresults_last" xml:space="preserve">
+				<source>Last &gt;&gt;</source>
+			<target state="needs-translation">Last &gt;&gt;</target></trans-unit>
+      <trans-unit id="list_browseresults_to" xml:space="preserve">
+				<source>to</source>
+			<target state="needs-translation">to</target></trans-unit>
+      <trans-unit id="list_browseresults_displays_marker" xml:space="preserve">
+				<source>Displaying results ###FROM### to ###TO### out of ###OUT_OF###</source>
+			<target state="needs-translation">Displaying results ###FROM### to ###TO### out of ###OUT_OF###</target></trans-unit>
+      <trans-unit id="list_browseresults_displays" xml:space="preserve">
+				<source>Displaying results ###SPAN_BEGIN###%s to %s&lt;/span&gt; out of ###SPAN_BEGIN###%s&lt;/span&gt;</source>
+			<target state="needs-translation">Displaying results ###SPAN_BEGIN###%s to %s&lt;/span&gt; out of ###SPAN_BEGIN###%s&lt;/span&gt;</target></trans-unit>
+    </body>
+  </file>
+</xliff>
