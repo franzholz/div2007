@@ -5,10 +5,10 @@
     <body>
       <trans-unit id="tstamp" xml:space="preserve">
                 <source>Timestamp</source>
-            <target state="needs-translation">Timestamp</target></trans-unit>
-      <trans-unit id="crdate" xml:space="preserve">
+            <target state="translated">Zeitstempel</target></trans-unit>
+      <trans-unit id="crdate" xml:space="preserve" approved="yes">
                 <source>Creation Date</source>
-            <target state="needs-translation">Creation Date</target></trans-unit>
+            <target state="final">Erstellungsdatum</target></trans-unit>
     </body>
   </file>
 </xliff>
