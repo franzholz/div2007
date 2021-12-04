@@ -19,7 +19,7 @@ namespace JambageCom\Div2007\Api;
  *
  * functions for the TYPO3 extension static_info_tables
  *
- * attention: This class must also work under TYPO3 6.2
+ * attention: This class must also work under TYPO3 7.6
  */
 
 use JambageCom\Div2007\Utility\ExtensionUtility;
@@ -74,7 +74,12 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
             $result = false;
         } else if (!$this->hasBeenInitialized) {
-            Locales::initialize();
+            if (
+                defined('TYPO3_version') &&
+                version_compare(TYPO3_version, '10.0.0', '<')
+            ) {
+                Locales::initialize();
+            }
 
             if (empty($conf) && is_object($GLOBALS['TSFE'])) {
                 $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'];
@@ -297,11 +302,13 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         foreach ($prefixedTitleFields as $titleField) {
             $queryBuilder->addSelect($titleField);
         }
+
         if ($param === 'UN') {
             $queryBuilder->where($queryBuilder->expr()->eq('cn_uno_member', $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT)));
         } elseif ($param === 'EU') {
             $queryBuilder->where($queryBuilder->expr()->eq('cn_eu_member', $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT)));
         }
+
         if ($addWhere) {
             $addWhere = QueryHelper::stripLogicalOperatorPrefix($addWhere);
             if (empty($queryBuilder->getQueryPart('where'))) {
@@ -310,6 +317,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 $queryBuilder->andWhere($addWhere);
             }
         }
+
         $query = $queryBuilder->execute();
         while ($row = $query->fetch()) {
             foreach ($titleFields as $titleField) {
@@ -319,6 +327,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 }
             }
         }
+
         if ($this->conf['countriesAllowed'] != '') {
             $countriesAllowedArray = GeneralUtility::trimExplode(',', $this->conf['countriesAllowed']);
             $newNameArray = [];
