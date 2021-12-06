@@ -44,7 +44,7 @@ use SJBR\StaticInfoTables\Utility\LocalizationUtility;
 class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
 
     private $hasBeenInitialized = false;
-    private $cache = array();
+    private $cache = [];
     protected $types = ['TERRITORIES', 'COUNTRIES', 'SUBDIVISIONS', 'CURRENCIES', 'LANGUAGES'];
     private $tables = [
         'TERRITORIES' 	=> 'static_territories',
@@ -59,6 +59,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     public $defaultCountry;
     public $defaultCountryZone;
     public $defaultLanguage;
+    public $versionNumber;
 
     
     /**
@@ -84,6 +85,8 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             if (empty($conf) && is_object($GLOBALS['TSFE'])) {
                 $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'];
             }
+            $extensionInfo = \JambageCom\Div2007\Utility\ExtensionUtility::getExtensionInfo('static_info_tables');
+            $this->versionNumber = $extensionInfo['version'];
             $this->initCountries('ALL');
 
             //Get the default currency and make sure it does exist in table static_currencies
@@ -287,8 +290,14 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $titleFields = LocalizationUtility::getLabelFields($table, $lang, $local);
         $prefixedTitleFields = [];
         $prefixedTitleFields[] = $table . '.cn_iso_3';
-        foreach ($titleFields as $titleField) {
-            $prefixedTitleFields[] = $table . '.' . $titleField;
+        if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+            foreach ($titleFields as $titleField => $titleFieldProperty) {
+                $prefixedTitleFields[] = $table . '.' . $titleField;
+            }
+        } else {
+            foreach ($titleFields as $titleField) {
+                $prefixedTitleFields[] = $table . '.' . $titleField;
+            }
         }
         array_unique($prefixedTitleFields);
 
@@ -317,13 +326,21 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 $queryBuilder->andWhere($addWhere);
             }
         }
-
         $query = $queryBuilder->execute();
         while ($row = $query->fetch()) {
-            foreach ($titleFields as $titleField) {
-                if ($row[$titleField]) {
-                    $nameArray[$row['cn_iso_3']] = $row[$titleField];
-                    break;
+            if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+                foreach ($titleFields as $titleField => $titleFieldProperty) {
+                    if ($row[$titleField]) {
+                        $nameArray[$row['cn_iso_3']] = $row[$titleField];
+                        break;
+                    }
+               }
+            } else {
+                foreach ($titleFields as $titleField) {
+                    if ($row[$titleField]) {
+                        $nameArray[$row['cn_iso_3']] = $row[$titleField];
+                        break;
+                    }
                 }
             }
         }
@@ -364,8 +381,14 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $lang = LocalizationUtility::getIsoLanguageKey($lang);
         $titleFields = LocalizationUtility::getLabelFields($table, $lang);
         $prefixedTitleFields = [];
-        foreach ($titleFields as $titleField) {
-            $prefixedTitleFields[] = $table . '.' . $titleField;
+        if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+            foreach ($titleFields as $titleField => $titleFieldProperty) {
+                $prefixedTitleFields[] = $table . '.' . $titleField;
+            }
+        } else {
+            foreach ($titleFields as $titleField) {
+                $prefixedTitleFields[] = $table . '.' . $titleField;
+            }
         }
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable($table);
@@ -389,10 +412,19 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         }
         $query = $queryBuilder->execute();
         while ($row = $query->fetch()) {
-            foreach ($titleFields as $titleField) {
-                if ($row[$titleField]) {
-                    $nameArray[$row['zn_code']] = $row[$titleField];
-                    break;
+            if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+                foreach ($titleFields as $titleField => $titleFieldProperty) {
+                    if ($row[$titleField]) {
+                        $nameArray[$row['zn_code']] = $row[$titleField];
+                        break;
+                    }
+                }
+            } else {
+                foreach ($titleFields as $titleField) {
+                    if ($row[$titleField]) {
+                        $nameArray[$row['zn_code']] = $row[$titleField];
+                        break;
+                    }
                 }
             }
         }
@@ -421,8 +453,14 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $lang = LocalizationUtility::getIsoLanguageKey($lang);
         $titleFields = LocalizationUtility::getLabelFields($table, $lang);
         $prefixedTitleFields = [];
-        foreach ($titleFields as $titleField) {
-            $prefixedTitleFields[] = $table . '.' . $titleField;
+        if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+            foreach ($titleFields as $titleField => $titleFieldProperty) {
+                $prefixedTitleFields[] = $table . '.' . $titleField;
+            }
+        } else {
+            foreach ($titleFields as $titleField) {
+                $prefixedTitleFields[] = $table . '.' . $titleField;
+            }
         }
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable($table);
@@ -439,10 +477,19 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         }
         $query = $queryBuilder->execute();
         while ($row = $query->fetch()) {
-            foreach ($titleFields as $titleField) {
-                if ($row[$titleField]) {
-                    $nameArray[$row['cu_iso_3']] = $row[$titleField];
-                    break;
+            if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+                foreach ($titleFields as $titleField => $titleFieldProperty) {
+                    if ($row[$titleField]) {
+                        $nameArray[$row['cu_iso_3']] = $row[$titleField];
+                        break;
+                    }
+                }
+            } else {
+                foreach ($titleFields as $titleField) {
+                    if ($row[$titleField]) {
+                        $nameArray[$row['cu_iso_3']] = $row[$titleField];
+                        break;
+                    }
                 }
             }
         }
@@ -489,7 +536,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
 
             // Initialize cache array
         if (!is_array($this->cache['getCurrentLanguage'])) {
-            $this->cache['getCurrentLanguage'] = array();
+            $this->cache['getCurrentLanguage'] = [];
         }
             // Cache retrieved value
         $this->cache['getCurrentLanguage'][$langCodeT3] = $lang;
@@ -575,7 +622,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         if (!$this->isActive()) {
             return false;
         }
-        $labelFields = array();
+        $labelFields = [];
         if(
             $table &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'])
@@ -671,14 +718,21 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $title = '';
         $titleFields = static::getTCAlabelField($table, true, $lang, $local);
         if (count ($titleFields)) {
-            $prefixedTitleFields = array();
-            foreach ($titleFields as $titleField) {
-                $prefixedTitleFields[] = $table . '.' . $titleField;
+            $prefixedTitleFields = [];
+            if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+                foreach ($titleFields as $titleField => $titleFieldProperty) {
+                    $prefixedTitleFields[] = $table . '.' . $titleField;
+                }
+            } else {
+                foreach ($titleFields as $titleField) {
+                    $prefixedTitleFields[] = $table . '.' . $titleField;
+                }
             }
+
             $fields = implode(',', $prefixedTitleFields);
             $whereClause = '1=1';
             if (!is_array($isoCode)) {
-                $isoCode = array($isoCode);
+                $isoCode = [$isoCode];
             }
             $index = 0;
             foreach ($isoCode as $index => $code) {
@@ -703,10 +757,19 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             );
 
             if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                foreach ($titleFields as $titleField) {
-                    if ($row[$titleField]) {
-                        $title = $row[$titleField];
-                        break;
+                if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+                    foreach ($titleFields as $titleField => $titleFieldProperty) {
+                        if ($row[$titleField]) {
+                            $title = $row[$titleField];
+                            break;
+                        }
+                    }
+                } else {
+                    foreach ($titleFields as $titleField) {
+                        if ($row[$titleField]) {
+                            $title = $row[$titleField];
+                            break;
+                        }
                     }
                 }
             }
@@ -731,7 +794,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         if (!$this->isActive()) {
             return false;
         }
-        $resultArray = array();
+        $resultArray = [];
         $where = '';
 
         $table = 'static_countries';

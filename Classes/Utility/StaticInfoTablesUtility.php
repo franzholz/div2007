@@ -18,6 +18,7 @@ namespace JambageCom\Div2007\Utility;
 /**
  * deprecated. Use the class \JambageCom\Div2007\Api\StaticInfoTablesApi instead.
  * functions for the TYPO3 extension static_info_tables
+ * It will be removed in 2025
  *
  * attention: This class must also work under TYPO3 6.2
  */
@@ -33,10 +34,15 @@ class StaticInfoTablesUtility {
 
     static private $staticInfo = false;
     static private $cache = array();
+    static private $versionNumber;
 
 
     static public function getStaticInfo () {
         return static::$staticInfo;
+    }
+
+    static public function getVersionNumer () {
+        return static::$versionNumber;
     }
 
     /**
@@ -66,6 +72,7 @@ class StaticInfoTablesUtility {
                 } else {
                     return false;
                 }
+                static::$versionNumber = $sitVersion;
 
                 // Initialise static info library
                 static::$staticInfo = GeneralUtility::makeInstance($class);
@@ -234,9 +241,17 @@ class StaticInfoTablesUtility {
         $titleFields = static::getTCAlabelField($table, true, $lang, $local);
         if (count ($titleFields)) {
             $prefixedTitleFields = array();
-            foreach ($titleFields as $titleField) {
-                $prefixedTitleFields[] = $table . '.' . $titleField;
+            
+            if (version_compare(static::$versionNumber, '11.5.0', '>=')) {            
+                foreach ($titleFields as $titleField => $titleFieldProperty) {
+                    $prefixedTitleFields[] = $table . '.' . $titleField;
+                }
+            } else {
+                foreach ($titleFields as $titleField) {
+                    $prefixedTitleFields[] = $table . '.' . $titleField;
+                }
             }
+
             $fields = implode(',', $prefixedTitleFields);
             $whereClause = '1=1';
             if (!is_array($isoCode)) {
@@ -265,10 +280,19 @@ class StaticInfoTablesUtility {
             );
 
             if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                foreach ($titleFields as $titleField) {
-                    if ($row[$titleField]) {
-                        $title = $row[$titleField];
-                        break;
+                if (version_compare(static::$versionNumber, '11.5.0', '>=')) {            
+                    foreach ($titleFields as $titleField => $titleFieldProperty) {
+                        if ($row[$titleField]) {
+                            $title = $row[$titleField];
+                            break;
+                        }
+                    }
+                } else {
+                    foreach ($titleFields as $titleField) {
+                        if ($row[$titleField]) {
+                            $title = $row[$titleField];
+                            break;
+                        }
                     }
                 }
             }

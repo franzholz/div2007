@@ -1,3 +1,6 @@
+2021-12-06 Franz Holzinger <franz@ttproducts.de>
+    * compatibility TYPO3 11: In static_info_tables 11.5 the method LocalizationUtility::getLabelFields returns an array.
+
 2021-12-04 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 11: Do not call the removed method initialize for the class TYPO3\CMS\Core\Localization\Locales.
 
