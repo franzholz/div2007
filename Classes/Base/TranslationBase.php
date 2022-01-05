@@ -16,7 +16,6 @@ namespace JambageCom\Div2007\Base;
  */
 
 
-use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
