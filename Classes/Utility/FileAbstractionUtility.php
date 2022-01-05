@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Utility;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2019 Franz Holzinger (franz@ttproducts.de)
+*  (c) 2022 Franz Holzinger (franz@ttproducts.de)
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,6 +27,13 @@ namespace JambageCom\Div2007\Utility;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+
+use \TYPO3\CMS\Core\Resource\ResourceFactory;
+use \TYPO3\CMS\Core\Resource\StorageRepository;
+use \TYPO3\CMS\Core\Utility\GeneralUtility;
+
+
+
 /**
  *
  * functions for the TYPO3 File Abstraction Layer (FAL)
@@ -36,8 +43,6 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-
-
 
 class FileAbstractionUtility {
 
@@ -51,11 +56,11 @@ class FileAbstractionUtility {
     static public function getFileRecords (
         $tableName,
         $fieldName,
-        array $uidArray = array(),
+        array $uidArray = [],
         $orderBy = 'sorting_foreign'
     )
     {
-        $result = array();
+        $result = [];
 
         if (count($uidArray)) {
             $where_clause = 'uid_foreign IN (' . implode(',', $uidArray) . ') AND tablenames="' . $tableName . '" AND fieldname="' . $fieldName . '"' ;
@@ -82,9 +87,9 @@ class FileAbstractionUtility {
     ) {
         $result = false;
 
-        $storageRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\StorageRepository::class);
+        $storageRepository = GeneralUtility::makeInstance(StorageRepository::class);
         $storage = $storageRepository->findByUid(1);
-        $resourceFactory = \TYPO3\CMS\Core\Resource\ResourceFactory::getInstance();
+        $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
         $fileObj = $resourceFactory->getFileReferenceObject(intval($fileReferenceUid));
 
         if (is_object($fileObj)) {
@@ -113,7 +118,6 @@ class FileAbstractionUtility {
 
         return $result;
     }
-
 }
 
 

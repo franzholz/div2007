@@ -1,3 +1,6 @@
+2021-12-06 Franz Holzinger <franz@ttproducts.de>
+    * compatibility TYPO3 11: Replace ResourceFactory::getInstance by GeneralUtility::makeInstance(ResourceFactory::class)
+
 2021-12-11 Franz Holzinger <franz@ttproducts.de>
     * Remove the parameter no_cache from the page browser in the class BrowserUtility
 
