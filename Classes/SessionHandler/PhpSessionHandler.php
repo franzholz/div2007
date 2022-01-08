@@ -40,7 +40,7 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
     * @param string $subKey: The subkey of the session key for the extension for which you read or write the session data.
     * @return data The session data
     */
-    public function getSessionData ($subKey = '')
+    public function getSessionData ($subKey = '') {
         $data = [];
         $result = [];
 
