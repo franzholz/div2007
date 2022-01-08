@@ -1,3 +1,6 @@
+2022-01-08 Franz Holzinger <franz@ttproducts.de>
+    * fix PHP syntax errors
+
 2021-12-06 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 11: Replace ResourceFactory::getInstance by GeneralUtility::makeInstance(ResourceFactory::class)
 
