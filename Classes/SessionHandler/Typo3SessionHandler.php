@@ -51,8 +51,6 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
                 isset($GLOBALS['TSFE']->fe_user)
             ) {
                 $this->frontendUser = $GLOBALS['TSFE']->fe_user;
-            } else if (version_compare(TYPO3_version, '10.0.0', '<')) {
-                $this->frontendUser = \TYPO3\CMS\Frontend\Utility\EidUtility::initFeUser();
             } else {
                 $detail = '';
                 if (isset($GLOBALS['TSFE'])) {

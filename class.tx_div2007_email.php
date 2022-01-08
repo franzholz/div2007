@@ -168,57 +168,40 @@ class tx_div2007_email {
 			}
 		}
 
-		if (
-			version_compare(TYPO3_version, '4.7.0', '>=') ||
-			(
-				isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
-				is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']) &&
-				isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
-				is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']) &&
-				array_search(
-					\TYPO3\CMS\Core\Mail\SwiftMailerAdapter::class,
-					$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/utility/class.t3lib_utility_mail.php']['substituteMailDelivery']
-				) !== FALSE
-			)
-		) {
-			$mail = tx_div2007_core::newMailMessage();
-			$mail->setTo($toEMail)
-				->setFrom(array($fromEMail => $fromName))
-				->setReturnPath($returnPath)
-				->setSubject($subject)
-				->setBody($HTMLContent, 'text/html', $charset)
-				->addPart($PLAINContent, 'text/plain', $charset);
+        $mail = tx_div2007_core::newMailMessage();
+        $mail->setTo($toEMail)
+            ->setFrom(array($fromEMail => $fromName))
+            ->setReturnPath($returnPath)
+            ->setSubject($subject)
+            ->setBody($HTMLContent, 'text/html', $charset)
+            ->addPart($PLAINContent, 'text/plain', $charset);
 
-			if ($replyTo) {
-				$mail->setReplyTo(array($replyTo => $fromEmail));
-			}
+        if ($replyTo) {
+            $mail->setReplyTo(array($replyTo => $fromEmail));
+        }
 
-			if (isset($attachment)) {
-				if (is_array($attachment)) {
-					$attachmentArray = $attachment;
-				} else {
-					$attachmentArray = array($attachment);
-				}
-				foreach ($attachmentArray as $theAttachment) {
-					if (file_exists($theAttachment)) {
-						$mail->attach(Swift_Attachment::fromPath($theAttachment));
-					}
-				}
-			}
+        if (isset($attachment)) {
+            if (is_array($attachment)) {
+                $attachmentArray = $attachment;
+            } else {
+                $attachmentArray = array($attachment);
+            }
+            foreach ($attachmentArray as $theAttachment) {
+                if (file_exists($theAttachment)) {
+                    $mail->attach(Swift_Attachment::fromPath($theAttachment));
+                }
+            }
+        }
 
-				// HTML
-			if (trim($HTMLContent)) {
-				$HTMLContent = self::embedMedia($mail, $HTMLContent);
-				$mail->setBody($HTMLContent, 'text/html', $charset);
-			}
+            // HTML
+        if (trim($HTMLContent)) {
+            $HTMLContent = self::embedMedia($mail, $HTMLContent);
+            $mail->setBody($HTMLContent, 'text/html', $charset);
+        }
 
-			if ($bcc != '') {
-				$mail->addBcc($bcc);
-			}
-		} else {
-			$result = FALSE;
-			debug ('tx_div2007_email::sendMail exited with error 4'); // keep this
-		}
+        if ($bcc != '') {
+            $mail->addBcc($bcc);
+        }
 
 		if (
 			isset($mail) &&

@@ -88,13 +88,7 @@ class BrowserUtility {
     )
     {
         $usedLang = '';
-        $parser = $cObj;
-        if (
-            defined('TYPO3_version') &&
-            version_compare(TYPO3_version, '8.0.0', '>=')
-        ) {
-            $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
-        }
+        $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
         $linkArray = $addQueryString;
             // Initializing variables:
         $pointer = intval($pObject->ctrlVars[$pointerName]);

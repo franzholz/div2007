@@ -385,12 +385,6 @@ class TranslationBase {
                     $languageKey = substr($languageKey, 0, -1);
                     $charset = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];
 
-                    // For labels coming from the TypoScript (database) the charset is assumed to be "forceCharset"
-                    // and if that is not set, assumed to be that of the individual system languages
-                    if (!$charset && version_compare(TYPO3_version, '8.5.0', '<')) {
-                        $charset = $GLOBALS['TSFE']->csConvObj->charSetArray[$languageKey];
-                    }
-
                         // Remove the dot after the language key
                     foreach ($languageArray as $labelKey => $labelValue) {
                         if (!isset($this->LOCAL_LANG[$languageKey][$labelKey])) {

@@ -58,14 +58,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     */
     static protected function getStorageSecurityLevel ()
     {
-        $result = 'normal';
-
-        if (
-            version_compare(TYPO3_version, '9.5.0', '>=') || 
-            class_exists(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::class)
-        ) {
-            $result = 'salted';
-        }
+        $result = 'salted';
         return $result;
     }
 

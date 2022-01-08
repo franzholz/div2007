@@ -50,12 +50,6 @@ class StaticInfoTablesUtility {
     */
     static public function init () {
         $result = false;
-        if (
-            defined('TYPO3_version') &&
-            version_compare(TYPO3_version, '10.0.0', '<')
-        ) {
-            Locales::initialize();
-        }
 
         if (
             !is_object(static::$staticInfo) &&

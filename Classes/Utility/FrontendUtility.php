@@ -71,201 +71,6 @@ class FrontendUtility {
 */
 
 
-
-    static public function init (
-        $id = '',
-        $type = '',
-        $noCache = '',
-        $cHash = '',
-        $jumpurl = '',
-        $mp = ''
-    )
-    {
-        global $TSFE, $BE_USER, $TYPO3_CONF_VARS, $error;
-
-        if (
-            version_compare(TYPO3_version, '10.4.0', '>=')
-        ) {
-            // you must use a Middleware instead of Ajax eID at the position where $GLOBALS['TSFE'] is already present
-            return false;
-        }
-
-        if (!$id) {
-            $id = GeneralUtility::_GP('id');
-        }
-        if (!$type) {
-            $type = GeneralUtility::_GP('type');
-        }
-        if (!$noCache) {
-            $noCache = GeneralUtility::_GP('no_cache');
-        }
-        if (!$cHash) {
-            $cHash = GeneralUtility::_GP('cHash');
-        }
-        if (!$jumpurl) {
-            $jumpurl = GeneralUtility::_GP('jumpurl');
-        }
-        if (!$mp) {
-            $mp = GeneralUtility::_GP('MP');
-        }
-        /** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
-        $TSFE = GeneralUtility::makeInstance(
-            \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class,
-            $TYPO3_CONF_VARS,
-            $id,
-            $type,
-            $noCache,
-            $cHash,
-            $jumpurl,
-            $mp
-        );
-
-        if (
-            $TYPO3_CONF_VARS['FE']['pageUnavailable_force'] &&
-            !GeneralUtility::cmpIP(
-                GeneralUtility::getIndpEnv('REMOTE_ADDR'),
-                $TYPO3_CONF_VARS['SYS']['devIPmask']
-            )
-        ) {
-            $TSFE->pageUnavailableAndExit('This page is temporarily unavailable.');
-        }
-
-        if (
-            version_compare(TYPO3_version, '9.5.0', '>=') &&
-            \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('typo3db_legacy')
-        ) {
-            $GLOBALS['TYPO3_DB']->connectDB();
-        } else {
-            $TSFE->connectToDB();
-        }
-
-        // Output compression
-        // Remove any output produced until now
-        ob_clean();
-        if (
-            $TYPO3_CONF_VARS['FE']['compressionLevel'] &&
-            extension_loaded('zlib')
-        ) {
-            if (\TYPO3\CMS\Core\Utility\MathUtility::canBeInterpretedAsInteger($TYPO3_CONF_VARS['FE']['compressionLevel'])) {
-                // Prevent errors if ini_set() is unavailable (safe mode)
-                @ini_set('zlib.output_compression_level', $TYPO3_CONF_VARS['FE']['compressionLevel']);
-            }
-            ob_start(array(GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Utility\CompressionUtility::class), 'compressionOutputHandler'));
-        }
-
-        // FE_USER
-        if (is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT']->push('Front End user initialized', '');
-        }
-        /** @var $TSFE \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
-        $TSFE->initFEuser();
-        if (is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT']->pull();
-        }
-
-        // BE_USER
-        /** @var $BE_USER \TYPO3\CMS\Backend\FrontendBackendUserAuthentication */
-        $BE_USER = $TSFE->initializeBackendUser();
-
-        // Process the ID, type and other parameters.
-        // After this point we have an array, $page in TSFE, which is the page-record
-        // of the current page, $id.
-        if (is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT']->push('Process ID', '');
-        }
-        // Initialize admin panel since simulation settings are required here:
-        if ($TSFE->isBackendUserLoggedIn()) {
-            $BE_USER->initializeAdminPanel();
-            if (
-                version_compare(TYPO3_version, '8.7.0', '>=')
-            ) {
-                \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadBaseTca(true);
-                \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtTables(true);
-            } else {
-                \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadExtensionTables(true);
-            }
-        } else {
-            $callingClassNameBootstrap = \TYPO3\CMS\Core\Core\Bootstrap::class;
-            if (method_exists($callingClassNameBootstrap, 'loadCachedTca')) {
-                \TYPO3\CMS\Core\Core\Bootstrap::getInstance()->loadCachedTca();
-            } else {
-                \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
-            }
-        }
-        $TSFE->checkAlternativeIdMethods();
-        $TSFE->clear_preview();
-        $TSFE->determineId();
-
-        // Now, if there is a backend user logged in and he has NO access to this page,
-        // then re-evaluate the id shown! _GP('ADMCMD_noBeUser') is placed here because
-        // \TYPO3\CMS\Version\Hook\PreviewHook might need to know if a backend user is logged in.
-        if (
-            $TSFE->isBackendUserLoggedIn()
-            && (!$BE_USER->extPageReadAccess($TSFE->page) || GeneralUtility::_GP('ADMCMD_noBeUser'))
-        ) {
-            // Remove user
-            unset($BE_USER);
-            $TSFE->beUserLogin = false;
-            // Re-evaluate the page-id.
-            $TSFE->checkAlternativeIdMethods();
-            $TSFE->clear_preview();
-            $TSFE->determineId();
-        }
-
-        $TSFE->makeCacheHash();
-        if (is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT']->pull();
-
-            // Starts the template
-            $GLOBALS['TT']->push('Start Template', '');
-        }
-        $TSFE->initTemplate();
-        if (is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT']->pull();
-            // Get from cache
-            $GLOBALS['TT']->push('Get Page from cache', '');
-        }
-        $TSFE->getFromCache();
-        if (is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT']->pull();
-        }
-        // Get config if not already gotten
-        // After this, we should have a valid config-array ready
-        $TSFE->getConfigArray();
-        // Setting language and locale
-        if (is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT']->push('Setting language and locale', '');
-        }
-        $TSFE->settingLanguage();
-        $TSFE->settingLocale();
-        if (is_object($GLOBALS['TT'])) {
-            $GLOBALS['TT']->pull();
-        }
-
-        // Convert POST data to internal "renderCharset" if different from the metaCharset
-        $TSFE->convPOSTCharset();
-
-        // Store session data for fe_users
-        $TSFE->storeSessionData();
-        if (is_object($GLOBALS['TT'])) {
-            // Finish timetracking
-            $GLOBALS['TT']->pull();
-        }
-
-        // Debugging Output
-        if (
-            isset($error) &&
-            is_object($error) &&
-            @is_callable(array($error, 'debugOutput'))
-        ) {
-            $error->debugOutput();
-        }
-
-        if (isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['devLog'])) {
-            GeneralUtility::devLog('END of div2007 FRONTEND session', 'cms', 0, array('_FLUSH' => true));
-        }
-    }
-
     /**
      * This method is needed only for Ajax calls.
      * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId instead of this method.
@@ -276,8 +81,7 @@ class FrontendUtility {
     {
         $result = (int) GeneralUtility::_GP('id');
         if (
-            $result ||
-            version_compare(TYPO3_version, '9.0.0', '<')
+            $result
         ) {
             return $result;
         }
@@ -341,7 +145,7 @@ class FrontendUtility {
     *
     * @param array $dataArray Data array which values to load into the form fields from $formName (only field names found in $fieldList)
     * @param string $formName The form name
-    * @param string $arrPrefix A prefix for the data array
+    * @param string´ $arrPrefix A prefix for the data array
     * @param string $fieldList The list of fields which are loaded
     * @param string $javascriptFilename relative path to the filename of the Javascript which can execute the update form
     * @return string containing the update Javascript
@@ -628,13 +432,7 @@ class FrontendUtility {
     )
     {
         $usedLang = '';
-        $parser = $cObj;
-        if (
-            defined('TYPO3_version') &&
-            version_compare(TYPO3_version, '8.0.0', '>=')
-        ) {
-            $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
-        }
+        $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
         $linkArray = $addQueryString;
             // Initializing variables:
         $pointer = intval($pObject->ctrlVars[$pointerName]);
@@ -1240,17 +1038,12 @@ class FrontendUtility {
                 $paramsOld = $conf['additionalParams'];
             }
 
-                // fix issue #89686
-            if (
-                version_compare(TYPO3_version, '9.0.0', '>=')
-            ) {
-                if (!isset($conf['language'])) {
-                    $api =
-                        GeneralUtility::makeInstance(\JambageCom\Div2007\Api\Frontend::class);
-                    $sys_language_uid = $api->getLanguageId();
-                    if ($sys_language_uid) {
-                        $conf['language'] = $sys_language_uid;
-                    }
+            if (!isset($conf['language'])) {
+                $api =
+                    GeneralUtility::makeInstance(\JambageCom\Div2007\Api\Frontend::class);
+                $sys_language_uid = $api->getLanguageId();
+                if ($sys_language_uid) {
+                    $conf['language'] = $sys_language_uid;
                 }
             }
 
@@ -1479,14 +1272,8 @@ class FrontendUtility {
         if (
             $fName != ''
         ) {
-            if (
-                version_compare(TYPO3_version, '9.4.0', '>=')
-            ) {
-                $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
-                $incFile = $sanitizer->sanitize($fName);
-            } else {
-                $incFile = $GLOBALS['TSFE']->tmpl->getFileName($fName);
-            }
+            $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+            $incFile = $sanitizer->sanitize($fName);
         }
 
         if ($incFile && file_exists($incFile)) {

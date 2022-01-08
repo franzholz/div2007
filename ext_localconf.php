@@ -6,16 +6,9 @@ if (!defined ('DIV2007_EXT')) {
 }
 
 call_user_func(function () {
-    if (
-        defined('TYPO3_version') &&
-        version_compare(TYPO3_version, '9.0.0', '>=')
-    ) {
-        $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-            \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
-        )->get(DIV2007_EXT);
-    } else if (isset($extensionConfiguration)) {
-        $extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][DIV2007_EXT]);
-    }
+    $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+        \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class
+    )->get(DIV2007_EXT);
 
     if (
         isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]) &&
@@ -54,21 +47,8 @@ call_user_func(function () {
 
     // constants for the TCA fields
 
-    if (version_compare(TYPO3_version, '9.3.0', '>=')) {
-        // 'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
-
-        define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.');
-        define('DIV2007_LANGUAGE_PATH', 'LLL:EXT:core/Resources/Private/Language/');
-    } else if (version_compare(TYPO3_version, '8.0.0', '>=')) {
-        // 'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.starttime',
-
-        define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.');
-        define('DIV2007_LANGUAGE_PATH', 'LLL:EXT:lang/Resources/Private/Language/');
-    } else {
-        // 'label' => 'LLL:EXT:lang/locallang_general.php:LGL.starttime',
-        define('DIV2007_LANGUAGE_PATH', 'LLL:EXT:lang/');
-        define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:lang/locallang_general.php:LGL.');
-    }
+    define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.');
+    define('DIV2007_LANGUAGE_PATH', 'LLL:EXT:core/Resources/Private/Language/');
 
     define('DIV2007_LANGUAGE_SUBPATH', '/Resources/Private/Language/');
     define('DIV2007_ICONS_SUBPATH', 'Resources/Public/Images/Icons/');

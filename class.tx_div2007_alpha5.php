@@ -2045,27 +2045,6 @@ class tx_div2007_alpha5 {
 	}
 
 
-	/**
-	 * Fetches the character set conversion object
-	 *
-	 * @param	boolean		if TRUE, then the object will be created if no such object is present
-	 * @return	object/boolean		Object or FALSE
-	 */
-	static public function getCsConvObj ($bCreateIfNotFound = FALSE) {
-		$csConvObj = FALSE;
-
-		if (version_compare(TYPO3_version, '8.5.0', '>=')) {
-            // nothing
-		} else if (is_object($GLOBALS['LANG'])) {
-			$csConvObj = $GLOBALS['LANG']->csConvObj;
-		} elseif (is_object($GLOBALS['TSFE'])) {
-			$csConvObj = $GLOBALS['TSFE']->csConvObj;
-		}
-
-		return $csConvObj;
-	}
-
-
 	static public function initFE () {
 		global $TYPO3_CONF_VARS, $TSFE, $BE_USER, $error;
 

@@ -194,23 +194,10 @@ class StatusProviderBase implements StatusProviderInterface
     protected function checkIfSaltedPasswordsAreEnabledInFrontEnd ()
     {
         $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Salted_passwords_in_front_end', $this->getExtensionName());
-        $value = null;
-        $message = null;
-        $status = Status::OK;
 
-        if (
-            version_compare(TYPO3_version, '9.5.0', '<') &&
-            ExtensionManagementUtility::isLoaded('saltedpasswords') &&
-            !\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::isUsageEnabled('FE')
-        ) {
-            $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:disabled', $this->getExtensionName());
-            $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:salted_passwords_must_be_enabled', $this->getExtensionName());
-            $status = Status::ERROR;
-        } else {
-            $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:enabled', $this->getExtensionName());
-            $message = '';
-            $status = Status::OK;
-        }
+        $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:enabled', $this->getExtensionName());
+        $message = '';
+        $status = Status::OK;
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
         return $result;
     }

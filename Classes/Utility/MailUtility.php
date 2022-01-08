@@ -72,10 +72,7 @@ class MailUtility {
     ) {
         $result = true;
 		$debug = 
-            (version_compare(TYPO3_version, '10.0.0', '>=') ? 
-                $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug']['mail'] :
-                $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug.']['mail']
-            );
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug']['mail'];
         if (
             $debug == 'DEBUG_AND_SEND' ||
             $debug == 'DEBUG'

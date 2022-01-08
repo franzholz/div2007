@@ -36,31 +36,16 @@ class CompatibilityUtility {
 
     static public function getPageRepository ()
     {
-        $classname = '';
-        if (
-            defined('TYPO3_version') &&
-            version_compare(TYPO3_version, '10.0.0', '>=')
-        ) {
-            $classname = \TYPO3\CMS\Core\Domain\Repository\PageRepository::class;
-        } else {
-            $classname = \TYPO3\CMS\Frontend\Page\PageRepository::class;
-        }
+        $classname = \TYPO3\CMS\Core\Domain\Repository\PageRepository::class;
         $pageRepository = GeneralUtility::makeInstance($classname);
         return $pageRepository;
     }
     
     static public function isLoggedIn ()
     {
-        $result = false;
-        if (
-            defined('TYPO3_version') &&
-            version_compare(TYPO3_version, '9.5.0', '>=')
-        ) {
-            $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
-            $result = $context->getPropertyFromAspect('frontend.user', 'isLoggedIn');
-        } else if (is_object($GLOBALS['TSFE'])) {
-            $result = $GLOBALS['TSFE']->loginUser;
-        }
+        $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
+        $result = $context->getPropertyFromAspect('frontend.user', 'isLoggedIn');
+
         return $result;
     }
 }

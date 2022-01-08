@@ -104,14 +104,7 @@ class tx_div2007_staticinfotables {
 				if ($local) {
 					$labelField = str_replace ('##', 'local', $field);
 				} else {
-                    if (
-                        defined('TYPO3_version') &&
-                        version_compare(TYPO3_version, '8.5.0', '>=')
-                    ) {
-                        $labelField = str_replace('##', mb_strtolower($lang, 'utf-8'), $field);
-                    } else {
-                        $labelField = str_replace('##', $csConvObj->conv_case('utf-8', $lang, 'toLower'), $field);
-					}
+                    $labelField = str_replace('##', mb_strtolower($lang, 'utf-8'), $field);
 				}
 				if (is_array($GLOBALS['TCA'][$table]['columns'][$labelField])) {
 					$labelFields[] = $labelField;
@@ -633,34 +626,6 @@ class tx_div2007_staticinfotables {
 			$value = htmlspecialchars($value, ENT_COMPAT, $charset);
 		}
 		return '"' . $value . '"';
-	}
-
-
-	/**
-	 * loadTcaAdditions($ext_keys)
-	 *
-	 * It has been copied here in order not to depend on the div extension only for this function.
-	 *
-	 * @param	array		extension keys which have TCA additions to load
-	 * @return	void
-	 * @see div extension
-	 */
-	static public function loadTcaAdditions ($ext_keys) {
-		global $_EXTKEY;
-
-		if (
-			version_compare(TYPO3_version, '6.2.0', '<')
-		) {
-			//Merge all ext_keys
-			if (is_array($ext_keys)) {
-				foreach ($ext_keys as $_EXTKEY) {
-					if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($_EXTKEY)) {
-						//Include the ext_table
-						include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'ext_tables.php');
-					}
-				}
-			}
-		}
 	}
 }
 

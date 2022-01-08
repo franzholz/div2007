@@ -1,6 +1,7 @@
 
 
 2022-01-08 Franz Holzinger <franz@ttproducts.de>
+    * remove code parts for TYPO3 < 11
     * changed StaticInfoTablesApi: changed parameter 1 and 2 order for getStaticInfoName
     * new requirement: PHP 8
     * fix PHP syntax errors

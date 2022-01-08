@@ -75,13 +75,6 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
             $result = false;
         } else if (!$this->hasBeenInitialized) {
-            if (
-                defined('TYPO3_version') &&
-                version_compare(TYPO3_version, '10.0.0', '<')
-            ) {
-                Locales::initialize();
-            }
-
             if (empty($conf) && is_object($GLOBALS['TSFE'])) {
                 $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'];
             }

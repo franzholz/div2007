@@ -137,16 +137,10 @@ class tx_div2007_core {
 
 	static public function newHtmlParser ($html = true) {
         $useClassName = '';
-        $callingClassName = '\\TYPO3\\CMS\\Core\\Html\\HtmlParser';
-        if (
-            defined('TYPO3_version') &&
-            version_compare(TYPO3_version, '8.0.0', '>=') ||
-            !$html
-        ) {
-            $checkClassName = '\\TYPO3\\CMS\\Core\\Service\\MarkerBasedTemplateService';
-            if (class_exists($checkClassName)) {
-                $callingClassName = $checkClassName;
-            }
+
+        $checkClassName = '\\TYPO3\\CMS\\Core\\Service\\MarkerBasedTemplateService';
+        if (class_exists($checkClassName)) {
+            $callingClassName = $checkClassName;
         }
 
         if (
@@ -458,24 +452,11 @@ class tx_div2007_core {
     static public function substituteMarkerArrayCached ($content, array $markContentArray = null, array $subpartContentArray = null, array $wrappedSubpartContentArray = null)
     {
         $templateClassName = '\\TYPO3\\CMS\\Core\\Service\\MarkerBasedTemplateService';
-
-        if (
-            version_compare(TYPO3_version, '8.0.0', '>=') &&
-            class_exists($templateClassName)
-        ) {
-            $utilityClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
-            $useClassName = substr($utilityClassName, 1);
-            $useTemplateClassName = substr($templateClassName, 1);
-            $object = call_user_func($useClassName . '::makeInstance', $useTemplateClassName);
-            $result = $object->substituteMarkerArrayCached($content, $markContentArray, $subpartContentArray, $wrappedSubpartContentArray);
-        } else {
-            $templateClassName = '\\TYPO3\\CMS\\Frontend\\ContentObject\\ContentObjectRenderer';
-            $utilityClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
-            $useClassName = substr($utilityClassName, 1);
-            $useTemplateClassName = substr($templateClassName, 1);
-            $object = call_user_func($useClassName . '::makeInstance', $useTemplateClassName);
-            $result = $object->substituteMarkerArrayCached($content, $markContentArray, $subpartContentArray, $wrappedSubpartContentArray);
-        }
+        $utilityClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+        $useClassName = substr($utilityClassName, 1);
+        $useTemplateClassName = substr($templateClassName, 1);
+        $object = call_user_func($useClassName . '::makeInstance', $useTemplateClassName);
+        $result = $object->substituteMarkerArrayCached($content, $markContentArray, $subpartContentArray, $wrappedSubpartContentArray);
         return $result;
     }
     
@@ -539,25 +520,17 @@ class tx_div2007_core {
         $converterClassName = '\\TYPO3\\CMS\\Core\\Charset\\CharsetConverter';
         $result = '';
 
-        if (
-            $from &&
-            version_compare(TYPO3_version, '8.0.0', '>=') &&
-            class_exists($converterClassName)
-        ) {
-            $useConverterClassName = substr($converterClassName, 1);
+        $useConverterClassName = substr($converterClassName, 1);
 
-            $callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
-            $useClassName = substr($callingClassName, 1);
-            /** @var \TYPO3\CMS\Core\Charset\CharsetConverter $charsetConverter */
-            $charsetConverter = call_user_func($useClassName . '::makeInstance', $useConverterClassName);
+        $callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+        $useClassName = substr($callingClassName, 1);
+        /** @var \TYPO3\CMS\Core\Charset\CharsetConverter $charsetConverter */
+        $charsetConverter = call_user_func($useClassName . '::makeInstance', $useConverterClassName);
 
-            $result = $charsetConverter->conv($str, trim(strtolower($from)), 'utf-8');
+        $result = $charsetConverter->conv($str, trim(strtolower($from)), 'utf-8');
 
-            if (!$result) {
-                $result = $str;
-            }
-        } else {
-            $result = $GLOBALS['TSFE']->csConv($str, $from);
+        if (!$result) {
+            $result = $str;
         }
 
         return $result;
@@ -576,24 +549,13 @@ class tx_div2007_core {
         $result = FALSE;
         $useClassName = '';
 
-        $callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\GeneralUtility';
+        $callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
+        $useClassName = substr($callingClassName, 1);
+        $result =
+            call_user_func($useClassName . '::convertVersionNumberToInteger', TYPO3_branch) >=
+            call_user_func($useClassName . '::convertVersionNumberToInteger', $verNumberStr);
 
-        if (
-            version_compare(TYPO3_version, '8.0.0', '>=')
-        ) {
-            $callingClassName = '\\TYPO3\\CMS\\Core\\Utility\\VersionNumberUtility';
-            $useClassName = substr($callingClassName, 1);
-            $result =
-                call_user_func($useClassName . '::convertVersionNumberToInteger', TYPO3_branch) >=
-                call_user_func($useClassName . '::convertVersionNumberToInteger', $verNumberStr);
-
-            $useClassName = '';
-        } else if (
-            class_exists($callingClassName) &&
-            method_exists($callingClassName, 'compat_version')
-        ) {
-            $useClassName = substr($callingClassName, 1);
-        }
+        $useClassName = '';
 
         if (
             $useClassName &&

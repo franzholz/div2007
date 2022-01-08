@@ -149,18 +149,10 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
 
 
     public function getLanguageId () {
-        $result = false;
 
-        if (
-            version_compare(TYPO3_version, '9.4.0', '>=')
-        ) {
-            $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
-            // (previously known as TSFE->sys_language_uid)
-            $result = $languageAspect->getId();
-        } else {
-            $tsfe = $this->getTypoScriptFrontendController();
-            $result = $tsfe->config['config']['sys_language_uid'];
-        }
+        $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
+        // (previously known as TSFE->sys_language_uid)
+        $result = $languageAspect->getId();
 
         return $result;
     }
