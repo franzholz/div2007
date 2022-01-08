@@ -4137,7 +4137,7 @@ final class tx_div2007_div {
 
 				// Set charset:
 			if ($charset) {
-				$targetCharset = trim(strtolower(($charset));
+				$targetCharset = trim(strtolower($charset));
 			} else {
 				$targetCharset = 'utf-8';
 			}
