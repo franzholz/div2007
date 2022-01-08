@@ -9,7 +9,7 @@ $EM_CONF[$_EXTKEY] = [
   'title' => 'Static Methods since 2007',
   'description' => 'This library offers classes and functions to other TYPO3 extensions. It provides a modified t3lib_div of TYPO3 4.7.10. Replacement for tslib_pibase methods and t3skin images.',
   'category' => 'misc',
-  'version' => '1.12.5',
+  'version' => '1.13.0',
   'state' => 'stable',
   'uploadfolder' => 0,
   'createDirs' => '',
@@ -21,8 +21,8 @@ $EM_CONF[$_EXTKEY] = [
   [
     'depends' =>
     [
-      'php' => '7.2.0-7.4.99',
-      'typo3' => '7.6.0-11.5.99',
+      'php' => '8.0.0-8.1.99',
+      'typo3' => '11.5.0-11.5.99',
     ],
     'conflicts' =>
     [

@@ -245,7 +245,7 @@ class tx_div2007_controller extends tx_div2007_object {
 		$this->action = $action;
 		$controller = GeneralUtility::makeInstance($controllerName);
 		// Set all values to the new controller
-		foreach(array_keys(get_class_vars(get_class($this))) as $key) {
+		foreach(array_keys(get_class_vars($this::class)) as $key) {
 			$controller->$key = $this->$key;
 		}
 		// Rebuild the central quad

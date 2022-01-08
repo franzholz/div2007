@@ -38,10 +38,6 @@ class StoreRequest implements MiddlewareInterface
 {
     /**
      * Hook to store the current request
-     *
-     * @param ServerRequestInterface $request
-     * @param RequestHandlerInterface $handler
-     * @return ResponseInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

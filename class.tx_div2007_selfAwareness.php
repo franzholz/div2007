@@ -111,7 +111,7 @@ class tx_div2007_selfAwareness {
 	 * @return	void
 	 */
 	public function api () {
-		print '<h1>Class: ' . get_class($this) . '</h1>';
+		print '<h1>Class: ' . $this::class . '</h1>';
 		print '<h2>Methodes:</h2>';
 		$methods = get_class_methods($this);
 		if($methods) {
@@ -123,7 +123,7 @@ class tx_div2007_selfAwareness {
 			print '</ul>' . chr(10);
 		}
 		print '<h2>Variables:</h2>';
-		$variables = get_class_vars(get_class($this));
+		$variables = get_class_vars($this::class);
 		if($variables) {
 			ksort($variables);
 			print '<dl>' . chr(10);
@@ -171,7 +171,7 @@ class tx_div2007_selfAwareness {
 	 * @return	string		classname
 	 */
 	public function getClassName () {
-		return get_class($this);
+		return $this::class;
 	}
 
 	/**
@@ -222,8 +222,8 @@ class tx_div2007_selfAwareness {
 	 */
 	public function getExtensionKey () {
 		if(
-			preg_match('/^tx_([^_]+)/', get_class($this), $matches) ||
-			preg_match('/^user_([^_]+)/', get_class($this), $matches)
+			preg_match('/^tx_([^_]+)/', $this::class, $matches) ||
+			preg_match('/^user_([^_]+)/', $this::class, $matches)
 		) {
 			$candidate = $matches[1];
 			if ($candidate != 'lib') {

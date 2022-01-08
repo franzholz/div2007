@@ -1,4 +1,8 @@
+
+
 2022-01-08 Franz Holzinger <franz@ttproducts.de>
+    * changed StaticInfoTablesApi: changed parameter 1 and 2 order for getStaticInfoName
+    * new requirement: PHP 8
     * fix PHP syntax errors
 
 2021-12-06 Franz Holzinger <franz@ttproducts.de>

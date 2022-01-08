@@ -121,7 +121,7 @@ class ExtensionUtility {
     */
     static public function getExtensionFilePath ($filepath, $relative = false) {
         $result = $filepath;
-        if (substr($filepath, 0, 4) === 'EXT:') {
+        if (str_starts_with($filepath, 'EXT:')) {
             list($extensionKey, $relativePath) = explode('/', substr($filepath, 4), 2);
 
             if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {

@@ -95,7 +95,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 $this->currency = (trim($conf['currencyCode'])) ? trim($conf['currencyCode']) : 'EUR';
             }
             //If nothing is set, we use the Euro because TYPO3 is spread more in this area
-            if (!$this->getStaticInfoName('CURRENCIES', $this->currency)) {
+            if (!$this->getStaticInfoName($this->currency, 'CURRENCIES')) {
                 $this->currency = 'EUR';
             }
             $this->currencyInfo = $this->loadCurrencyInfo($this->currency);
@@ -104,7 +104,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             if (!$this->defaultCountry) {
                 $this->defaultCountry = trim($conf['countryCode']);
             }
-            if (!$this->getStaticInfoName('COUNTRIES', $this->defaultCountry)) {
+            if (!$this->getStaticInfoName($this->defaultCountry, 'COUNTRIES')) {
                 $this->defaultCountry = 'DEU';
             }
             $this->initCountrySubdivisions($this->defaultCountry);
@@ -112,7 +112,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             if (!$this->defaultCountryZone) {
                 $this->defaultCountryZone = trim($conf['countryZoneCode']);
             }
-            if (!$this->getStaticInfoName('SUBDIVISIONS', $this->defaultCountryZone, $this->defaultCountry)) {
+            if (!$this->getStaticInfoName($this->defaultCountryZone, 'SUBDIVISIONS', $this->defaultCountry)) {
                 if ($this->defaultCountry == 'DEU') {
                     $this->defaultCountryZone = 'NW';
                 } else {
@@ -124,7 +124,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             if (!$this->defaultLanguage) {
                 $this->defaultLanguage = trim($conf['languageCode']);
             }
-            if (!$this->getStaticInfoName('LANGUAGES', $this->defaultLanguage)) {
+            if (!$this->getStaticInfoName($this->defaultLanguage, 'LANGUAGES')) {
                 $this->defaultLanguage = 'EN';
             }
 
@@ -141,8 +141,8 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     /**
      * Getting the name of a country, country subdivision, currency, language, tax
      *
-     * @param string Defines the type of entry of the requested name: 'TERRITORIES', 'COUNTRIES', 'SUBDIVISIONS', 'CURRENCIES', 'LANGUAGES'
      * @param string The ISO alpha-3 code of a territory, country or currency, or the ISO alpha-2 code of a language or the code of a country subdivision, can be a comma ',' separated string, then all the single items are looked up and returned
+     * @param string Defines the type of entry of the requested name: 'TERRITORIES', 'COUNTRIES', 'SUBDIVISIONS', 'CURRENCIES', 'LANGUAGES'
      * @param string The value of the country code (cn_iso_3) for which a name of type 'SUBDIVISIONS' is requested (meaningful only in this case)
      * @param string Not used
      * @param bool local name only - if set local title is returned
@@ -154,7 +154,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
      *
      * @return string|bool The name of the object in the current language or false
      */
-    public function getStaticInfoName ($type = 'COUNTRIES', $code, $country = '', $countrySubdivision = '', $local = false)
+    public function getStaticInfoName ($code, $type = 'COUNTRIES', $country = '', $countrySubdivision = '', $local = false): bool|string
     {
         $names = false;
         if (in_array($type, $this->types) && trim($code)) {
@@ -569,7 +569,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             $currency = $this->currencyRepository->findOneByIsoCodeA3($this->currencyInfo['cu_iso_3']);
         }
         if ($currency instanceof Currency) {
-            $this->currencyInfo['cu_name'] = $this->getStaticInfoName('CURRENCIES', $this->currencyInfo['cu_iso_3']);
+            $this->currencyInfo['cu_name'] = $this->getStaticInfoName($this->currencyInfo['cu_iso_3'], 'CURRENCIES');
             $this->currencyInfo['cu_symbol_left'] = $currency->getSymbolLeft();
             $this->currencyInfo['cu_symbol_right'] = $currency->getSymbolRight();
             $this->currencyInfo['cu_decimal_digits'] = $currency->getDecimalDigits();
@@ -803,7 +803,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             $where = 'cn_official_name_local LIKE '. $value . ' OR cn_official_name_en LIKE ' . $value;
 
             foreach ($GLOBALS['TCA'][$table]['columns'] as $fieldname => $fieldArray) {
-                if (strpos($fieldname, 'cn_short_') === 0) {
+                if (str_starts_with($fieldname, 'cn_short_')) {
                     $where .= ' OR ' . $fieldname . ' LIKE ' . $value;
                 }
             }

@@ -45,8 +45,6 @@
 class tx_div2007_spl_arrayObject {
 
 	public $array = array();
-	public $iteratorClass;
-	public $flags;
 
 	/**
 	 * Constructs a tx_div2007_spl_arrayObject using the given arguments.
@@ -60,12 +58,10 @@ class tx_div2007_spl_arrayObject {
 	 */
 	public function __construct (
 		$array = array(),
-		$flags = 0,
-		$iteratorClass = 'tx_div2007_spl_arrayIterator'
+		public $flags = 0,
+		public $iteratorClass = 'tx_div2007_spl_arrayIterator'
 	) {
 		$this->_setArray($array);
-		$this->flags = $flags;
-		$this->iteratorClass = $iteratorClass;
 	}
 	public function tx_div2007_spl_arrayObject (
 		$array = array(),

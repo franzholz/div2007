@@ -292,9 +292,9 @@ class TranslationBase {
         $extensionKey = $this->getExtensionKey();
 
         if (
-            substr($langFile, 0, 4) === 'EXT:' ||
-            substr($langFile, 0, 5) === 'typo3' ||
-            substr($langFile, 0, 9) === 'fileadmin'
+            str_starts_with($langFile, 'EXT:') ||
+            str_starts_with($langFile, 'typo3') ||
+            str_starts_with($langFile, 'fileadmin')
         ) {
             $basePath = $langFile;
         } else if ($extensionKey != '') {

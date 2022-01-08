@@ -212,7 +212,7 @@ class MailUtility {
                 $mail->text($PLAINContent);
             }
         } else {
-            throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . get_class($mail) . '. ', 1612276260 
+            throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . $mail::class . '. ', 1612276260 
             ); 
         }
 

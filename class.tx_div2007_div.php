@@ -202,7 +202,7 @@ final class tx_div2007_div {
 		}
 
 		if ($key != '') {
-			if (strpos($key, '|') !== FALSE) {
+			if (str_contains($key, '|')) {
 				$pieces = explode('|', $key);
 				$newGet = array();
 				$pointer =& $newGet;
@@ -392,7 +392,7 @@ final class tx_div2007_div {
 		} elseif ($list === '*') {
 			return TRUE;
 		}
-		if (strpos($baseIP, ':') !== FALSE && self::validIPv6($baseIP)) {
+		if (str_contains($baseIP, ':') && self::validIPv6($baseIP)) {
 			return self::cmpIPv6($baseIP, $list);
 		} else {
 			return self::cmpIPv4($baseIP, $list);
@@ -783,7 +783,7 @@ final class tx_div2007_div {
 	 * @return boolean TRUE if $item is in $list
 	 */
 	static public function inList($list, $item) {
-		return (strpos(',' . $list . ',', ',' . $item . ',') !== FALSE ? TRUE : FALSE);
+		return (str_contains(',' . $list . ',', ',' . $item . ',') ? TRUE : FALSE);
 	}
 
 	/**
@@ -1064,7 +1064,7 @@ final class tx_div2007_div {
 	 * @return boolean TRUE if $partStr was found to be equal to the first part of $str
 	 */
 	static public function isFirstPartOfStr($str, $partStr) {
-		return $partStr != '' && strpos((string) $str, (string) $partStr, 0) === 0;
+		return $partStr != '' && str_starts_with((string) $str, (string) $partStr);
 	}
 
 	/**
@@ -1234,7 +1234,7 @@ final class tx_div2007_div {
 	 * @return boolean TRUE if mail() does not accept recipient name
 	 */
 	static public function isBrokenEmailEnvironment() {
-		return TYPO3_OS == 'WIN' || (FALSE !== strpos(ini_get('sendmail_path'), 'mini_sendmail'));
+		return TYPO3_OS == 'WIN' || (str_contains(ini_get('sendmail_path'), 'mini_sendmail'));
 	}
 
 	/**
@@ -3426,21 +3426,13 @@ final class tx_div2007_div {
 			case 'REMOTE_ADDR':
 				$retVal = $_SERVER['REMOTE_ADDR'];
 				if (self::cmpIP($_SERVER['REMOTE_ADDR'], $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP'])) {
-					$ip = self::trimExplode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-						// choose which IP in list to use
+					// choose which IP in list to use
 					if (count($ip)) {
-						switch ($GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyHeaderMultiValue']) {
-							case 'last':
-								$ip = array_pop($ip);
-								break;
-							case 'first':
-								$ip = array_shift($ip);
-								break;
-							case 'none':
-							default:
-								$ip = '';
-								break;
-						}
+						$ip = match ($GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyHeaderMultiValue']) {
+							'last' => array_pop($ip),
+							'first' => array_shift($ip),
+							default => '',
+						};
 					}
 					if (self::validIP($ip)) {
 						$retVal = $ip;
@@ -3450,21 +3442,13 @@ final class tx_div2007_div {
 			case 'HTTP_HOST':
 				$retVal = $_SERVER['HTTP_HOST'];
 				if (self::cmpIP($_SERVER['REMOTE_ADDR'], $GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyIP'])) {
-					$host = self::trimExplode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
-						// choose which host in list to use
+					// choose which host in list to use
 					if (count($host)) {
-						switch ($GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyHeaderMultiValue']) {
-							case 'last':
-								$host = array_pop($host);
-								break;
-							case 'first':
-								$host = array_shift($host);
-								break;
-							case 'none':
-							default:
-								$host = '';
-								break;
-						}
+						$host = match ($GLOBALS['TYPO3_CONF_VARS']['SYS']['reverseProxyHeaderMultiValue']) {
+							'last' => array_pop($host),
+							'first' => array_shift($host),
+							default => '',
+						};
 					}
 					if ($host) {
 						$retVal = $host;
@@ -3612,15 +3596,15 @@ final class tx_div2007_div {
 
 		$bInfo = array();
 			// Which browser?
-		if (strpos($useragent, 'Konqueror') !== FALSE) {
+		if (str_contains($useragent, 'Konqueror')) {
 			$bInfo['BROWSER'] = 'konqu';
-		} elseif (strpos($useragent, 'Opera') !== FALSE) {
+		} elseif (str_contains($useragent, 'Opera')) {
 			$bInfo['BROWSER'] = 'opera';
-		} elseif (strpos($useragent, 'MSIE') !== FALSE) {
+		} elseif (str_contains($useragent, 'MSIE')) {
 			$bInfo['BROWSER'] = 'msie';
-		} elseif (strpos($useragent, 'Mozilla') !== FALSE) {
+		} elseif (str_contains($useragent, 'Mozilla')) {
 			$bInfo['BROWSER'] = 'net';
-		} elseif (strpos($useragent, 'Flash') !== FALSE) {
+		} elseif (str_contains($useragent, 'Flash')) {
 			$bInfo['BROWSER'] = 'flash';
 		}
 		if ($bInfo['BROWSER']) {
@@ -3628,13 +3612,13 @@ final class tx_div2007_div {
 			switch ($bInfo['BROWSER']) {
 				case 'net':
 					$bInfo['VERSION'] = doubleval(substr($useragent, 8));
-					if (strpos($useragent, 'Netscape6/') !== FALSE) {
+					if (str_contains($useragent, 'Netscape6/')) {
 						$bInfo['VERSION'] = doubleval(substr(strstr($useragent, 'Netscape6/'), 10));
 					} // Will we ever know if this was a typo or intention...?! :-(
-					if (strpos($useragent, 'Netscape/6') !== FALSE) {
+					if (str_contains($useragent, 'Netscape/6')) {
 						$bInfo['VERSION'] = doubleval(substr(strstr($useragent, 'Netscape/6'), 10));
 					}
-					if (strpos($useragent, 'Netscape/7') !== FALSE) {
+					if (str_contains($useragent, 'Netscape/7')) {
 						$bInfo['VERSION'] = doubleval(substr(strstr($useragent, 'Netscape/7'), 9));
 					}
 					break;
@@ -3652,11 +3636,11 @@ final class tx_div2007_div {
 					break;
 			}
 			// Client system
-			if (strpos($useragent, 'Win') !== FALSE) {
+			if (str_contains($useragent, 'Win')) {
 				$bInfo['SYSTEM'] = 'win';
-			} elseif (strpos($useragent, 'Mac') !== FALSE) {
+			} elseif (str_contains($useragent, 'Mac')) {
 				$bInfo['SYSTEM'] = 'mac';
-			} elseif (strpos($useragent, 'Linux') !== FALSE || strpos($useragent, 'X11') !== FALSE || strpos($useragent, 'SGI') !== FALSE || strpos($useragent, ' SunOS ') !== FALSE || strpos($useragent, ' HP-UX ') !== FALSE) {
+			} elseif (str_contains($useragent, 'Linux') || str_contains($useragent, 'X11') || str_contains($useragent, 'SGI') || str_contains($useragent, ' SunOS ') || str_contains($useragent, ' HP-UX ')) {
 				$bInfo['SYSTEM'] = 'unix';
 			}
 		}
@@ -3688,7 +3672,7 @@ final class tx_div2007_div {
 			}
 		}
 			// we have not found a FQDN yet
-		if ($host && strpos($host, '.') === FALSE) {
+		if ($host && !str_contains($host, '.')) {
 			$ip = gethostbyname($host);
 				// we got an IP address
 			if ($ip != $host) {
@@ -3762,7 +3746,7 @@ final class tx_div2007_div {
 	 * @todo Possible improvement: Should it rawurldecode the string first to check if any of these characters is encoded?
 	 */
 	static public function validPathStr($theFile) {
-		if (strpos($theFile, '//') === FALSE && strpos($theFile, '\\') === FALSE && !preg_match('#(?:^\.\.|/\.\./|[[:cntrl:]])#u', $theFile)) {
+		if (!str_contains($theFile, '//') && !str_contains($theFile, '\\') && !preg_match('#(?:^\.\.|/\.\./|[[:cntrl:]])#u', $theFile)) {
 			return TRUE;
 		}
 
@@ -3782,7 +3766,7 @@ final class tx_div2007_div {
 		}
 
 			// path starting with a / is always absolute, on every system
-		return (substr($path, 0, 1) === '/');
+		return (str_starts_with($path, '/'));
 	}
 
 	/**
@@ -4053,7 +4037,7 @@ final class tx_div2007_div {
 		if (@is_file($fileRef) && $langKey) {
 
 				// Set charsets:
-			$sourceCharset = trim(strtolower($csConvObj->charSetArray[$langKey] ? $csConvObj->charSetArray[$langKey] : 'utf-8'));
+			$sourceCharset = trim(strtolower(($csConvObj->charSetArray[$langKey] ? $csConvObj->charSetArray[$langKey] : 'utf-8')));
 			if ($charset) {
 				$targetCharset = trim(strtolower($charset));
 			} else {
@@ -4423,7 +4407,7 @@ final class tx_div2007_div {
 		}
 
 			// Check file-reference prefix; if found, require_once() the file (should be library of code)
-		if (strpos($funcName, ':') !== FALSE) {
+		if (str_contains($funcName, ':')) {
 			list($file, $funcRef) = self::revExplode(':', $funcName, 2);
 			$requireFile = self::getFileAbsFileName($file);
 			if ($requireFile) {
@@ -4531,7 +4515,7 @@ final class tx_div2007_div {
 		} else {
 
 				// Check file-reference prefix; if found, require_once() the file (should be library of code)
-			if (strpos($classRef, ':') !== FALSE) {
+			if (str_contains($classRef, ':')) {
 				list($file, $class) = self::revExplode(':', $classRef, 2);
 				$requireFile = self::getFileAbsFileName($file);
 				if ($requireFile) {
@@ -4767,7 +4751,7 @@ final class tx_div2007_div {
 		}
 		if (!($instance instanceof $className)) {
 			throw new InvalidArgumentException(
-				'$instance must be an instance of ' . $className . ', but actually is an instance of ' . get_class($instance) . '.',
+				'$instance must be an instance of ' . $className . ', but actually is an instance of ' . $instance::class . '.',
 				1288967686
 			);
 		}
@@ -5020,7 +5004,7 @@ final class tx_div2007_div {
 	 */
 	static public function encodeHeader($line, $enc = 'quoted-printable', $charset = 'utf-8') {
 			// Avoid problems if "###" is found in $line (would conflict with the placeholder which is used below)
-		if (strpos($line, '###') !== FALSE) {
+		if (str_contains($line, '###')) {
 			return $line;
 		}
 			// Check if any non-ASCII characters are found - otherwise encoding is not needed
@@ -5074,20 +5058,11 @@ final class tx_div2007_div {
 	 * @see makeRedirectUrl()
 	 */
 	static public function substUrlsInPlainText($message, $urlmode = '76', $index_script_url = '') {
-		$lengthLimit = FALSE;
-
-		switch ((string) $urlmode) {
-			case '':
-				$lengthLimit = FALSE;
-				break;
-			case 'all':
-				$lengthLimit = 0;
-				break;
-			case '76':
-			default:
-				$lengthLimit = (int) $urlmode;
-		}
-
+		$lengthLimit = match ((string) $urlmode) {
+			'' => FALSE,
+			'all' => 0,
+			default => (int) $urlmode,
+		};
 		if ($lengthLimit === FALSE) {
 				// no processing
 			$messageSubstituted = $message;

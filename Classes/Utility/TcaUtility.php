@@ -75,7 +75,7 @@ class TcaUtility {
 								$showItem = trim($showItem);
 								foreach ($fieldArray as $field) {
 									if (
-										strpos($showItem, $field) === 0
+										str_starts_with($showItem, $field)
 									) {
 										$length = strlen($field);
 										if (

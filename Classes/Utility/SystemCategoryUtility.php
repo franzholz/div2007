@@ -84,9 +84,9 @@ class SystemCategoryUtility {
 	static public function getUids (
 		$tableName,
 		$fieldName,
+		$type = type_local,
 		array $uidArray = array(),
-		$orderBy = '',
-		$type = type_local
+		$orderBy = ''
 	) {
 		$relatedRecords = array();
 		// Assemble where clause

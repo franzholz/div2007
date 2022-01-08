@@ -47,7 +47,7 @@ class PhpUtility {
 	* @param string $code PHP code to check.
 	* @return boolean|array If FALSE, then check was successful, otherwise an array(message,line) of errors is returned.
 	*/
-	static public function php_syntax_error ($code, $addPhp = TRUE){
+	static public function php_syntax_error ($code, $addPhp = TRUE): array|bool{
 		if(!defined("CR"))
 			define("CR", "\r");
 		if(!defined("LF"))
@@ -60,7 +60,7 @@ class PhpUtility {
 			$code = '<?php ' . $code;
 		}
 
-		foreach (token_get_all('<?php ' . $code) as $token) {
+		foreach (\PhpToken::tokenize('<?php ' . $code) as $token) {
 			if (is_array($token)) {
 				switch ($token[0]) {
 					case T_CURLY_OPEN:
@@ -99,7 +99,7 @@ class PhpUtility {
 			if ($braces) {
 				$braces = PHP_INT_MAX;
 			} else {
-				FALSE !== strpos($code, CR) && $code = strtr(str_replace(CRLF, LF, $code), CR, LF);
+				str_contains($code, CR) && $code = strtr(str_replace(CRLF, LF, $code), CR, LF);
 				$braces = substr_count($code,LF);
 			}
 			$code = ob_get_clean();

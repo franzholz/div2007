@@ -8,6 +8,10 @@ Sinve version 1.10.30 a middleware to store the request is provided for Ajax cal
 
 ## Requirements
 
+1.13 and later require PHP 8 and therefore also TYPO3 11.5 
+
+1.12.x are the last versions which support PHP 7.2 - 7.4 .
+
 1.11.8 has been the last version which supports PHP < 7.2 .
 
 1.11.6 has been the last version which supports TYPO3 6.2 .

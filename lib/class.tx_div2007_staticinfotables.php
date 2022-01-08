@@ -585,7 +585,7 @@ class tx_div2007_staticinfotables {
 			$where = 'cn_official_name_local LIKE '. $value . ' OR cn_official_name_en LIKE ' . $value;
 
 			foreach ($GLOBALS['TCA'][$table]['columns'] as $fieldname => $fieldArray) {
-				if (strpos($fieldname, 'cn_short_') === 0) {
+				if (str_starts_with($fieldname, 'cn_short_')) {
 					$where .= ' OR ' . $fieldname . ' LIKE ' . $value;
 				}
 			}

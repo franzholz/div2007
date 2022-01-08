@@ -323,7 +323,7 @@ class FrontendUtility {
                     $pageArguments = $site->getRouter()->matchRequest($request, $previousResult);
                     $result = $pageArguments->getPageId();
                 }
-            } catch (\TYPO3\CMS\Core\Routing\RouteNotFoundException $e) {
+            } catch (\TYPO3\CMS\Core\Routing\RouteNotFoundException) {
                 return GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
                     $request,
                     'The requested page does not exist',
@@ -492,10 +492,10 @@ class FrontendUtility {
         $headerCounter = 0;
         $boxCounter = 0;
         foreach ($internalMarkerArray as $marker) {
-            if (strpos($marker, '###TAB_HEADER_' . ($headerCounter + 1)) === 0) {
+            if (str_starts_with($marker, '###TAB_HEADER_' . ($headerCounter + 1))) {
                 $headerCounter++;
             }
-            if (strpos($marker, '###TAB_BOX_' . ($boxCounter + 1)) === 0) {
+            if (str_starts_with($marker, '###TAB_BOX_' . ($boxCounter + 1))) {
                 $boxCounter++;
             }
         }
@@ -1087,7 +1087,7 @@ class FrontendUtility {
      */
     static public function getClassName ($class, $prefixId = '', $bAddPrefixTx = false)
     {
-        if ($bAddPrefixTx && $prefixId != '' && strpos($prefixId, 'tx_') !== 0) {
+        if ($bAddPrefixTx && $prefixId != '' && !str_starts_with($prefixId, 'tx_')) {
             $prefixId = 'tx-' . $prefixId;
         }
         return str_replace('_', '-', $prefixId) . ($prefixId != '' ? '-' : '') . $class;

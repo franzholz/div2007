@@ -267,7 +267,7 @@ class tx_div2007_email {
 			isset($mail) &&
 			is_object($mail)
 		) {
-			$mailClass = get_class($mail);
+			$mailClass = $mail::class;
 
 			if (
 				method_exists($mail, 'send') &&

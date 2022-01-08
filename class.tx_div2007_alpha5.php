@@ -372,7 +372,7 @@ class tx_div2007_alpha5 {
 	 * @see pi_getClassName()
 	 */
 	static public function getClassName_fh002 ($class, $prefixId = '', $bAddPrefixTx = FALSE) {
-		if ($bAddPrefixTx && $prefixId != '' && strpos($prefixId, 'tx_') !== 0) {
+		if ($bAddPrefixTx && $prefixId != '' && !str_starts_with($prefixId, 'tx_')) {
 			$prefixId = 'tx_' . $prefixId;
 		}
 		return str_replace('_', '-', $prefixId) . ($prefixId != '' ? '-' : '') . $class;
@@ -887,9 +887,9 @@ class tx_div2007_alpha5 {
 			$langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
 
 			if (
-				substr($langFile, 0, 4) === 'EXT:' ||
-				substr($langFile, 0, 5) === 'typo3' ||
-				substr($langFile, 0, 9) === 'fileadmin'
+				str_starts_with($langFile, 'EXT:') ||
+				str_starts_with($langFile, 'typo3') ||
+				str_starts_with($langFile, 'fileadmin')
 			) {
 				$basePath = $langFile;
 			} else {

@@ -128,7 +128,6 @@ class tx_div2007_configurations extends tx_div2007_object {
 	// -------------------------------------------------------------------------------------
 	// Getters
 	// -------------------------------------------------------------------------------------
-
 	/**
 	 * Get a value or an array by providing a relative pathKey
 	 *
@@ -145,9 +144,8 @@ class tx_div2007_configurations extends tx_div2007_object {
 	 * Mind: To query an array end with a DOT. To query a single value end without DOT.
 	 *
 	 * @param	string		relative setupPath
-	 * @return	array|string
 	 */
-	public function get ($pathKey) {
+	public function get ($pathKey): array|string {
 		return $this->_queryArrayByPath($this->getArrayCopy(), $pathKey);
 	}
 

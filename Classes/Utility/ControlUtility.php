@@ -89,12 +89,12 @@ class ControlUtility {
     )
     {
         foreach ($conf as $key => $confNextLevel) {
-            if (strpos($key, '.') !== false) {
+            if (str_contains($key, '.')) {
                 $key = substr($key, 0, -1);
 
                 // descend into all non-stdWrap-subelements first
                 foreach ($confNextLevel as $subKey => $subConfNextLevel) {
-                    if (is_array($subConfNextLevel) && strpos($subKey, '.') !== false && $subKey !== 'stdWrap.') {
+                    if (is_array($subConfNextLevel) && str_contains($subKey, '.') && $subKey !== 'stdWrap.') {
                         $subKey = substr($subKey, 0, -1);
                         $conf[$key . '.'] = static::applyStdWrapRecursive($cObj, $confNextLevel, $level + 1);
                     }
