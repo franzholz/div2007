@@ -4053,7 +4053,7 @@ final class tx_div2007_div {
 		if (@is_file($fileRef) && $langKey) {
 
 				// Set charsets:
-			$sourceCharset = trim(strtolower(($csConvObj->charSetArray[$langKey] ? $csConvObj->charSetArray[$langKey] : 'utf-8'));
+			$sourceCharset = trim(strtolower(($csConvObj->charSetArray[$langKey] ? $csConvObj->charSetArray[$langKey] : 'utf-8')));
 			if ($charset) {
 				$targetCharset = trim(strtolower($charset));
 			} else {
