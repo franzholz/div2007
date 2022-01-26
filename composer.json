@@ -26,9 +26,9 @@
     "GPL-2.0-or-later"
   ],
   "require": {
-    "php": "^8.0",
-    "typo3/cms-core": "^11.5",
-    "typo3/cms-reports": "^11.5"    
+    "php": "^7.4 || ^8.0",
+    "typo3/cms-core": "^10.4 || ^11.5",
+    "typo3/cms-reports": "^10.4 || ^11.5"    
   },
   "autoload": {
     "psr-4": {
@@ -42,7 +42,7 @@
     ]
   },
   "replace": {
-    "jambagecom/div2007": "self.version"
+    "typo3-ter/div2007": "self.version"
   },
   "extra": {
     "typo3/cms": {
