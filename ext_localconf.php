@@ -47,11 +47,17 @@ call_user_func(function () {
 
     // constants for the TCA fields
 
-    define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.');
-    define('DIV2007_LANGUAGE_PATH', 'LLL:EXT:core/Resources/Private/Language/');
-
-    define('DIV2007_LANGUAGE_SUBPATH', '/Resources/Private/Language/');
-    define('DIV2007_ICONS_SUBPATH', 'Resources/Public/Images/Icons/');
-    
+    if (!defined('DIV2007_LANGUAGE_LGL')) {
+        define('DIV2007_LANGUAGE_LGL', 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.');
+    }
+    if (!defined('DIV2007_LANGUAGE_PATH')) {
+        define('DIV2007_LANGUAGE_PATH', 'LLL:EXT:core/Resources/Private/Language/');
+    }
+    if (!defined('DIV2007_LANGUAGE_SUBPATH')) {
+        define('DIV2007_LANGUAGE_SUBPATH', '/Resources/Private/Language/');
+    }
+    if (!defined('DIV2007_LANGUAGE_SUBPATH')) {
+        define('DIV2007_ICONS_SUBPATH', 'Resources/Public/Images/Icons/');
+    }
 });
 
