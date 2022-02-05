@@ -38,6 +38,8 @@ namespace JambageCom\Div2007\Utility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
+use JambageCom\Div2007\Utility\CompatibilityUtility;
+
 
 class TableUtility {
 
@@ -169,7 +171,7 @@ class TableUtility {
     */
     static public function enableFields ($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = true) {
         if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
-            $show_hidden = $table == 'pages' ? $GLOBALS['TSFE']->showHiddenPage : $GLOBALS['TSFE']->showHiddenRecords;
+            $show_hidden = $table == 'pages' ? CompatibilityUtility::includeHiddenPages() : CompatibilityUtility::includeHiddenContent();
         }
         if ($show_hidden == -1) {
             $show_hidden = 0;
@@ -190,33 +192,33 @@ class TableUtility {
             }
 
                 // Enable fields:
-            if (is_array($ctrl['enablecolumns'])) {
+            if (isset($ctrl['enablecolumns']) && is_array($ctrl['enablecolumns'])) {
                 if (!$ctrl['versioningWS'] || $noVersionPreview) { // In case of versioning-preview, enableFields are ignored (checked in versionOL())
                     if (
                         $ctrl['enablecolumns']['disabled'] &&
                         !$show_hidden &&
-                        !$ignore_array['disabled']
+                        empty($ignore_array['disabled'])
                     ) {
                         $field = $table . '.' . $ctrl['enablecolumns']['disabled'];
                         $query .= ' AND ' . $field . '=0';
                     }
                     if (
-                        $ctrl['enablecolumns']['starttime'] &&
-                        !$ignore_array['starttime']
+                        !empty($ctrl['enablecolumns']['starttime']) &&
+                        empty($ignore_array['starttime'])
                     ) {
                         $field = $table . '.' . $ctrl['enablecolumns']['starttime'];
                         $query .= ' AND ' . $field . '<=' . $GLOBALS['SIM_ACCESS_TIME'];
                     }
                     if (
-                        $ctrl['enablecolumns']['endtime'] &&
-                        !$ignore_array['endtime']
+                        !empty($ctrl['enablecolumns']['endtime']) &&
+                        empty($ignore_array['endtime'])
                     ) {
                         $field = $table . '.' . $ctrl['enablecolumns']['endtime'];
                         $query .= ' AND (' . $field . '=0 OR ' . $field . '>' . $GLOBALS['SIM_ACCESS_TIME'] . ')';
                     }
                     if (
-                        $ctrl['enablecolumns']['fe_group'] &&
-                        !$ignore_array['fe_group']
+                        !empty($ctrl['enablecolumns']['fe_group']) &&
+                        empty($ignore_array['fe_group'])
                     ) {
                         $field = $table . '.' . $ctrl['enablecolumns']['fe_group'];
                         $query .= static::getMultipleGroupsWhereClause($field, $table);
@@ -224,7 +226,10 @@ class TableUtility {
 
                         // Call hook functions for additional enableColumns
                         // It is used by the extension ingmar_accessctrl which enables assigning more than one usergroup to content and page records
-                    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'])) {
+                    if (
+                        isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns']) &&
+                        is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'])
+                    ) {
                         $_params = array(
                             'table' => $table,
                             'show_hidden' => $show_hidden,
@@ -292,7 +297,10 @@ class TableUtility {
     static public function getFields ($table, $prefix = false) {
         $result = false;
 
-        if (is_array($GLOBALS['TCA'][$table]['columns'])) {
+        if (
+            isset($GLOBALS['TCA'][$table]['columns']) &&
+            is_array($GLOBALS['TCA'][$table]['columns'])
+        ) {
             $tcaFields = array_keys($GLOBALS['TCA'][$table]['columns']);
             $systemFields = static::getSystemFields();
             $result = array_diff($tcaFields, $systemFields);

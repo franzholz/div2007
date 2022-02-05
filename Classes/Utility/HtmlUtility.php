@@ -47,16 +47,19 @@ class HtmlUtility {
     static public function useXHTML ()
     {
         $result = false;
-        if (is_object($GLOBALS['TSFE'])) {
+        if (
+            is_object($GLOBALS['TSFE']) &&
+            isset($GLOBALS['TSFE']->config['config'])
+        ) {
             $config = $GLOBALS['TSFE']->config['config'];
             if (
                 (
-                    $config['xhtmlDoctype'] != '' &&
+                    isset($config['xhtmlDoctype']) &&
                     stripos($config['xhtmlDoctype'], 'xthml') !== false
                 )
                     ||
                 (
-                    $config['doctype'] != '' &&
+                    isset($config['doctype']) &&
                     stripos($config['doctype'], 'xthml') !== false
                 )
             ) {

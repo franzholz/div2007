@@ -86,14 +86,15 @@ class ExtensionUtility {
                     }
 
                     if (
+                        isset($extConf['constraints']) &&
                         is_array($extConf['constraints']) &&
+                        isset($EM_CONF[$extKey]['constraints']['depends']) &&
                         is_array($EM_CONF[$extKey]['constraints']['depends'])
                     ) {
                         $eInfo['TYPO3_version'] = $extConf['constraints']['depends']['typo3'];
                     } else {
                         $eInfo['TYPO3_version'] = $extConf['TYPO3_version'];
                     }
-                    $filesHash = unserialize($extConf['_md5_values_when_last_written']);
                     $eInfo['manual'] =
                         @is_file($path . '/doc/manual.sxw') ||
                         @is_file($path . '/Documentation/Index.rst');

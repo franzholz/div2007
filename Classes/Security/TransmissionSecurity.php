@@ -135,7 +135,11 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     protected function setTransmissionSecurityLevel ($level = '')
     {
         if ($level == '') {
-            $level = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
+            if (isset($GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'])) {
+                $level = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
+            } else {
+                $level = 'normal';
+            }
         }
         $this->transmissionSecurityLevel = $level;
     }
@@ -409,6 +413,7 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
 
         if (
             $loginForm &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs']) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'])
         ) {
             $_params = array();

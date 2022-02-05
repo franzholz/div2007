@@ -1,5 +1,10 @@
+2022-02-05 Franz Holzinger <franz@ttproducts.de>
+    * deprecation 94312: remove loginSecurityLevel global FE variable in TYPO3 11.5
+    * PHP improvements: solve warning exceptions by PHP 8
+
 2022-01-26 Franz Holzinger <franz@ttproducts.de>
     * bugfix: \JambageCom\Div2007\Utility\TcaUtility::removeField has 2 array parameters.  
+    func_get_arg(): Argument #1 ($position) must be less than the number of the arguments passed to the currently executed function
 
 2022-01-10 Franz Holzinger <franz@ttproducts.de>
     * It should still work with PHP 7.4 and under TYPO3 10.4.

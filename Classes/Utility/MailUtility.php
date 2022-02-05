@@ -100,7 +100,7 @@ class MailUtility {
             $charset = $GLOBALS['TSFE']->renderCharset;
         }
 
-        if (!is_array($toEMail) && trim($toEMail)) {
+        if (!is_array($toEMail) && strlen($toEMail)) {
             $emailArray = GeneralUtility::trimExplode(',', $toEMail);
             $toEMail = [];
             foreach ($emailArray as $email) {

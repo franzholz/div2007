@@ -510,6 +510,7 @@ class FrontendUtility {
         }
 
         if (
+            isset($pObject->internal['image']) &&
             is_array($pObject->internal['image']) &&
             $pObject->internal['image']['path']
         ) {
@@ -824,19 +825,24 @@ class FrontendUtility {
         if (is_array($inArray)) {
             foreach($inArray as $fN => $fV) {
                 $bIsCachable = false;
-                if (!strcmp($inArray[$fN],'')) {
+                if (!strcmp($fV,'')) {
                     $bIsCachable = true;
-                } elseif (is_array($pObject->autoCacheFields[$fN])) {
+                } elseif (
+                    isset($pObject->autoCacheFields[$fN]) &&
+                    is_array($pObject->autoCacheFields[$fN])
+                ) {
                     if (
+                        isset($pObject->autoCacheFields[$fN]['range']) &&
                         is_array($pObject->autoCacheFields[$fN]['range']) &&
-                        intval($inArray[$fN]) >= intval($pObject->autoCacheFields[$fN]['range'][0]) &&
-                        intval($inArray[$fN]) <= intval($pObject->autoCacheFields[$fN]['range'][1])) {
+                        intval($fV) >= intval($pObject->autoCacheFields[$fN]['range'][0]) &&
+                        intval($fV) <= intval($pObject->autoCacheFields[$fN]['range'][1])) {
                         $bIsCachable = true;
                     }
 
                     if (    
-                        is_array($this->autoCacheFields[$fN]['list']) &&
-                        in_array($inArray[$fN], $pObject->autoCacheFields[$fN]['list'])
+                        isset($pObject->autoCacheFields[$fN]['list']) &&
+                        is_array($pObject->autoCacheFields[$fN]['list']) &&
+                        in_array($fV, $pObject->autoCacheFields[$fN]['list'])
                     ){
                         $bIsCachable = true;
                     }
@@ -1187,7 +1193,7 @@ class FrontendUtility {
     </div>
     ';
 
-        if (!$GLOBALS['TSFE']->config['config']['disablePrefixComment']) {
+        if (empty($GLOBALS['TSFE']->config['config']['disablePrefixComment'])) {
             $content = '
 
     <!--
@@ -1309,9 +1315,15 @@ class FrontendUtility {
         $tsfe = static::getTypoScriptFrontendController();
         $docType = $tsfe->xhtmlDoctype;
         if (
-            $docType !== 'xhtml_strict' && $docType !== 'xhtml_11'
-            && $tsfe->config['config']['doctype'] !== 'html5'
-            && !$tsfe->config['config']['disableImgBorderAttr']
+            $docType !== 'xhtml_strict' && 
+            $docType !== 'xhtml_11' &&
+            (
+                !isset($tsfe->config['config']['doctype']) ||
+                $tsfe->config['config']['doctype'] !== 'html5'
+            ) &&
+            (
+                empty($tsfe->config['config']['disableImgBorderAttr'])
+            )
         ) {
             return $borderAttr;
         }

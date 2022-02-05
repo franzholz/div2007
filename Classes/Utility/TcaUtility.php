@@ -48,9 +48,20 @@ class TcaUtility {
 	 */
 	static public function removeField (array &$tableTca, array $fieldArray) {
 
-		$tmpArray = explode(',', $tableTca['interface']['showRecordFieldList']);
+        $tmpArray = [];
+        if (
+            defined('TYPO3_version') &&
+            version_compare(TYPO3_version, '10.0.0', '<')
+        ) {
+            $tmpArray = explode(',', $tableTca['interface']['showRecordFieldList']);
+        }
 		$tmpArray = array_diff($tmpArray, $fieldArray);
-		$tableTca['interface']['showRecordFieldList'] = implode(',', $tmpArray);
+        if (
+            defined('TYPO3_version') &&
+            version_compare(TYPO3_version, '10.0.0', '<')
+        ) {
+            $tableTca['interface']['showRecordFieldList'] = implode(',', $tmpArray);
+        }
 
 		foreach ($fieldArray as $field) {
 			if (isset($tableTca['columns'][$field])) {
