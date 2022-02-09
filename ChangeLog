@@ -1,3 +1,6 @@
+2022-02-09 Franz Holzinger <franz@ttproducts.de>
+    * Add new classes CompatibilityApi for PHP 8 and OldCompatibilityApi for PHP 7 related functions.
+
 2022-02-05 Franz Holzinger <franz@ttproducts.de>
     * deprecation 94312: remove loginSecurityLevel global FE variable in TYPO3 11.5
     * PHP improvements: solve warning exceptions by PHP 8

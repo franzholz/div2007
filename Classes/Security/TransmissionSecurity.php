@@ -57,6 +57,7 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     public    $hiddenMarker     = '###HIDDENFIELDS###';
     protected $encryptionAttribute = 'data-rsa-encryption=""';
     public    $requiredExtensions = array('rsa' => array('rsaauth'));
+    public    $allowSyslog = true;
 
     /**
     * Constructor
@@ -66,13 +67,14 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     */
     public function __construct (
         $extensionKey = '',
-        public $allowSyslog = true
+        $allowSyslog = true
     )
     {
         if ($extensionKey != '') {
             $this->extensionKey = $extensionKey;
         }
         $this->setTransmissionSecurityLevel();
+        $this->allowSyslog = $allowSyslog;
     }
 
     /**
