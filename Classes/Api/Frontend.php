@@ -94,7 +94,7 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
                 $this->frontendUser->isCookieSet()
             )
         ) {
-            if ($recs['clear_all']) {
+            if (!empty($recs['clear_all'])) {
                 $this->frontendUser->setKey('ses', 'recs', []);
             }
             $change = 0;
@@ -102,7 +102,10 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
             foreach ($recs as $table => $data) {
                 if (is_array($data)) {
                     foreach ($data as $rec_id => $value) {
-                        if ($value != $recs_array[$table][$rec_id]) {
+                        if (
+                            !isset($recs_array[$table][$rec_id]) ||
+                            $value != $recs_array[$table][$rec_id]
+                        ) {
                             $recs_array[$table][$rec_id] = $value;
                             $change = 1;
                         }

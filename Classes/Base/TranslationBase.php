@@ -62,7 +62,7 @@ class TranslationBase {
         if ($extensionKey != '') {
             $this->extensionKey = $extensionKey;
         }
-        $conf = $GLOBALS['TSFE']->tmpl->setup['lib.'][DIV2007_EXT . '.'];
+        $conf = $GLOBALS['TSFE']->tmpl->setup['lib.'][DIV2007_EXT . '.'] ?? '';
         if (
             isset($conf) &&
             is_array($conf) &&
@@ -162,7 +162,8 @@ class TranslationBase {
             isset($GLOBALS['TSFE']->config) &&
             is_array($GLOBALS['TSFE']->config) &&
             isset($GLOBALS['TSFE']->config['config']) &&
-            is_array($GLOBALS['TSFE']->config['config'])
+            is_array($GLOBALS['TSFE']->config['config']) &&
+            isset($GLOBALS['TSFE']->config['config']['language'])
         ) {
             $result = $GLOBALS['TSFE']->config['config']['language'];
         }
@@ -193,6 +194,7 @@ class TranslationBase {
 
         if (
             $usedLang != '' &&
+            isset($this->LOCAL_LANG[$usedLang][$key][0]) &&
             is_array($this->LOCAL_LANG[$usedLang][$key][0]) &&
             isset($this->LOCAL_LANG[$usedLang][$key][0]['target']) &&
             (
@@ -211,6 +213,7 @@ class TranslationBase {
             }
         } else if (
             $this->getLocalLangKey() != '' &&
+            isset($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]) &&
             is_array($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]) &&
             isset($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['target']) &&
             (
@@ -221,7 +224,7 @@ class TranslationBase {
             $usedLang = $this->getLocalLangKey();
 
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-            if ($this->LOCAL_LANG_charset[$usedLang][$key] != '') {
+            if (!empty($this->LOCAL_LANG_charset[$usedLang][$key])) {
                 $word = $GLOBALS['TSFE']->csConv(
                     $this->LOCAL_LANG[$usedLang][$key][0]['target'],
                     $this->LOCAL_LANG_charset[$usedLang][$key]
@@ -231,10 +234,11 @@ class TranslationBase {
             }
         } elseif (
             $this->altLocalLangKey &&
+            isset($this->LOCAL_LANG[$this->altLocalLangKey][$key][0]) &&
             is_array($this->LOCAL_LANG[$this->altLocalLangKey][$key][0]) &&
             (
-                $this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['target'] != '' ||
-                !isset($this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['source']) // neu FHO
+                !empty($this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['target']) ||
+                !isset($this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['source'])
             )
         ) {
             $usedLang = $this->altLocalLangKey;
@@ -249,14 +253,16 @@ class TranslationBase {
                 $word = $this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['target'];
             }
         } elseif (
+            isset($this->LOCAL_LANG['default'][$key][0]) &&
             is_array($this->LOCAL_LANG['default'][$key][0]) &&
             (
+                isset($this->LOCAL_LANG['default'][$key][0]['target']) &&
                 $this->LOCAL_LANG['default'][$key][0]['target'] != '' ||
-                !isset($this->LOCAL_LANG['default'][$key][0]['source']) // neu FHO
+                !isset($this->LOCAL_LANG['default'][$key][0]['source'])
             )
         ) {
             $usedLang = 'default';
-                // Get default translation (without charset conversion, english)
+                // Get default translation (without charset conversion, English)
             $word = $this->LOCAL_LANG[$usedLang][$key][0]['target'];
         } else {
                 // Return alternative string or empty
@@ -334,7 +340,7 @@ class TranslationBase {
 
         if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
             foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
-                if (is_array($tempLOCAL_LANG[$langKey])) {
+                if (isset($tempLOCAL_LANG[$langKey]) && is_array($tempLOCAL_LANG[$langKey])) {
 
                     if ($overwrite) {
                         $this->LOCAL_LANG[$langKey] = array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
@@ -358,7 +364,7 @@ class TranslationBase {
 
             if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
                 foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
-                    if (is_array($tempLOCAL_LANG[$langKey])) {
+                    if (isset($tempLOCAL_LANG[$langKey]) && is_array($tempLOCAL_LANG[$langKey])) {
                         if ($overwrite) {
                             $this->LOCAL_LANG[$langKey] =
                                 array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);

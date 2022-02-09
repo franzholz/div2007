@@ -100,7 +100,7 @@ class MailUtility {
             $charset = $GLOBALS['TSFE']->renderCharset;
         }
 
-        if (!is_array($toEMail) && trim($toEMail)) {
+        if (!is_array($toEMail) && strlen($toEMail)) {
             $emailArray = GeneralUtility::trimExplode(',', $toEMail);
             $toEMail = [];
             foreach ($emailArray as $email) {
@@ -209,7 +209,17 @@ class MailUtility {
                 $mail->text($PLAINContent);
             }
         } else {
-            throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . $mail::class . '. ', 1612276260 
+            $apiClass = '';
+            
+            if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
+                $apiClass = \JambageCom\Div2007\Api\CompatibilityApi::class;
+            } else {
+                $apiClass = \JambageCom\Div2007\Api\OldCompatibilityApi::class;
+            }
+            
+            $compatibilityApi = GeneralUtility::makeInstance($apiClass);
+
+            throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . $compatibilityApi->getClass($mail) . '. ', 1612276260 
             ); 
         }
 

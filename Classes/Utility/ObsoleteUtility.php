@@ -49,7 +49,9 @@ class ObsoleteUtility {
         $result = '';
 
         if (
+            isset($pOb->conf[$mConfKey]) &&
             $pOb->conf[$mConfKey] &&
+            isset($pOb->conf[$mConfKey . '.']) &&
             $pOb->conf[$mConfKey . '.']
         ) {
             $pOb->cObj->regObj = $pOb;

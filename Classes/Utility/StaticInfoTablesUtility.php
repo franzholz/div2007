@@ -123,7 +123,10 @@ class StaticInfoTablesUtility {
         $lang = $lang ? $lang : strtoupper($langCodeT3);
 
             // Initialize cache array
-        if (!is_array(self::$cache['getCurrentLanguage'])) {
+        if (
+            !isset(self::$cache['getCurrentLanguage']) ||
+            !is_array(self::$cache['getCurrentLanguage'])
+        ) {
             self::$cache['getCurrentLanguage'] = array();
         }
             // Cache retrieved value
@@ -146,6 +149,7 @@ class StaticInfoTablesUtility {
         $labelFields = array();
         if(
             $table &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields']) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'])
         ) {
             $locales = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\Locales::class);
@@ -160,7 +164,10 @@ class StaticInfoTablesUtility {
                 } else {
                     $labelField = str_replace ('##',  strtolower($lang), $field);
                 }
-                if (is_array($GLOBALS['TCA'][$table]['columns'][$labelField])) {
+                if (
+                    isset($GLOBALS['TCA'][$table]['columns'][$labelField]) &&
+                    is_array($GLOBALS['TCA'][$table]['columns'][$labelField])
+                ) {
                     $labelFields[] = $labelField;
                 }
             }
@@ -212,7 +219,10 @@ class StaticInfoTablesUtility {
                 $type = static::isoCodeType($isoCode);
                 $isoCodeField = str_replace ('##', $type, $isoCodeField);
 
-                if (is_array($GLOBALS['TCA'][$table]['columns'][$isoCodeField])) {
+                if (
+                    isset($GLOBALS['TCA'][$table]['columns'][$isoCodeField]) &&
+                    is_array($GLOBALS['TCA'][$table]['columns'][$isoCodeField])
+                ) {
                     $result = $isoCodeField;
                 }
             }

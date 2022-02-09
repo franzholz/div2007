@@ -58,6 +58,7 @@ class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface {
 
     public function pmDrawItem ($params, $pObj) {
 
+        $codes = '';
         $extensionKey = '';
         if (
             $this->extensionKey != ''

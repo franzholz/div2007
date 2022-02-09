@@ -155,12 +155,19 @@ class FlexformUtility {
             $_flexForm = static::$flexForm;
             $index = 0;
         }
+        $number = func_num_args();
         $fieldName = func_get_arg($index);
-        @func_get_arg($index + 1) ? $sheet = func_get_arg($index + 1) : $sheet = 'sDEF';
-        @func_get_arg($index + 2) ? $lang = func_get_arg($index + 2) : $lang = 'lDEF';
-        @func_get_arg($index + 3) ? $value = func_get_arg($index + 3) : $value = 'vDEF';
+        ($number > $index + 1) ? $sheet = func_get_arg($index + 1) : $sheet = 'sDEF';
+        ($number > $index + 2) ? $lang = func_get_arg($index + 2) : $lang = 'lDEF';
+        ($number > $index + 3) ? $value = func_get_arg($index + 3) : $value = 'vDEF';
 
-        is_array($_flexForm) ? $sheetArray = $_flexForm['data'][$sheet][$lang] : $sheetArray = '';
+        $sheetArray = '';
+        if (
+            is_array($_flexForm) &&
+            !empty($_flexForm['data'][$sheet][$lang])
+        ) {
+            $sheetArray = $_flexForm['data'][$sheet][$lang];
+        }
         $result = null;
         if (is_array($sheetArray)) {
             $result =

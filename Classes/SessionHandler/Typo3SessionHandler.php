@@ -79,8 +79,8 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     public function setSessionData ($data)
     {
         if (
-            !$GLOBALS['TYPO3_CONF_VARS']['FE']['maxSessionDataSize'] ||
-            !$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['checkCookieSet'] ||
+            empty($GLOBALS['TYPO3_CONF_VARS']['FE']['maxSessionDataSize']) ||
+            empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['checkCookieSet']) ||
             $this->frontendUser->isCookieSet()
         ) {
             if (!is_array($data)) {

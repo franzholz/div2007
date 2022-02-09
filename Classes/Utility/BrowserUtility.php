@@ -81,10 +81,10 @@ class BrowserUtility {
         $bCSSStyled = true,
         $showResultCount = 1,
         $browseParams = '',
-        $wrapArr = array(),
+        $wrapArr = [],
         $pointerName = 'pointer',
         $hscText = true,
-        $addQueryString = array()
+        $addQueryString = []
     )
     {
         $usedLang = '';
@@ -166,6 +166,7 @@ class BrowserUtility {
         }
 
         if (
+            isset($pObject->internal['image']) &&
             is_array($pObject->internal['image']) &&
             $pObject->internal['image']['path']
         ) {
@@ -218,7 +219,7 @@ class BrowserUtility {
                         $maxPages
                     );
             }
-            $links = array();
+            $links = [];
 
                 // Make browse-table/links:
             if ($bShowFirstLast) { // Link to first page
@@ -483,8 +484,12 @@ class BrowserUtility {
                 $bIsCachable = false;
                 if (!strcmp($inArray[$fN],'')) {
                     $bIsCachable = true;
-                } elseif (is_array($pObject->autoCacheFields[$fN])) {
+                } elseif (
+                    isset($pObject->autoCacheFields[$fN]) &&
+                    is_array($pObject->autoCacheFields[$fN])
+                ) {
                     if (
+                        isset($pObject->autoCacheFields[$fN]['range']) &&
                         is_array($pObject->autoCacheFields[$fN]['range']) &&
                         intval($inArray[$fN]) >= intval($pObject->autoCacheFields[$fN]['range'][0]) &&
                         intval($inArray[$fN]) <= intval($pObject->autoCacheFields[$fN]['range'][1])) {
@@ -529,7 +534,7 @@ class BrowserUtility {
         $cObj,
         $prefixId,
         $str,
-        $overruleCtrlVars = array(),
+        $overruleCtrlVars = [],
         $cache = 0,
         $clearAnyway = 0,
         $altPageId = 0
@@ -541,7 +546,7 @@ class BrowserUtility {
             is_array($overruleCtrlVars) &&
             !$clearAnyway
         ) {
-            $overruledCtrlVars = array();
+            $overruledCtrlVars = [];
             if (
                 isset($pObject->ctrlVars) &&
                 is_array($pObject->ctrlVars)
@@ -594,15 +599,18 @@ class BrowserUtility {
         \JambageCom\Div2007\Base\BrowserBase $pObject,
         $cObj,
         $str,
-        $urlParameters = array(),
+        $urlParameters = [],
         $cache = 0,
         $altPageId = 0
     )
     {
-        $conf = array();
+        $conf = [];
         $conf['useCacheHash'] = $pObject->getIsUserIntObject() ? 0 : $cache;
-        $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
-        $conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) . $pObject->moreParams;
+        $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ?? $GLOBALS['TSFE']->id);
+        $conf['additionalParams'] = 
+            ($pObject->conf['parent.']['addParams'] ?? '') .
+            GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) .
+            $pObject->moreParams;
         $result = $cObj->typoLink($str, $conf);
         return $result;
     }

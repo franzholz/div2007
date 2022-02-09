@@ -79,61 +79,13 @@ class FrontendUtility {
      */
     static public function getPageId (...$params)
     {
-        $result = (int) GeneralUtility::_GP('id');
-        if (
-            $result
-        ) {
-            return $result;
-        }
-
-        $request = null;
-        $site = null;
-        $result = 0;
-        
-        if (
-            isset($params['0']) &&
-            $params['0'] instanceof \Psr\Http\Message\ServerRequestInterface
-        ) {
-            $request = $params['0'];
-        }
-
-        if (
-            $request === null &&
-            is_object($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'])
-        ) {
-            $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
-        }
-        
-        if ($request instanceof \Psr\Http\Message\ServerRequestInterface) {
-            $matcher = GeneralUtility::makeInstance(
-                \TYPO3\CMS\Core\Routing\SiteMatcher::class,
-                GeneralUtility::makeInstance(\TYPO3\CMS\Core\Site\SiteFinder::class)
-            );
-            /** @var \TYPO3\CMS\Core\Routing\SiteRouteResult $routeResult */
-            $routeResult = $matcher->matchRequest($request);
-            /** @var \TYPO3\CMS\Core\Site\Entity\Site $site */
-            $site = $routeResult->getSite();
-        }
-
-        if (
-            isset($site) &&
-            $site instanceof \TYPO3\CMS\Core\Site\Entity\Site
-        ) {
-            try {
-                $previousResult = $request->getAttribute('routing', null);
-                $result = $previousResult->getPageId();
-           // Check for the route
-                if (!$result) {
-                    $pageArguments = $site->getRouter()->matchRequest($request, $previousResult);
-                    $result = $pageArguments->getPageId();
-                }
-            } catch (\TYPO3\CMS\Core\Routing\RouteNotFoundException) {
-                return GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
-                    $request,
-                    'The requested page does not exist',
-                    ['code' => PageAccessFailureReasons::PAGE_NOT_FOUND]
-                );
-            }
+        $result = false;
+        if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
+            $api = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\FrontendApi::class);
+            $result = $api->getPageId($params);
+        } else {
+            $api = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\FrontendApi::class);
+            $result = $api->getPageId($params);
         }
 
         return $result;
@@ -510,6 +462,7 @@ class FrontendUtility {
         }
 
         if (
+            isset($pObject->internal['image']) &&
             is_array($pObject->internal['image']) &&
             $pObject->internal['image']['path']
         ) {
@@ -824,19 +777,24 @@ class FrontendUtility {
         if (is_array($inArray)) {
             foreach($inArray as $fN => $fV) {
                 $bIsCachable = false;
-                if (!strcmp($inArray[$fN],'')) {
+                if (!strcmp($fV,'')) {
                     $bIsCachable = true;
-                } elseif (is_array($pObject->autoCacheFields[$fN])) {
+                } elseif (
+                    isset($pObject->autoCacheFields[$fN]) &&
+                    is_array($pObject->autoCacheFields[$fN])
+                ) {
                     if (
+                        isset($pObject->autoCacheFields[$fN]['range']) &&
                         is_array($pObject->autoCacheFields[$fN]['range']) &&
-                        intval($inArray[$fN]) >= intval($pObject->autoCacheFields[$fN]['range'][0]) &&
-                        intval($inArray[$fN]) <= intval($pObject->autoCacheFields[$fN]['range'][1])) {
+                        intval($fV) >= intval($pObject->autoCacheFields[$fN]['range'][0]) &&
+                        intval($fV) <= intval($pObject->autoCacheFields[$fN]['range'][1])) {
                         $bIsCachable = true;
                     }
 
                     if (    
-                        is_array($this->autoCacheFields[$fN]['list']) &&
-                        in_array($inArray[$fN], $pObject->autoCacheFields[$fN]['list'])
+                        isset($pObject->autoCacheFields[$fN]['list']) &&
+                        is_array($pObject->autoCacheFields[$fN]['list']) &&
+                        in_array($fV, $pObject->autoCacheFields[$fN]['list'])
                     ){
                         $bIsCachable = true;
                     }
@@ -1187,7 +1145,7 @@ class FrontendUtility {
     </div>
     ';
 
-        if (!$GLOBALS['TSFE']->config['config']['disablePrefixComment']) {
+        if (empty($GLOBALS['TSFE']->config['config']['disablePrefixComment'])) {
             $content = '
 
     <!--
@@ -1309,9 +1267,15 @@ class FrontendUtility {
         $tsfe = static::getTypoScriptFrontendController();
         $docType = $tsfe->xhtmlDoctype;
         if (
-            $docType !== 'xhtml_strict' && $docType !== 'xhtml_11'
-            && $tsfe->config['config']['doctype'] !== 'html5'
-            && !$tsfe->config['config']['disableImgBorderAttr']
+            $docType !== 'xhtml_strict' && 
+            $docType !== 'xhtml_11' &&
+            (
+                !isset($tsfe->config['config']['doctype']) ||
+                $tsfe->config['config']['doctype'] !== 'html5'
+            ) &&
+            (
+                empty($tsfe->config['config']['disableImgBorderAttr'])
+            )
         ) {
             return $borderAttr;
         }

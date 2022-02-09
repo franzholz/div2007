@@ -48,5 +48,21 @@ class CompatibilityUtility {
 
         return $result;
     }
+    
+    static public function includeHiddenContent ()
+    {
+        $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
+        $result = $context->getPropertyFromAspect('visibility', 'includeHiddenContent');
+
+        return $result;
+    }
+
+    static public function includeHiddenPages ()
+    {
+        $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
+        $result = $context->getPropertyFromAspect('visibility', 'includeHiddenPages');
+
+        return $result;
+    }    
 }
 
