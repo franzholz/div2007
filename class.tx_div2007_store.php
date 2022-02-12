@@ -58,7 +58,7 @@ class tx_div2007_store {
 			$cObject instanceof $className
 		) {
 			$this->cObj = $cObject;
-		} else throw exception ('wrong instance ' . $cObject::class);
+		} else throw exception ('wrong instance ' . get_classs($cObject));
 	}
 
 	public function getCobj() {
@@ -66,5 +66,3 @@ class tx_div2007_store {
 	}
 }
 
-
-?>

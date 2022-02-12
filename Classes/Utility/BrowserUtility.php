@@ -560,6 +560,7 @@ class BrowserUtility {
                     $overruledCtrlVars,
                     $overruleCtrlVars
                 );
+
             if ($pObject->getAutoCacheEnable()) {
                 $cache = static::autoCache($pObject, $overruledCtrlVars);
             }
@@ -570,9 +571,9 @@ class BrowserUtility {
                 $pObject,
                 $cObj,
                 $str,
-                array(
+                [
                     $prefixId => $overruledCtrlVars
-                ),
+                ],
                 $cache,
                 $altPageId
             );
@@ -606,7 +607,7 @@ class BrowserUtility {
     {
         $conf = [];
         $conf['useCacheHash'] = $pObject->getIsUserIntObject() ? 0 : $cache;
-        $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ?? $GLOBALS['TSFE']->id);
+        $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
         $conf['additionalParams'] = 
             ($pObject->conf['parent.']['addParams'] ?? '') .
             GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) .

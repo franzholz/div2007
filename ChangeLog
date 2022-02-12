@@ -1,3 +1,6 @@
+2022-02-12 Franz Holzinger <franz@ttproducts.de>
+    * bugfix PHP 8: page browser
+
 2022-02-09 Franz Holzinger <franz@ttproducts.de>
     * Add new classes CompatibilityApi for PHP 8 and OldCompatibilityApi for PHP 7 related functions.
 
