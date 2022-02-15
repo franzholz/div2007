@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Security;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2020 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2022 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -40,15 +40,21 @@ namespace JambageCom\Div2007\Security;
 *
 */
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+
+
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
+
 
 use JambageCom\Div2007\Constants\ErrorCode;
 
 
-class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
-        // Extension key
+class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAwareInterface {
+    use LoggerAwareTrait;
+
+    // Extension key
     protected $extensionKey = DIV2007_EXT;
 
     /**
@@ -89,17 +95,13 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                         $encryptedPassword = false;
                         // Could not get a salting instance from saltedpasswords
                         // This must not happen: It has been checked on the beginning in the method checkRequirements that a object to generate a hash must be available. The hash generation must never fail.
-                         
+                        
                             // Failed to decrypt auto login password
                         $errorMessage =
                             $GLOBALS['TSFE']->sL(
                                 'LLL:EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_hashed_password_error'
                             );
-                        GeneralUtility::sysLog(
-                            $errorMessage,
-                            $this->extensionKey,
-                            GeneralUtility::SYSLOG_SEVERITY_ERROR
-                        );
+                        $this->logger->critical($errorMessage);
                     }
 
                     break;
@@ -182,7 +184,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                     $password != '' &&
                     ExtensionManagementUtility::isLoaded('rsaauth')
                 ) {
-                    $backend = BackendFactory::getBackend();
+                    $backend = \TYPO3\CMS\Rsaauth\Backend\BackendFactory::getBackend();
                     if (is_object($backend) && $backend->isAvailable()) {
                         $decryptedPassword = $backend->decrypt($privateKey, $password);
                         if ($decryptedPassword) {
@@ -194,11 +196,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                                 $GLOBALS['TSFE']->sL(
                                     'LLL:EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_decrypt_auto_login_failed'
                                 );
-                            GeneralUtility::sysLog(
-                                $errorMessage,
-                                $this->extensionKey,
-                                GeneralUtility::SYSLOG_SEVERITY_ERROR
-                            );
+                            $this->logger->critical($errorMessage);
                         }
                     } else {
                         // Required RSA auth backend not available

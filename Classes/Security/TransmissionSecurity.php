@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Security;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2018 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2022 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -40,6 +40,11 @@ namespace JambageCom\Div2007\Security;
 *
 */
 
+
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+
+
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
 use TYPO3\CMS\Rsaauth\Storage\StorageFactory;
@@ -48,7 +53,9 @@ use JambageCom\Div2007\Constants\ErrorCode;
 use JambageCom\Div2007\Utility\HtmlUtility;
 
 
-class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
+class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAwareInterface {
+    use LoggerAwareTrait;
+
         // Extension key
     protected $extensionKey = DIV2007_EXT;
         // The storage security level: normal or rsa
@@ -57,7 +64,7 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     public    $hiddenMarker     = '###HIDDENFIELDS###';
     protected $encryptionAttribute = 'data-rsa-encryption=""';
     public    $requiredExtensions = array('rsa' => array('rsaauth'));
-    public    $allowSyslog = true;
+    public    $allowLog = true;
 
     /**
     * Constructor
@@ -67,14 +74,14 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     */
     public function __construct (
         $extensionKey = '',
-        $allowSyslog = true
+        $allowLog = true
     )
     {
         if ($extensionKey != '') {
             $this->extensionKey = $extensionKey;
         }
         $this->setTransmissionSecurityLevel();
-        $this->allowSyslog = $allowSyslog;
+        $this->allowLog = $allowLog;
     }
 
     /**
@@ -280,12 +287,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                                     'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_process_incoming_field_failed');
                                 $errorMessage = sprintf($errorMessage, $errorDecryptField);
 
-                                if ($this->allowSyslog) {
-                                    GeneralUtility::sysLog(
-                                        $errorMessage, 
-                                        $this->extensionKey,
-                                        GeneralUtility::SYSLOG_SEVERITY_ERROR
-                                    );
+                                if ($this->allowLog) {
+                                    $this->logger->critical($errorMessage);
                                 }                                
                             }
 
@@ -300,12 +303,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                             $errorMessage =
                                 $GLOBALS['TSFE']->sL(
                                     'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_retrieve_private_key_failed');
-                            if ($this->allowSyslog) {
-                                GeneralUtility::sysLog(
-                                    $errorMessage,
-                                    $this->extensionKey,
-                                    GeneralUtility::SYSLOG_SEVERITY_ERROR
-                                );
+                            if ($this->allowLog) {
+                                $this->logger->critical($errorMessage);
                             }
                         }
                     } else {
@@ -315,12 +314,8 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                         $errorMessage =
                             $GLOBALS['TSFE']->sL(
                                 'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_backend_not_available');
-                        if ($this->allowSyslog) {
-                            GeneralUtility::sysLog(
-                                $errorMessage,
-                                $this->extensionKey,
-                                GeneralUtility::SYSLOG_SEVERITY_ERROR
-                            );
+                        if ($this->allowLog) {
+                            $this->logger->critical($errorMessage);
                         }
                     }
                     break;
