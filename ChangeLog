@@ -1,5 +1,6 @@
 2022-02-15 Franz Holzinger <franz@ttproducts.de>
     * Deprecation no. 82430: GeneralUtility::sysLog must be replaced by the Logging API.
+    * Transform StorageSecurity into a class which must be instantiated because of the Logging API.
 
 2022-02-12 Franz Holzinger <franz@ttproducts.de>
     * bugfix PHP 8: page browser

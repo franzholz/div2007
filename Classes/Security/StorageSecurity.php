@@ -62,7 +62,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
     *
     * @return	string	the storage security level
     */
-    static protected function getStorageSecurityLevel ()
+    protected function getStorageSecurityLevel ()
     {
         $result = 'salted';
         return $result;
@@ -75,11 +75,11 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
     * @return	string	encrypted password
     *           boolean false in case of an error
     */
-    static public function encryptPasswordForStorage ($password)
+    public function encryptPasswordForStorage ($password)
     {
         $encryptedPassword = $password;
         if ($password != '') {
-            switch (self::getStorageSecurityLevel()) {
+            switch ($this->getStorageSecurityLevel()) {
                 case 'salted':
                     $objSalt = null;
                     
@@ -123,7 +123,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
     * @param	string	$autoLoginKey: returns the auto-login key
     * @return	boolean  true if the crypted password and auto-login key are filled in
     */
-    static public function encryptPasswordForAutoLogin (
+    public function encryptPasswordForAutoLogin (
         $password,
         &$cryptedPassword,
         &$autoLoginKey
