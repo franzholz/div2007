@@ -1,3 +1,8 @@
+
+
+2022-02-17 Franz Holzinger <franz@ttproducts.de>
+    * Deprecation no. 86389: Replace GeneralUtility::_GETset by JambageCom\Div2007\Utility\ControlUtility::_GETset .
+
 2022-02-15 Franz Holzinger <franz@ttproducts.de>
     * Deprecation no. 82430: GeneralUtility::sysLog must be replaced by the Logging API.
     * Transform StorageSecurity into a class which must be instantiated because of the Logging API.

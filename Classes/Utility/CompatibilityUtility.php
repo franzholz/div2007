@@ -18,7 +18,7 @@ namespace JambageCom\Div2007\Utility;
  /**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
- * Control functions
+ * Backwards compatibility related functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
@@ -48,7 +48,7 @@ class CompatibilityUtility {
 
         return $result;
     }
-    
+
     static public function includeHiddenContent ()
     {
         $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);

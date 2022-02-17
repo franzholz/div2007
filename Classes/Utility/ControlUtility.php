@@ -27,7 +27,12 @@ namespace JambageCom\Div2007\Utility;
  *
  */
 
+ 
+use Psr\Http\Message\ServerRequestInterface;
+
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 
 class ControlUtility {
@@ -129,8 +134,42 @@ class ControlUtility {
         if (isset($conf['_DEFAULT_PI_VARS.']) && is_array($conf['_DEFAULT_PI_VARS.'])) {
             $conf['_DEFAULT_PI_VARS.'] = static::applyStdWrapRecursive($cObj, $conf['_DEFAULT_PI_VARS.']);
             $tmp = $conf['_DEFAULT_PI_VARS.'];
-            \TYPO3\CMS\Core\Utility\ArrayUtility::mergeRecursiveWithOverrule($tmp, is_array($piVars) ? $piVars : array());
+            ArrayUtility::mergeRecursiveWithOverrule($tmp, is_array($piVars) ? $piVars : array());
             $piVars = $tmp;
+        }
+    }
+
+    /**
+     * Writes input value to $_GET.
+     *
+     * @param mixed $inputGet
+     * @param string $key
+     */
+    public static function _GETset($inputGet, $key = '')
+    {
+        if ($key != '') {
+            if (strpos($key, '|') !== false) {
+                $pieces = explode('|', $key);
+                $newGet = [];
+                $pointer = &$newGet;
+                foreach ($pieces as $piece) {
+                    $pointer = &$pointer[$piece];
+                }
+                $pointer = $inputGet;
+                $mergedGet = $_GET;
+                ArrayUtility::mergeRecursiveWithOverrule($mergedGet, $newGet);
+                $_GET = $mergedGet;
+                $GLOBALS['HTTP_GET_VARS'] = $mergedGet;
+            } else {
+                $_GET[$key] = $inputGet;
+                $GLOBALS['HTTP_GET_VARS'][$key] = $inputGet;
+            }
+        } elseif (is_array($inputGet)) {
+            $_GET = $inputGet;
+            $GLOBALS['HTTP_GET_VARS'] = $inputGet;
+            if (isset($GLOBALS['TYPO3_REQUEST']) && $GLOBALS['TYPO3_REQUEST'] instanceof ServerRequestInterface) {
+                $GLOBALS['TYPO3_REQUEST'] = $GLOBALS['TYPO3_REQUEST']->withQueryParams($inputGet);
+            }
         }
     }
 }

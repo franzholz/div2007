@@ -81,16 +81,16 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
         if ($password != '') {
             switch ($this->getStorageSecurityLevel()) {
                 case 'salted':
-                    $objSalt = null;
+                    $objHash = null;
                     
                     if (class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::class)) {
-                        $objSalt = \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::getSaltingInstance(null);
+                        $objHash = GeneralUtility::makeInstance( \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE');
                     } else if (class_exists(\TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::class)) {
-                        $objSalt = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(null);
+                        $objHash = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(null);
                     }
 
-                    if (is_object($objSalt)) {
-                        $encryptedPassword = $objSalt->getHashedPassword($password);
+                    if (is_object($objHash)) {
+                        $encryptedPassword = $objHash->getHashedPassword($password);
                     } else {
                         $encryptedPassword = false;
                         // Could not get a salting instance from saltedpasswords
