@@ -195,7 +195,7 @@ class CoreQuery {
      * @return bool
      * @see user_feAdmin
      */
-    static public function DBmayFEUserEdit ($table, $row, $feUserRow, $allowedGroups = '', bool|int $feEditSelf = 0)
+    static public function DBmayFEUserEdit ($table, $row, $feUserRow, $allowedGroups = '', $feEditSelf = 0)
     {
         if ($allowedGroups) {
             $groupList = implode(
@@ -247,7 +247,7 @@ class CoreQuery {
      * @return string The where clause part. ALWAYS returns a string. If no access at all, then " AND 1=0
      * @see DBmayFEUserEdit(), user_feAdmin::displayEditScreen()
      */
-    static public function DBmayFEUserEditSelect ($table, $feUserRow, $allowedGroups = '', bool|int $feEditSelf = 0)
+    static public function DBmayFEUserEditSelect ($table, $feUserRow, $allowedGroups = '', $feEditSelf = 0)
     {
         // Returns where-definition that selects user-editable records.
         if ($allowedGroups) {

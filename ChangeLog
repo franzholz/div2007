@@ -1,5 +1,15 @@
+
+
+2022-02-17 Franz Holzinger <franz@ttproducts.de>
+    * Deprecation no. 86389: Replace GeneralUtility::_GETset by JambageCom\Div2007\Utility\ControlUtility::_GETset .
+
+2022-02-15 Franz Holzinger <franz@ttproducts.de>
+    * Deprecation no. 82430: GeneralUtility::sysLog must be replaced by the Logging API.
+    * Transform StorageSecurity into a class which must be instantiated because of the Logging API.
+
 2022-02-12 Franz Holzinger <franz@ttproducts.de>
     * bugfix PHP 8: page browser
+    * remove file class.tx_div2007_alpha5.php
 
 2022-02-09 Franz Holzinger <franz@ttproducts.de>
     * Add new classes CompatibilityApi for PHP 8 and OldCompatibilityApi for PHP 7 related functions.

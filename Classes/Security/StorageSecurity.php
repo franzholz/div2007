@@ -5,7 +5,7 @@ namespace JambageCom\Div2007\Security;
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2020 Stanislas Rolland <typo3(arobas)sjbr.ca>
+*  (c) 2022 Stanislas Rolland <typo3(arobas)sjbr.ca>
 *  All rights reserved
 *
 *  This script is part of the Typo3 project. The Typo3 project is
@@ -40,15 +40,21 @@ namespace JambageCom\Div2007\Security;
 *
 */
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+
+
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
+
 
 use JambageCom\Div2007\Constants\ErrorCode;
 
 
-class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
-        // Extension key
+class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAwareInterface {
+    use LoggerAwareTrait;
+
+    // Extension key
     protected $extensionKey = DIV2007_EXT;
 
     /**
@@ -56,7 +62,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     *
     * @return	string	the storage security level
     */
-    static protected function getStorageSecurityLevel ()
+    protected function getStorageSecurityLevel ()
     {
         $result = 'salted';
         return $result;
@@ -69,37 +75,33 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * @return	string	encrypted password
     *           boolean false in case of an error
     */
-    static public function encryptPasswordForStorage ($password)
+    public function encryptPasswordForStorage ($password)
     {
         $encryptedPassword = $password;
         if ($password != '') {
-            switch (self::getStorageSecurityLevel()) {
+            switch ($this->getStorageSecurityLevel()) {
                 case 'salted':
-                    $objSalt = null;
+                    $objHash = null;
                     
                     if (class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::class)) {
-                        $objSalt = \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::getSaltingInstance(null);
+                        $objHash = GeneralUtility::makeInstance( \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE');
                     } else if (class_exists(\TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::class)) {
-                        $objSalt = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(null);
+                        $objHash = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(null);
                     }
 
-                    if (is_object($objSalt)) {
-                        $encryptedPassword = $objSalt->getHashedPassword($password);
+                    if (is_object($objHash)) {
+                        $encryptedPassword = $objHash->getHashedPassword($password);
                     } else {
                         $encryptedPassword = false;
                         // Could not get a salting instance from saltedpasswords
                         // This must not happen: It has been checked on the beginning in the method checkRequirements that a object to generate a hash must be available. The hash generation must never fail.
-                         
+                        
                             // Failed to decrypt auto login password
                         $errorMessage =
                             $GLOBALS['TSFE']->sL(
                                 'LLL:EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_hashed_password_error'
                             );
-                        GeneralUtility::sysLog(
-                            $errorMessage,
-                            $this->extensionKey,
-                            GeneralUtility::SYSLOG_SEVERITY_ERROR
-                        );
+                        $this->logger->critical($errorMessage);
                     }
 
                     break;
@@ -121,7 +123,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
     * @param	string	$autoLoginKey: returns the auto-login key
     * @return	boolean  true if the crypted password and auto-login key are filled in
     */
-    static public function encryptPasswordForAutoLogin (
+    public function encryptPasswordForAutoLogin (
         $password,
         &$cryptedPassword,
         &$autoLoginKey
@@ -182,7 +184,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                     $password != '' &&
                     ExtensionManagementUtility::isLoaded('rsaauth')
                 ) {
-                    $backend = BackendFactory::getBackend();
+                    $backend = \TYPO3\CMS\Rsaauth\Backend\BackendFactory::getBackend();
                     if (is_object($backend) && $backend->isAvailable()) {
                         $decryptedPassword = $backend->decrypt($privateKey, $password);
                         if ($decryptedPassword) {
@@ -194,11 +196,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface {
                                 $GLOBALS['TSFE']->sL(
                                     'LLL:EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_decrypt_auto_login_failed'
                                 );
-                            GeneralUtility::sysLog(
-                                $errorMessage,
-                                $this->extensionKey,
-                                GeneralUtility::SYSLOG_SEVERITY_ERROR
-                            );
+                            $this->logger->critical($errorMessage);
                         }
                     } else {
                         // Required RSA auth backend not available
