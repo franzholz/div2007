@@ -116,7 +116,7 @@ class FrontendUtility {
         $JSPart = '';
         $updateValues = GeneralUtility::trimExplode(',', $fieldList);
         foreach ($updateValues as $fKey) {
-            $value = $dataArray[$fKey];
+            $value = $dataArray[$fKey] ?? '';
             if (is_array($value)) {
                 foreach ($value as $Nvalue) {
                     $JSPart .= '
