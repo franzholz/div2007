@@ -83,7 +83,8 @@ class ObsoleteUtility {
         if (
             isset($conf) &&
             is_array($conf) &&
-            $conf[$mConfKey]
+            !empty($conf[$mConfKey]) &&
+            !empty($conf[$mConfKey . '.'])
         ) {
             $funcConf = $conf[$mConfKey . '.'];
             $funcConf['parentObj'] = $pObject;

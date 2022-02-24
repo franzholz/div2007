@@ -137,27 +137,27 @@ class CoreQuery {
     static public function DBgetInsert ($table, $pid, array $dataArray, $fieldList, $doExec = false)
     {
         $extraList = 'pid';
-        if ($GLOBALS['TCA'][$table]['ctrl']['tstamp']) {
+        if (isset($GLOBALS['TCA'][$table]['ctrl']['tstamp'])) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['tstamp'];
             $dataArray[$field] = $GLOBALS['EXEC_TIME'];
             $extraList .= ',' . $field;
         }
-        if ($GLOBALS['TCA'][$table]['ctrl']['crdate']) {
+        if (isset($GLOBALS['TCA'][$table]['ctrl']['crdate'])) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['crdate'];
             $dataArray[$field] = $GLOBALS['EXEC_TIME'];
             $extraList .= ',' . $field;
         }
-        if ($GLOBALS['TCA'][$table]['ctrl']['cruser_id']) {
+        if (isset($GLOBALS['TCA'][$table]['ctrl']['cruser_id'])) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['cruser_id'];
             $dataArray[$field] = 0;
             $extraList .= ',' . $field;
         }
-        if ($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id']) {
+        if (isset($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'])) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'];
             $dataArray[$field] = (int) static::getTypoScriptFrontendController()->fe_user->user['uid'];
             $extraList .= ',' . $field;
         }
-        if ($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id']) {
+        if (isset($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'])) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'];
             list($dataArray[$field]) = explode(',', static::getTypoScriptFrontendController()->fe_user->user['usergroup']);
             $dataArray[$field] = (int)$dataArray[$field];
@@ -210,9 +210,9 @@ class CoreQuery {
         }
         $ok = 0;
         // Points to the field that allows further editing from frontend if not set. If set the record is locked.
-        if (!$GLOBALS['TCA'][$table]['ctrl']['fe_admin_lock'] || !$row[$GLOBALS['TCA'][$table]['ctrl']['fe_admin_lock']]) {
+        if (empty($GLOBALS['TCA'][$table]['ctrl']['fe_admin_lock']) || empty($row[$GLOBALS['TCA'][$table]['ctrl']['fe_admin_lock']])) {
             // Points to the field (int) that holds the fe_users-id of the creator fe_user
-            if ($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id']) {
+            if (!empty($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'])) {
                 $rowFEUser = (int)$row[$GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id']];
                 if ($rowFEUser && $rowFEUser === (int)$feUserRow['uid']) {
                     $ok = 1;
@@ -223,7 +223,7 @@ class CoreQuery {
                 $ok = 1;
             }
             // Points to the field (int) that holds the fe_group-id of the creator fe_user's first group
-            if ($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id']) {
+            if (!empty($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'])) {
                 $rowFEUser = (int)$row[$GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id']];
                 if ($rowFEUser) {
                     if (GeneralUtility::inList($groupList, $rowFEUser)) {
@@ -263,11 +263,11 @@ class CoreQuery {
         }
         $OR_arr = [];
         // Points to the field (int) that holds the fe_users-id of the creator fe_user
-        if ($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id']) {
+        if (isset($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'])) {
             $OR_arr[] = $GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'] . '=' . $feUserRow['uid'];
         }
         // Points to the field (int) that holds the fe_group-id of the creator fe_user's first group
-        if ($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id']) {
+        if (isset($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'])) {
             $values = GeneralUtility::intExplode(',', $groupList);
             foreach ($values as $theGroupUid) {
                 if ($theGroupUid) {
