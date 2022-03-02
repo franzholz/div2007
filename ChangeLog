@@ -1,3 +1,6 @@
+2022-03-02 Franz Holzinger <franz@ttproducts.de>
+    * bugfix PHP 7.4: keep compatibility
+
 2022-02-24 Franz Holzinger <franz@ttproducts.de>
     * bugfix PHP 8: empty variables
 
