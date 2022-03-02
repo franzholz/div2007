@@ -147,7 +147,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
      *
      * @return string|bool The name of the object in the current language or false
      */
-    public function getStaticInfoName ($code, $type = 'COUNTRIES', $country = '', $countrySubdivision = '', $local = false): bool|string
+    public function getStaticInfoName ($code, $type = 'COUNTRIES', $country = '', $countrySubdivision = '', $local = false)
     {
         $names = false;
         if (in_array($type, $this->types) && trim($code)) {
