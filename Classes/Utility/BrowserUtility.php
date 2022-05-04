@@ -581,16 +581,13 @@ class BrowserUtility {
     }
 
     /**
-     * deprecated:
-     * use BrowserUtility::linkTPKeepCtrlVars instead
-     *
      * Link string to the current page.
      * Returns the $str wrapped in <a>-tags with a link to the CURRENT page, but with $urlParameters set as extra parameters for the page.
      *
      * @param   object      parent object of type \JambageCom\Div2007\Base\BrowserBase
      * @param   object      cObject
      * @param   string      The content string to wrap in <a> tags
-     * @param   array       Array with URL parameters as key/value pairs. They will be "imploded" and added to the list of parameters defined in the plugins TypoScript property "parent.addParams" plus $this->pi_moreParams.
+     * @param   array       Array with URL parameters as key/value pairs. They will be "imploded" and added to the list of parameters defined in the $pObject TypoScript property "parent.addParams" plus $pObject->moreParams.
      * @param   boolean     If $cache is set (0/1), the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
      * @param   integer     Alternative page ID for the link. (By default this function links to the SAME page!)
      * @return  string      The input string wrapped in <a> tags
