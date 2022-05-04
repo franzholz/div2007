@@ -92,7 +92,7 @@ class FrontendApi {
                     $pageArguments = $site->getRouter()->matchRequest($request, $previousResult);
                     $result = $pageArguments->getPageId();
                 }
-            } catch (\TYPO3\CMS\Core\Routing\RouteNotFoundException) {
+            } catch (\TYPO3\CMS\Core\Routing\RouteNotFoundException $e) {
                 return GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
                     $request,
                     'The requested page does not exist',
