@@ -83,26 +83,26 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             $this->initCountries('ALL');
 
             //Get the default currency and make sure it does exist in table static_currencies
-            $this->currency = $conf['currencyCode'];
+            $this->currency = $conf['currencyCode'] ?? '';
             if (!$this->currency) {
-                $this->currency = (trim($conf['currencyCode'])) ? trim($conf['currencyCode']) : 'EUR';
+                $this->currency = (!empty($conf['currencyCode'])) ? trim($conf['currencyCode']) : 'EUR';
             }
             //If nothing is set, we use the Euro because TYPO3 is spread more in this area
             if (!$this->getStaticInfoName($this->currency, 'CURRENCIES')) {
                 $this->currency = 'EUR';
             }
             $this->currencyInfo = $this->loadCurrencyInfo($this->currency);
-            $this->defaultCountry = $conf['countryCode'];
+            $this->defaultCountry = $conf['countryCode'] ?? '';
 
-            if (!$this->defaultCountry) {
+            if (!$this->defaultCountry && isset($conf['countryCode'])) {
                 $this->defaultCountry = trim($conf['countryCode']);
             }
             if (!$this->getStaticInfoName($this->defaultCountry, 'COUNTRIES')) {
                 $this->defaultCountry = 'DEU';
             }
             $this->initCountrySubdivisions($this->defaultCountry);
-            $this->defaultCountryZone = $conf['countryZoneCode'];
-            if (!$this->defaultCountryZone) {
+            $this->defaultCountryZone = $conf['countryZoneCode'] ?? '';
+            if (!$this->defaultCountryZone && isset($conf['countryZoneCode'])) {
                 $this->defaultCountryZone = trim($conf['countryZoneCode']);
             }
             if (!$this->getStaticInfoName($this->defaultCountryZone, 'SUBDIVISIONS', $this->defaultCountry)) {
@@ -113,8 +113,8 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 }
             }
 
-            $this->defaultLanguage = $conf['languageCode'];
-            if (!$this->defaultLanguage) {
+            $this->defaultLanguage = $conf['languageCode'] ?? '';
+            if (!$this->defaultLanguage && isset($conf['languageCode'])) {
                 $this->defaultLanguage = trim($conf['languageCode']);
             }
             if (!$this->getStaticInfoName($this->defaultLanguage, 'LANGUAGES')) {
@@ -338,7 +338,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
 
-        if ($this->conf['countriesAllowed'] != '') {
+        if (!empty($this->conf['countriesAllowed'])) {
             $countriesAllowedArray = GeneralUtility::trimExplode(',', $this->conf['countriesAllowed']);
             $newNameArray = [];
             foreach ($countriesAllowedArray as $iso3) {

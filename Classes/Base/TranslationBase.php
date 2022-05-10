@@ -54,7 +54,7 @@ class TranslationBase {
             isset($GLOBALS['TSFE']->config['config']['language'])
         ) {
             $this->setLocalLangKey($GLOBALS['TSFE']->config['config']['language']);
-            if ($GLOBALS['TSFE']->config['config']['language_alt']) {
+            if (!empty($GLOBALS['TSFE']->config['config']['language_alt'])) {
                 $this->altLocalLangKey = $GLOBALS['TSFE']->config['config']['language_alt'];
             }
         }
@@ -389,7 +389,6 @@ class TranslationBase {
                         $this->LOCAL_LANG[$languageKey] = array();
                     }
                     $languageKey = substr($languageKey, 0, -1);
-                    $charset = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];
 
                         // Remove the dot after the language key
                     foreach ($languageArray as $labelKey => $labelValue) {
