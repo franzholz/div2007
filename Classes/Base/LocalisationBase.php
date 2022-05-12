@@ -19,6 +19,7 @@ namespace JambageCom\Div2007\Base;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Charset\CharsetConverter;
 
 // DEPRECATED: Use the class TranslationBase instead
 
@@ -194,6 +195,8 @@ class LocalisationBase {
         $hsc = false
     ) {
         $output = false;
+                /** @var CharsetConverter $charsetConverter */
+        $charsetConverter = GeneralUtility::makeInstance(CharsetConverter::class);
 
         if (
             $usedLang != '' &&
@@ -202,10 +205,16 @@ class LocalisationBase {
         ) {
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if ($this->LOCAL_LANG_charset[$usedLang][$key] != '') {
-                $word = $GLOBALS['TSFE']->csConv(
-                    $this->LOCAL_LANG[$usedLang][$key][0]['target'],
-                    $this->LOCAL_LANG_charset[$usedLang][$key]
-                );
+                try {
+                    $word =
+                        $charsetConverter->conv(
+                            $this->LOCAL_LANG[$usedLang][$key][0]['target'],
+                            $this->LOCAL_LANG_charset[$usedLang][$key],
+                            'utf-8'
+                        );
+                } catch (UnknownCharsetException $e) {
+                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '" ' . ' for language "' . $usedLang . '" ' . $e->getMessage(), 1652365326);
+                }
             } else {
                 $word = $this->LOCAL_LANG[$usedLang][$key][0]['target'];
             }
@@ -218,10 +227,16 @@ class LocalisationBase {
 
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if ($this->LOCAL_LANG_charset[$usedLang][$key] != '') {
-                $word = $GLOBALS['TSFE']->csConv(
-                    $this->LOCAL_LANG[$usedLang][$key][0]['target'],
-                    $this->LOCAL_LANG_charset[$usedLang][$key]
-                );
+                try {
+                    $word =
+                        $charsetConverter->conv(
+                            $this->LOCAL_LANG[$usedLang][$key][0]['target'],
+                            $this->LOCAL_LANG_charset[$usedLang][$key],
+                            'utf-8'
+                        );
+                } catch (UnknownCharsetException $e) {
+                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '" ' . ' for language "' . $usedLang . '" ' . $e->getMessage(), 1652365370);
+                }
             } else {
                 $word = $this->LOCAL_LANG[$this->getLLkey()][$key][0]['target'];
             }
@@ -234,10 +249,16 @@ class LocalisationBase {
 
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if (isset($this->LOCAL_LANG_charset[$usedLang][$key])) {
-                $word = $GLOBALS['TSFE']->csConv(
-                    $this->LOCAL_LANG[$usedLang][$key][0]['target'],
-                    $this->LOCAL_LANG_charset[$usedLang][$key]
-                );
+                try {
+                    $word =
+                        $charsetConverter->conv(
+                            $this->LOCAL_LANG[$usedLang][$key][0]['target'],
+                            $this->LOCAL_LANG_charset[$usedLang][$key],
+                            'utf-8'
+                        );
+                } catch (UnknownCharsetException $e) {
+                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '" ' . ' for language "' . $usedLang . '" ' . $e->getMessage(), 1652365408);
+                }
             } else {
                 $word = $this->LOCAL_LANG[$this->altLLkey][$key][0]['target'];
             }
