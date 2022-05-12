@@ -18,11 +18,12 @@ namespace JambageCom\Div2007\Base;
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Charset\CharsetConverter;
 
 
 class TranslationBase {
-    public $LOCAL_LANG = array();   // Local Language content
-    public $LOCAL_LANG_charset = array();   // Local Language content charset for individual labels (overriding)
+    public $LOCAL_LANG = [];   // Local Language content
+    public $LOCAL_LANG_charset = [];   // Local Language content charset for individual labels (overriding)
     public $LOCAL_LANG_loaded = 0;  // Flag that tells if the locallang file has been fetch (or tried to be fetched) already.
     public $LocalLangKey = 'default';      // Pointer to the language to use.
     public $altLocalLangKey = '';          // Pointer to alternative fall-back language to use.
@@ -38,13 +39,13 @@ class TranslationBase {
     * $conf[LOCAL_LANG][_key_] is reserved for Local Language overrides.
     * $conf[userFunc] / $conf[includeLibs]  reserved for setting up the USER / USER_INT object. See TSref
     */
-    protected $confLocalLang = array();
+    protected $confLocalLang = [];
     private $hasBeenInitialized = false;
 
 
     public function init (
         $extensionKey = '',
-        $confLocalLang = array(), // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
+        $confLocalLang = [], // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
         $scriptRelPath = '',
         $lookupFilename = '',
         $useDiv2007Language = true
@@ -191,6 +192,9 @@ class TranslationBase {
         $hsc = false
     ) {
         $output = false;
+        $word = '';
+                /** @var CharsetConverter $charsetConverter */
+        $charsetConverter = GeneralUtility::makeInstance(CharsetConverter::class);
 
         if (
             $usedLang != '' &&
@@ -199,15 +203,21 @@ class TranslationBase {
             isset($this->LOCAL_LANG[$usedLang][$key][0]['target']) &&
             (
                 $this->LOCAL_LANG[$usedLang][$key][0]['target'] != '' ||
-                !isset($this->LOCAL_LANG[$usedLang][$key][0]['source']) // neu FHO
+                !isset($this->LOCAL_LANG[$usedLang][$key][0]['source'])
             )
         ) {
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-            if ($this->LOCAL_LANG_charset[$usedLang][$key] != '') {
-                $word = $GLOBALS['TSFE']->csConv(
-                    $this->LOCAL_LANG[$usedLang][$key][0]['target'],
-                    $this->LOCAL_LANG_charset[$usedLang][$key]
-                );
+            if (!empty($this->LOCAL_LANG_charset[$usedLang][$key])) {
+                try {
+                    $word =
+                        $charsetConverter->conv(
+                            $this->LOCAL_LANG[$usedLang][$key][0]['target'],
+                            $this->LOCAL_LANG_charset[$usedLang][$key],
+                            'utf-8'
+                        );
+                } catch (UnknownCharsetException $e) {
+                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '" ' . ' for language "' . $usedLang . '" ' . $e->getMessage(), 1652354355);
+                }
             } else {
                 $word = $this->LOCAL_LANG[$usedLang][$key][0]['target'];
             }
@@ -218,17 +228,23 @@ class TranslationBase {
             isset($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['target']) &&
             (
                 $this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['target'] != '' ||
-                !isset($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['source']) // neu FHO
+                !isset($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['source'])
             )
         ) {
             $usedLang = $this->getLocalLangKey();
 
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if (!empty($this->LOCAL_LANG_charset[$usedLang][$key])) {
-                $word = $GLOBALS['TSFE']->csConv(
-                    $this->LOCAL_LANG[$usedLang][$key][0]['target'],
-                    $this->LOCAL_LANG_charset[$usedLang][$key]
-                );
+                try {
+                    $word =
+                        $charsetConverter->conv(
+                            $this->LOCAL_LANG[$usedLang][$key][0]['target'],
+                            $this->LOCAL_LANG_charset[$usedLang][$key],
+                            'utf-8'
+                        );
+                } catch (UnknownCharsetException $e) {
+                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '" ' . ' for language "' . $usedLang . '" ' . $e->getMessage(), 1652359060);
+                }
             } else {
                 $word = $this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['target'];
             }
@@ -245,10 +261,16 @@ class TranslationBase {
 
                 // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if (isset($this->LOCAL_LANG_charset[$usedLang][$key])) {
-                $word = $GLOBALS['TSFE']->csConv(
-                    $this->LOCAL_LANG[$usedLang][$key][0]['target'],
-                    $this->LOCAL_LANG_charset[$usedLang][$key]
-                );
+                try {
+                    $word =
+                        $charsetConverter->conv(
+                            $this->LOCAL_LANG[$usedLang][$key][0]['target'],
+                            $this->LOCAL_LANG_charset[$usedLang][$key],
+                            'utf-8'
+                        );
+                } catch (UnknownCharsetException $e) {
+                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '" ' . ' for language "' . $usedLang . '" ' . $e->getMessage(), 1652359097);
+                }
             } else {
                 $word = $this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['target'];
             }
@@ -386,14 +408,14 @@ class TranslationBase {
             foreach ($confLocalLang as $languageKey => $languageArray) {
                 if (is_array($languageArray)) {
                     if (!isset($this->LOCAL_LANG[$languageKey])) {
-                        $this->LOCAL_LANG[$languageKey] = array();
+                        $this->LOCAL_LANG[$languageKey] = [];
                     }
                     $languageKey = substr($languageKey, 0, -1);
 
                         // Remove the dot after the language key
                     foreach ($languageArray as $labelKey => $labelValue) {
                         if (!isset($this->LOCAL_LANG[$languageKey][$labelKey])) {
-                            $this->LOCAL_LANG[$languageKey][$labelKey] = array();
+                            $this->LOCAL_LANG[$languageKey][$labelKey] = [];
                         }
 
                         if (is_array($labelValue)) {
