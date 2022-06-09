@@ -193,6 +193,7 @@ class FlexformUtility {
         $fieldNameArr,
         $value
     ) {
+        $result = '';
         $tempArr = $sheetArray;
         foreach($fieldNameArr as $k => $v) {
             if (
@@ -203,16 +204,26 @@ class FlexformUtility {
                     foreach($tempArr as $values) {
                         if ($c == $v) {
                             $tempArr = $values;
-                            break;
+                            break 2;
                         }
                         $c++;
                     }
                 }
-            } else {
+            } else if (
+                is_array($tempArr) && 
+                isset($tempArr[$v])
+            ) {
                 $tempArr = $tempArr[$v];
             }
         }
-        return $tempArr[$value];
+        
+        if (
+            is_array($tempArr) && 
+            isset($tempArr[$value])
+        ) {
+            $result = $tempArr[$value];
+        }
+        return $result;
     }
 }
 
