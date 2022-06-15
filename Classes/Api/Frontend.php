@@ -59,7 +59,7 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
     public function __construct ($typoScriptFrontendController = '') {
         if (!empty($typoScriptFrontendController)) {
             $this->typoScriptFrontendController = $typoScriptFrontendController;
-        } else {
+        } else if (isset($GLOBALS['TSFE'])) {
             $this->typoScriptFrontendController = $GLOBALS['TSFE'];
         }
 
