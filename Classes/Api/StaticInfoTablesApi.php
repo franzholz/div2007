@@ -75,7 +75,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
             $result = false;
         } else if (!$this->hasBeenInitialized) {
-            if (empty($conf) && is_object($GLOBALS['TSFE']) && isset($GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'])) {
+            if (empty($conf) && isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE']) && isset($GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'])) {
                 $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'];
             }
             $extensionInfo = \JambageCom\Div2007\Utility\ExtensionUtility::getExtensionInfo('static_info_tables');

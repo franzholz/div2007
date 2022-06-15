@@ -1,3 +1,6 @@
+2022-06-15 Franz Holzinger <franz@ttproducts.de>
+    * add support for TYPO3 backend
+
 2022-06-09 Franz Holzinger <franz@ttproducts.de>
     * bugfixes PHP 8: FlexformUtility::get must check if array index is set
 
