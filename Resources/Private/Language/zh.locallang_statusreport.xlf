@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.0">
-  <file source-language="en" datatype="plaintext" original="EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf" date="2018-03-06T12:15:00Z" product-name="div2007" target-language="zh-TW">
+  <file source-language="en" datatype="plaintext" original="EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf" date="2018-03-06T12:15:00Z" product-name="div2007" target-language="zh-CN">
     <header/>
     <body>
       <trans-unit id="Conflicting_extensions_installed" resname="Conflicting_extensions_installed">
