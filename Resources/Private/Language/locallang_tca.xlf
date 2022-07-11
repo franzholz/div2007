@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="de" datatype="plaintext" original="messages" date="2017-11-21T15:45:00Z" product-name="div2007">
+	<file source-language="en" datatype="plaintext" original="EXT:div2007/Resources/Private/Language/locallang_tca.xlf" date="2017-11-21T15:45:00Z" product-name="div2007">
 		<header/>
 		<body>
-            <trans-unit id="tstamp" xml:space="preserve">
+            <trans-unit id="tstamp" resname="tstamp">
                 <source>Timestamp</source>
             </trans-unit>
-            <trans-unit id="crdate" xml:space="preserve">
+            <trans-unit id="crdate" resname="crdate">
                 <source>Creation Date</source>
             </trans-unit>
 		</body>
