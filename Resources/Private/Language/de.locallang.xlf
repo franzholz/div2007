@@ -5,91 +5,91 @@
     <body>
       <trans-unit id="example_text" resname="example_text">
         <source>Overwrite this example text in your div2007 setup.</source>
-        <target state="needs-translation">Overwrite this example text in your div2007 setup.</target>
+        <target state="translated">Überschreiben Sie diesen Beispieltext in Ihrem div2007 Setup.</target>
       </trans-unit>
       <trans-unit id="security.internal_hashed_password_error" resname="security.internal_hashed_password_error">
         <source>Failed to fetch a hashed password</source>
-        <target state="needs-translation">Failed to fetch a hashed password</target>
+        <target state="translated">Fehler beim Abrufen eines gehashten Passworts</target>
       </trans-unit>
       <trans-unit id="security.internal_decrypt_auto_login_failed" resname="security.internal_decrypt_auto_login_failed">
         <source>Failed to decrypt the auto login password</source>
-        <target state="needs-translation">Failed to decrypt the auto login password</target>
+        <target state="translated">Fehler beim Entschlüsseln des Auto-Login-Passworts</target>
       </trans-unit>
       <trans-unit id="security.internal_rsaauth_process_incoming_field_failed" resname="security.internal_rsaauth_process_incoming_field_failed">
         <source>RSA auth service failed to process incoming field "%s"</source>
-        <target state="needs-translation">RSA auth service failed to process incoming field "%s"</target>
+        <target state="translated">RSA Authentifizierungsdienst konnte eingehendes Feld "%s " nicht verarbeiten</target>
       </trans-unit>
       <trans-unit id="security.internal_rsaauth_retrieve_private_key_failed" resname="security.internal_rsaauth_retrieve_private_key_failed">
         <source>RSA auth service failed to retrieve private key</source>
-        <target state="needs-translation">RSA auth service failed to retrieve private key</target>
+        <target state="translated">RSA Authentifizierungsdienst konnte den privaten Schlüssel nicht abrufen</target>
       </trans-unit>
       <trans-unit id="security.internal_rsaauth_backend_not_available" resname="security.internal_rsaauth_backend_not_available">
         <source>Required RSA auth backend not available</source>
-        <target state="needs-translation">Required RSA auth backend not available</target>
+        <target state="translated">Benötigtes RSA Auth Backend nicht verfügbar</target>
       </trans-unit>
       <trans-unit id="error.internal_required_extension_missing" resname="error.internal_required_extension_missing">
         <source>The extension "%1$s" is required and must be installed</source>
-        <target state="needs-translation">The extension "%1$s" is required and must be installed</target>
+        <target state="translated">Die Erweiterung "%1$s" ist erforderlich und muss installiert sein</target>
       </trans-unit>
       <trans-unit id="privacy_policy.title" resname="privacy_policy.title">
         <source>Privacy Policy</source>
-        <target state="needs-translation">Privacy Policy</target>
+        <target state="translated">Datenschutzerklärung</target>
       </trans-unit>
       <trans-unit id="privacy_policy.acknowledgement" resname="privacy_policy.acknowledgement">
         <source>Privacy Policy Acknowledgement</source>
-        <target state="needs-translation">Privacy Policy Acknowledgement</target>
+        <target state="translated">Bestätigung der Datenschutzrichtlinie</target>
       </trans-unit>
       <trans-unit id="privacy_policy.approval_required" resname="privacy_policy.approval_required">
         <source>Before you can continue, your approval to this website's privacy policy is required</source>
-        <target state="needs-translation">Before you can continue, your approval to this website's privacy policy is required</target>
+        <target state="translated">Bevor Sie fortfahren können, ist Ihre Zustimmung zu den Datenschutzrichtlinien dieser Website erforderlich</target>
       </trans-unit>
       <trans-unit id="privacy_policy.acknowledged" resname="privacy_policy.acknowledged">
         <source>I acknowledge and agree to the privacy policy.</source>
-        <target state="needs-translation">I acknowledge and agree to the privacy policy.</target>
+        <target state="translated">Ich habe die Datenschutzrichtlinie gelesen und akzeptiere sie.</target>
       </trans-unit>
       <trans-unit id="privacy_policy.acknowledged_2" resname="privacy_policy.acknowledged_2">
         <source>I agree for any data I transmit through this site, that you can use them in accordance with its Privacy Policy.</source>
-        <target state="needs-translation">I agree for any data I transmit through this site, that you can use them in accordance with its Privacy Policy.</target>
+        <target state="translated">Ich stimme für alle von mir über diese Webseite übertragenen Daten zu, dass Sie diese gemäß der Datenschutzrichtlinie verwenden dürfen.</target>
       </trans-unit>
       <trans-unit id="privacy_policy.hint" resname="privacy_policy.hint">
         <source>Hint</source>
-        <target state="needs-translation">Hint</target>
+        <target state="translated">Hinweis</target>
       </trans-unit>
       <trans-unit id="privacy_policy.hint_1" resname="privacy_policy.hint_1">
         <source>You have the right to renounce the agreement to the usage of your personal data at any time via email.</source>
-        <target state="needs-translation">You have the right to renounce the agreement to the usage of your personal data at any time via email.</target>
+        <target state="translated">Sie haben das Recht die Zustimmung zur Nutzung Ihrer Daten jederzeit per Email zu widerrufen.</target>
       </trans-unit>
       <trans-unit id="list_browseresults_first" resname="list_browseresults_first">
         <source>&lt;&lt; First</source>
-        <target state="needs-translation">&lt;&lt; First</target>
+        <target state="translated">&lt;&lt; Erste</target>
       </trans-unit>
       <trans-unit id="list_browseresults_prev" resname="list_browseresults_prev">
         <source>&lt; Previous</source>
-        <target state="needs-translation">&lt; Previous</target>
+        <target state="translated">&lt; Vorige</target>
       </trans-unit>
       <trans-unit id="list_browseresults_page" resname="list_browseresults_page">
         <source>Page</source>
-        <target state="needs-translation">Page</target>
+        <target state="translated">Seite</target>
       </trans-unit>
       <trans-unit id="list_browseresults_next" resname="list_browseresults_next">
         <source>Next &gt;</source>
-        <target state="needs-translation">Next &gt;</target>
+        <target state="translated">Nächste &gt;</target>
       </trans-unit>
       <trans-unit id="list_browseresults_last" resname="list_browseresults_last">
         <source>Last &gt;&gt;</source>
-        <target state="needs-translation">Last &gt;&gt;</target>
+        <target state="translated">Letzte &gt;&gt;</target>
       </trans-unit>
       <trans-unit id="list_browseresults_to" resname="list_browseresults_to">
         <source>to</source>
-        <target state="needs-translation">to</target>
+        <target state="translated">bis</target>
       </trans-unit>
       <trans-unit id="list_browseresults_displays_marker" resname="list_browseresults_displays_marker">
         <source>Displaying results ###FROM### to ###TO### out of ###OUT_OF###</source>
-        <target state="needs-translation">Displaying results ###FROM### to ###TO### out of ###OUT_OF###</target>
+        <target state="translated">Anzeige Ergebnisse ###FROM### bis ###TO### von ###OUT_OF###</target>
       </trans-unit>
-      <trans-unit id="list_browseresults_displays" resname="list_browseresults_displays">
+      <trans-unit id="list_browseresults_displays" resname="list_browseresults_displays" approved="yes">
         <source>Displaying results ###SPAN_BEGIN###%s to %s&lt;/span&gt; out of ###SPAN_BEGIN###%s&lt;/span&gt;</source>
-        <target state="needs-translation">Displaying results ###SPAN_BEGIN###%s to %s&lt;/span&gt; out of ###SPAN_BEGIN###%s&lt;/span&gt;</target>
+        <target state="final">Anzeige Ergebnisse ###SPAN_BEGIN###%s bis %s&lt;/span&gt; von ###SPAN_BEGIN###%s&lt;/span&gt;</target>
       </trans-unit>
     </body>
   </file>
