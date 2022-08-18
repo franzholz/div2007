@@ -1,3 +1,7 @@
+2022-08-18 Franz Holzinger <franz@ttproducts.de>
+    * Breaking no.88143: Version-related database field “t3ver_id” removed
+    * Breaking no.87193: Deprecated functionality removed: database field “t3ver_label“ removed
+
 2022-07-11 Franz Holzinger <franz@ttproducts.de>
     * Bugfix language files
 
