@@ -56,11 +56,11 @@ class ExtensionUtility {
 
             if (@is_file($file)) {
                 $_EXTKEY = $extKey;
-                $EM_CONF = array();
+                $EM_CONF = [];
                 include($file);
 
-                $eInfo = array();
-                $fieldArray = array(
+                $eInfo = [];
+                $fieldArray = [
                     'author',
                     'author_company',
                     'author_email',
@@ -74,7 +74,7 @@ class ExtensionUtility {
                     'version',
                     'CGLcompliance',
                     'CGLcompliance_note'
-                );
+                ];
                 $extConf = $EM_CONF[$extKey];
 
                 if (isset($extConf) && is_array($extConf)) {
