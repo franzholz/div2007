@@ -56,7 +56,7 @@ call_user_func(function () {
     if (!defined('DIV2007_LANGUAGE_SUBPATH')) {
         define('DIV2007_LANGUAGE_SUBPATH', '/Resources/Private/Language/');
     }
-    if (!defined('DIV2007_LANGUAGE_SUBPATH')) {
+    if (!defined('DIV2007_ICONS_SUBPATH')) {
         define('DIV2007_ICONS_SUBPATH', 'Resources/Public/Images/Icons/');
     }
 });
