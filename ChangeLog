@@ -1,4 +1,5 @@
-
+2022-12-01 Franz Holzinger  <franz@ttproducts.de>
+    * compatibility: Migrate extension icon to Resources/Public/Icons/Extension.gif
 
 2022-09-01 Franz Holzinger <franz@ttproducts.de>
     * Bugfix undefined constant DIV2007_ICONS_SUBPATH
