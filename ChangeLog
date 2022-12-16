@@ -1,3 +1,6 @@
+2022-12-16 Franz Holzinger  <franz@ttproducts.de>
+    * compatibility: TYPO3 12
+
 2022-12-01 Franz Holzinger  <franz@ttproducts.de>
     * compatibility: Migrate extension icon to Resources/Public/Icons/Extension.gif
 
