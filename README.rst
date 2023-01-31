@@ -16,6 +16,7 @@ the speaking url of the routing enhancer.
 
 Requirements
 ------------
+1.16 and later require PHP 7.4 - 8 and TYPO3 10.4 - 12.x
 
 1.13 and later require PHP 7.4 - 8 and TYPO3 10.4 - 11.5
 
