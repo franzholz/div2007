@@ -430,7 +430,7 @@ class tx_div2007_staticinfotables {
 				$limit = $config['itemsProcFunc_config']['hotlistLimit'];
 				$limit = $limit ? $limit : '8';
 				$app = $config['itemsProcFunc_config']['hotlistApp'];
-				$app = $app ? $app : TYPO3_MODE;
+				$app = $app ? $app : defined('TYPO3_MODE') ?? TYPO3_MODE : '';
 
 				$res = $GLOBALS['TYPO3_DB']->exec_SELECT_mm_query(
 						$fields,
@@ -503,7 +503,7 @@ class tx_div2007_staticinfotables {
 
 		if ($table && $indexValue) {
 			$indexField = $indexField ? $indexField : 'uid';
-			$app = $app ? $app : TYPO3_MODE;
+            $app = $app ? $app : defined('TYPO3_MODE') ?? TYPO3_MODE : '';
 
 			if ($indexField=='uid') {
 				$uid = $indexValue;

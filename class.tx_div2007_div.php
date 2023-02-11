@@ -3187,7 +3187,7 @@ final class tx_div2007_div {
 		$lookupFile = explode('?', $file);
 		$path = self::resolveBackPath(self::dirname(PATH_thisScript) . '/' . $lookupFile[0]);
 
-		if (TYPO3_MODE == 'FE') {
+		if (defined('TYPO3_MODE') && TYPO3_MODE == 'FE') {
 			$mode = strtolower($GLOBALS['TYPO3_CONF_VARS'][TYPO3_MODE]['versionNumberInFilename']);
 			if ($mode === 'embed') {
 				$mode = TRUE;
