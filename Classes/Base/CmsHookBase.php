@@ -75,7 +75,7 @@ class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface {
             ExtensionManagementUtility::isLoaded($extensionKey) &&
             in_array(
                 intval($pObj->pageRecord['doktype']),
-                array(1, 2, 5)
+                [1, 2, 5]
             ) &&
             $params['row']['pi_flexform'] != ''
         ) {
