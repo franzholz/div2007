@@ -37,50 +37,57 @@ namespace JambageCom\Div2007\Base;
  * @package TYPO3
  * @subpackage div2007
  *
- *
  */
 
-use JambageCom\Div2007\Utility\FlexformUtility;
+use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
+use JambageCom\Div2007\Utility\FlexformUtility;
 
-class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface {
+
+class PageContentPreviewRenderingListenerBase implements \TYPO3\CMS\Core\SingletonInterface {
     public $extensionKey = '';	// extension key must be overridden
-    public $extKey = '';	// DEPRECATED
+
+    public function __invoke(PageContentPreviewRenderingEvent $event): void
+    {
+        $content = $event->getPreviewContent();
+        $record = $event->getRecord();
+        $pageContext = $event->getPageLayoutContext();
+        $pageRecord = $pageContext->getPageRecord();
+        $codes = $this->pmDrawItem($record, $pageRecord);
+        $event->setPreviewContent($content . $codes);
+    }
+
 
     /**
     * Draw the item in the page module
     *
-    * @param	array		parameters
+    * @param	array		record
     * @param	object		the parent object
     * @return	  string
     */
 
-    public function pmDrawItem ($params, $pObj) {
-
+    public function pmDrawItem (array $record, array $pageRecord): string
+    {
         $codes = '';
         $extensionKey = '';
         if (
             $this->extensionKey != ''
         ) {
             $extensionKey = $this->extensionKey;
-        } else if (
-            $this->extKey != ''
-        ) {
-            $extensionKey = $this->extKey;
         }
 
         if (
             $extensionKey != '' &&
             ExtensionManagementUtility::isLoaded($extensionKey) &&
             in_array(
-                intval($pObj->pageRecord['doktype']),
+                intval($pageRecord['doktype']),
                 [1, 2, 5]
             ) &&
-            $params['row']['pi_flexform'] != ''
+            $record['pi_flexform'] != ''
         ) {
             FlexformUtility::load(
-                $params['row']['pi_flexform'],
+                $record['pi_flexform'],
                 $extensionKey
             );
             $codes =

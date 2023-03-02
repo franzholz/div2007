@@ -32,6 +32,7 @@ use TYPO3\CMS\Core\Localization\Locales;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
+use TYPO3\CMS\Core\Information\Typo3Version;
 
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -59,9 +60,10 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     public $defaultCountry;
     public $defaultCountryZone;
     public $defaultLanguage;
-    public $versionNumber;
+    public $versionNumber; // extension static_info_tables version number
+    public $version; // TYPO3 version number
     public $countriesAllowed;
-    
+
     /**
      * @var \SJBR\StaticInfoTables\Domain\Repository\CurrencyRepository
      */
@@ -75,7 +77,10 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
             $result = false;
         } else if (!$this->hasBeenInitialized) {
-            if (empty($conf) && isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE']) && isset($GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'])) {
+            $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+            $this->version = $typo3Version->getVersion();
+
+           if (empty($conf) && isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE']) && isset($GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'])) {
                 $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'];
             }
             $extensionInfo = \JambageCom\Div2007\Utility\ExtensionUtility::getExtensionInfo('static_info_tables');
@@ -321,8 +326,8 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 $queryBuilder->andWhere($addWhere);
             }
         }
-        $query = $queryBuilder->execute();
-        while ($row = $query->fetch()) {
+        $statement = $queryBuilder->execute();
+        while ($row = (version_compare($this->version, '12.0.0', '>=') ? $statement->fetchAssociative() : $statement->fetch()) {
             if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     if ($row[$titleField]) {
@@ -405,8 +410,8 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 $queryBuilder->andWhere($addWhere);
             }
         }
-        $query = $queryBuilder->execute();
-        while ($row = $query->fetch()) {
+        $statement = $queryBuilder->execute();
+        while ($row = (version_compare($this->version, '12.0.0', '>=') ? $statement->fetchAssociative() : $statement->fetch()) {
             if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     if ($row[$titleField]) {
@@ -470,8 +475,8 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             $addWhere = QueryHelper::stripLogicalOperatorPrefix($addWhere);
             $queryBuilder->where($addWhere);
         }
-        $query = $queryBuilder->execute();
-        while ($row = $query->fetch()) {
+        $statement = $queryBuilder->execute();
+        while ($row = (version_compare($this->version, '12.0.0', '>=') ? $statement->fetchAssociative() : $statement->fetch()) {
             if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     if ($row[$titleField]) {
