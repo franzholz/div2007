@@ -17,6 +17,9 @@ namespace JambageCom\Div2007\Api;
 
 /**
  *
+ * not supported since TYPO3 12!
+ * Migrate to OldStaticInfoTablesApi!
+ *
  * functions for the TYPO3 extension static_info_tables
  *
  * attention: This class must also work under TYPO3 7.6
@@ -59,7 +62,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     public $defaultCountry;
     public $defaultCountryZone;
     public $defaultLanguage;
-    public $versionNumber;
+    public $versionNumber; // extension static_info_tables version number
 
     
     /**

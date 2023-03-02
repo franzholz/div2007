@@ -1,3 +1,8 @@
+2023-03-02 Franz Holzinger  <franz@ttproducts.de>
+    * Deprecation no. 88366: use 'pages' instead of 'page_caches'
+    * Breaking no. 96287: use fetchAssociative instead of fetch
+    * bugfix pmDrawItem for event
+
 2023-02-10 Franz Holzinger  <franz@ttproducts.de>
     * compatibility: TYPO3 12
 

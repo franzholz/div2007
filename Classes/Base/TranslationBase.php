@@ -303,8 +303,8 @@ class TranslationBase {
 
     /**
      * used since TYPO3 4.6 as loadLL
-     * Loads local-language values by looking for a "locallang.php" file in the plugin class directory ($langObj->scriptRelPath) and if found includes it.
-     * Also locallang values set in the TypoScript property "_LOCAL_LANG" are merged onto the values found in the "locallang.xml" file.
+     * Loads local-language values by looking for a "locallang.xlf" file in the plugin class directory ($langObj->scriptRelPath) and if found includes it.
+     * Also locallang values set in the TypoScript property "_LOCAL_LANG" are merged onto the values found in the "locallang.xlf" file.
      *
      * former method loadLL
      *
@@ -328,7 +328,7 @@ class TranslationBase {
         } else if ($extensionKey != '') {
             $basePath = ExtensionManagementUtility::extPath($extensionKey);
             if ($this->scriptRelPath != '') {
-                if (strpos($this->scriptRelPath, '.php')) {
+                if (strpos($this->scriptRelPath, '.xlf')) {
                     $basePath .= dirname($this->scriptRelPath) . '/';
                 } else {
                     $basePath .= $this->scriptRelPath;

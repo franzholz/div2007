@@ -5080,6 +5080,8 @@ final class tx_div2007_div {
 	}
 
 	/**
+	 * breaking #82572 - RDCT functionality removed
+	 *
 	 * Sub-function for substUrlsInPlainText() above.
 	 *
 	 * @param string $inUrl Input URL
@@ -5088,28 +5090,7 @@ final class tx_div2007_div {
 	 * @return string Processed URL
 	 */
 	static public function makeRedirectUrl($inUrl, $l = 0, $index_script_url = '') {
-		if (strlen($inUrl) > $l) {
-			$md5 = substr(md5($inUrl), 0, 20);
-			$count = $GLOBALS['TYPO3_DB']->exec_SELECTcountRows(
-				'*',
-				'cache_md5params',
-					'md5hash=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($md5, 'cache_md5params')
-			);
-			if (!$count) {
-				$insertFields = array(
-					'md5hash' => $md5,
-					'tstamp' => $GLOBALS['EXEC_TIME'],
-					'type' => 2,
-					'params' => $inUrl
-				);
-
-				$GLOBALS['TYPO3_DB']->exec_INSERTquery('cache_md5params', $insertFields);
-			}
-			$inUrl = ($index_script_url ? $index_script_url : self::getIndpEnv('TYPO3_REQUEST_DIR') . 'index.php') .
-					'?RDCT=' . $md5;
-		}
-
-		return $inUrl;
+        debug ($inUrl, 'ERROR in div2007: makeRedirectUrl $inUrl');
 	}
 
 	/**

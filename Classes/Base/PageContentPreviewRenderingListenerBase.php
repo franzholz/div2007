@@ -37,11 +37,12 @@ namespace JambageCom\Div2007\Base;
  * @package TYPO3
  * @subpackage div2007
  *
- *
  */
 
-use JambageCom\Div2007\Utility\FlexformUtility;
+use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+use JambageCom\Div2007\Utility\FlexformUtility;
 
 
 class PageContentPreviewRenderingListenerBase implements \TYPO3\CMS\Core\SingletonInterface {
@@ -53,7 +54,7 @@ class PageContentPreviewRenderingListenerBase implements \TYPO3\CMS\Core\Singlet
         $record = $event->getRecord();
         $pageContext = $event->getPageLayoutContext();
         $pageRecord = $pageContext->getPageRecord();
-        $codes = $event->pmDrawItem($record, $pageRecord);
+        $codes = $this->pmDrawItem($record, $pageRecord);
         $event->setPreviewContent($content . $codes);
     }
 
