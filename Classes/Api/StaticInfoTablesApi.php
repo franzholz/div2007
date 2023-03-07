@@ -327,7 +327,8 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
         $statement = $queryBuilder->execute();
-        while ($row = (version_compare($this->version, '12.0.0', '>=') ? $statement->fetchAssociative() : $statement->fetch()) {
+        $version12 = (version_compare($this->version, '12.0.0', '>='));
+        while ($row = ($version12 ? $statement->fetchAssociative() : $statement->fetch())) {
             if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     if ($row[$titleField]) {
@@ -411,7 +412,8 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
         $statement = $queryBuilder->execute();
-        while ($row = (version_compare($this->version, '12.0.0', '>=') ? $statement->fetchAssociative() : $statement->fetch()) {
+        $version12 = (version_compare($this->version, '12.0.0', '>='));
+        while ($row = ($version12 ? $statement->fetchAssociative() : $statement->fetch())) {
             if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     if ($row[$titleField]) {
@@ -476,7 +478,8 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             $queryBuilder->where($addWhere);
         }
         $statement = $queryBuilder->execute();
-        while ($row = (version_compare($this->version, '12.0.0', '>=') ? $statement->fetchAssociative() : $statement->fetch()) {
+        $version12 = (version_compare($this->version, '12.0.0', '>='));
+        while ($row = ($version12 ? $statement->fetchAssociative() : $statement->fetch())) {
             if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     if ($row[$titleField]) {
