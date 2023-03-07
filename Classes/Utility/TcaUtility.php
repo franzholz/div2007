@@ -37,7 +37,6 @@ namespace JambageCom\Div2007\Utility;
  */
 
  
-use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
@@ -52,22 +51,6 @@ class TcaUtility {
 	 * @return	string		Content stream
 	 */
 	static public function removeField (array &$tableTca, array $fieldArray) {
-
-        $tmpArray = [];
-        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        $version = $typo3Version->getVersion();
-
-        if (
-            version_compare($version, '10.0.0', '<')
-        ) {
-            $tmpArray = explode(',', $tableTca['interface']['showRecordFieldList']);
-        }
-		$tmpArray = array_diff($tmpArray, $fieldArray);
-        if (
-            version_compare($version, '10.0.0', '<')
-        ) {
-            $tableTca['interface']['showRecordFieldList'] = implode(',', $tmpArray);
-        }
 
 		foreach ($fieldArray as $field) {
 			if (isset($tableTca['columns'][$field])) {
