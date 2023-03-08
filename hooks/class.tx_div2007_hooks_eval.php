@@ -73,4 +73,4 @@ class tx_double6 {
 	}
 }
 
-?>
+

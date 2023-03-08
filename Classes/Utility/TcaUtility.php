@@ -58,7 +58,7 @@ class TcaUtility {
 			}
 		}
 
-		$conigTypeArray = array('types', 'palettes');
+		$conigTypeArray = ['types', 'palettes'];
 
 		foreach ($conigTypeArray as $configType) {
 			if (

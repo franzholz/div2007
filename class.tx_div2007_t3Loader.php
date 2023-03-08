@@ -40,7 +40,7 @@
  // deprecated: will be removed in 2024
 
 /**
- * Collection of functions to load t3 classes and instanciate them.
+ * Collection of functions to load t3 classes and instantiate them.
  *
  * @author     Elmar Hinz <elmar.hinz@team-red.net>
  * @package    TYPO3
@@ -199,5 +199,3 @@ class tx_div2007_t3Loader {
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/lib/class.tx_div2007_t3Loader.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/div2007/lib/class.tx_div2007_t3Loader.php']);
 }
-
-?>

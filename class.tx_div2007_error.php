@@ -62,5 +62,3 @@ class tx_div2007_error {
 }
 
 
-
-?>
