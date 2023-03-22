@@ -26,6 +26,7 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 
 
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -86,6 +87,41 @@ class FrontendUtility {
         } else {
             $api = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\FrontendApi::class);
             $result = $api->getPageId($params);
+        }
+
+        return $result;
+    }
+
+    /**
+    * Get the logged in front end user
+    *
+    * @param	string		field of the user if set
+    *
+    * @return object The current frontend user or string value of the field or boolean false.
+    * @see tx_div2007::user();
+    */
+    static public function getFrontEndUser ($field = '') {
+        $result = false;
+		$context = GeneralUtility::makeInstance(Context::class);
+        $tsfe = $this->getTypoScriptFrontendController();
+
+        if (
+            isset($tsfe->fe_user) &&
+            is_object($tsfe->fe_user) &&
+            $context->getPropertyFromAspect('frontend.user', 'isLoggedIn') &&
+            isset($tsfe->fe_user->user) &&
+            is_array($tsfe->fe_user->user) &&
+            isset($tsfe->fe_user->user['username']) &&
+            $tsfe->fe_user->user['username'] != ''
+        ) {
+            $result = $tsfe->fe_user;
+
+            if (
+                $field != '' &&
+                isset($tsfe->fe_user->user[$field])
+            ) {
+                $result = $tsfe->fe_user->user[$field];
+            }
         }
 
         return $result;
