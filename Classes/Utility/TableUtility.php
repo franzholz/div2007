@@ -367,7 +367,7 @@ class TableUtility {
             }
 
             if ($foreignFieldname != '') {
-                $mmTableConf = $GLOBALS['TCA'][$mmTablename]['columns'][$foreignFieldname]['config'];
+                $mmTableConf = $GLOBALS['TCA'][$mmTablename]['columns'][$foreignFieldname]['config'] ?? '';
             }
 
             if (
