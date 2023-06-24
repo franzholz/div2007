@@ -33,7 +33,7 @@ use TYPO3\CMS\Core\Localization\Locales;
 class StaticInfoTablesUtility {
 
     static private $staticInfo = false;
-    static private $cache = array();
+    static private $cache = [];
     static private $versionNumber;
 
 
@@ -127,7 +127,7 @@ class StaticInfoTablesUtility {
             !isset(self::$cache['getCurrentLanguage']) ||
             !is_array(self::$cache['getCurrentLanguage'])
         ) {
-            self::$cache['getCurrentLanguage'] = array();
+            self::$cache['getCurrentLanguage'] = [];
         }
             // Cache retrieved value
         self::$cache['getCurrentLanguage'][$langCodeT3] = $lang;
@@ -146,7 +146,7 @@ class StaticInfoTablesUtility {
     */
     static public function getTCAlabelField ($table, $bLoadTCA = true, $lang = '', $local = false) {
 
-        $labelFields = array();
+        $labelFields = [];
         if(
             $table &&
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields']) &&
@@ -244,7 +244,7 @@ class StaticInfoTablesUtility {
         $title = '';
         $titleFields = static::getTCAlabelField($table, true, $lang, $local);
         if (count ($titleFields)) {
-            $prefixedTitleFields = array();
+            $prefixedTitleFields = [];
             
             if (version_compare(static::$versionNumber, '11.5.0', '>=')) {            
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
@@ -259,7 +259,7 @@ class StaticInfoTablesUtility {
             $fields = implode(',', $prefixedTitleFields);
             $whereClause = '1=1';
             if (!is_array($isoCode)) {
-                $isoCode = array($isoCode);
+                $isoCode = [$isoCode];
             }
             $index = 0;
             foreach ($isoCode as $index => $code) {
@@ -318,7 +318,7 @@ class StaticInfoTablesUtility {
     */
     static public function fetchCountries ($country, $iso2 = '', $iso3 = '', $isonr = '') {
 
-        $resultArray = array();
+        $resultArray = [];
         $where = '';
 
         $table = 'static_countries';

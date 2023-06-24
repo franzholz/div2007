@@ -200,6 +200,7 @@ class LocalisationBase {
 
         if (
             $usedLang != '' &&
+            isset($this->LOCAL_LANG[$usedLang][$key][0]) &&
             is_array($this->LOCAL_LANG[$usedLang][$key][0]) &&
             $this->LOCAL_LANG[$usedLang][$key][0]['target'] != ''
         ) {
@@ -220,6 +221,7 @@ class LocalisationBase {
             }
         } else if (
             $this->getLLkey() != '' &&
+            isset($this->LOCAL_LANG[$this->getLLkey()][$key][0]) &&
             is_array($this->LOCAL_LANG[$this->getLLkey()][$key][0]) &&
             $this->LOCAL_LANG[$this->getLLkey()][$key][0]['target'] != ''
         ) {
@@ -242,6 +244,7 @@ class LocalisationBase {
             }
         } elseif (
             $this->altLLkey &&
+            isset($this->LOCAL_LANG[$this->altLLkey][$key][0]) &&
             is_array($this->LOCAL_LANG[$this->altLLkey][$key][0]) &&
             $this->LOCAL_LANG[$this->altLLkey][$key][0]['target'] != ''
         ) {
@@ -263,6 +266,7 @@ class LocalisationBase {
                 $word = $this->LOCAL_LANG[$this->altLLkey][$key][0]['target'];
             }
         } elseif (
+            isset($this->LOCAL_LANG['default'][$key][0]) &&
             is_array($this->LOCAL_LANG['default'][$key][0]) &&
             $this->LOCAL_LANG['default'][$key][0]['target'] != ''
         ) {
@@ -321,7 +325,10 @@ class LocalisationBase {
 
         if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
             foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
-                if (is_array($tempLOCAL_LANG[$langKey])) {
+                if (
+                    isset($tempLOCAL_LANG[$langKey]) &&
+                    is_array($tempLOCAL_LANG[$langKey])
+                ) {
 
                     if ($overwrite) {
                         $this->LOCAL_LANG[$langKey] = array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
@@ -345,7 +352,10 @@ class LocalisationBase {
 
             if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
                 foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
-                    if (is_array($tempLOCAL_LANG[$langKey])) {
+                    if (
+                        isset($tempLOCAL_LANG[$langKey]) &&
+                        is_array($tempLOCAL_LANG[$langKey])
+                    ) {
                         if ($overwrite) {
                             $this->LOCAL_LANG[$langKey] =
                                 array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
