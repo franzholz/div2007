@@ -467,7 +467,7 @@ class BrowserUtility {
     }
 
     /**
-     * Returns true if the array $inArray contains only values allowed to be cached based on the configuration in $this->pi_autoCacheFields
+     * Returns true if the array $inArray contains only values allowed to be cached based on the configuration in $pObject->pi_autoCacheFields
      * Used by static::linkTPKeepCtrlVars
      * This is an advanced form of evaluation of whether a URL should be cached or not.
      *
@@ -496,8 +496,9 @@ class BrowserUtility {
                         $bIsCachable = true;
                     }
 
-                    if (    
-                        is_array($this->autoCacheFields[$fN]['list']) &&
+                    if (
+                        isset($pObject->autoCacheFields[$fN]['list']) &&
+                        is_array($pObject->autoCacheFields[$fN]['list']) &&
                         in_array($inArray[$fN], $pObject->autoCacheFields[$fN]['list'])
                     ){
                         $bIsCachable = true;

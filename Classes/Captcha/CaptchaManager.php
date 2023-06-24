@@ -77,7 +77,10 @@ class CaptchaManager
     static public function isLoaded ($extensionKey)
     {
         $isLoaded = false;
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'])) {
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha']) &&
+            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'])
+        ) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'] as $classRef) {
                 $captchaObj = GeneralUtility::makeInstance($classRef);
                 if (is_object($captchaObj)) {

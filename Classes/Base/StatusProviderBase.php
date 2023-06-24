@@ -87,12 +87,13 @@ class StatusProviderBase implements StatusProviderInterface
         $value = null;
         $message = null;
         $status = Status::OK;
-        $missingExtensions = array();
+        $missingExtensions = [];
 
         if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->getExtensionKey()]['constraints']['depends']) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->getExtensionKey()]['constraints']['depends'])
         ) {
-            $requiredExtensions = array_diff(array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->getExtensionKey()]['constraints']['depends']), array('php', 'typo3'));
+            $requiredExtensions = array_diff(array_keys($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->getExtensionKey()]['constraints']['depends']), ['php', 'typo3']);
             foreach ($requiredExtensions as $extensionKey) {
                 if (!ExtensionManagementUtility::isLoaded($extensionKey)) {
                     $missingExtensions[] = $extensionKey;
@@ -132,9 +133,11 @@ class StatusProviderBase implements StatusProviderInterface
         $value = null;
         $message = null;
         $status = Status::OK;
-        $conflictingExtensions = array();
+        $conflictingExtensions = [];
 
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->getExtensionKey()]['constraints']['conflicts'])) {
+        if (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->getExtensionKey()]['constraints']['conflicts']) &&
+            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->getExtensionKey()]['constraints']['conflicts'])) {
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$this->getExtensionKey()]['constraints']['conflicts'] as $extensionKey => $version) {
                 if (ExtensionManagementUtility::isLoaded($extensionKey)) {
                     $conflictingExtensions[] = $extensionKey;
@@ -166,7 +169,7 @@ class StatusProviderBase implements StatusProviderInterface
         $value = null;
         $message = null;
         $status = Status::OK;
-        $supportedTransmissionSecurityLevels = array('', 'normal', 'rsa');
+        $supportedTransmissionSecurityLevels = ['', 'normal', 'rsa'];
 
         if (
             in_array(

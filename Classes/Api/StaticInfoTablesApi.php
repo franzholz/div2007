@@ -538,7 +538,10 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $lang = $lang ? $lang : strtoupper($langCodeT3);
 
             // Initialize cache array
-        if (!is_array($this->cache['getCurrentLanguage'])) {
+        if (
+            !isset($this->cache['getCurrentLanguage']) ||
+            !is_array($this->cache['getCurrentLanguage'])
+        ) {
             $this->cache['getCurrentLanguage'] = [];
         }
             // Cache retrieved value
@@ -628,6 +631,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $labelFields = [];
         if(
             $table &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields']) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'])
         ) {
             $locales = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\Locales::class);
@@ -642,7 +646,10 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 } else {
                     $labelField = str_replace ('##',  strtolower($lang), $field);
                 }
-                if (is_array($GLOBALS['TCA'][$table]['columns'][$labelField])) {
+                if (
+                    isset($GLOBALS['TCA'][$table]['columns'][$labelField]) &&
+                    is_array($GLOBALS['TCA'][$table]['columns'][$labelField])
+                ) {
                     $labelFields[] = $labelField;
                 }
             }
@@ -689,7 +696,8 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
 
         if (
             $isoCode &&
-            $table
+            $table &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['isocode_field'][$index])
         ) {
             $isoCodeField = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['isocode_field'][$index];
 
@@ -697,7 +705,10 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 $type = static::isoCodeType($isoCode);
                 $isoCodeField = str_replace ('##', $type, $isoCodeField);
 
-                if (is_array($GLOBALS['TCA'][$table]['columns'][$isoCodeField])) {
+                if (
+                    isset($GLOBALS['TCA'][$table]['columns'][$isoCodeField]) &&
+                    is_array($GLOBALS['TCA'][$table]['columns'][$isoCodeField])
+                ) {
                     $result = $isoCodeField;
                 }
             }
