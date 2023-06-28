@@ -46,7 +46,7 @@ class TranslationBase {
     public function init (
         $extensionKey = '',
         $confLocalLang = [], // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
-        $scriptRelPath = '',
+        $scriptRelPath = '', // obsolete 
         $lookupFilename = '',
         $useDiv2007Language = true
     ) {
@@ -86,7 +86,7 @@ class TranslationBase {
         }
 
         $this->setConfLocalLang($confLocalLang);
-        $this->scriptRelPath = $scriptRelPath;
+        $this->scriptRelPath = '/Resources/Private/Language/';
         $this->lookupFilename = $lookupFilename;
 
         $this->hasBeenInitialized = true;
