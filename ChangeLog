@@ -1,3 +1,5 @@
+2023-06-28 Franz Holzinger  <franz@ttproducts.de>
+    * scriptRelPath is always '/Resources/Private/Language/'.
 
 2023-03-09 Franz Holzinger  <franz@ttproducts.de>
     * Replace tx_div2007::getFrontEndUser by new FrontendUtility::getFrontEndUser
