@@ -22,8 +22,6 @@ namespace JambageCom\Div2007\Api;
  * attention: This class must also work under TYPO3 7.6
  */
 
-use JambageCom\Div2007\Utility\ExtensionUtility;
-
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -40,6 +38,8 @@ use SJBR\StaticInfoTables\Domain\Repository\CurrencyRepository;
 use SJBR\StaticInfoTables\Utility\HtmlElementUtility;
 use SJBR\StaticInfoTables\Utility\LocalizationUtility;
 
+use JambageCom\Div2007\Utility\ExtensionUtility;
+use JambageCom\Div2007\Utility\TableUtility;
 
 
 class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
@@ -761,7 +761,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             if (is_object($GLOBALS['TSFE'])) {
                 $enableFields = $GLOBALS['TSFE']->sys_page->enableFields($table);
             } else {
-                $enableFields = tx_div2007_core::deleteClause($table);
+                $enableFields = TableUtility::deleteClause($table);
             }
 
             $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(

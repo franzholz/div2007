@@ -60,14 +60,14 @@ class FlexformUtility {
     *
     * @var array
     */
-    static protected $flexForm = array(); //the current loaded flexform
+    static protected $flexForm = []; //the current loaded flexform
 
     /**
     * A set of flexforms that are stored in case they are going to be used.
     *
     * @var array
     */
-    static protected $flexForms = array();
+    static protected $flexForms = [];
 
     /**
     * Load a flexform into memory

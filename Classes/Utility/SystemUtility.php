@@ -93,7 +93,7 @@ class SystemUtility {
     */
     static public function fetchFeGroups ()
     {
-        $result = array();
+        $result = [];
 
         if (
             isset($GLOBALS['TSFE']->fe_user) &&
@@ -165,15 +165,15 @@ class SystemUtility {
     ) {
         $result = false;
 
-        $codeArray = array('a', 's');
+        $codeArray = ['a', 's'];
         $len = strlen($str);
         $depth = 0;
         $mode = 'c';
         $i = 0;
         $errorOffset = -1;
-        $controlArray = array();
-        $controlCount = array();
-        $controlData = array();
+        $controlArray = [];
+        $controlCount = [];
+        $controlData = [];
         $controlIndex = 0;
         while ($i < $len) {
             $ch = substr($str, $i, 1);
@@ -189,13 +189,13 @@ class SystemUtility {
                         case 'a':
                             if (isset($var)) {
                             } else {
-                                $var = array();
+                                $var = [];
                             }
                             if (substr($str, $i, 1) == '{') {
                                 $i++;
                                 $controlIndex++;
                                 $controlArray[$controlIndex] = $ch;
-                                $controlData[$controlIndex] = array('param' => $param1);
+                                $controlData[$controlIndex] = ['param' => $param1];
                                 $controlCount[$controlIndex] = 0;
                             } else {
                                 $errorOffset = $i;

@@ -189,7 +189,7 @@ class MailUtility {
         if ($mail instanceof \Swift_Message) {
             $mail->setCharset($charset)
                 ->setTo($toEMail)
-                ->setFrom(array($fromEMail => $fromName))
+                ->setFrom([$fromEMail => $fromName])
                 ->setSubject($subject);
             if ($HTMLContent != '') {
                 $mail->setBody($HTMLContent, 'text/html');
@@ -233,7 +233,7 @@ class MailUtility {
 
         if ($replyTo) {
             if ($mail instanceof \Swift_Message) {
-                $mail->setReplyTo(array($replyTo => $fromEmail));
+                $mail->setReplyTo([$replyTo => $fromEmail]);
             } else {
                 $mail->replyTo($replyTo);
             }
@@ -243,7 +243,7 @@ class MailUtility {
             if (is_array($attachment)) {
                 $attachmentArray = $attachment;
             } else {
-                $attachmentArray = array($attachment);
+                $attachmentArray = [$attachment];
             }
 
             foreach ($attachmentArray as $theAttachment) {

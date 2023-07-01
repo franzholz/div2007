@@ -54,7 +54,7 @@ class MarkerUtility {
     */
     static public function getTags ($content)
     {
-        $found = array();
+        $found = [];
         $result = false;
 
         preg_match_all('/###([\w:-]+)###/', $content, $found);

@@ -285,18 +285,6 @@ class tx_div2007_core {
 	static public function deleteClause ($table, $tableAlias = '') {
 		$useClassName = '';
 		$result = FALSE;
-		$callingClassName = '\\TYPO3\\CMS\\Backend\\Utility\\BackendUtility';
-
-		if (
-			class_exists($callingClassName)
-		) {
-			$useClassName = substr($callingClassName, 1);
-		}
-
-		if (method_exists($useClassName, 'deleteClause')) {
-
-			$result = call_user_func($useClassName . '::deleteClause', $table, $tableAlias);
-		}
 
 		return $result;
 	}

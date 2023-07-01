@@ -69,7 +69,7 @@ class ControlUtility {
             if (is_string($result)) {
                 $result = htmlSpecialChars($result);
             } else if (is_array($result)) {
-                $newResult = array();
+                $newResult = [];
                 foreach ($result as $key => $value) {
                     $newResult[$key] = htmlSpecialChars($value);
                 }
