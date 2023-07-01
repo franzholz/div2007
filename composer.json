@@ -30,6 +30,9 @@
     "typo3/cms-core": "^10.4 || ^11.5 || ^12.2",
     "typo3/cms-reports": "^10.4 || ^11.5 || ^12.2"    
   },
+  "suggest": {
+    "friendsoftypo3/typo3db-legacy": "^1"
+  },
   "autoload": {
     "psr-4": {
       "JambageCom\\Div2007\\": "Classes"
