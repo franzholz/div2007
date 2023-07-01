@@ -1,5 +1,5 @@
 2023-07-01 Franz Holzinger  <franz@ttproducts.de>
-    * deprecation 83118 - DeleteClause methods deprecated
+    * deprecation 83118 - DeleteClause methods are deprecated
 
 2023-06-28 Franz Holzinger  <franz@ttproducts.de>
     * scriptRelPath is always '/Resources/Private/Language/'.

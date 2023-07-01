@@ -282,12 +282,18 @@ class tx_div2007_core {
 		return $result;
 	}
 
-	static public function deleteClause ($table, $tableAlias = '') {
-		$useClassName = '';
+    static public function deleteClause ($table, $tableAlias = '') {
 		$result = FALSE;
-
+		if ($tableAlias == '') {
+            $tableAlias = $table;
+        }
+        if (!strcmp($table, 'pages')) { // Hardcode for pages because TCA might not be loaded yet (early frontend initialization)
+            $result = ' AND ' . $tableAlias . '.deleted=0';
+        } else {
+            $result = $GLOBALS['TCA'][$table]['ctrl']['delete'] ? ' AND ' . $tableAlias . '.' . $GLOBALS['TCA'][$table]['ctrl']['delete'] . '=0' : '';
+        }
 		return $result;
-	}
+    }
 
 	static public function getTCEFORM_TSconfig ($table, $row) {
 		$useClassName = '';
