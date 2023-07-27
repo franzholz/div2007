@@ -107,9 +107,9 @@ class PhpUtility {
 			if (preg_match("'syntax error, (.+) in .+ on line (\d+)$'s", $code, $code)) {
 				$code[2] = (int) $code[2];
 				$code = $code[2] <= $braces
-					? array($code[1], $code[2])
-					: array('unexpected $end' . substr($code[1], 14), $braces);
-			} else $code = array('syntax error', 0);
+					? [$code[1], $code[2]]
+					: ['unexpected $end' . substr($code[1], 14), $braces];
+			} else $code = ['syntax error', 0];
 		} else {
 			ob_end_clean();
 			$code = FALSE;

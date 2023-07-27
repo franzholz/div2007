@@ -314,22 +314,22 @@ class FrontendUtility {
                 static::addCssFile($cssFilename, $keyPrefix . 'CSSincludeTab');
                 $result = true;
                 $wrappedSubpartArray['###TAB_MENU###'] =
-                    array(
+                    [
                         '<div id="tabmenu" class="tabmenu">',
                         '</div>'
-                    );
+                    ];
 
                 for ($i = 1; $i <= $headerCounter; $i++) {
                     $wrappedSubpartArray['###TAB_HEADER_' . $i . '###'] =
-                        array(
+                        [
                             '<div id="tab_top_' . $i . '" class="tab_top_active" onclick="javascript:openTab(' . $i . ');">',
                             '</div>'
-                        );
+                        ];
                     $wrappedSubpartArray['###TAB_BOX_' . $i . '###'] =
-                        array(
+                        [
                             '<div id="tab_box_' . $i . '" class="tab_box">',
                             '</div>'
-                        );
+                        ];
                 }
             }
         } else {
@@ -945,9 +945,9 @@ class FrontendUtility {
                 $pObject,
                 $cObj,
                 $str,
-                array(
+                [
                     $prefixId => $overruledCtrlVars
-                ),
+                ],
                 $cache,
                 $altPageId
             );

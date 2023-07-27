@@ -315,7 +315,7 @@ class TranslationBase {
         $langFileParam = '',
         $overwrite = true
     ) {
-        $langFile = ($langFileParam ? $langFileParam : $this->getLookupFilename());
+        $langFile = ($langFileParam ?? $this->getLookupFilename());
         $extensionKey = $this->getExtensionKey();
 
         if (
@@ -337,7 +337,7 @@ class TranslationBase {
         /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
         $languageFactory = GeneralUtility::makeInstance($callingClassName);
         $filePath = GeneralUtility::getFileAbsFileName($basePath);
-        
+
         if (!file_exists($filePath)) {
             debug($basePath, 'ERROR: ' . DIV2007_EXT . ' called by "' . $extensionKey . '" - file "' . $basePath . '" cannot be found!'); // keep this
             return false;

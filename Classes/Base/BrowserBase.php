@@ -43,9 +43,9 @@ namespace JambageCom\Div2007\Base;
 
     // this class must be overridden and filled out. You can use the init method.
 class BrowserBase {
-    public $ctrlVars = array();
-    public $internal = array();
-    public $autoCacheFields = array();
+    public $ctrlVars = [];
+    public $internal = [];
+    public $autoCacheFields = [];
     public $autoCacheEnable = false;
     public $is_USER_INT_obj;
     public $tmpPageId = 0;

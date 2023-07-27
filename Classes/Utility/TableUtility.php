@@ -35,6 +35,7 @@ namespace JambageCom\Div2007\Utility;
  * @subpackage div2007
  */
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
@@ -48,7 +49,7 @@ class TableUtility {
     *
     * @var array
     */
-    static protected $systemFields = array(
+    static protected $systemFields = [
         'uid',
         'pid',
         'tstamp',
@@ -67,7 +68,7 @@ class TableUtility {
         't3ver_count',
         't3ver_tstamp',
         't3_origuid',
-    );
+    ];
 
     /**
     * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
@@ -81,7 +82,7 @@ class TableUtility {
     * @internal
     * @see t3lib_transferData::renderRecord(), t3lib_TCEforms::foreignTable()
     */
-    static public function foreign_table_where_query ($fieldValue, $field = '', $TSconfig = array(), $prefix = '') {
+    static public function foreign_table_where_query ($fieldValue, $field = '', $TSconfig = [], $prefix = '') {
         $foreign_table = $fieldValue['config'][$prefix . 'foreign_table'];
         $rootLevel = $GLOBALS['TCA'][$foreign_table]['ctrl']['rootLevel'];
 
@@ -119,19 +120,38 @@ class TableUtility {
     }
 
 
+    /*******************************************
+     *
+     * SQL-related, selecting records, searching
+     *
+     *******************************************/
     /**
-    * Returns the "AND NOT deleted" clause for the tablename given IF $GLOBALS['TCA'] configuration points to such a field.
-    *
-    * @param	string		Tablename
-    * @return	string
-    * @see enableFields()
-    */
-    static public function deleteClause ($table) {
-        if (!strcmp($table, 'pages')) { // Hardcode for pages because TCA might not be loaded yet (early frontend initialization)
-            return ' AND pages.deleted=0';
-        } else {
-            return $GLOBALS['TCA'][$table]['ctrl']['delete'] ? ' AND ' . $table . '.' . $GLOBALS['TCA'][$table]['ctrl']['delete'] . '=0' : '';
+     * Returns the WHERE clause " AND NOT [tablename].[deleted-field]" if a deleted-field
+     * is configured in $GLOBALS['TCA'] for the tablename, $table
+     * This function should ALWAYS be called in the backend for selection on tables which
+     * are configured in $GLOBALS['TCA'] since it will ensure consistent selection of records,
+     * even if they are marked deleted (in which case the system must always treat them as non-existent!)
+     * In the frontend a function, ->enableFields(), is known to filter hidden-field, start- and endtime
+     * and fe_groups as well. But that is a job of the frontend, not the backend. If you need filtering
+     * on those fields as well in the backend you can use ->BEenableFields() though.
+     *
+     * @param string $table Table name present in $GLOBALS['TCA']
+     * @param string $tableAlias Table alias if any
+     * @return string WHERE clause for filtering out deleted records, eg " AND tablename.deleted=0
+     * @deprecated since TYPO3 v9, will be removed in TYPO3 v10.0, the DeletedRestriction functionality should be used instead.
+     */
+    static public function deleteClause($table, $tableAlias = '')
+    {
+        if (empty($GLOBALS['TCA'][$table]['ctrl']['delete'])) {
+            return '';
         }
+        $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable($table)
+            ->expr();
+        return ' AND ' . $expressionBuilder->eq(
+            ($tableAlias ?: $table) . '.' . $GLOBALS['TCA'][$table]['ctrl']['delete'],
+            0
+        );
     }
 
     /**
@@ -144,7 +164,7 @@ class TableUtility {
     */
     static public function getMultipleGroupsWhereClause ($field, $table) {
         $memberGroups = GeneralUtility::intExplode(',', $GLOBALS['TSFE']->gr_list);
-        $orChecks = array();
+        $orChecks = [];
         $orChecks[] = $field . '=\'\''; // If the field is empty, then OK
         $orChecks[] = $field . ' IS NULL'; // If the field is NULL, then OK
         $orChecks[] = $field . '=\'0\''; // If the field contsains zero, then OK
@@ -167,7 +187,7 @@ class TableUtility {
     * @return	string		The clause starting like " AND ...=... AND ...=..."
     * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::enableFields(), deleteClause()
     */
-    static public function enableFields ($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = true) {
+    static public function enableFields ($table, $show_hidden = -1, $ignore_array = [], $noVersionPreview = true) {
         if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
             $show_hidden = $table == 'pages' ? CompatibilityUtility::includeHiddenPages() : CompatibilityUtility::includeHiddenContent();
         }
@@ -228,12 +248,12 @@ class TableUtility {
                         isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns']) &&
                         is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'])
                     ) {
-                        $_params = array(
+                        $_params = [
                             'table' => $table,
                             'show_hidden' => $show_hidden,
                             'ignore_array' => $ignore_array,
                             'ctrl' => $ctrl
-                        );
+                        ];
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'] as $_funcRef) {
                             $query .= GeneralUtility::callUserFunction($_funcRef, $_params, $tmp = 'TableUtility');
                         }
@@ -263,7 +283,7 @@ class TableUtility {
     * @todo Define visibility
     */
     static public function checkPidArray ($listArr) {
-        $outArr = array();
+        $outArr = [];
         if (is_array($listArr) && count($listArr)) {
             $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . static::enableFields('pages') . ' AND doktype NOT IN (' . $this->checkPid_badDoktypeList . ')');
             if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
@@ -303,7 +323,7 @@ class TableUtility {
             $systemFields = static::getSystemFields();
             $result = array_diff($tcaFields, $systemFields);
             if ($prefix) {
-                $prefixArray = array();
+                $prefixArray = [];
                 foreach ($result as $key => $value) {
                     $prefixArray[] = $table . '.' . $value;
                 }
@@ -333,7 +353,7 @@ class TableUtility {
     *
     */
     static public function getForeignTableInfo ($tablename, $fieldname) {
-        $result = array();
+        $result = [];
         if (
             $tablename != '' &&
             $fieldname != '' &&
@@ -401,8 +421,8 @@ class TableUtility {
     */
     static public function getAllSubPages ($uid) {
 
-        $uidArray = array();
-        $result = array();
+        $uidArray = [];
+        $result = [];
 
         if (MathUtility::canBeInterpretedAsInteger($uid)) {
             $uidArray[] = $uid;

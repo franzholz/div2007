@@ -25,8 +25,8 @@ use TYPO3\CMS\Core\Charset\CharsetConverter;
 
 class LocalisationBase {
     public $cObj; // DEPRECATED
-    public $LOCAL_LANG = array();   // Local Language content
-    public $LOCAL_LANG_charset = array();   // Local Language content charset for individual labels (overriding)
+    public $LOCAL_LANG = [];   // Local Language content
+    public $LOCAL_LANG_charset = [];   // Local Language content charset for individual labels (overriding)
     public $LOCAL_LANG_loaded = 0;  // Flag that tells if the locallang file has been fetch (or tried to be fetched) already.
     public $LLkey = 'default';      // Pointer to the language to use.
     public $altLLkey = '';          // Pointer to alternative fall-back language to use.
@@ -42,7 +42,7 @@ class LocalisationBase {
     * $conf[LOCAL_LANG][_key_] is reserved for Local Language overrides.
     * $conf[userFunc] / $conf[includeLibs]  reserved for setting up the USER / USER_INT object. See TSref
     */
-    public $conf = array();
+    public $conf = [];
     public $typoVersion; // DEPRECATED
     private $hasBeenInitialized = false;
 
@@ -381,7 +381,7 @@ class LocalisationBase {
             foreach ($confLL as $languageKey => $languageArray) {
                 if (is_array($languageArray)) {
                     if (!isset($this->LOCAL_LANG[$languageKey])) {
-                        $this->LOCAL_LANG[$languageKey] = array();
+                        $this->LOCAL_LANG[$languageKey] = [];
                     }
                     $languageKey = substr($languageKey, 0, -1);
                     $charset = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'];
@@ -389,7 +389,7 @@ class LocalisationBase {
                         // Remove the dot after the language key
                     foreach ($languageArray as $labelKey => $labelValue) {
                         if (!isset($this->LOCAL_LANG[$languageKey][$labelKey])) {
-                            $this->LOCAL_LANG[$languageKey][$labelKey] = array();
+                            $this->LOCAL_LANG[$languageKey][$labelKey] = [];
                         }
 
                         if (is_array($labelValue)) {

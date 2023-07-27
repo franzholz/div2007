@@ -66,13 +66,13 @@ class StatusProviderBase implements StatusProviderInterface
     */
     public function getStatus ()
     {
-        $result = array(
+        $result = [
             'requiredExtensionsAreInstalled' => $this->checkIfRequiredExtensionsAreInstalled(),
             'noConflictingExtensionIsInstalled' => $this->checkIfNoConflictingExtensionIsInstalled(),
             'frontEndLoginSecurityLevelIsCorrectlySet' => $this->checkIfFrontEndLoginSecurityLevelIsCorrectlySet(),
             'saltedPasswordsAreEnabledInFrontEnd' => $this->checkIfSaltedPasswordsAreEnabledInFrontEnd(),
             'globalVariablesAreSet' => StatusUtility::checkIfGlobalVariablesAreSet($this->getExtensionName(), $this->getGlobalVariables())
-        );
+        ];
         return $result;
     }
 

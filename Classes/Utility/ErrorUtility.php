@@ -47,7 +47,7 @@ class ErrorUtility {
         $result = '';
         $i = 0;
         $indice = '';
-        $messageArray = array();
+        $messageArray = [];
         if (!is_object($languageObj)) {
             return false;
         }

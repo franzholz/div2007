@@ -69,7 +69,7 @@ class ControlUtility {
             if (is_string($result)) {
                 $result = htmlSpecialChars($result);
             } else if (is_array($result)) {
-                $newResult = array();
+                $newResult = [];
                 foreach ($result as $key => $value) {
                     $newResult[$key] = htmlSpecialChars($value);
                 }
@@ -134,7 +134,7 @@ class ControlUtility {
         if (isset($conf['_DEFAULT_PI_VARS.']) && is_array($conf['_DEFAULT_PI_VARS.'])) {
             $conf['_DEFAULT_PI_VARS.'] = static::applyStdWrapRecursive($cObj, $conf['_DEFAULT_PI_VARS.']);
             $tmp = $conf['_DEFAULT_PI_VARS.'];
-            ArrayUtility::mergeRecursiveWithOverrule($tmp, is_array($piVars) ? $piVars : array());
+            ArrayUtility::mergeRecursiveWithOverrule($tmp, is_array($piVars) ? $piVars : []);
             $piVars = $tmp;
         }
     }
