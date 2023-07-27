@@ -63,7 +63,7 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface, Logger
     public    $encryptionMarker = '###ENCRYPTION###';
     public    $hiddenMarker     = '###HIDDENFIELDS###';
     protected $encryptionAttribute = 'data-rsa-encryption=""';
-    public    $requiredExtensions = array('rsa' => array('rsaauth'));
+    public    $requiredExtensions = ['rsa' => ['rsaauth']];
     public    $allowLog = true;
 
     /**

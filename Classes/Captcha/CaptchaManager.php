@@ -40,10 +40,10 @@ class CaptchaManager
     static public function getCaptcha ($extensionKey, $name)
     {
         $result = null;
-        $captchaArray = array(
+        $captchaArray = [
             \JambageCom\Div2007\Captcha\Captcha::class,
             \JambageCom\Div2007\Captcha\Freecap::class
-        );
+        ];
         if (
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha']) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha'])

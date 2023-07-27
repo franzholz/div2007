@@ -49,7 +49,7 @@ class TableUtility {
     *
     * @var array
     */
-    static protected $systemFields = array(
+    static protected $systemFields = [
         'uid',
         'pid',
         'tstamp',
@@ -68,7 +68,7 @@ class TableUtility {
         't3ver_count',
         't3ver_tstamp',
         't3_origuid',
-    );
+    ];
 
     /**
     * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
@@ -248,12 +248,12 @@ class TableUtility {
                         isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns']) &&
                         is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'])
                     ) {
-                        $_params = array(
+                        $_params = [
                             'table' => $table,
                             'show_hidden' => $show_hidden,
                             'ignore_array' => $ignore_array,
                             'ctrl' => $ctrl
-                        );
+                        ];
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'] as $_funcRef) {
                             $query .= GeneralUtility::callUserFunction($_funcRef, $_params, $tmp = 'TableUtility');
                         }
