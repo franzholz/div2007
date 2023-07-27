@@ -1,3 +1,7 @@
+
+2023-07-27 Franz Holzinger  <franz@ttproducts.de>
+    * Deprecation no. 88406: setCacheHash/noCacheHash options in ViewHelpers and UriBuilder
+
 2023-07-01 Franz Holzinger  <franz@ttproducts.de>
     * deprecation 83118 - DeleteClause methods are deprecated
 

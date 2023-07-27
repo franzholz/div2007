@@ -980,7 +980,6 @@ class FrontendUtility {
     )
     {
         $conf = [];
-        $conf['useCacheHash'] = $pObject->getIsUserIntObject() ? 0 : $cache;
         $conf['no_cache'] = $pObject->getIsUserIntObject() ? 0 : !$cache;
         $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
         $conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) . $pObject->moreParams;
