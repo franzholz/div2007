@@ -134,7 +134,7 @@ class ControlUtility {
         if (isset($conf['_DEFAULT_PI_VARS.']) && is_array($conf['_DEFAULT_PI_VARS.'])) {
             $conf['_DEFAULT_PI_VARS.'] = static::applyStdWrapRecursive($cObj, $conf['_DEFAULT_PI_VARS.']);
             $tmp = $conf['_DEFAULT_PI_VARS.'];
-            ArrayUtility::mergeRecursiveWithOverrule($tmp, is_array($piVars) ? $piVars : array());
+            ArrayUtility::mergeRecursiveWithOverrule($tmp, is_array($piVars) ? $piVars : []);
             $piVars = $tmp;
         }
     }

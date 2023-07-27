@@ -45,8 +45,8 @@ class XmlUtility {
 		xml_parse_into_struct($parser, $xml, $tags);
 		xml_parser_free($parser);
 
-		$elements = array();  // the currently filling [child] XmlElement array
-		$stack = array();
+		$elements = [];  // the currently filling [child] XmlElement array
+		$stack = [];
 		foreach ($tags as $tag) {
 			$index = count($elements);
 			if (
@@ -58,7 +58,7 @@ class XmlUtility {
 				$elements[$index]->attributes = $tag['attributes'];
 				$elements[$index]->content = $tag['value'];
 				if ($tag['type'] == 'open') {  // push
-					$elements[$index]->children = array();
+					$elements[$index]->children = [];
 					$stack[count($stack)] = &$elements;
 					$elements = &$elements[$index]->children;
 				}

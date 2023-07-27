@@ -406,14 +406,14 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
     {
         $markerArray[$this->getEncryptionMarker()] = '';
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
-        $extraHiddenFieldsArray = array();
+        $extraHiddenFieldsArray = [];
 
         if (
             $loginForm &&
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs']) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'])
         ) {
-            $_params = array();
+            $_params = [];
             foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'] as $funcRef) {
                 list($onSubmit, $hiddenFields) = GeneralUtility::callUserFunction($funcRef, $_params, $this);
                 $extraHiddenFieldsArray[] = $hiddenFields;

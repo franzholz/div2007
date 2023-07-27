@@ -82,7 +82,7 @@ class TableUtility {
     * @internal
     * @see t3lib_transferData::renderRecord(), t3lib_TCEforms::foreignTable()
     */
-    static public function foreign_table_where_query ($fieldValue, $field = '', $TSconfig = array(), $prefix = '') {
+    static public function foreign_table_where_query ($fieldValue, $field = '', $TSconfig = [], $prefix = '') {
         $foreign_table = $fieldValue['config'][$prefix . 'foreign_table'];
         $rootLevel = $GLOBALS['TCA'][$foreign_table]['ctrl']['rootLevel'];
 
@@ -164,7 +164,7 @@ class TableUtility {
     */
     static public function getMultipleGroupsWhereClause ($field, $table) {
         $memberGroups = GeneralUtility::intExplode(',', $GLOBALS['TSFE']->gr_list);
-        $orChecks = array();
+        $orChecks = [];
         $orChecks[] = $field . '=\'\''; // If the field is empty, then OK
         $orChecks[] = $field . ' IS NULL'; // If the field is NULL, then OK
         $orChecks[] = $field . '=\'0\''; // If the field contsains zero, then OK
@@ -187,7 +187,7 @@ class TableUtility {
     * @return	string		The clause starting like " AND ...=... AND ...=..."
     * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::enableFields(), deleteClause()
     */
-    static public function enableFields ($table, $show_hidden = -1, $ignore_array = array(), $noVersionPreview = true) {
+    static public function enableFields ($table, $show_hidden = -1, $ignore_array = [], $noVersionPreview = true) {
         if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
             $show_hidden = $table == 'pages' ? CompatibilityUtility::includeHiddenPages() : CompatibilityUtility::includeHiddenContent();
         }
@@ -283,7 +283,7 @@ class TableUtility {
     * @todo Define visibility
     */
     static public function checkPidArray ($listArr) {
-        $outArr = array();
+        $outArr = [];
         if (is_array($listArr) && count($listArr)) {
             $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . static::enableFields('pages') . ' AND doktype NOT IN (' . $this->checkPid_badDoktypeList . ')');
             if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
@@ -323,7 +323,7 @@ class TableUtility {
             $systemFields = static::getSystemFields();
             $result = array_diff($tcaFields, $systemFields);
             if ($prefix) {
-                $prefixArray = array();
+                $prefixArray = [];
                 foreach ($result as $key => $value) {
                     $prefixArray[] = $table . '.' . $value;
                 }
@@ -353,7 +353,7 @@ class TableUtility {
     *
     */
     static public function getForeignTableInfo ($tablename, $fieldname) {
-        $result = array();
+        $result = [];
         if (
             $tablename != '' &&
             $fieldname != '' &&
@@ -421,8 +421,8 @@ class TableUtility {
     */
     static public function getAllSubPages ($uid) {
 
-        $uidArray = array();
-        $result = array();
+        $uidArray = [];
+        $result = [];
 
         if (MathUtility::canBeInterpretedAsInteger($uid)) {
             $uidArray[] = $uid;

@@ -68,7 +68,7 @@ class SystemCategoryUtility {
 	static public function getForeignUids (
 		$tableName,
 		$fieldName,
-		array $uidArray = array(),
+		array $uidArray = [],
 		$orderBy = ''
 	) {
 		return static::getUids($tableName, $fieldName, $uidArray, $orderBy, type_foreign);
@@ -85,10 +85,10 @@ class SystemCategoryUtility {
 		$tableName,
 		$fieldName,
 		$type = type_local,
-		array $uidArray = array(),
+		array $uidArray = [],
 		$orderBy = ''
 	) {
-		$relatedRecords = array();
+		$relatedRecords = [];
 		// Assemble where clause
 
 		// Add condition on tablenames fields

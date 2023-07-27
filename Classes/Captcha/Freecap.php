@@ -76,7 +76,7 @@ class Freecap extends CaptchaBase
             $this->initialize() == true
         ) {
             $freecapMarkerArray = $this->getApi()->makeCaptcha();
-            $captchaMarkerArray = array();
+            $captchaMarkerArray = [];
             $prefixLength = strlen($markerPrefix);
 
             foreach ($freecapMarkerArray as $key => $value) {
