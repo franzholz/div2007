@@ -1,4 +1,7 @@
 
+2023-08-02 Franz Holzinger  <franz@ttproducts.de>
+    * bugfix in class StoreRequest: TYPO3\CMS\Core\Routing\SiteMatcher::__construct() Argument 1 ($features) must be of type TYPO3\CMS\Core\Configuration\Features.
+
 2023-07-27 Franz Holzinger  <franz@ttproducts.de>
     * Deprecation no. 88406: setCacheHash/noCacheHash options in ViewHelpers and UriBuilder
 
