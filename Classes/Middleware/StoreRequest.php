@@ -19,6 +19,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Configuration\Features;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Information\Typo3Version;
@@ -50,12 +51,13 @@ class StoreRequest implements MiddlewareInterface
         $version = $typo3Version->getVersion();
 
         if (
-            version_compare($version, '12.0.0', '>=')
+            version_compare($version, '12.4.0', '>=')
         ) {
             $container = GeneralUtility::getContainer();
             $contextFactory = $container->get(\TYPO3\CMS\Core\Routing\RequestContextFactory::class);
             $matcher = GeneralUtility::makeInstance(
                 SiteMatcher::class,
+                GeneralUtility::makeInstance(Features::class),
                 GeneralUtility::makeInstance(SiteFinder::class),
                 $contextFactory
             );
