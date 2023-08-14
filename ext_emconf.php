@@ -7,12 +7,11 @@
 
 $EM_CONF[$_EXTKEY] = [
   'title' => 'Static Methods since 2007',
-  'description' => 'This library offers classes and functions to other TYPO3 extensions. It provides a modified t3lib_div of TYPO3 4.7.10. Replacement for tslib_pibase methods and t3skin images.',
+  'description' => 'This library offers classes and functions to other TYPO3 extensions. It provides a modified t3lib_div of TYPO3 4.7.10. Replacement for tslib_pibase methods.',
   'category' => 'misc',
-  'version' => '1.17.0',
+  'version' => '1.17.1',
   'state' => 'stable',
   'uploadfolder' => 0,
-  'createDirs' => '',
   'clearcacheonload' => 0,
   'author' => 'Franz Holzinger',
   'author_email' => 'franz@ttproducts.de',
@@ -22,7 +21,7 @@ $EM_CONF[$_EXTKEY] = [
     'depends' =>
     [
       'php' => '7.4.0-8.4.99',
-      'typo3' => '10.4.0-12.5.99',
+      'typo3' => '10.4.0-12.4.99',
     ],
     'suggests' =>
     [
