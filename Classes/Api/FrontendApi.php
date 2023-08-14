@@ -58,10 +58,13 @@ class FrontendApi {
             $params['0'] instanceof \Psr\Http\Message\ServerRequestInterface
         ) {
             $request = $params['0'];
+        } else if (isset($GLOBALS['TYPO3_REQUEST'])) {
+            $request = $GLOBALS['TYPO3_REQUEST'];
         }
 
         if (
             $request === null &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST']) &&
             is_object($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'])
         ) {
             $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
