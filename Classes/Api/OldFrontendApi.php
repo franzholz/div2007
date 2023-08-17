@@ -32,7 +32,7 @@ namespace JambageCom\Div2007\Api;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 
-class FrontendApi {
+class OldFrontendApi {
 
     /**
      * This method is needed only for Ajax calls.
