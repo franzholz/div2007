@@ -29,7 +29,9 @@ namespace JambageCom\Div2007\Api;
  */
 
 
+use TYPO3\CMS\Core\Routing\RouteNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 
 
 class FrontendApi {
@@ -95,7 +97,7 @@ class FrontendApi {
                     $pageArguments = $site->getRouter()->matchRequest($request, $previousResult);
                     $result = $pageArguments->getPageId();
                 }
-            } catch (\TYPO3\CMS\Core\Routing\RouteNotFoundException $e) {
+            } catch (RouteNotFoundException $e) {
                 return GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
                     $request,
                     'The requested page does not exist',
@@ -105,6 +107,22 @@ class FrontendApi {
         }
 
         return $result;
+    }
+    
+    /**
+     * Get an empty fluid view to which you can assign your variables:
+     *     $view->assignMultiple( ... );
+     *     $view->render();
+     * 
+     * @return StandaloneView
+     */
+    static public function getStandaloneView ($extensionKey, $templateNameAndPath): StandaloneView
+    {
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templateNameAndPath));
+        $view->setPartialRootPaths(['EXT:' . $extensionKey . '/Resources/Private/Partials']);
+
+        return $view;
     }
 }
 
