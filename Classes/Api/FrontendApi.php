@@ -29,7 +29,9 @@ namespace JambageCom\Div2007\Api;
  */
 
 
+use TYPO3\CMS\Core\Routing\RouteNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 
 
 class FrontendApi {
@@ -58,10 +60,13 @@ class FrontendApi {
             $params['0'] instanceof \Psr\Http\Message\ServerRequestInterface
         ) {
             $request = $params['0'];
+        } else if (isset($GLOBALS['TYPO3_REQUEST'])) {
+            $request = $GLOBALS['TYPO3_REQUEST'];
         }
 
         if (
             $request === null &&
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST']) &&
             is_object($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'])
         ) {
             $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
@@ -92,7 +97,7 @@ class FrontendApi {
                     $pageArguments = $site->getRouter()->matchRequest($request, $previousResult);
                     $result = $pageArguments->getPageId();
                 }
-            } catch (\TYPO3\CMS\Core\Routing\RouteNotFoundException $e) {
+            } catch (RouteNotFoundException $e) {
                 return GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
                     $request,
                     'The requested page does not exist',
@@ -102,6 +107,22 @@ class FrontendApi {
         }
 
         return $result;
+    }
+    
+    /**
+     * Get an empty fluid view to which you can assign your variables:
+     *     $view->assignMultiple( ... );
+     *     $view->render();
+     * 
+     * @return StandaloneView
+     */
+    static public function getStandaloneView ($extensionKey, $templateNameAndPath): StandaloneView
+    {
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templateNameAndPath));
+        $view->setPartialRootPaths(['EXT:' . $extensionKey . '/Resources/Private/Partials']);
+
+        return $view;
     }
 }
 

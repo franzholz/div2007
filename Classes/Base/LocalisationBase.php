@@ -343,13 +343,16 @@ class LocalisationBase {
         $charset = 'UTF-8';
 
         if ($this->altLLkey) {
-            $tempLOCAL_LANG =
-                GeneralUtility::readLLfile(
-                    $basePath,
-                    $this->altLLkey,
-                    $charset
-                );
+            $callingClassName = \TYPO3\CMS\Core\Localization\LocalizationFactory::class;
 
+            /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
+            $languageFactory = GeneralUtility::makeInstance($callingClassName);
+            $tempLOCAL_LANG = $languageFactory->getParsedData(
+                $basePath,
+                $this->altLLkey,
+                'UTF-8'
+            );
+	
             if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
                 foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
                     if (

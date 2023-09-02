@@ -366,12 +366,11 @@ class TranslationBase {
         $charset = 'UTF-8';
 
         if ($this->altLocalLangKey) {
-            $tempLOCAL_LANG =
-                GeneralUtility::readLLfile(
-                    $basePath,
-                    $this->altLocalLangKey,
-                    $charset
-                );
+            $tempLOCAL_LANG = $languageFactory->getParsedData(
+                $basePath,
+                $this->altLocalLangKey,
+                'UTF-8'
+            );
 
             if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
                 foreach ($this->LOCAL_LANG as $langKey => $tempArray) {

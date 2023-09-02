@@ -85,7 +85,7 @@ class FrontendUtility {
             $api = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\FrontendApi::class);
             $result = $api->getPageId($params);
         } else {
-            $api = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\FrontendApi::class);
+            $api = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\OldFrontendApi::class);
             $result = $api->getPageId($params);
         }
 
