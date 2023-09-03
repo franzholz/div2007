@@ -1249,24 +1249,29 @@ class FrontendUtility {
         $rc = $apostrophe . addcslashes($name, '<>()@;:\\".[]' . chr('\n')) . $apostrophe;
         return $rc;
     }
-    
+
     /**
      * Returns content of a file. If it's an image the content of the file is not returned but rather an image tag is.
      *
      * @param string $fName The filename, being a TypoScript resource data type
      * @param string $addParams Additional parameters (attributes). Default is empty alt and title tags.
+     * @param boolean $sanitize If true then the front end sanitizer is used to check if the file location is inside the path Resources/Public .
      * @return string If jpg,gif,jpeg,png: returns image_tag with picture in. If html,txt: returns content string
      * @see FILE(), \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer fileResource
      */
-    static public function fileResource ($fName, $addParams = 'alt="" title=""')
+    static public function fileResource ($fName, $addParams = 'alt="" title=""', $sanitize = true)
     {
         $result = '';
         $incFile = '';
         if (
             $fName != ''
         ) {
-            $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
-            $incFile = $sanitizer->sanitize($fName);
+            if ($sanitize) {
+                $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+                $incFile = $sanitizer->sanitize($fName);
+            } else {
+                $incFile = $fName;
+            }
         }
 
         if ($incFile && file_exists($incFile)) {
