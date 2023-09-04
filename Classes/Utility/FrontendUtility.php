@@ -1270,7 +1270,7 @@ class FrontendUtility {
                 $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
                 $incFile = $sanitizer->sanitize($fName);
             } else {
-                $incFile = $fName;
+                $incFile = GeneralUtility::getFileAbsFileName($fName);
             }
         }
 
