@@ -1,3 +1,6 @@
+2023-09-07 Franz Holzinger  <franz@ttproducts.de>
+    * new feature: add parameter $sanitize to FrontendUtility::fileResource and sanitize it only if set to true
+
 2023-08-04 Franz Holzinger  <franz@ttproducts.de>
     * remove all t3skin icons: Use the extension t3skin_icons instead of div2007.
 
