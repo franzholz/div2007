@@ -38,28 +38,30 @@ class FrontendApi {
 
     /**
      * This method is needed only for Ajax calls.
-     * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId instead of this method.
+     * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId() instead of this method.
      * 
      * @return int
      */
     static public function getPageId (...$params)
     {
-        $result = (int) GeneralUtility::_GP('id');
-        if (
-            $result
-        ) {
-            return $result;
-        }
-
         $request = null;
         $site = null;
         $result = 0;
-        
+
+        if (method_exists(GeneralUtility::class, '_GP')) {
+            $result = (int) GeneralUtility::_GP('id');
+            if (
+                $result
+            ) {
+                return $result;
+            }
+        }
+
         if (
-            isset($params['0']) &&
-            $params['0'] instanceof \Psr\Http\Message\ServerRequestInterface
+            isset($params[0]) &&
+            $params[0] instanceof \Psr\Http\Message\ServerRequestInterface
         ) {
-            $request = $params['0'];
+            $request = $params[0];
         } else if (isset($GLOBALS['TYPO3_REQUEST'])) {
             $request = $GLOBALS['TYPO3_REQUEST'];
         }
