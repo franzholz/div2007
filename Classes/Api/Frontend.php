@@ -134,7 +134,17 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
         if ($this->typoScriptFrontendController instanceof TypoScriptFrontendController) {
             return $this->typoScriptFrontendController;
         }
-        
+
+        $id = '';
+        if (method_exists(GeneralUtility::class, '_GP')) {
+            $id = (int) GeneralUtility::_GP('id');
+        }
+
+        $type = '';
+        if (method_exists(GeneralUtility::class, '_GP')) {
+            $type = (int) GeneralUtility::_GP('type');
+        }
+
         // This usually happens when typolink is created by the TYPO3 Backend, where no TSFE object
         // is there. This functionality is currently completely internal, as these links cannot be
         // created properly from the Backend.
@@ -142,8 +152,8 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
         $this->typoScriptFrontendController = GeneralUtility::makeInstance(
             TypoScriptFrontendController::class,
             null,
-            GeneralUtility::_GP('id'),
-            (int)GeneralUtility::_GP('type')
+            $id,
+            $type
         );
         $this->typoScriptFrontendController->sys_page = GeneralUtility::makeInstance(PageRepository::class);
         $this->typoScriptFrontendController->tmpl = GeneralUtility::makeInstance(TemplateService::class);

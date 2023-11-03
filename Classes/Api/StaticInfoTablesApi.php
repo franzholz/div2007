@@ -19,7 +19,8 @@ namespace JambageCom\Div2007\Api;
  *
  * functions for the TYPO3 extension static_info_tables
  *
- * attention: This class must also work under TYPO3 7.6
+ * Alternative: see TYPO3 12 TYPO3\CMS\Core\Country\CountryProvider class
+ * https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Country/Index.html
  */
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
