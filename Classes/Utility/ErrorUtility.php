@@ -61,7 +61,7 @@ class ErrorUtility {
                         $messageArray = explode('|', $message);
                         $result .= $plugin . ': ' . $messageArray[0];
                     } else {
-                        break;
+                        continue;
                     }
                 } else if (method_exists($languageObj, 'getLabel')) {
                     $message = $languageObj->getLabel($indice);
@@ -70,11 +70,14 @@ class ErrorUtility {
                         $messageArray = explode('|', $message);
                         $result .= $plugin . ': ' . $messageArray[0];
                     } else {
-                        break;
+                        continue;
                     }
                 }
-            } else if (isset($messageArray[$i])) {
-                $result .= $indice . htmlspecialchars($messageArray[$i]);
+            } else  {
+                $result .= $indice;
+                if (isset($messageArray[$i])) {
+                    $result .= htmlspecialchars($messageArray[$i]);
+                }
             }
 
             $i++;
