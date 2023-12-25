@@ -36,7 +36,7 @@
   "autoload": {
     "psr-4": {
       "JambageCom\\Div2007\\": "Classes"
-    },
+    }
   },
   "replace": {
     "typo3-ter/div2007": "self.version"
