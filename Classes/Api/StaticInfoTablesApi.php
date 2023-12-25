@@ -632,8 +632,8 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $labelFields = [];
         if(
             $table &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields']) &&
-            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'])
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields']) &&
+            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'])
         ) {
             $locales = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\Locales::class);
             $isoArray = (array) $locales->getIsoMapping();
@@ -641,7 +641,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             $lang = $lang ? $lang : static::getCurrentLanguage();
             $lang = isset($isoArray[$lang]) ? $isoArray[$lang] : $lang;
             
-            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['label_fields'] as $field) {
+            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'] as $field) {
                 if ($local) {
                     $labelField = str_replace ('##', 'local', $field);
                 } else {
@@ -681,7 +681,7 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     /**
     * Returns a iso code field for the passed table and iso code
     *
-    *  $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables']
+    *  $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables']
     *
     * @param	string		table name
     * @param	string		iso code
@@ -698,9 +698,9 @@ class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         if (
             $isoCode &&
             $table &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['isocode_field'][$index])
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['isocode_field'][$index])
         ) {
-            $isoCodeField = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][STATIC_INFO_TABLES_EXT]['tables'][$table]['isocode_field'][$index];
+            $isoCodeField = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['isocode_field'][$index];
 
             if ($isoCodeField != '') {
                 $type = static::isoCodeType($isoCode);

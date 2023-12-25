@@ -26,10 +26,6 @@ call_user_func(function ($extensionKey): void {
         }
     }
 
-    if (!defined ('STATIC_INFO_TABLES_EXT')) {
-        define('STATIC_INFO_TABLES_EXT', 'static_info_tables');
-    }
-
     // constants for the TCA fields
 
     if (!defined('DIV2007_LANGUAGE_LGL')) {
