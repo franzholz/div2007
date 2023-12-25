@@ -236,8 +236,13 @@ class FrontendUtility {
         $result = false;
         $path = '';
 
+        $extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(DIV2007_EXT);
+        $relativeExtensionPath = \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(
+            $extensionPath
+        );
+    
         if (empty($filename)) {
-            $filename = PATH_FE_DIV2007_REL .
+            $filename = $relativeExtensionPath .
                 $defaultPath . $defaultBasename;
         }
 

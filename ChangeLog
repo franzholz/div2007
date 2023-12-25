@@ -1,5 +1,7 @@
 2023-12-25 Franz Holzinger  <franz@ttproducts.de>
     * remove all deprecated files announced to be removed in 2024
+    * remove unused constants PATH_BE_DIV2007 and PATH_FE_DIV2007_REL
+    * remove constant STATIC_INFO_TABLES_EXT
 
 2023-11-03 Franz Holzinger  <franz@ttproducts.de>
     * bugfix: Always append any error indices if found in ErrorUtility::getMessage

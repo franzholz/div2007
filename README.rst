@@ -8,17 +8,22 @@ This library offers functions for TYPO3 extensions. tx_div2007_div
 provides a modified t3lib_div of TYPO3 4.7.10 and backwards
 compatibility to TYPO3 6.2 and 4.5. It replaces most of the tslib_pibase
 methods. You find the migration classes for TYPO3 6.x, 7.x and 8.x
-inside of the extension migration_core. Sinve version 1.10.30 a
+inside of the extension migration_core. Since version 1.10.30 a
 middleware to store the request is provided for Ajax calls. This is
 required for Ajax calls since TYPO3 9.5. With this you can use the
 method FrontendUtility::getPageId() to get the current page id out of
 the speaking url of the routing enhancer.
 
+All class.tx_div2007_xxx.php files have been removed since version 1.18. 
+Most code of the former extensions div and lib is not present any more.
+This means that the MVC design pattern of it has been given up.
+Parts of the former methods have been integrated into the namespace classes.
+
 Requirements
 ------------
 1.16 and later require PHP 7.4 - 8 and TYPO3 10.4 - 12.x
 
-1.13 and later require PHP 7.4 - 8 and TYPO3 10.4 - 11.5
+1.13 - 11.15 require PHP 7.4 - 8 and TYPO3 10.4 - 11.5
 
 1.12.x are the last versions which support PHP 7.2 - 7.4 .
 
