@@ -37,11 +37,6 @@
     "psr-4": {
       "JambageCom\\Div2007\\": "Classes"
     },
-    "classmap": [
-      "hooks/",
-      "lib/",
-      "spl/"
-    ]
   },
   "replace": {
     "typo3-ter/div2007": "self.version"
