@@ -1,8 +1,9 @@
 <?php
+
 defined('TYPO3') || defined('TYPO3_MODE') || die('Access denied.');
 
 call_user_func(function ($extensionKey): void {
-    if (!defined ('DIV2007_EXT')) {
+    if (!defined('DIV2007_EXT')) {
         define('DIV2007_EXT', $extensionKey);
     }
 
@@ -41,4 +42,3 @@ call_user_func(function ($extensionKey): void {
         define('DIV2007_ICONS_SUBPATH', 'Resources/Public/Images/Icons/');
     }
 }, 'div2007');
-

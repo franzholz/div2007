@@ -20,30 +20,26 @@ namespace JambageCom\Div2007\Utility;
  * Control functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
 
- 
 use Psr\Http\Message\ServerRequestInterface;
-
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-
-class ControlUtility {
-
+class ControlUtility
+{
     /**
-        * Creates a regular expression out of an array of tags
-        *
-        * @param	array		$tags: the array of tags
-        * @return	string		the regular expression
-        */
-    static public function readGP ($variable, $prefixId = '' , $htmlSpecialChars = true) {
+     * Creates a regular expression out of an array of tags.
+     *
+     * @return	string		the regular expression
+     */
+    public static function readGP($variable, $prefixId = '', $htmlSpecialChars = true)
+    {
         $result = null;
 
         if (
@@ -61,17 +57,17 @@ class ControlUtility {
             } else {
                 $result = GeneralUtility::_GP($variable);
             }
-        } else if ($prefixId != '') {
+        } elseif ($prefixId != '') {
             $result = GeneralUtility::_GP($prefixId);
         }
 
         if ($htmlSpecialChars && isset($result)) {
             if (is_string($result)) {
-                $result = htmlSpecialChars($result);
-            } else if (is_array($result)) {
+                $result = htmlspecialchars($result);
+            } elseif (is_array($result)) {
                 $newResult = [];
                 foreach ($result as $key => $value) {
-                    $newResult[$key] = htmlSpecialChars($value);
+                    $newResult[$key] = htmlspecialchars($value);
                 }
                 $result = $newResult;
             }
@@ -81,18 +77,18 @@ class ControlUtility {
     }
 
     /**
-    * Recursively looks for stdWrap and executes it
-    *
-    * @param array $conf Current section of configuration to work on
-    * @param integer $level Current level being processed (currently just for tracking; no limit enforced)
-    * @return array Current section of configuration after stdWrap applied
-    */
-    static public function applyStdWrapRecursive (
+     * Recursively looks for stdWrap and executes it.
+     *
+     * @param array $conf Current section of configuration to work on
+     * @param int $level Current level being processed (currently just for tracking; no limit enforced)
+     *
+     * @return array Current section of configuration after stdWrap applied
+     */
+    public static function applyStdWrapRecursive(
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
-        array $conf, 
+        array $conf,
         $level = 0
-    )
-    {
+    ) {
         foreach ($conf as $key => $confNextLevel) {
             if (str_contains($key, '.')) {
                 $key = substr($key, 0, -1);
@@ -117,20 +113,18 @@ class ControlUtility {
                 }
             }
         }
+
         return $conf;
     }
 
     /**
-    * If internal TypoScript property "_DEFAULT_PI_VARS." is set then it will merge the current $piVars array onto these default values.
-    *
-    * @return void
-    */
-    static public function setPiVarDefaults (
+     * If internal TypoScript property "_DEFAULT_PI_VARS." is set then it will merge the current $piVars array onto these default values.
+     */
+    public static function setPiVarDefaults(
         &$piVars,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         array $conf
-    )
-    {
+    ) {
         if (isset($conf['_DEFAULT_PI_VARS.']) && is_array($conf['_DEFAULT_PI_VARS.'])) {
             $conf['_DEFAULT_PI_VARS.'] = static::applyStdWrapRecursive($cObj, $conf['_DEFAULT_PI_VARS.']);
             $tmp = $conf['_DEFAULT_PI_VARS.'];
@@ -142,7 +136,6 @@ class ControlUtility {
     /**
      * Writes input value to $_GET.
      *
-     * @param mixed $inputGet
      * @param string $key
      */
     public static function _GETset($inputGet, $key = '')
@@ -173,4 +166,3 @@ class ControlUtility {
         }
     }
 }
-

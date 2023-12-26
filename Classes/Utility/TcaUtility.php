@@ -28,70 +28,65 @@ namespace JambageCom\Div2007\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
- * TCA functions
+ * TCA functions.
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
  */
+class TcaUtility
+{
+    /**
+     * removes fields from the TCA of a table.
+     *
+     * @param	array		reference to the TCA of a table, e.g. GLOBALS['TCA']['tablename']
+     * @param	array		Array of fields to remove
+     *
+     * @return	string		Content stream
+     */
+    public static function removeField(array &$tableTca, array $fieldArray)
+    {
+        foreach ($fieldArray as $field) {
+            if (isset($tableTca['columns'][$field])) {
+                unset($tableTca['columns'][$field]);
+            }
+        }
 
- 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+        $conigTypeArray = ['types', 'palettes'];
 
-
-
-class TcaUtility {
-
-	/**
-	 * removes fields from the TCA of a table
-	 *
-	 * @param	array		reference to the TCA of a table, e.g. GLOBALS['TCA']['tablename']
-	 * @param	array		Array of fields to remove
-	 * @return	string		Content stream
-	 */
-	static public function removeField (array &$tableTca, array $fieldArray) {
-
-		foreach ($fieldArray as $field) {
-			if (isset($tableTca['columns'][$field])) {
-				unset($tableTca['columns'][$field]);
-			}
-		}
-
-		$conigTypeArray = ['types', 'palettes'];
-
-		foreach ($conigTypeArray as $configType) {
-			if (
-				isset($tableTca[$configType]) &&
-				is_array($tableTca[$configType])
-			) {
-				foreach ($tableTca[$configType] as $k => $config) {
-					if (isset($config) && is_array($config)) {
-						$showItemArray = explode(',', $config['showitem']);
-						if (isset($showItemArray) && is_array($showItemArray)) {
-							foreach ($showItemArray as $k2 => $showItem) {
-								$showItem = trim($showItem);
-								foreach ($fieldArray as $field) {
-									if (
-										str_starts_with($showItem, $field)
-									) {
-										$length = strlen($field);
-										if (
-											strlen($showItem) == $length ||
-											substr($showItem, $length, 1) == ';'
-										) {
-											unset($showItemArray[$k2]);
-										}
-									}
-								}
-							}
-							$tableTca[$configType][$k]['showitem'] = implode(',', $showItemArray);
-						}
-					}
-				}
-			}
-		}
-	}
+        foreach ($conigTypeArray as $configType) {
+            if (
+                isset($tableTca[$configType]) &&
+                is_array($tableTca[$configType])
+            ) {
+                foreach ($tableTca[$configType] as $k => $config) {
+                    if (isset($config) && is_array($config)) {
+                        $showItemArray = explode(',', $config['showitem']);
+                        if (isset($showItemArray) && is_array($showItemArray)) {
+                            foreach ($showItemArray as $k2 => $showItem) {
+                                $showItem = trim($showItem);
+                                foreach ($fieldArray as $field) {
+                                    if (
+                                        str_starts_with($showItem, $field)
+                                    ) {
+                                        $length = strlen($field);
+                                        if (
+                                            strlen($showItem) == $length ||
+                                            substr($showItem, $length, 1) == ';'
+                                        ) {
+                                            unset($showItemArray[$k2]);
+                                        }
+                                    }
+                                }
+                            }
+                            $tableTca[$configType][$k]['showitem'] = implode(',', $showItemArray);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
-
-

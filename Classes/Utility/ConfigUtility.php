@@ -20,28 +20,24 @@ namespace JambageCom\Div2007\Utility;
  * Control functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
-
-
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-
-class ConfigUtility {
-
+class ConfigUtility
+{
     /**
-     * Recursively looks for stdWrap and executes it
+     * Recursively looks for stdWrap and executes it.
      *
      * @param cObject $cObj content object
      * @param array $conf Current section of configuration to work on
      * @param int $level Current level being processed (currently just for tracking; no limit enforced)
+     *
      * @return array Current section of configuration after stdWrap applied
      */
-    static protected function applyStdWrapRecursive($cObj, array $conf, $level = 0)
+    protected static function applyStdWrapRecursive($cObj, array $conf, $level = 0)
     {
         foreach ($conf as $key => $confNextLevel) {
             if (str_contains($key, '.')) {
@@ -66,9 +62,9 @@ class ConfigUtility {
                 }
             }
         }
+
         return $conf;
     }
-
 
     /**
      * Returns the values from the setup field or the field of the flexform converted into the value
@@ -87,18 +83,20 @@ class ConfigUtility {
      *                  $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][EXTENSION_KEY]['useFlexforms']);
      *
      * You have to call $this->pi_initPIflexForm(); before you call this method!
+     *
      * @param   object      tx_div2007_alpha_language_base object
      * @param   string      TypoScript configuration
      * @param   string      extended TypoScript configuration
      * @param   string      default value to use if the result would be empty
-     * @param   boolean     if flexforms are used or not
+     * @param   bool     if flexforms are used or not
      * @param   string      name of the flexform which has been used in ext_tables.php
      *                      $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['5']='pi_flexform';
-     * @return  string      name of the field to look for in the flexform
-     * @access  public
      *
+     * @return  string      name of the field to look for in the flexform
+     *
+     * @access  public
      */
-    static public function getSetupOrFFvalue (
+    public static function getSetupOrFFvalue(
         $cObj,
         $code,
         $codeExt,
@@ -115,7 +113,7 @@ class ConfigUtility {
             if (empty($code)) {
                 if ($bUseFlexforms) {
                     // Converting flexform data into array:
-                    $result = \JambageCom\Div2007\Utility\FlexformUtility::get(
+                    $result = FlexformUtility::get(
                         $T3FlexForm_array,
                         $fieldName,
                         $sheet,
@@ -133,10 +131,9 @@ class ConfigUtility {
             }
         } else {
             $result = 'error in call of \\JambageCom\\Div2007\\Utility\\ConfigUtility::getSetupOrFFvalue: parameter $cObj is not an object';
-            debug ($result, '$result'); // keep this
+            debug($result, '$result'); // keep this
         }
+
         return $result;
     }
 }
-
-

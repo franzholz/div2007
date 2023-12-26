@@ -16,45 +16,29 @@ namespace JambageCom\Div2007\Utility;
  */
 
 /**
-* Part of the div2007 (Static Methods for Extensions since 2007) extension.
-*
-* Mailing functions
-* TYPO3 >= 6.2 is required
-*
-* @author  Franz Holzinger <franz@ttproducts.de>
-* @maintainer	Franz Holzinger <franz@ttproducts.de>
-* @package TYPO3
-* @subpackage div2007
-*
-*
-*/
+ * Part of the div2007 (Static Methods for Extensions since 2007) extension.
+ *
+ * Mailing functions
+ * TYPO3 >= 6.2 is required
+ *
+ * @author  Franz Holzinger <franz@ttproducts.de>
+ *
+ * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
+ * @package TYPO3
+ * @subpackage div2007
+ */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use JambageCom\Div2007\Utility\FrontendUtility;
-
-
-class MailUtility {
-
+class MailUtility
+{
     /**
-    * sends the email in plaintext or HTML format or both
-    *
-    * @param string  $toEMail: recipients email address
-    * @param string  $subject: subject of the message
-    * @param string  $PLAINContent: plain version of the message
-    * @param string  $HTMLContent: HTML version of the message
-    * @param string  $fromEmail: email address
-    * @param string  $fromName: name
-    * @param string  $attachment: file name
-    * @param string  $cc: CC
-    * @param string  $bcc: BCC
-    * @param string  $returnPath: return path
-    * @param string  $replyTo: email address
-    * @param string  $extensionKey: extension key
-    * @param string  $hookVar: name of the hook
-    * @return boolean if the email has been sent
-    */
-    static public function send (
+     * sends the email in plaintext or HTML format or both.
+     *
+     * @return bool if the email has been sent
+     */
+    public static function send(
         $toEMail,
         $subject,
         $PLAINContent,
@@ -71,20 +55,20 @@ class MailUtility {
         $defaultSubject = ''
     ) {
         $result = true;
-		$debug = 
+        $debug =
             $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug']['mail'];
         if (
             $debug == 'DEBUG_AND_SEND' ||
             $debug == 'DEBUG'
         ) {
-            debug ($toEMail, '$toEMail'); // keep this
-            debug ($subject, '$subject'); // keep this
-            debug ($PLAINContent, '$PLAINContent'); // keep this
-            debug ($HTMLContent, '$HTMLContent'); // keep this
-            debug ($fromEMail, '$fromEMail'); // keep this
-            debug ($fromName, '$fromName'); // keep this
+            debug($toEMail, '$toEMail'); // keep this
+            debug($subject, '$subject'); // keep this
+            debug($PLAINContent, '$PLAINContent'); // keep this
+            debug($HTMLContent, '$HTMLContent'); // keep this
+            debug($fromEMail, '$fromEMail'); // keep this
+            debug($fromName, '$fromName'); // keep this
         }
-        
+
         if (
             $debug == 'NO' ||
             $debug == 'DEBUG'
@@ -137,26 +121,29 @@ class MailUtility {
                         $email = $v;
                     }
 
-                    debug ('MailUtility::send invalid email address: to "' . $email . '"'); // keep this
+                    debug('MailUtility::send invalid email address: to "' . $email . '"'); // keep this
                 }
             }
 
             if (
                 !count($toEMail)
             ) {
-                debug ('MailUtility::send exited with error 1'); // keep this
+                debug('MailUtility::send exited with error 1'); // keep this
+
                 return false;
             }
         } else {
-            debug ('MailUtility::send exited with error 2'); // keep this
+            debug('MailUtility::send exited with error 2'); // keep this
+
             return false;
         }
 
         if (
             !GeneralUtility::validEmail($fromEMail)
         ) {
-            debug ('MailUtility::send invalid email address: from "' . $fromEMail . '"'); // keep this
-            debug ('MailUtility::send exited with error 3'); // keep this
+            debug('MailUtility::send invalid email address: from "' . $fromEMail . '"'); // keep this
+            debug('MailUtility::send exited with error 3'); // keep this
+
             return false;
         }
 
@@ -168,12 +155,12 @@ class MailUtility {
                 $defaultSubject = 'message from ' . $fromNameSlashed . ($fromNameSlashed != '' ? '<' : '') . $fromEMail . ($fromNameSlashed != '' ? '>' : '');
             }
 
-                // First line is subject
+            // First line is subject
             if ($HTMLContent) {
                 $parts = preg_split('/<title>|<\\/title>/i', $HTMLContent, 3);
                 $subject = trim($parts[1]) ? strip_tags(trim($parts[1])) : $defaultSubject;
             } else {
-                    // First line is subject
+                // First line is subject
                 $parts = explode(chr(10), $PLAINContent, 2);
                 $subject = trim($parts[0]) ? trim($parts[0]) : $defaultSubject;
                 $PLAINContent = trim($parts[1]);
@@ -181,7 +168,7 @@ class MailUtility {
         }
 
         $mail = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Mail\MailMessage::class);
-            // HTML
+        // HTML
         if (trim($HTMLContent)) {
             $HTMLContent = static::embedMedia($mail, $HTMLContent);
         }
@@ -190,18 +177,20 @@ class MailUtility {
             $mail->setCharset($charset)
                 ->setTo($toEMail)
                 ->setFrom([$fromEMail => $fromName])
-                ->setSubject($subject);
+                ->setSubject($subject)
+            ;
             if ($HTMLContent != '') {
                 $mail->setBody($HTMLContent, 'text/html');
             }
             if ($PLAINContent != '') {
                 $mail->addPart($PLAINContent, 'text/plain');
             }
-        } else if ($mail instanceof \Symfony\Component\Mime\Email) {
+        } elseif ($mail instanceof \Symfony\Component\Mime\Email) {
             $mail
                 ->setTo($toEMail)
                 ->from(new \Symfony\Component\Mime\Address($fromEMail, $fromName))
-                ->subject($subject);
+                ->subject($subject)
+            ;
             if ($HTMLContent != '') {
                 $mail->html($HTMLContent);
             }
@@ -210,17 +199,17 @@ class MailUtility {
             }
         } else {
             $apiClass = '';
-            
+
             if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
                 $apiClass = \JambageCom\Div2007\Api\CompatibilityApi::class;
             } else {
                 $apiClass = \JambageCom\Div2007\Api\OldCompatibilityApi::class;
             }
-            
+
             $compatibilityApi = GeneralUtility::makeInstance($apiClass);
 
-            throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . $compatibilityApi->getClass($mail) . '. ', 1612276260 
-            ); 
+            throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . $compatibilityApi->getClass($mail) . '. ', 1612276260
+            );
         }
 
         if ($returnPath) {
@@ -297,7 +286,7 @@ class MailUtility {
                     );
 
                     if ($result === false) {
-                        debug ('MailUtility::send exited with error 5'); // keep this
+                        debug('MailUtility::send exited with error 5'); // keep this
                         break;
                     }
                 }
@@ -331,12 +320,11 @@ class MailUtility {
                 }
 
                 if ($fileExtension == 'xml') {
-                    $objDom = new \domDocument();
+                    $objDom = new \DOMDocument();
                     $objDom->encoding = 'utf-8';
                     $resultLoad = $objDom->load($absFilename, LIBXML_COMPACT);
 
                     if ($resultLoad) {
-
                         $bRowFits = false;
                         $objRows = $objDom->getElementsByTagName('Row');
 
@@ -402,7 +390,7 @@ class MailUtility {
                         $signerRow['selector']
                     );
                     $mail = $signer->sign($mail);
-                } else if (class_exists(\Swift_Signers_DKIMSigner::class)) {
+                } elseif (class_exists(\Swift_Signers_DKIMSigner::class)) {
                     //  create a signer
                     $signer = \Swift_Signers_DKIMSigner::newInstance(
                         file_get_contents($absFilename),
@@ -419,7 +407,7 @@ class MailUtility {
                         $mail->attachSigner($signer);
                     }
                 } else {
-                    throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: no mail signer class found.', 1612340604 
+                    throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: no mail signer class found.', 1612340604
                     );
                 }
             }
@@ -439,21 +427,20 @@ class MailUtility {
                         is_object($resultSend) &&
                         $resultSend instanceof \Symfony\Component\Mailer\SentMessage
                     ) {
-                        debug ($resultSend->getOriginalMessage(), 'MailUtility::send original message'); // keep this
-                        debug ($resultSend->getDebug(), 'MailUtility::send debug'); // keep this                
+                        debug($resultSend->getOriginalMessage(), 'MailUtility::send original message'); // keep this
+                        debug($resultSend->getDebug(), 'MailUtility::send debug'); // keep this
                     }
                     $result = $mail->isSent();
                     if (!$result) {
-                        debug ('MailUtility::send exited with error 6'); // keep this
+                        debug('MailUtility::send exited with error 6'); // keep this
                         $undelivered = $mail->getFailedRecipients();
                         if (is_array($undelivered)) {
-                            debug ('MailUtility::send undelivered: ' . implode(',', $undelivered)); // keep this
+                            debug('MailUtility::send undelivered: ' . implode(',', $undelivered)); // keep this
                         }
                     }
-                }
-                catch (Exception $e) {
+                } catch (Exception $e) {
                     if ($e instanceof \Symfony\Component\Mailer\Exception\TransportException) {
-                        debug ($e->getDebug(), 'MailUtility::send Exception debug'); // keep this       
+                        debug($e->getDebug(), 'MailUtility::send Exception debug'); // keep this
                     }
                 }
             } else {
@@ -466,24 +453,21 @@ class MailUtility {
     }
 
     /**
-    * Embeds media into the mail message
-    *
-    * @param TYPO3\CMS\Core\Mail\MailMessage $mail: mail message
-    * @param string $htmlContent: the HTML content of the message
-    * @return string the subtituted HTML content
-    */
-    static public function embedMedia (
+     * Embeds media into the mail message.
+     *
+     * @return string the subtituted HTML content
+     */
+    public static function embedMedia(
         \TYPO3\CMS\Core\Mail\MailMessage $mail,
         $htmlContent
-    )
-    {
+    ) {
         $substitutedHtmlContent = $htmlContent;
         if (is_object($GLOBALS['TYPO3_REQUEST'])) {
             $normalizedParams = $GLOBALS['TYPO3_REQUEST']->getAttribute('normalizedParams');
         }
         $media = [];
         $attribRegex = static::makeTagRegex(['img', 'embed', 'audio', 'video']);
-            // Split the document by the beginning of the above tags
+        // Split the document by the beginning of the above tags
         $codepieces = preg_split($attribRegex, $htmlContent);
         $len = strlen($codepieces[0]);
         $pieces = count($codepieces);
@@ -492,7 +476,7 @@ class MailUtility {
             $tag = strtolower(strtok(substr($htmlContent, $len + 1, 10), ' '));
             $len += strlen($tag) + strlen($codepieces[$i]) + 2;
             $dummy = preg_match('/[^>]*/', $codepieces[$i], $reg);
-                // Fetches the attributes for the tag
+            // Fetches the attributes for the tag
             $attributes = static::getTagAttributes($reg[0]);
             if ($attributes['src'] != '' && $attributes['src'] != 'clear.gif') {
                 $httpDomain = '';
@@ -528,36 +512,38 @@ class MailUtility {
                 $substitutedHtmlContent
             );
         }
+
         return $substitutedHtmlContent;
     }
 
     /**
-    * Creates a regular expression out of an array of tags
-    *
-    * @param	array		$tags: the array of tags
-    * @return	string		the regular expression
-    */
-    static public function makeTagRegex (array $tags) {
+     * Creates a regular expression out of an array of tags.
+     *
+     * @return	string		the regular expression
+     */
+    public static function makeTagRegex(array $tags)
+    {
         $regexpArray = [];
         foreach ($tags as $tag) {
             $regexpArray[] = '<' . $tag . '[[:space:]]';
         }
+
         return '/' . implode('|', $regexpArray) . '/i';
     }
 
     /**
-    * This function analyzes a HTML tag
-    * If an attribute is empty (like OPTION) the value of that key is just empty. Check it with is_set();
-    *
-    * @param string $tag: is either like this "<TAG OPTION ATTRIB=VALUE>" or this " OPTION ATTRIB=VALUE>" which means you can omit the tag-name
-    * @return array array with attributes as keys in lower-case
-    */
-    static public function getTagAttributes ($tag) {
+     * This function analyzes a HTML tag
+     * If an attribute is empty (like OPTION) the value of that key is just empty. Check it with is_set();.
+     *
+     * @return array array with attributes as keys in lower-case
+     */
+    public static function getTagAttributes($tag)
+    {
         $attributes = [];
         $tag = ltrim(preg_replace('/^<[^ ]*/', '', trim($tag)));
         $tagLen = strlen($tag);
         $safetyCounter = 100;
-            // Find attribute
+        // Find attribute
         while ($tag) {
             $value = '';
             $reg = preg_split('/[[:space:]=>]/', $tag, 2);
@@ -567,12 +553,12 @@ class MailUtility {
             if (substr($tag, 0, 1) == '=') {
                 $tag = ltrim(substr($tag, 1, $tagLen));
                 if (substr($tag, 0, 1) == '"') {
-                        // Quotes around the value
+                    // Quotes around the value
                     $reg = explode('"', substr($tag, 1, $tagLen), 2);
                     $tag = ltrim($reg[1]);
                     $value = $reg[0];
                 } else {
-                        // No quotes around value
+                    // No quotes around value
                     preg_match('/^([^[:space:]>]*)(.*)/', $tag, $reg);
                     $value = trim($reg[1]);
                     $tag = ltrim($reg[2]);
@@ -587,26 +573,26 @@ class MailUtility {
                 break;
             }
         }
+
         return $attributes;
     }
 
     /**
-    * This function checks if the corresponding DNS has a valid MX record
-    *
-    * @param	string		$email: the email address
-    * @return	boolean		true if a MX record has been found
-    */
-    static public function checkMXRecord ($email) {
-
+     * This function checks if the corresponding DNS has a valid MX record.
+     *
+     * @return	bool		true if a MX record has been found
+     */
+    public static function checkMXRecord($email)
+    {
         if ($email != '' && !GeneralUtility::validEmail($email)) {
             return false;
         }
 
         // gets domain name
-        list($username, $domain) = explode('@', $email);
+        [$username, $domain] = explode('@', $email);
         // checks for if MX records in the DNS
         $mxhosts = [];
-        if(!getmxrr($domain, $mxhosts)) {
+        if (!getmxrr($domain, $mxhosts)) {
             // no mx records, ok to check domain
             if (@fsockopen($domain, 25, $errno, $errstr, 30)) {
                 return true;
@@ -620,9 +606,8 @@ class MailUtility {
                     return true;
                 }
             }
+
             return false;
         }
     }
 }
-
-

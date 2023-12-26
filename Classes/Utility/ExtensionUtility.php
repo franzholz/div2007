@@ -2,7 +2,6 @@
 
 namespace JambageCom\Div2007\Utility;
 
-
 /***************************************************************
 *  Copyright notice
 *
@@ -27,24 +26,27 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 
 /**
-* extension functions.
-*
-* @author	Franz Holzinger <franz@ttproducts.de>
-* @maintainer Franz Holzinger <franz@ttproducts.de>
-* @package TYPO3
-* @subpackage div2007
-*/
-
-class ExtensionUtility {
-
+ * extension functions.
+ *
+ * @author	Franz Holzinger <franz@ttproducts.de>
+ *
+ * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
+ * @package TYPO3
+ * @subpackage div2007
+ */
+class ExtensionUtility
+{
     /**
-    * Gets information for an extension, eg. version and most-recently-edited-script
-    *
-    * @param	string		Extension key
-    * @param	string		predefined path ... needed if you have the extension in another place
-    * @return	array		Information array (unless an error occured)
-    */
-    static public function getExtensionInfo ($extKey, $path = '') {
+     * Gets information for an extension, eg. version and most-recently-edited-script.
+     *
+     * @param	string		Extension key
+     * @param	string		predefined path ... needed if you have the extension in another place
+     *
+     * @return	array		Information array (unless an error occured)
+     */
+    public static function getExtensionInfo($extKey, $path = '')
+    {
         $result = '';
 
         if (!$path) {
@@ -57,7 +59,7 @@ class ExtensionUtility {
             if (@is_file($file)) {
                 $_EXTKEY = $extKey;
                 $EM_CONF = [];
-                include($file);
+                include $file;
 
                 $eInfo = [];
                 $fieldArray = [
@@ -73,7 +75,7 @@ class ExtensionUtility {
                     'title',
                     'version',
                     'CGLcompliance',
-                    'CGLcompliance_note'
+                    'CGLcompliance_note',
                 ];
                 $extConf = $EM_CONF[$extKey];
 
@@ -112,22 +114,23 @@ class ExtensionUtility {
         return $result;
     }
 
-
     /**
-    * Gets the absolute file path out of an extension relative path preceded by EXT:
-    *
-    * @param    string      absolute or relative path with filename ... can be preceded by EXT:. Otherwise an absolute filename must be given and will be returned unchanged
-    * @param    boolean     if true, the relative path is returned
-    * @return   string / boolean     the absolute filename or false in error case
-    */
-    static public function getExtensionFilePath ($filepath, $relative = false) {
+     * Gets the absolute file path out of an extension relative path preceded by EXT:
+     *
+     * @param    string      absolute or relative path with filename ... can be preceded by EXT:. Otherwise an absolute filename must be given and will be returned unchanged
+     * @param    bool     if true, the relative path is returned
+     *
+     * @return   string / boolean     the absolute filename or false in error case
+     */
+    public static function getExtensionFilePath($filepath, $relative = false)
+    {
         $result = $filepath;
         if (str_starts_with($filepath, 'EXT:')) {
-            list($extensionKey, $relativePath) = explode('/', substr($filepath, 4), 2);
+            [$extensionKey, $relativePath] = explode('/', substr($filepath, 4), 2);
 
             if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {
                 if ($relative) {
-                    $extensionPath = 
+                    $extensionPath =
                         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(
                             $extensionKey
                         );
@@ -145,7 +148,7 @@ class ExtensionUtility {
                 $result = false;
             }
         }
+
         return $result;
     }
 }
-

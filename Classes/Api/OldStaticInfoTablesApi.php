@@ -16,7 +16,6 @@ namespace JambageCom\Div2007\Api;
  */
 
 /**
- *
  * not supported since TYPO3 12!
  * Migrate to OldStaticInfoTablesApi!
  *
@@ -25,37 +24,31 @@ namespace JambageCom\Div2007\Api;
  * attention: This class must also work under TYPO3 7.6
  */
 
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Core\Localization\Locales;
-
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\QueryHelper;
-use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
-
-use TYPO3\CMS\Extbase\Object\ObjectManager;
-
+use JambageCom\Div2007\Utility\ExtensionUtility;
+use JambageCom\Div2007\Utility\TableUtility;
 use SJBR\StaticInfoTables\Domain\Repository\CurrencyRepository;
 use SJBR\StaticInfoTables\Utility\HtmlElementUtility;
 use SJBR\StaticInfoTables\Utility\LocalizationUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryHelper;
+use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
+use TYPO3\CMS\Core\Localization\Locales;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-use JambageCom\Div2007\Utility\ExtensionUtility;
-use JambageCom\Div2007\Utility\TableUtility;
-
-
-
-class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
-
+class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface
+{
     private $hasBeenInitialized = false;
     private $cache = [];
     protected $types = ['TERRITORIES', 'COUNTRIES', 'SUBDIVISIONS', 'CURRENCIES', 'LANGUAGES'];
     private $tables = [
-        'TERRITORIES' 	=> 'static_territories',
-        'COUNTRIES' 	=> 'static_countries',
-        'SUBDIVISIONS' 	=> 'static_country_zones',
-        'CURRENCIES' 	=> 'static_currencies',
-        'LANGUAGES' 	=> 'static_languages',
+        'TERRITORIES' => 'static_territories',
+        'COUNTRIES' => 'static_countries',
+        'SUBDIVISIONS' => 'static_country_zones',
+        'CURRENCIES' => 'static_currencies',
+        'LANGUAGES' => 'static_languages',
     ];
     // Default currency
     public $currency;
@@ -65,33 +58,33 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     public $defaultLanguage;
     public $versionNumber; // extension static_info_tables version number
 
-    
     /**
-     * @var \SJBR\StaticInfoTables\Domain\Repository\CurrencyRepository
+     * @var CurrencyRepository
      */
     protected $currencyRepository;
 
     /**
-    * Initialization of the extension static_info_tables
-    */
-    public function init ($conf = []) {
+     * Initialization of the extension static_info_tables.
+     */
+    public function init($conf = [])
+    {
         $result = true;
-        if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
+        if (!ExtensionManagementUtility::isLoaded('static_info_tables')) {
             $result = false;
-        } else if (!$this->hasBeenInitialized) {
+        } elseif (!$this->hasBeenInitialized) {
             if (empty($conf) && is_object($GLOBALS['TSFE'])) {
                 $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'];
             }
-            $extensionInfo = \JambageCom\Div2007\Utility\ExtensionUtility::getExtensionInfo('static_info_tables');
+            $extensionInfo = ExtensionUtility::getExtensionInfo('static_info_tables');
             $this->versionNumber = $extensionInfo['version'];
             $this->initCountries('ALL');
 
-            //Get the default currency and make sure it does exist in table static_currencies
+            // Get the default currency and make sure it does exist in table static_currencies
             $this->currency = $conf['currencyCode'] ?? '';
             if (!$this->currency) {
                 $this->currency = (!empty($conf['currencyCode'])) ? trim($conf['currencyCode']) : 'EUR';
             }
-            //If nothing is set, we use the Euro because TYPO3 is spread more in this area
+            // If nothing is set, we use the Euro because TYPO3 is spread more in this area
             if (!$this->getStaticInfoName($this->currency, 'CURRENCIES')) {
                 $this->currency = 'EUR';
             }
@@ -131,31 +124,27 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         return $result;
     } // init
 
-    public function isActive () {
+    public function isActive()
+    {
         return $this->hasBeenInitialized;
     }
-    
+
     /**
-     * Getting the name of a country, country subdivision, currency, language, tax
+     * Getting the name of a country, country subdivision, currency, language, tax.
      *
      * @param string The ISO alpha-3 code of a territory, country or currency, or the ISO alpha-2 code of a language or the code of a country subdivision, can be a comma ',' separated string, then all the single items are looked up and returned
      * @param string Defines the type of entry of the requested name: 'TERRITORIES', 'COUNTRIES', 'SUBDIVISIONS', 'CURRENCIES', 'LANGUAGES'
      * @param string The value of the country code (cn_iso_3) for which a name of type 'SUBDIVISIONS' is requested (meaningful only in this case)
      * @param string Not used
      * @param bool local name only - if set local title is returned
-     * @param mixed $type
-     * @param mixed $code
-     * @param mixed $country
-     * @param mixed $countrySubdivision
-     * @param mixed $local
      *
      * @return string|bool The name of the object in the current language or false
      */
-    public function getStaticInfoName ($code, $type = 'COUNTRIES', $country = '', $countrySubdivision = '', $local = false)
+    public function getStaticInfoName($code, $type = 'COUNTRIES', $country = '', $countrySubdivision = '', $local = false)
     {
         $names = false;
         if (in_array($type, $this->types) && trim($code)) {
-            $codeArray = GeneralUtility::trimExplode(',', ($code));
+            $codeArray = GeneralUtility::trimExplode(',', $code);
             $tableName = $this->tables[$type];
             if (!$tableName) {
                 return false;
@@ -176,30 +165,18 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             }
             $names = implode(',', $nameArray);
         }
+
         return $names;
     }
 
     /**
-     * Buils a HTML drop-down selector of countries, country subdivisions, currencies or languages
+     * Buils a HTML drop-down selector of countries, country subdivisions, currencies or languages.
      *
-     * @param string $type: Defines the type of entries to be presented in the drop-down selector: 'COUNTRIES', 'SUBDIVISIONS', 'CURRENCIES' or 'LANGUAGES'
-     * @param string $name: A value for the name attribute of the <select> tag
-     * @param string $class: A value for the class attribute of the <select> tag
-     * @param array $selectedArray: The values of the code of the entries to be pre-selected in the drop-down selector: value of cn_iso_3, zn_code, cu_iso_3 or lg_iso_2
-     * @param string $country: The value of the country code (cn_iso_3) for which a drop-down selector of type 'SUBDIVISIONS' is requested (meaningful only in this case)
      * @param boolean/string $submit: If set to 1, an onchange attribute will be added to the <select> tag for immediate submit of the changed value; if set to other than 1, overrides the onchange script
-     * @param string $id: A value for the id attribute of the <select> tag
-     * @param string $title: A value for the title attribute of the <select> tag
-     * @param string $addWhere: A where clause for the records
-     * @param string $lang: language to be used
-     * @param bool $local: If set, we are looking for the "local" title field
-     * @param array $mergeArray: additional array to be merged as key => value pair
-     * @param int $size: max elements that can be selected. Default: 1
-     * @param array $outSelectedArray: resulting selected array with the ISO alpha-3 code of the countries (passed by reference)
      *
      * @return string A set of HTML <select> and <option> tags
      */
-    public function buildStaticInfoSelector ($type = 'COUNTRIES', $name = '', $class = '', $selectedArray = [], $country = '', $submit = 0, $id = '', $title = '', $addWhere = '', $lang = '', $local = false, $mergeArray = [], $size = 1, &$outSelectedArray = [])
+    public function buildStaticInfoSelector($type = 'COUNTRIES', $name = '', $class = '', $selectedArray = [], $country = '', $submit = 0, $id = '', $title = '', $addWhere = '', $lang = '', $local = false, $mergeArray = [], $size = 1, &$outSelectedArray = [])
     {
         if (!$this->isActive()) {
             return false;
@@ -261,22 +238,18 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             }
             $selector = HtmlElementUtility::selectConstructor($items, $selectedArray, $outSelectedArray, $name, $class, $id, $title, $onChange, $size);
         }
+
         return $selector;
     }
 
     /**
      * Getting all countries into an array
      * where the key is the ISO alpha-3 code of the country
-     * and where the value is the name of the country in the current language
-     *
-     * @param string $param: It defines a selection: 'ALL', 'UN', 'EU'
-     * @param string $lang: language to be used
-     * @param bool $local: If set, we are looking for the "local" title field
-     * @param string $addWhere: additional WHERE clause
+     * and where the value is the name of the country in the current language.
      *
      * @return array An array of names of countries
      */
-    public function initCountries ($param = 'UN', $lang = '', $local = false, $addWhere = '')
+    public function initCountries($param = 'UN', $lang = '', $local = false, $addWhere = '')
     {
         $nameArray = [];
         $table = $this->tables['COUNTRIES'];
@@ -287,7 +260,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $titleFields = LocalizationUtility::getLabelFields($table, $lang, $local);
         $prefixedTitleFields = [];
         $prefixedTitleFields[] = $table . '.cn_iso_3';
-        if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+        if (version_compare($this->versionNumber, '11.5.0', '>=')) {
             foreach ($titleFields as $titleField => $titleFieldProperty) {
                 $prefixedTitleFields[] = $table . '.' . $titleField;
             }
@@ -299,11 +272,13 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         array_unique($prefixedTitleFields);
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable($table);
+            ->getQueryBuilderForTable($table)
+        ;
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
         $queryBuilder
             ->select($prefixedTitleFields[0])
-            ->from($table);
+            ->from($table)
+        ;
         array_shift($prefixedTitleFields);
         foreach ($prefixedTitleFields as $titleField) {
             $queryBuilder->addSelect($titleField);
@@ -325,13 +300,13 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         }
         $query = $queryBuilder->execute();
         while ($row = $query->fetch()) {
-            if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+            if (version_compare($this->versionNumber, '11.5.0', '>=')) {
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     if ($row[$titleField]) {
                         $nameArray[$row['cn_iso_3']] = $row[$titleField];
                         break;
                     }
-               }
+                }
             } else {
                 foreach ($titleFields as $titleField) {
                     if ($row[$titleField]) {
@@ -354,6 +329,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         } else {
             uasort($nameArray, 'strcoll');
         }
+
         return $nameArray;
     }
 
@@ -365,12 +341,10 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
      *
      * @param string The ISO alpha-3 code of a country
      * @param string additional WHERE clause
-     * @param mixed $param
-     * @param mixed $addWhere
      *
      * @return array An array of names of country subdivisions
      */
-    public function initCountrySubdivisions ($param, $addWhere='')
+    public function initCountrySubdivisions($param, $addWhere = '')
     {
         $nameArray = [];
         $table = $this->tables['SUBDIVISIONS'];
@@ -378,7 +352,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $lang = LocalizationUtility::getIsoLanguageKey($lang);
         $titleFields = LocalizationUtility::getLabelFields($table, $lang);
         $prefixedTitleFields = [];
-        if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+        if (version_compare($this->versionNumber, '11.5.0', '>=')) {
             foreach ($titleFields as $titleField => $titleFieldProperty) {
                 $prefixedTitleFields[] = $table . '.' . $titleField;
             }
@@ -388,11 +362,13 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable($table);
+            ->getQueryBuilderForTable($table)
+        ;
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
         $queryBuilder
             ->select($table . '.zn_code')
-            ->from($table);
+            ->from($table)
+        ;
         foreach ($prefixedTitleFields as $titleField) {
             $queryBuilder->addSelect($titleField);
         }
@@ -409,7 +385,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         }
         $query = $queryBuilder->execute();
         while ($row = $query->fetch()) {
-            if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+            if (version_compare($this->versionNumber, '11.5.0', '>=')) {
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     if ($row[$titleField]) {
                         $nameArray[$row['zn_code']] = $row[$titleField];
@@ -426,20 +402,20 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
         uasort($nameArray, 'strcoll');
+
         return $nameArray;
     }
 
     /**
      * Getting all currencies into an array
      * 	where the key is the ISO alpha-3 code of the currency
-     * 	and where the value are the name of the currency in the current language
+     * 	and where the value are the name of the currency in the current language.
      *
      * @param string additional WHERE clause
-     * @param mixed $addWhere
      *
      * @return array An array of names of currencies
      */
-    public function initCurrencies ($addWhere='')
+    public function initCurrencies($addWhere = '')
     {
         if (!$this->isActive()) {
             return false;
@@ -450,7 +426,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $lang = LocalizationUtility::getIsoLanguageKey($lang);
         $titleFields = LocalizationUtility::getLabelFields($table, $lang);
         $prefixedTitleFields = [];
-        if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+        if (version_compare($this->versionNumber, '11.5.0', '>=')) {
             foreach ($titleFields as $titleField => $titleFieldProperty) {
                 $prefixedTitleFields[] = $table . '.' . $titleField;
             }
@@ -460,11 +436,13 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable($table);
+            ->getQueryBuilderForTable($table)
+        ;
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
         $queryBuilder
             ->select($table . '.cu_iso_3')
-            ->from($table);
+            ->from($table)
+        ;
         foreach ($prefixedTitleFields as $titleField) {
             $queryBuilder->addSelect($titleField);
         }
@@ -474,7 +452,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         }
         $query = $queryBuilder->execute();
         while ($row = $query->fetch()) {
-            if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+            if (version_compare($this->versionNumber, '11.5.0', '>=')) {
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     if ($row[$titleField]) {
                         $nameArray[$row['cu_iso_3']] = $row[$titleField];
@@ -491,16 +469,17 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
         uasort($nameArray, 'strcoll');
+
         return $nameArray;
     }
 
     /**
-    * Returns the current language as iso-2-alpha code
-    *
-    * @return	string		'DE', 'EN', 'DK', ...
-    */
-    static public function getCurrentLanguage () {
-
+     * Returns the current language as iso-2-alpha code.
+     *
+     * @return	string		'DE', 'EN', 'DK', ...
+     */
+    public static function getCurrentLanguage()
+    {
         if (!$this->isActive()) {
             return false;
         }
@@ -514,7 +493,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         if ($langCodeT3 == 'default') {
             return 'EN';
         }
-            // Return cached value if any
+        // Return cached value if any
         if (isset($this->cache['getCurrentLanguage'][$langCodeT3])) {
             return $this->cache['getCurrentLanguage'][$langCodeT3];
         }
@@ -531,20 +510,18 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
 
         $lang = $lang ? $lang : strtoupper($langCodeT3);
 
-            // Initialize cache array
+        // Initialize cache array
         if (!is_array($this->cache['getCurrentLanguage'])) {
             $this->cache['getCurrentLanguage'] = [];
         }
-            // Cache retrieved value
+        // Cache retrieved value
         $this->cache['getCurrentLanguage'][$langCodeT3] = $lang;
 
         return $lang;
     }
 
     /**
-     * Loading currency display parameters from Static Info Tables
-     *
-     * @param string $currencyCode: An ISO alpha-3 currency code
+     * Loading currency display parameters from Static Info Tables.
      *
      * @return array An array of information regarding the currrency
      */
@@ -573,18 +550,16 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             $this->currencyInfo['cu_decimal_point'] = $currency->getDecimalPoint();
             $this->currencyInfo['cu_thousands_point'] = $currency->getThousandsPoint();
         }
+
         return $this->currencyInfo;
     }
 
     /**
-     * Formatting an amount in the currency loaded by loadCurrencyInfo($currencyCode)
+     * Formatting an amount in the currency loaded by loadCurrencyInfo($currencyCode).
      *
      * 	 '' - the currency code is not displayed
      * 	 'RIGHT' - the code is displayed at the right of the amount
      * 	 'LEFT' - the code is displayed at the left of the amount
-     *
-     * @param float $amount: An amount to be displayed in the loaded currency
-     * @param string $displayCurrencyCode: A flag specifying if the the currency code should be displayed:
      *
      * @return string The formated amounted
      */
@@ -598,44 +573,47 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             $formatedAmount .= $this->currencyInfo['cu_iso_3'] . chr(32);
         }
         $formatedAmount .= $this->currencyInfo['cu_symbol_left'];
-        $formatedAmount .= number_format($amount, (int)$this->currencyInfo['cu_decimal_digits'], $this->currencyInfo['cu_decimal_point'], (($this->currencyInfo['cu_thousands_point']) ? $this->currencyInfo['cu_thousands_point'] : chr(32)));
+        $formatedAmount .= number_format($amount, (int)$this->currencyInfo['cu_decimal_digits'], $this->currencyInfo['cu_decimal_point'], ($this->currencyInfo['cu_thousands_point']) ? $this->currencyInfo['cu_thousands_point'] : chr(32));
         $formatedAmount .= (($this->currencyInfo['cu_symbol_right']) ? chr(32) : '') . $this->currencyInfo['cu_symbol_right'];
         if ($displayCurrencyCode === 'RIGHT') {
             $formatedAmount .= chr(32) . $this->currencyInfo['cu_iso_3'];
         }
+
         return $formatedAmount;
     }
 
     /**
-    * Returns a label field for the current language
-    *
-    * @param	string		table name
-    * @param	boolean		DEPRECATED
-    * @param	string		language to be used
-    * @param	boolean		If set, we are looking for the "local" title field
-    * @return	string		field name
-    */
-    static public function getTCAlabelField ($table, $bLoadTCA = true, $lang = '', $local = false) {
+     * Returns a label field for the current language.
+     *
+     * @param	string		table name
+     * @param	bool		DEPRECATED
+     * @param	string		language to be used
+     * @param	bool		If set, we are looking for the "local" title field
+     *
+     * @return	string		field name
+     */
+    public static function getTCAlabelField($table, $bLoadTCA = true, $lang = '', $local = false)
+    {
         if (!$this->isActive()) {
             return false;
         }
         $labelFields = [];
-        if(
+        if (
             $table &&
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields']) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'])
         ) {
-            $locales = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\Locales::class);
-            $isoArray = (array) $locales->getIsoMapping();
+            $locales = GeneralUtility::makeInstance(Locales::class);
+            $isoArray = (array)$locales->getIsoMapping();
 
             $lang = $lang ? $lang : static::getCurrentLanguage();
-            $lang = isset($isoArray[$lang]) ? $isoArray[$lang] : $lang;
-            
-            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'] as $field) {
+            $lang = $isoArray[$lang] ?? $lang;
+
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'] as $field) {
                 if ($local) {
-                    $labelField = str_replace ('##', 'local', $field);
+                    $labelField = str_replace('##', 'local', $field);
                 } else {
-                    $labelField = str_replace ('##',  strtolower($lang), $field);
+                    $labelField = str_replace('##', strtolower($lang), $field);
                 }
                 if (
                     isset($GLOBALS['TCA'][$table]['columns'][$labelField]) &&
@@ -645,18 +623,21 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 }
             }
         }
+
         return $labelFields;
     }
 
     /**
-    * Returns the type of an iso code: nr, 2, 3
-    *
-    * @param	string		iso code
-    * @return	string		iso code type
-    */
-    static public function isoCodeType ($isoCode) {
+     * Returns the type of an iso code: nr, 2, 3.
+     *
+     * @param	string		iso code
+     *
+     * @return	string		iso code type
+     */
+    public static function isoCodeType($isoCode)
+    {
         $type = '';
-        $isoCodeAsInteger = 
+        $isoCodeAsInteger =
             MathUtility::canBeInterpretedAsInteger($isoCode);
         if ($isoCodeAsInteger) {
             $type = 'nr';
@@ -665,21 +646,24 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         } elseif (strlen($isoCode) == 3) {
             $type = '3';
         }
+
         return $type;
     }
 
     /**
-    * Returns a iso code field for the passed table and iso code
-    *
-    *  $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables']
-    *
-    * @param	string		table name
-    * @param	string		iso code
-    * @param	boolean		If set (default) the TCA definition of the table should be loaded with tx_div2007_core::loadTCA(). It will be needed to set it to false if you call this function from inside of tca.php
-    * @param	integer		index in the table's isocode_field array in the global variable
-    * @return	string		field name
-    */
-    static public function getIsoCodeField ($table, $isoCode, $bLoadTCA = false, $index = 0) {
+     * Returns a iso code field for the passed table and iso code.
+     *
+     *  $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables']
+     *
+     * @param	string		table name
+     * @param	string		iso code
+     * @param	bool		If set (default) the TCA definition of the table should be loaded with tx_div2007_core::loadTCA(). It will be needed to set it to false if you call this function from inside of tca.php
+     * @param	int		index in the table's isocode_field array in the global variable
+     *
+     * @return	string		field name
+     */
+    public static function getIsoCodeField($table, $isoCode, $bLoadTCA = false, $index = 0)
+    {
         if (!$this->isActive()) {
             return false;
         }
@@ -693,7 +677,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
 
             if ($isoCodeField != '') {
                 $type = static::isoCodeType($isoCode);
-                $isoCodeField = str_replace ('##', $type, $isoCodeField);
+                $isoCodeField = str_replace('##', $type, $isoCodeField);
 
                 if (
                     isset($GLOBALS['TCA'][$table]['columns'][$isoCodeField]) &&
@@ -703,27 +687,30 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 }
             }
         }
+
         return $result;
     }
 
     /**
-    * Fetches short title from an iso code
-    *
-    * @param	string		table name
-    * @param	string		iso code
-    * @param	string		language code - if not set current default language is used
-    * @param	boolean		local name only - if set local title is returned
-    * @return	string		short title
-    */
-    static public function getTitleFromIsoCode ($table, $isoCode, $lang = '', $local = false) {
+     * Fetches short title from an iso code.
+     *
+     * @param	string		table name
+     * @param	string		iso code
+     * @param	string		language code - if not set current default language is used
+     * @param	bool		local name only - if set local title is returned
+     *
+     * @return	string		short title
+     */
+    public static function getTitleFromIsoCode($table, $isoCode, $lang = '', $local = false)
+    {
         if (!$this->isActive()) {
             return false;
         }
         $title = '';
         $titleFields = static::getTCAlabelField($table, true, $lang, $local);
-        if (count ($titleFields)) {
+        if (count($titleFields)) {
             $prefixedTitleFields = [];
-            if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+            if (version_compare($this->versionNumber, '11.5.0', '>=')) {
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     $prefixedTitleFields[] = $table . '.' . $titleField;
                 }
@@ -743,7 +730,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
                 if ($code != '') {
                     $tmpField = static::getIsoCodeField($table, $code, true, $index);
                     $tmpValue = $GLOBALS['TYPO3_DB']->fullQuoteStr($code, $table);
-                    if ($tmpField && $tmpValue)	{
+                    if ($tmpField && $tmpValue) {
                         $whereClause .= ' AND ' . $table . '.' . $tmpField . ' = ' . $tmpValue;
                     }
                 }
@@ -761,7 +748,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             );
 
             if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                if (version_compare($this->versionNumber, '11.5.0', '>=')) {            
+                if (version_compare($this->versionNumber, '11.5.0', '>=')) {
                     foreach ($titleFields as $titleField => $titleFieldProperty) {
                         if ($row[$titleField]) {
                             $title = $row[$titleField];
@@ -784,17 +771,18 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
     }
 
     /**
-    * Get a list of countries by specific parameters or parts of names of countries
-    * in different languages. Parameters might be left empty.
-    *
-    * @param   string      a name of the country or a part of it in any language
-    * @param   string      ISO alpha-2 code of the country
-    * @param   string      ISO alpha-3 code of the country
-    * @param   array       Database row.
-    * @return  array       Array of rows of country records
-    */
-    static public function fetchCountries ($country, $iso2 = '', $iso3 = '', $isonr = '') {
-
+     * Get a list of countries by specific parameters or parts of names of countries
+     * in different languages. Parameters might be left empty.
+     *
+     * @param   string      a name of the country or a part of it in any language
+     * @param   string      ISO alpha-2 code of the country
+     * @param   string      ISO alpha-3 code of the country
+     * @param   array       database row
+     *
+     * @return  array       Array of rows of country records
+     */
+    public static function fetchCountries($country, $iso2 = '', $iso3 = '', $isonr = '')
+    {
         if (!$this->isActive()) {
             return false;
         }
@@ -804,7 +792,7 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
         $table = 'static_countries';
         if ($country != '') {
             $value = $GLOBALS['TYPO3_DB']->fullQuoteStr(trim('%' . $country . '%'), $table);
-            $where = 'cn_official_name_local LIKE '. $value . ' OR cn_official_name_en LIKE ' . $value;
+            $where = 'cn_official_name_local LIKE ' . $value . ' OR cn_official_name_en LIKE ' . $value;
 
             foreach ($GLOBALS['TCA'][$table]['columns'] as $fieldname => $fieldArray) {
                 if (str_starts_with($fieldname, 'cn_short_')) {
@@ -821,21 +809,21 @@ class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface {
             $where = 'cn_iso_2=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(trim($iso2), $table);
         }
 
-        if ($iso3 !='') {
+        if ($iso3 != '') {
             $where = 'cn_iso_3=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(trim($iso3), $table);
         }
 
         if ($where != '') {
             $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $table, $where);
 
-            if ($res)   {
+            if ($res) {
                 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
                     $resultArray[] = $row;
                 }
             }
             $GLOBALS['TYPO3_DB']->sql_free_result($res);
         }
+
         return $resultArray;
     }
 }
-

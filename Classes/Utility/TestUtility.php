@@ -2,14 +2,10 @@
 
 namespace JambageCom\Div2007\Utility;
 
-
-class TestUtility {
-
-
-	static public function test () {
-		return true;
-	}
-
-
+class TestUtility
+{
+    public static function test()
+    {
+        return true;
+    }
 }
-

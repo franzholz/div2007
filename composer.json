@@ -45,5 +45,14 @@
     "typo3/cms": {
       "extension-key": "div2007"
     }
+  },
+  "config": {
+    "allow-plugins": {
+      "typo3/class-alias-loader": true,
+      "typo3/cms-composer-installers": true
+    }
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.42"
   }
 }

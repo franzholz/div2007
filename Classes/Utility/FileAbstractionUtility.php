@@ -28,48 +28,45 @@ namespace JambageCom\Div2007\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-use \TYPO3\CMS\Core\Resource\ResourceFactory;
-use \TYPO3\CMS\Core\Resource\StorageRepository;
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
-
-
+use TYPO3\CMS\Core\Resource\ResourceFactory;
+use TYPO3\CMS\Core\Resource\StorageRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- *
- * functions for the TYPO3 File Abstraction Layer (FAL)
+ * functions for the TYPO3 File Abstraction Layer (FAL).
  *
  * @author Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
  */
-
-class FileAbstractionUtility {
-
+class FileAbstractionUtility
+{
     /**
-    * Gets the file records
-    * looking up the MM relations of this record to the
-    * table name defined in the local field 'table_name'.
-    *
-    * @return array
-    */
-    static public function getFileRecords (
+     * Gets the file records
+     * looking up the MM relations of this record to the
+     * table name defined in the local field 'table_name'.
+     *
+     * @return array
+     */
+    public static function getFileRecords(
         $tableName,
         $fieldName,
         array $uidArray = [],
         $orderBy = 'sorting_foreign'
-    )
-    {
+    ) {
         $result = [];
 
         if (count($uidArray)) {
-            $where_clause = 'uid_foreign IN (' . implode(',', $uidArray) . ') AND tablenames="' . $tableName . '" AND fieldname="' . $fieldName . '"' ;
-            $where_clause .= \JambageCom\Div2007\Utility\TableUtility::enableFields('sys_file_reference');
+            $where_clause = 'uid_foreign IN (' . implode(',', $uidArray) . ') AND tablenames="' . $tableName . '" AND fieldname="' . $fieldName . '"';
+            $where_clause .= TableUtility::enableFields('sys_file_reference');
             $result =
                 $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
                     '*',
                     'sys_file_reference',
-                    $where_clause,  
+                    $where_clause,
                     '',
                     $orderBy,
                     '',
@@ -80,7 +77,7 @@ class FileAbstractionUtility {
         return $result;
     }
 
-    static public function getFileInfo (
+    public static function getFileInfo(
         &$fileObj,
         &$fileInfo,
         $fileReferenceUid
@@ -100,15 +97,12 @@ class FileAbstractionUtility {
         return $result;
     }
 
-    
     /**
-     * Create folder
+     * Create folder.
      *
-     * @param $path
-     * @return void
      * @throws \Exception
      */
-    static public function createFolderIfNotExists ($path)
+    public static function createFolderIfNotExists($path)
     {
         $result = true;
 
@@ -119,5 +113,3 @@ class FileAbstractionUtility {
         return $result;
     }
 }
-
-

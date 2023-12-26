@@ -2,7 +2,6 @@
 
 namespace JambageCom\Div2007\Utility;
 
-
 /***************************************************************
 *  Copyright notice
 *
@@ -30,46 +29,47 @@ namespace JambageCom\Div2007\Utility;
  * XML functions.
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
  */
+class XmlUtility
+{
+    public static function xml_to_object($xml)
+    {
+        $parser = xml_parser_create();
+        xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
+        xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
+        xml_parse_into_struct($parser, $xml, $tags);
+        xml_parser_free($parser);
 
+        $elements = [];  // the currently filling [child] XmlElement array
+        $stack = [];
+        foreach ($tags as $tag) {
+            $index = count($elements);
+            if (
+                $tag['type'] == 'complete' ||
+                $tag['type'] == 'open'
+            ) {
+                $elements[$index] = new XmlElement();
+                $elements[$index]->name = $tag['tag'];
+                $elements[$index]->attributes = $tag['attributes'];
+                $elements[$index]->content = $tag['value'];
+                if ($tag['type'] == 'open') {  // push
+                    $elements[$index]->children = [];
+                    $stack[count($stack)] = &$elements;
+                    $elements = &$elements[$index]->children;
+                }
+            }
 
-class XmlUtility {
+            if ($tag['type'] == 'close') {  // pop
+                $elements = &$stack[count($stack) - 1];
+                unset($stack[count($stack) - 1]);
+            }
+        }
 
-	static public function xml_to_object ($xml) {
-		$parser = xml_parser_create();
-		xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-		xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-		xml_parse_into_struct($parser, $xml, $tags);
-		xml_parser_free($parser);
-
-		$elements = [];  // the currently filling [child] XmlElement array
-		$stack = [];
-		foreach ($tags as $tag) {
-			$index = count($elements);
-			if (
-				$tag['type'] == 'complete' ||
-				$tag['type'] == 'open'
-			) {
-				$elements[$index] = new XmlElement;
-				$elements[$index]->name = $tag['tag'];
-				$elements[$index]->attributes = $tag['attributes'];
-				$elements[$index]->content = $tag['value'];
-				if ($tag['type'] == 'open') {  // push
-					$elements[$index]->children = [];
-					$stack[count($stack)] = &$elements;
-					$elements = &$elements[$index]->children;
-				}
-			}
-
-			if ($tag['type'] == 'close') {  // pop
-				$elements = &$stack[count($stack) - 1];
-				unset($stack[count($stack) - 1]);
-			}
-		}
-		return $elements[0];  // the single top-level element
-	}
+        return $elements[0];  // the single top-level element
+    }
 }
-

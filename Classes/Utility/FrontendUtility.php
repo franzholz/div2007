@@ -25,60 +25,56 @@ namespace JambageCom\Div2007\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
-
-
 /**
-* front end functions.
-*
-* @author	Franz Holzinger <franz@ttproducts.de>
-* @maintainer Franz Holzinger <franz@ttproducts.de>
-* @package TYPO3
-* @subpackage div2007
-*/
-
-
-
-class FrontendUtility {
+ * front end functions.
+ *
+ * @author	Franz Holzinger <franz@ttproducts.de>
+ *
+ * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
+ * @package TYPO3
+ * @subpackage div2007
+ */
+class FrontendUtility
+{
     /**
      * @var TypoScriptFrontendController
      */
-    static protected $typoScriptFrontendController = null;
+    protected static $typoScriptFrontendController;
 
-    static public function test ()
+    public static function test()
     {
         return true;
     }
 
-/**
-* This is the MAIN DOCUMENT of the TypoScript driven standard front-end (from
-* the "cms" extension)
-*
-* Basically call this php script which all requests for TYPO3
-* delivered pages goes to in the frontend (the website) The script configures
-* constants, includes libraries and does a little logic here and there in order
-* to instantiate the right classes to create the webpage.
-*
-* All the real data processing goes on in the library classes which this script
-* will use as needed.
-*
-* @author Kasper Skårhøj <kasperYYYY@typo3.com>
-*/
-
+    /**
+     * This is the MAIN DOCUMENT of the TypoScript driven standard front-end (from
+     * the "cms" extension).
+     *
+     * Basically call this php script which all requests for TYPO3
+     * delivered pages goes to in the frontend (the website) The script configures
+     * constants, includes libraries and does a little logic here and there in order
+     * to instantiate the right classes to create the webpage.
+     *
+     * All the real data processing goes on in the library classes which this script
+     * will use as needed.
+     *
+     * @author Kasper Skårhøj <kasperYYYY@typo3.com>
+     */
 
     /**
      * This method is needed only for Ajax calls.
      * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId instead of this method.
-     * 
+     *
      * @return int
      */
-    static public function getPageId (...$params)
+    public static function getPageId(...$params)
     {
         $result = false;
         if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
@@ -93,16 +89,18 @@ class FrontendUtility {
     }
 
     /**
-    * Get the logged in front end user
-    *
-    * @param	string		field of the user if set
-    *
-    * @return object The current frontend user or string value of the field or boolean false.
-    * @see tx_div2007::user();
-    */
-    static public function getFrontEndUser ($field = '') {
+     * Get the logged in front end user.
+     *
+     * @param	string		field of the user if set
+     *
+     * @return object the current frontend user or string value of the field or boolean false
+     *
+     * @see tx_div2007::user();
+     */
+    public static function getFrontEndUser($field = '')
+    {
         $result = false;
-		$context = GeneralUtility::makeInstance(Context::class);
+        $context = GeneralUtility::makeInstance(Context::class);
         $tsfe = $this->getTypoScriptFrontendController();
 
         if (
@@ -128,26 +126,28 @@ class FrontendUtility {
     }
 
     /**
-    * Returns a JavaScript <script> section with some function calls to JavaScript functions from "typo3/js/jsfunc.updateform.js" (which is also included by setting a reference in $GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'])
-    * The JavaScript codes simply transfers content into form fields of a form which is probably used for editing information by frontend users. Used by fe_adminLib.inc.
-    *
-    * @param array $dataArray Data array which values to load into the form fields from $formName (only field names found in $fieldList)
-    * @param string $formName The form name
-    * @param string´ $arrPrefix A prefix for the data array
-    * @param string $fieldList The list of fields which are loaded
-    * @param string $javascriptFilename relative path to the filename of the Javascript which can execute the update form
-    * @return string containing the update Javascript
-    * @access public
-    * @see tx_agency_display::createScreen()
-    */
-    static public function getUpdateJS (
+     * Returns a JavaScript <script> section with some function calls to JavaScript functions from "typo3/js/jsfunc.updateform.js" (which is also included by setting a reference in $GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'])
+     * The JavaScript codes simply transfers content into form fields of a form which is probably used for editing information by frontend users. Used by fe_adminLib.inc.
+     *
+     * @param array $dataArray Data array which values to load into the form fields from $formName (only field names found in $fieldList)
+     * @param string $formName The form name
+     * @param string´ $arrPrefix A prefix for the data array
+     * @param string $fieldList The list of fields which are loaded
+     * @param string $javascriptFilename relative path to the filename of the Javascript which can execute the update form
+     *
+     * @return string containing the update Javascript
+     *
+     * @access public
+     *
+     * @see tx_agency_display::createScreen()
+     */
+    public static function getUpdateJS(
         $dataArray,
         $formName,
         $arrPrefix,
         $fieldList,
         $javascriptFilename = ''
-    )
-    {
+    ) {
         $result = false;
         $JSPart = '';
         $updateValues = GeneralUtility::trimExplode(',', $fieldList);
@@ -182,7 +182,7 @@ class FrontendUtility {
         return $result;
     }
 
-    static public function addJavascriptFile ($filename, $key)
+    public static function addJavascriptFile($filename, $key)
     {
         $script =
             '<script type="text/javascript" src="' .
@@ -192,7 +192,7 @@ class FrontendUtility {
         $GLOBALS['TSFE']->additionalHeaderData[$key] = $script;
     }
 
-    static public function addCssFile ($filename, $key)
+    public static function addCssFile($filename, $key)
     {
         $GLOBALS['TSFE']->additionalHeaderData[$key] =
             '<link rel="stylesheet" href="' .
@@ -200,12 +200,11 @@ class FrontendUtility {
             GeneralUtility::createVersionNumberedFilename($filename) . '" type="text/css" />';
     }
 
-    static public function determineJavascriptFilename (
+    public static function determineJavascriptFilename(
         &$javascriptFilename,
         $defaultBasename
-    )
-    {
-        $result = static::determineFilename (
+    ) {
+        $result = static::determineFilename(
             $javascriptFilename,
             $defaultBasename,
             'Resources/Public/JavaScript/'
@@ -214,12 +213,11 @@ class FrontendUtility {
         return $result;
     }
 
-    static public function determineCssFilename (
+    public static function determineCssFilename(
         &$javascriptFilename,
         $defaultBasename
-    )
-    {
-        $result = static::determineFilename (
+    ) {
+        $result = static::determineFilename(
             $javascriptFilename,
             $defaultBasename,
             'Resources/Public/Css/'
@@ -228,7 +226,7 @@ class FrontendUtility {
         return $result;
     }
 
-    static public function determineFilename (
+    public static function determineFilename(
         &$filename,
         $defaultBasename,
         $defaultPath
@@ -236,18 +234,18 @@ class FrontendUtility {
         $result = false;
         $path = '';
 
-        $extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(DIV2007_EXT);
+        $extensionPath = ExtensionManagementUtility::extPath(DIV2007_EXT);
         $relativeExtensionPath = \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(
             $extensionPath
         );
-    
+
         if (empty($filename)) {
             $filename = $relativeExtensionPath .
                 $defaultPath . $defaultBasename;
         }
 
         $lookupFile = explode('?', $filename);
-        $scriptPath = (defined('PATH_thisScript') ? PATH_thisScript : \TYPO3\CMS\Core\Core\Environment::getCurrentScript() );
+        $scriptPath = (defined('PATH_thisScript') ? PATH_thisScript : \TYPO3\CMS\Core\Core\Environment::getCurrentScript());
 
         $path =
             GeneralUtility::resolveBackPath(
@@ -265,7 +263,7 @@ class FrontendUtility {
         return $result;
     }
 
-    static public function addTab (
+    public static function addTab(
         $templateCode,
         &$markerArray,
         &$subpartArray,
@@ -273,8 +271,7 @@ class FrontendUtility {
         $keyPrefix = '',
         $javascriptFilename = '',
         $cssFilename = ''
-    )
-    {
+    ) {
         $result = false;
         preg_match_all('/###(TAB_.*)###/', $templateCode, $treffer);
         $internalMarkerArray = [];
@@ -321,19 +318,19 @@ class FrontendUtility {
                 $wrappedSubpartArray['###TAB_MENU###'] =
                     [
                         '<div id="tabmenu" class="tabmenu">',
-                        '</div>'
+                        '</div>',
                     ];
 
                 for ($i = 1; $i <= $headerCounter; $i++) {
                     $wrappedSubpartArray['###TAB_HEADER_' . $i . '###'] =
                         [
                             '<div id="tab_top_' . $i . '" class="tab_top_active" onclick="javascript:openTab(' . $i . ');">',
-                            '</div>'
+                            '</div>',
                         ];
                     $wrappedSubpartArray['###TAB_BOX_' . $i . '###'] =
                         [
                             '<div id="tab_box_' . $i . '" class="tab_box">',
-                            '</div>'
+                            '</div>',
                         ];
                 }
             }
@@ -351,7 +348,7 @@ class FrontendUtility {
         return $result;
     }
 
-    static public function getContentObjectRendererClassname ()
+    public static function getContentObjectRendererClassname()
     {
         $useClassName = false;
         $callingClassName = \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::class;
@@ -360,15 +357,14 @@ class FrontendUtility {
     }
 
     /**
-    * Class constructor.
-    * Well, it has to be called manually since it is not a real constructor function.
-    * Call this function which is making an instance of the class, and pass to it a database record and the tablename from where the record is from. That will then become the "current" record loaded into memory and accessed by the .fields property found in eg. stdWrap.
-    *
-    * @param array $data The record data that is rendered.
-    * @param string $table The table that the data record is from.
-    * @return void
-    */
-    static public function getContentObjectRenderer ($data = [], $table = '')
+     * Class constructor.
+     * Well, it has to be called manually since it is not a real constructor function.
+     * Call this function which is making an instance of the class, and pass to it a database record and the tablename from where the record is from. That will then become the "current" record loaded into memory and accessed by the .fields property found in eg. stdWrap.
+     *
+     * @param array $data the record data that is rendered
+     * @param string $table the table that the data record is from
+     */
+    public static function getContentObjectRenderer($data = [], $table = '')
     {
         $className = static::getContentObjectRendererClassname();
         $cObj = GeneralUtility::makeInstance($className);	// local cObj
@@ -400,17 +396,18 @@ class FrontendUtility {
      * @param   object      language object of type \JambageCom\Div2007\Base\TranslationBase
      * @param   object      cObject
      * @param   string      prefix id
-     * @param   boolean     if CSS styled content with div tags shall be used
-     * @param   integer     determines how the results of the pagerowser will be shown. See description below
+     * @param   bool     if CSS styled content with div tags shall be used
+     * @param   int     determines how the results of the pagerowser will be shown. See description below
      * @param   string      Attributes for the table tag which is wrapped around the table cells containing the browse links
      *                      (only used if no CSS style is set)
-     * @param   array       Array with elements to overwrite the default $wrapper-array.
-     * @param   string      varname for the pointer.
-     * @param   boolean     enable htmlspecialchars() for the getLabel function (set this to false if you want e.g. use images instead of text for links like 'previous' and 'next').
+     * @param   array       array with elements to overwrite the default $wrapper-array
+     * @param   string      varname for the pointer
+     * @param   bool     enable htmlspecialchars() for the getLabel function (set this to false if you want e.g. use images instead of text for links like 'previous' and 'next').
      * @param   array       Additional query string to be passed as parameters to the links
+     *
      * @return  string      Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
      */
-    static public function listBrowser (
+    public static function listBrowser(
         \JambageCom\Div2007\Base\BrowserBase $pObject,
         \JambageCom\Div2007\Base\TranslationBase $languageObj,
         $cObj,
@@ -422,12 +419,11 @@ class FrontendUtility {
         $pointerName = 'pointer',
         $hscText = true,
         $addQueryString = []
-    )
-    {
+    ) {
         $usedLang = '';
         $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
         $linkArray = $addQueryString;
-            // Initializing variables:
+        // Initializing variables:
         $pointer = intval($pObject->ctrlVars[$pointerName]);
         $count = intval($pObject->internal['resCount']);
         $limit =
@@ -436,7 +432,7 @@ class FrontendUtility {
                 1,
                 1000
             );
-        $totalPages = ceil($count/$limit);
+        $totalPages = ceil($count / $limit);
         $maxPages =
             MathUtility::forceIntegerInRange(
                 $pObject->internal['maxPages'],
@@ -449,16 +445,16 @@ class FrontendUtility {
                 $pObject->ctrlVars
             );
 
-            // $showResultCount determines how the results of the pagerowser will be shown.
-            // If set to 0: only the result-browser will be shown
-            //           1: (default) the text "Displaying results..." and the result-browser will be shown.
-            //           2: only the text "Displaying results..." will be shown
+        // $showResultCount determines how the results of the pagerowser will be shown.
+        // If set to 0: only the result-browser will be shown
+        //           1: (default) the text "Displaying results..." and the result-browser will be shown.
+        //           2: only the text "Displaying results..." will be shown
         $showResultCount = intval($showResultCount);
 
-            // if this is set, two links named "<< First" and "LAST >>" will be shown and point to the very first or last page.
+        // if this is set, two links named "<< First" and "LAST >>" will be shown and point to the very first or last page.
         $bShowFirstLast = $pObject->internal['bShowFirstLast'];
 
-            // if this has a value the "previous" button is always visible (will be forced if "bShowFirstLast" is set)
+        // if this has a value the "previous" button is always visible (will be forced if "bShowFirstLast" is set)
         $alwaysPrev =
             (
                 $bShowFirstLast ?
@@ -482,7 +478,7 @@ class FrontendUtility {
             $pagefloat = -1; // pagefloat disabled
         }
 
-                // default values for "traditional" wrapping with a table. Can be overwritten by vars from $wrapArr
+        // default values for "traditional" wrapping with a table. Can be overwritten by vars from $wrapArr
         if ($bCSSStyled) {
             $wrapper['disabledLinkWrap'] = '<span class="disabledLinkWrap">|</span>';
             $wrapper['inactiveLinkWrap'] = '<span class="inactiveLinkWrap">|</span>';
@@ -507,12 +503,12 @@ class FrontendUtility {
             is_array($pObject->internal['image']) &&
             $pObject->internal['image']['path']
         ) {
-            $onMouseOver = ($pObject->internal['image']['onmouseover'] ? 'onmouseover="'.$pObject->internal['image']['onmouseover'] . '" ': '');
-            $onMouseOut = ($pObject->internal['image']['onmouseout'] ? 'onmouseout="' . $pObject->internal['image']['onmouseout'] . '" ': '');
-            $onMouseOverActive = ($pObject->internal['imageactive']['onmouseover'] ? 'onmouseover="' . $pObject->internal['imageactive']['onmouseover'] . '" ': '');
+            $onMouseOver = ($pObject->internal['image']['onmouseover'] ? 'onmouseover="' . $pObject->internal['image']['onmouseover'] . '" ' : '');
+            $onMouseOut = ($pObject->internal['image']['onmouseout'] ? 'onmouseout="' . $pObject->internal['image']['onmouseout'] . '" ' : '');
+            $onMouseOverActive = ($pObject->internal['imageactive']['onmouseover'] ? 'onmouseover="' . $pObject->internal['imageactive']['onmouseover'] . '" ' : '');
             $onMouseOutActive = (
                 $pObject->internal['imageactive']['onmouseout'] ?
-                    'onmouseout="' . $pObject->internal['imageactive']['onmouseout'] . '" ':
+                    'onmouseout="' . $pObject->internal['imageactive']['onmouseout'] . '" ' :
                     ''
             );
             $wrapper['browseTextWrap'] = '<img src="' . $pObject->internal['image']['path'] . $pObject->internal['image']['filemask'] . '" ' . $onMouseOver . $onMouseOut . '>';
@@ -533,10 +529,10 @@ class FrontendUtility {
             </div>';
         }
 
-            // now overwrite all entries in $wrapper which are also in $wrapArr
+        // now overwrite all entries in $wrapper which are also in $wrapArr
         $wrapper = array_merge($wrapper, $wrapArr);
 
-        if ($showResultCount != 2) { //show pagebrowser
+        if ($showResultCount != 2) { // show pagebrowser
             if ($pagefloat > -1) {
                 $lastPage =
                     min(
@@ -558,7 +554,7 @@ class FrontendUtility {
             }
             $links = [];
 
-                // Make browse-table/links:
+            // Make browse-table/links:
             if ($bShowFirstLast) { // Link to first page
                 if ($pointer > 0) {
                     $linkArray[$pointerName] = null;
@@ -624,22 +620,22 @@ class FrontendUtility {
                 }
             }
 
-            for($a = $firstPage; $a < $lastPage; $a++) { // Links to pages
+            for ($a = $firstPage; $a < $lastPage; $a++) { // Links to pages
                 $pageText = '';
                 if ($pObject->internal['showRange']) {
                     $pageText = (($a * $limit) + 1) . '-' .
                         min(
                             $count,
-                            (($a + 1) * $limit)
+                            ($a + 1) * $limit
                         );
-                } else if ($totalPages > 1) {
+                } elseif ($totalPages > 1) {
                     if ($wrapper['browseTextWrap']) {
                         if ($pointer == $a) { // current page
-                            $pageText = $cObj->wrap(($a + 1), $wrapper['activeBrowseTextWrap']);
+                            $pageText = $cObj->wrap($a + 1, $wrapper['activeBrowseTextWrap']);
                         } else {
                             $pageText =
                                 $cObj->wrap(
-                                    ($a + 1),
+                                    $a + 1,
                                     $wrapper['browseTextWrap']
                                 );
                         }
@@ -664,7 +660,7 @@ class FrontendUtility {
                                 $pageText,
                                 $wrapper['activeLinkWrap']
                             );
-                    } else if ($pageText != '') {
+                    } elseif ($pageText != '') {
                         $linkArray[$pointerName] = ($a ? $a : '');
                         $link =
                             static::linkTPKeepCtrlVars(
@@ -676,7 +672,7 @@ class FrontendUtility {
                                 $bUseCache
                             );
                     }
-                } else if ($pageText != '') {
+                } elseif ($pageText != '') {
                     $linkArray[$pointerName] = ($a ? $a : '');
                     $link =
                         $cObj->wrap(
@@ -769,10 +765,10 @@ class FrontendUtility {
                 // this will render the resultcount in a more flexible way using markers (new in TYPO3 3.8.0).
                 // the formatting string is expected to hold template markers (see function header). Example: 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###'
 
-                $markerArray['###FROM###'] = $cObj->wrap($count > 0 ? $pR1 : 0,$wrapper['showResultsNumbersWrap']);
+                $markerArray['###FROM###'] = $cObj->wrap($count > 0 ? $pR1 : 0, $wrapper['showResultsNumbersWrap']);
                 $markerArray['###TO###'] = $cObj->wrap(min($count, $pR2), $wrapper['showResultsNumbersWrap']);
                 $markerArray['###OUT_OF###'] = $cObj->wrap($count, $wrapper['showResultsNumbersWrap']);
-                $markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . $languageObj->getLabel('list_browseresults_to', $usedLang, 'to') . ' ' . min($count,$pR2), $wrapper['showResultsNumbersWrap']);
+                $markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . $languageObj->getLabel('list_browseresults_to', $usedLang, 'to') . ' ' . min($count, $pR2), $wrapper['showResultsNumbersWrap']);
                 $markerArray['###CURRENT_PAGE###'] = $cObj->wrap($pointer + 1, $wrapper['showResultsNumbersWrap']);
                 $markerArray['###TOTAL_PAGES###'] = $cObj->wrap($totalPages, $wrapper['showResultsNumbersWrap']);
                 $list_browseresults_displays = $languageObj->getLabel('list_browseresults_displays_marker', $usedLang, 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
@@ -796,6 +792,7 @@ class FrontendUtility {
             $resultCountMsg = '';
         }
         $rc = $cObj->wrap($resultCountMsg . $theLinks, $wrapper['browseBoxWrap']);
+
         return $rc;
     }
 
@@ -808,17 +805,19 @@ class FrontendUtility {
      * This is an advanced form of evaluation of whether a URL should be cached or not.
      *
      * @param   object      parent object of type tx_div2007_alpha_browse_base
-     * @return  boolean     Returns true (1) if conditions are met.
+     *
+     * @return  bool     returns true (1) if conditions are met
+     *
      * @see linkTPKeepCtrlVars()
      */
-    static public function autoCache ($pObject, $inArray)
+    public static function autoCache($pObject, $inArray)
     {
         $bUseCache = true;
 
         if (is_array($inArray)) {
-            foreach($inArray as $fN => $fV) {
+            foreach ($inArray as $fN => $fV) {
                 $bIsCachable = false;
-                if (!strcmp($fV,'')) {
+                if (!strcmp($fV, '')) {
                     $bIsCachable = true;
                 } elseif (
                     isset($pObject->autoCacheFields[$fN]) &&
@@ -832,11 +831,11 @@ class FrontendUtility {
                         $bIsCachable = true;
                     }
 
-                    if (    
+                    if (
                         isset($pObject->autoCacheFields[$fN]['list']) &&
                         is_array($pObject->autoCacheFields[$fN]['list']) &&
                         in_array($fV, $pObject->autoCacheFields[$fN]['list'])
-                    ){
+                    ) {
                         $bIsCachable = true;
                     }
                 }
@@ -847,21 +846,24 @@ class FrontendUtility {
                 }
             }
         }
+
         return $bUseCache;
     }
 
     /**
      * Returns the class-attribute with the correctly prefixed classname
-     * Using getClassName()
+     * Using getClassName().
      *
      * @param   string      The class name(s) (suffix) - separate multiple classes with commas
      * @param   string      Additional class names which should not be prefixed - separate multiple classes with commas
      * @param   string      $prefixId
-     * @param   boolean     if set, then the prefix 'tx_' is added to the extension name
-     * @return  string      A "class" attribute with value and a single space char before it.
+     * @param   bool     if set, then the prefix 'tx_' is added to the extension name
+     *
+     * @return  string      a "class" attribute with value and a single space char before it
+     *
      * @see pi_classParam()
      */
-    static public function classParam ($class, $addClasses = '', $prefixId = '', $bAddPrefixTx = false)
+    public static function classParam($class, $addClasses = '', $prefixId = '', $bAddPrefixTx = false)
     {
         $output = '';
         foreach (GeneralUtility::trimExplode(',', $class) as $v) {
@@ -870,23 +872,27 @@ class FrontendUtility {
         foreach (GeneralUtility::trimExplode(',', $addClasses) as $v) {
             $output .= ' ' . $v;
         }
+
         return ' class="' . trim($output) . '"';
     }
 
     /**
-     * Returns a class-name prefixed with $prefixId and with all underscores substituted to dashes (-). Copied from pi_getClassName
+     * Returns a class-name prefixed with $prefixId and with all underscores substituted to dashes (-). Copied from pi_getClassName.
      *
      * @param   string      The class name (or the END of it since it will be prefixed by $prefixId . '-')
      * @param   string      $prefixId
-     * @param   boolean     if set, then the prefix 'tx_' is added to the extension name
+     * @param   bool     if set, then the prefix 'tx_' is added to the extension name
+     *
      * @return  string      The combined class name (with the correct prefix)
+     *
      * @see pi_getClassName()
      */
-    static public function getClassName ($class, $prefixId = '', $bAddPrefixTx = false)
+    public static function getClassName($class, $prefixId = '', $bAddPrefixTx = false)
     {
         if ($bAddPrefixTx && $prefixId != '' && !str_starts_with($prefixId, 'tx_')) {
             $prefixId = 'tx-' . $prefixId;
         }
+
         return str_replace('_', '-', $prefixId) . ($prefixId != '' ? '-' : '') . $class;
     }
 
@@ -903,13 +909,15 @@ class FrontendUtility {
      * @param   string      prefix id
      * @param   string      The content string to wrap in <a> tags
      * @param   array       Array of values to override in the current piVars. Contrary to static::linkTP the keys in this array must correspond to the real piVars array and therefore NOT be prefixed with the $this->prefixId string. Further, if a value is a blank string it means the piVar key will not be a part of the link (unset)
-     * @param   boolean     If $cache is set, the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
-     * @param   boolean     If set, then the current values of piVars will NOT be preserved anyways... Practical if you want an easy way to set piVars without having to worry about the prefix, "tx_xxxxx[]"
-     * @param   integer     Alternative page ID for the link. (By default this function links to the SAME page!)
+     * @param   bool     If $cache is set, the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
+     * @param   bool     If set, then the current values of piVars will NOT be preserved anyways... Practical if you want an easy way to set piVars without having to worry about the prefix, "tx_xxxxx[]"
+     * @param   int     Alternative page ID for the link. (By default this function links to the SAME page!)
+     *
      * @return  string      The input string wrapped in <a> tags
+     *
      * @see static::linkTP()
      */
-    static public function linkTPKeepCtrlVars (
+    public static function linkTPKeepCtrlVars(
         \JambageCom\Div2007\Base\BrowserBase $pObject,
         $cObj,
         $prefixId,
@@ -918,8 +926,7 @@ class FrontendUtility {
         $cache = 0,
         $clearAnyway = 0,
         $altPageId = 0
-    )
-    {
+    ) {
         $overruledCtrlVars = '';
 
         if (
@@ -951,11 +958,12 @@ class FrontendUtility {
                 $cObj,
                 $str,
                 [
-                    $prefixId => $overruledCtrlVars
+                    $prefixId => $overruledCtrlVars,
                 ],
                 $cache,
                 $altPageId
             );
+
         return $result;
     }
 
@@ -970,25 +978,27 @@ class FrontendUtility {
      * @param   object      cObject
      * @param   string      The content string to wrap in <a> tags
      * @param   array       Array with URL parameters as key/value pairs. They will be "imploded" and added to the list of parameters defined in the plugins TypoScript property "parent.addParams" plus $this->pi_moreParams.
-     * @param   boolean     If $cache is set (0/1), the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
-     * @param   integer     Alternative page ID for the link. (By default this function links to the SAME page!)
+     * @param   bool     If $cache is set (0/1), the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
+     * @param   int     Alternative page ID for the link. (By default this function links to the SAME page!)
+     *
      * @return  string      The input string wrapped in <a> tags
+     *
      * @see pi_linkTP_keepPIvars(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink()
      */
-    static public function linkTP (
+    public static function linkTP(
         \JambageCom\Div2007\Base\BrowserBase $pObject,
         $cObj,
         $str,
         $urlParameters = [],
         $cache = 0,
         $altPageId = 0
-    )
-    {
+    ) {
         $conf = [];
         $conf['no_cache'] = $pObject->getIsUserIntObject() ? 0 : !$cache;
         $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
         $conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) . $pObject->moreParams;
         $result = $cObj->typoLink($str, $conf);
+
         return $result;
     }
 
@@ -999,23 +1009,24 @@ class FrontendUtility {
      * Optionally you can supply $urlParameters which is an array with key/value pairs that are rawurlencoded and appended to the resulting url.
      *
      * @param   object      cObject
-     * @param   string      Text string being wrapped by the link.
+     * @param   string      text string being wrapped by the link
      * @param   string      Link parameter; eg. "123" for page id, "kasperYYYY@typo3.com" for email address, "http://...." for URL, "fileadmin/blabla.txt" for file.
      * @param   array       An array with key/value pairs representing URL parameters to set. Values NOT URL-encoded yet.
      * @param   string      Specific target set, if any. (Default is using the current)
      * @param   array       Configuration
+     *
      * @return  string      The wrapped $label-text string
+     *
      * @see getTypoLink_URL()
      */
-    static public function getTypoLink (
+    public static function getTypoLink(
         $cObj,
         $label,
         $params,
         $urlParameters = [],
         $target = '',
         $conf = []
-    )
-    {
+    ) {
         $result = false;
 
         if (is_object($cObj)) {
@@ -1057,28 +1068,30 @@ class FrontendUtility {
         } else {
             $result = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink: parameter $cObj is not an object';
         }
+
         return $result;
     }
 
     /**
-     * Returns the URL of a "typolink" create from the input parameter string, url-parameters and target
+     * Returns the URL of a "typolink" create from the input parameter string, url-parameters and target.
      *
      * @param   object      cObject
      * @param   string      Link parameter; eg. "123" for page id, "kasperYYYY@typo3.com" for email address, "http://...." for URL, "fileadmin/blabla.txt" for file.
      * @param   array       An array with key/value pairs representing URL parameters to set. Values NOT URL-encoded yet.
      * @param   string      Specific target set, if any. (Default is using the current)
      * @param   array       Configuration
+     *
      * @return  string      The URL
+     *
      * @see getTypoLink()
      */
-    static public function getTypoLink_URL (
+    public static function getTypoLink_URL(
         $cObj,
         $params,
         $urlParameters = [],
         $target = '',
         $conf = []
-    )
-    {
+    ) {
         $result = false;
 
         if (is_object($cObj)) {
@@ -1102,24 +1115,27 @@ class FrontendUtility {
         return $result;
     }
 
-    static public function hasRTEparser ()
+    public static function hasRTEparser()
     {
         $result = isset($GLOBALS['TSFE']->tmpl->setup['lib.']['parseFunc_RTE.']);
+
         return $result;
     }
 
     /**
-    * This is the original pi_RTEcssText from the former tslib_pibase
-    * Will process the input string with the parseFunc function from TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
-    * This is useful for rendering of content in RTE fields where the transformation mode is set to "ts_css" or so.
-    * Notice that this requires the use of "css_styled_content" to work right.
-    *
-    * @param	object     cOject of class TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
-    * @param	string     The input text string to process
-    * @return	string     The processed string
-    * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::parseFunc()
-    */
-    static public function RTEcssText ($cObj, $str)
+     * This is the original pi_RTEcssText from the former tslib_pibase
+     * Will process the input string with the parseFunc function from TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer based on configuration set in "lib.parseFunc_RTE" in the current TypoScript template.
+     * This is useful for rendering of content in RTE fields where the transformation mode is set to "ts_css" or so.
+     * Notice that this requires the use of "css_styled_content" to work right.
+     *
+     * @param	object     cOject of class TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer
+     * @param	string     The input text string to process
+     *
+     * @return	string     The processed string
+     *
+     * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::parseFunc()
+     */
+    public static function RTEcssText($cObj, $str)
     {
         $result = '';
         $parseFunc = '';
@@ -1129,27 +1145,31 @@ class FrontendUtility {
         if (is_array($parseFunc)) {
             $result = $cObj->parseFunc($str, $parseFunc);
         }
+
         return $result;
     }
 
-    static public function translate ($extensionKey, $filename, $key)
+    public static function translate($extensionKey, $filename, $key)
     {
-        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key); 
+        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
+
         return $result;
     }
 
     /**
-    * Wrap content with the plugin code
-    * wraps the content of the plugin before the final output
-    *
-    * @param	string		content
-    * @param	string		CODE of plugin
-    * @param	string		prefix id of the plugin
-    * @param	string		content uid
-    * @return	string		The resulting content
-    * @see pi_linkToPage()
-    */
-    static public function wrapContentCode (
+     * Wrap content with the plugin code
+     * wraps the content of the plugin before the final output.
+     *
+     * @param	string		content
+     * @param	string		CODE of plugin
+     * @param	string		prefix id of the plugin
+     * @param	string		content uid
+     *
+     * @return	string		The resulting content
+     *
+     * @see pi_linkToPage()
+     */
+    public static function wrapContentCode(
         $content,
         $theCode,
         $prefixId,
@@ -1168,14 +1188,16 @@ class FrontendUtility {
     }
 
     /**
-    * Wraps the input string in a <div> tag with the class attribute set to the prefixId.
-    * All content returned from your plugins should be returned through this function so all content from your plugin is encapsulated in a <div>-tag nicely identifying the content of your plugin.
-    *
-    * @param	string		HTML content to wrap in the div-tags with the "main class" of the plugin
-    * @return	string		HTML content wrapped, ready to return to the parent object.
-    * @see pi_wrapInBaseClass()
-    */
-    static public function wrapInBaseClass (
+     * Wraps the input string in a <div> tag with the class attribute set to the prefixId.
+     * All content returned from your plugins should be returned through this function so all content from your plugin is encapsulated in a <div>-tag nicely identifying the content of your plugin.
+     *
+     * @param	string		HTML content to wrap in the div-tags with the "main class" of the plugin
+     *
+     * @return	string		HTML content wrapped, ready to return to the parent object
+     *
+     * @see pi_wrapInBaseClass()
+     */
+    public static function wrapInBaseClass(
         $str,
         $prefixId,
         $extKey
@@ -1202,7 +1224,7 @@ class FrontendUtility {
         return $content;
     }
 
-    static public function fixImageCodeAbsRefPrefix (
+    public static function fixImageCodeAbsRefPrefix(
         &$imageCode,
         $domain = ''
     ) {
@@ -1229,7 +1251,7 @@ class FrontendUtility {
         }
 
         if (
-            $domain != '' && 
+            $domain != '' &&
             !$bSetAbsRefPrefix
         ) {
             $parse = [];
@@ -1249,9 +1271,11 @@ class FrontendUtility {
         $imageCode = $fixImgCode;
     }
 
-    static public function slashName ($name, $apostrophe='"') {
-        $name = str_replace(',' , ' ', $name);
+    public static function slashName($name, $apostrophe = '"')
+    {
+        $name = str_replace(',', ' ', $name);
         $rc = $apostrophe . addcslashes($name, '<>()@;:\\".[]' . chr('\n')) . $apostrophe;
+
         return $rc;
     }
 
@@ -1260,11 +1284,13 @@ class FrontendUtility {
      *
      * @param string $fName The filename, being a TypoScript resource data type
      * @param string $addParams Additional parameters (attributes). Default is empty alt and title tags.
-     * @param boolean $sanitize If true then the front end sanitizer is used to check if the file location is inside the path Resources/Public .
+     * @param bool $sanitize if true then the front end sanitizer is used to check if the file location is inside the path Resources/Public
+     *
      * @return string If jpg,gif,jpeg,png: returns image_tag with picture in. If html,txt: returns content string
+     *
      * @see FILE(), \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer fileResource
      */
-    static public function fileResource ($fName, $addParams = 'alt="" title=""', $sanitize = true)
+    public static function fileResource($fName, $addParams = 'alt="" title=""', $sanitize = true)
     {
         $result = '';
         $incFile = '';
@@ -1289,14 +1315,15 @@ class FrontendUtility {
                 $extension === 'png'
             ) {
                 $tsfe = static::getTypoScriptFrontendController();
-                $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::generateXhtmlFix();
+                $xhtmlFix = HtmlUtility::generateXhtmlFix();
                 $imgFile = $incFile;
                 $imgInfo = @getimagesize($imgFile);
-                $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . $imgFile) . '" width="' . (int) $imgInfo[0] . '" height="' . (int) $imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
-            } else if (filesize($incFile) < 1024 * 1024) {
+                $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . $imgFile) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
+            } elseif (filesize($incFile) < 1024 * 1024) {
                 $result = file_get_contents($incFile);
             }
         }
+
         return $result;
     }
 
@@ -1305,14 +1332,15 @@ class FrontendUtility {
      * or if the config parameter 'disableImgBorderAttr' is not set.
      *
      * @param string $borderAttr The border attribute
+     *
      * @return string The border attribute
      */
-    static public function getBorderAttribute ($borderAttr)
+    public static function getBorderAttribute($borderAttr)
     {
         $tsfe = static::getTypoScriptFrontendController();
         $docType = $tsfe->xhtmlDoctype;
         if (
-            $docType !== 'xhtml_strict' && 
+            $docType !== 'xhtml_strict' &&
             $docType !== 'xhtml_11' &&
             (
                 !isset($tsfe->config['config']['doctype']) ||
@@ -1324,10 +1352,11 @@ class FrontendUtility {
         ) {
             return $borderAttr;
         }
+
         return '';
     }
 
-    static public function setTypoScriptFrontendController (TypoScriptFrontendController $typoScriptFrontendController)
+    public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController)
     {
         static::$typoScriptFrontendController = $typoScriptFrontendController;
     }
@@ -1335,9 +1364,8 @@ class FrontendUtility {
     /**
      * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
      */
-    static protected function getTypoScriptFrontendController ()
+    protected static function getTypoScriptFrontendController()
     {
         return static::$typoScriptFrontendController ?: $GLOBALS['TSFE'];
     }
 }
-

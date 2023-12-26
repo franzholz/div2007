@@ -1,4 +1,5 @@
 <?php
+
 namespace JambageCom\Div2007\SessionHandler;
 
 /*
@@ -14,56 +15,50 @@ namespace JambageCom\Div2007\SessionHandler;
  * The TYPO3 project - inspiring people to share!
  */
 
-
 /**
  * Abstract session handling base class.
  *
  * @author Bernhard Kraft <kraftb@think-open.at>
  * @copyright 2016
  */
-abstract class AbstractSessionHandler {
-
+abstract class AbstractSessionHandler
+{
     /**
-    * The session variable key. Overwrite this with your own session key which should be the tx_(extensionkey) where the extension key is without underline characters.
-    *
-    * @var string
-    */
+     * The session variable key. Overwrite this with your own session key which should be the tx_(extensionkey) where the extension key is without underline characters.
+     *
+     * @var string
+     */
     protected $sessionKey = DIV2007_EXT;
 
     /**
-    * Get session key
-    *
-    * @return data The session data
-    */
-    public function getSessionKey () {
+     * Get session key.
+     *
+     * @return data The session data
+     */
+    public function getSessionKey()
+    {
         return $this->sessionKey;
     }
 
     /**
-    * Get session key
-    *
-    * @param string $key: The session key for the extension for which you read or write the session data.
-    * @return data The session data for the captcha extension
-    */
-    public function setSessionKey ($key) {
+     * Get session key.
+     *
+     * @return data The session data for the captcha extension
+     */
+    public function setSessionKey($key)
+    {
         $this->sessionKey = $key;
     }
 
     /**
-    * Get session data
-    *
-    * @param string $subKey: The subkey of the session key for the extension for which you read or write the session data.
-    * @return data The session data
-    */
-    abstract public function getSessionData ($subKey = '');
+     * Get session data.
+     *
+     * @return data The session data
+     */
+    abstract public function getSessionData($subKey = '');
 
     /**
-    * Set session data
-    *
-    * @param array $data: The session data for the captcha extension
-    * @return void
-    */
-    abstract public function setSessionData ($data);
-
+     * Set session data.
+     */
+    abstract public function setSessionData($data);
 }
-

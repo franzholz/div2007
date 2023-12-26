@@ -33,19 +33,19 @@ namespace JambageCom\Div2007\Base;
  * hook functions for the TYPO3 cms
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
  */
 
+use JambageCom\Div2007\Utility\FlexformUtility;
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
-use JambageCom\Div2007\Utility\FlexformUtility;
-
-
-class PageContentPreviewRenderingListenerBase implements \TYPO3\CMS\Core\SingletonInterface {
+class PageContentPreviewRenderingListenerBase implements \TYPO3\CMS\Core\SingletonInterface
+{
     public $extensionKey = '';	// extension key must be overridden
 
     public function __invoke(PageContentPreviewRenderingEvent $event): void
@@ -58,16 +58,13 @@ class PageContentPreviewRenderingListenerBase implements \TYPO3\CMS\Core\Singlet
         $event->setPreviewContent($content . $codes);
     }
 
-
     /**
-    * Draw the item in the page module
-    *
-    * @param	array		record
-    * @param	object		the parent object
-    * @return	  string
-    */
-
-    public function pmDrawItem (array $record, array $pageRecord): string
+     * Draw the item in the page module.
+     *
+     * @param	array		record
+     * @param	object		the parent object
+     */
+    public function pmDrawItem(array $record, array $pageRecord): string
     {
         $codes = '';
         $extensionKey = '';
@@ -96,7 +93,7 @@ class PageContentPreviewRenderingListenerBase implements \TYPO3\CMS\Core\Singlet
                     'display_mode'
                 );
         }
+
         return $codes;
     }
 }
-

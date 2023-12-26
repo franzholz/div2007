@@ -2,7 +2,6 @@
 
 namespace JambageCom\Div2007\Utility;
 
-
 /***************************************************************
 *  Copyright notice
 *
@@ -30,29 +29,28 @@ namespace JambageCom\Div2007\Utility;
  * marker functions.
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
  */
-
-
-
-class MarkerUtility {
-    static public function addMarkers (array &$markerArray, $prefix, $separator, $key, $variable)
+class MarkerUtility
+{
+    public static function addMarkers(array &$markerArray, $prefix, $separator, $key, $variable)
     {
         $markerkey = $prefix . $separator . strtoupper($key);
         if (is_string($variable)) {
-            $markerArray['###' . $markerkey . '###'] =  strip_tags($variable);
-        } else if (is_array($variable)) {
+            $markerArray['###' . $markerkey . '###'] = strip_tags($variable);
+        } elseif (is_array($variable)) {
             foreach ($variable as $k => $v) {
                 static::addMarkers($markerArray, $markerkey, $separator, $k, $v);
             }
         }
     }
 
-    /*determine all markers 
-    */
-    static public function getTags ($content)
+    // determine all markers
+    public static function getTags($content)
     {
         $found = [];
         $result = false;
@@ -72,4 +70,3 @@ class MarkerUtility {
         return $result;
     }
 }
-

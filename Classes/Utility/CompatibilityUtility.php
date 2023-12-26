@@ -15,33 +15,32 @@ namespace JambageCom\Div2007\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 
- /**
+/**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
  * Backwards compatibility related functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
-
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-class CompatibilityUtility {
-
-    static public function getPageRepository ()
+class CompatibilityUtility
+{
+    public static function getPageRepository()
     {
         $classname = \TYPO3\CMS\Core\Domain\Repository\PageRepository::class;
         $pageRepository = GeneralUtility::makeInstance($classname);
+
         return $pageRepository;
     }
-    
-    static public function isLoggedIn ()
+
+    public static function isLoggedIn()
     {
         $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
         $result = $context->getPropertyFromAspect('frontend.user', 'isLoggedIn');
@@ -49,7 +48,7 @@ class CompatibilityUtility {
         return $result;
     }
 
-    static public function includeHiddenContent ()
+    public static function includeHiddenContent()
     {
         $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
         $result = $context->getPropertyFromAspect('visibility', 'includeHiddenContent');
@@ -57,12 +56,11 @@ class CompatibilityUtility {
         return $result;
     }
 
-    static public function includeHiddenPages ()
+    public static function includeHiddenPages()
     {
         $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
         $result = $context->getPropertyFromAspect('visibility', 'includeHiddenPages');
 
         return $result;
-    }    
+    }
 }
-

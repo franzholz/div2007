@@ -28,64 +28,57 @@ namespace JambageCom\Div2007\Security;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
-* Part of the div2007 (Static Methods for Extensions since 2007) extension.
-*
-* Storage security functions
-*
-* @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
-*
-* @package TYPO3
-* @subpackage div2007
-*
-*
-*/
+ * Part of the div2007 (Static Methods for Extensions since 2007) extension.
+ *
+ * Storage security functions
+ *
+ * @author	Stanislas Rolland <typo3(arobas)sjbr.ca>
+ *
+ * @package TYPO3
+ * @subpackage div2007
+ */
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
-
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-use JambageCom\Div2007\Constants\ErrorCode;
-
-
-class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAwareInterface {
+class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAwareInterface
+{
     use LoggerAwareTrait;
 
     // Extension key
     protected $extensionKey = DIV2007_EXT;
 
     /**
-    * Gets the storage security level
-    *
-    * @return	string	the storage security level
-    */
-    protected function getStorageSecurityLevel ()
+     * Gets the storage security level.
+     *
+     * @return	string	the storage security level
+     */
+    protected function getStorageSecurityLevel()
     {
         $result = 'salted';
+
         return $result;
     }
 
     /**
-    * Encrypts the password for secure storage
-    *
-    * @param	string	$password: password to encrypt
-    * @return	string	encrypted password
-    *           boolean false in case of an error
-    */
-    public function encryptPasswordForStorage ($password)
+     * Encrypts the password for secure storage.
+     *
+     * @return	string	encrypted password
+     *           boolean false in case of an error
+     */
+    public function encryptPasswordForStorage($password)
     {
         $encryptedPassword = $password;
         if ($password != '') {
             switch ($this->getStorageSecurityLevel()) {
                 case 'salted':
                     $objHash = null;
-                    
+
                     if (class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::class)) {
-                        $objHash = GeneralUtility::makeInstance( \TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE');
-                    } else if (class_exists(\TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::class)) {
+                        $objHash = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE');
+                    } elseif (class_exists(\TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::class)) {
                         $objHash = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(null);
                     }
 
@@ -95,8 +88,8 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
                         $encryptedPassword = false;
                         // Could not get a salting instance from saltedpasswords
                         // This must not happen: It has been checked on the beginning in the method checkRequirements that a object to generate a hash must be available. The hash generation must never fail.
-                        
-                            // Failed to decrypt auto login password
+
+                        // Failed to decrypt auto login password
                         $errorMessage =
                             $GLOBALS['TSFE']->sL(
                                 'LLL:EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_hashed_password_error'
@@ -107,7 +100,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
                     break;
                 case 'normal':
                 default:
-                        // No encryption!
+                    // No encryption!
                     break;
             }
         }
@@ -116,30 +109,26 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
     }
 
     /**
-    * Encrypts the password for auto-login on confirmation
-    *
-    * @param	string	$password: the password to be encrypted
-    * @param	string	$cryptedPassword: returns the encrypted password
-    * @param	string	$autoLoginKey: returns the auto-login key
-    * @return	boolean  true if the crypted password and auto-login key are filled in
-    */
-    public function encryptPasswordForAutoLogin (
+     * Encrypts the password for auto-login on confirmation.
+     *
+     * @return	bool  true if the crypted password and auto-login key are filled in
+     */
+    public function encryptPasswordForAutoLogin(
         $password,
         &$cryptedPassword,
         &$autoLoginKey
-    )
-    {
+    ) {
         $result = false;
         $privateKey = '';
         $cryptedPassword = '';
 
         if ($password != '') {
-                // Create the keypair
+            // Create the keypair
             $keyPair = openssl_pkey_new();
 
-                // Get private key
+            // Get private key
             openssl_pkey_export($keyPair, $privateKey);
-                // Get public key
+            // Get public key
             $keyDetails = openssl_pkey_get_details($keyPair);
             $publicKey = $keyDetails['key'];
 
@@ -159,21 +148,16 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
     }
 
     /**
-    * Decrypts the password for auto-login on confirmation or invitation acceptation
-    *
-    * @param string	$password: incoming and outgoing string of the password to be decrypted
-    * @param string $errorCode: outgoing text with an error code
-    * @param string $errorMessage: outgoing text with an error message
-    * @param string	$autoLoginKey: incoming the auto-login private key
-    * @return	boolean  true if decryption is successfull or no rsaauth is used
-    */
-    public function decryptPasswordForAutoLogin (
+     * Decrypts the password for auto-login on confirmation or invitation acceptation.
+     *
+     * @return	bool  true if decryption is successfull or no rsaauth is used
+     */
+    public function decryptPasswordForAutoLogin(
         &$password,
         &$errorCode,
         &$errorMessage,
         $autoLoginKey
-    )
-    {
+    ) {
         $result = true;
         $errorMessage = '';
 
@@ -191,7 +175,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
                             $password = $decryptedPassword;
                         } else {
                             $errorCode = SECURITY_RSA_AUTH_DECRYPTION_FAILED;
-                                // Failed to decrypt auto login password
+                            // Failed to decrypt auto login password
                             $errorMessage =
                                 $GLOBALS['TSFE']->sL(
                                     'LLL:EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_decrypt_auto_login_failed'
@@ -210,4 +194,3 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
         return $result;
     }
 }
-

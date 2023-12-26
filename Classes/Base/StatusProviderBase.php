@@ -1,4 +1,5 @@
 <?php
+
 namespace JambageCom\Div2007\Base;
 
 /*
@@ -23,65 +24,67 @@ namespace JambageCom\Div2007\Base;
 *  This copyright notice MUST APPEAR in all copies of the script!
 */
 
+use JambageCom\Div2007\Utility\StatusUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
 
-use JambageCom\Div2007\Utility\StatusUtility;
-
 /**
-* checking of the required or conflicting configurations
-*/
+ * checking of the required or conflicting configurations.
+ */
 class StatusProviderBase implements StatusProviderInterface
 {
     /**
-    * @var string Extension key: must be overridden
-    */
+     * @var string Extension key: must be overridden
+     */
     protected $extensionKey = '';
 
     /**
-    * @var string Extension name: must be overridden
-    */
+     * @var string Extension name: must be overridden
+     */
     protected $extensionName = '';
 
-
-    public function getExtensionKey () {
+    public function getExtensionKey()
+    {
         return $this->extensionKey;
     }
 
-    public function getExtensionName () {
+    public function getExtensionName()
+    {
         return $this->extensionName;
     }
 
-    public function getGlobalVariables () {
+    public function getGlobalVariables()
+    {
         return null;
     }
 
     /**
-    * Compiles a collection of system status checks as a status report.
-    *
-    * @return array List of status
-    */
-    public function getStatus ()
+     * Compiles a collection of system status checks as a status report.
+     *
+     * @return array List of status
+     */
+    public function getStatus()
     {
         $result = [
             'requiredExtensionsAreInstalled' => $this->checkIfRequiredExtensionsAreInstalled(),
             'noConflictingExtensionIsInstalled' => $this->checkIfNoConflictingExtensionIsInstalled(),
             'frontEndLoginSecurityLevelIsCorrectlySet' => $this->checkIfFrontEndLoginSecurityLevelIsCorrectlySet(),
             'saltedPasswordsAreEnabledInFrontEnd' => $this->checkIfSaltedPasswordsAreEnabledInFrontEnd(),
-            'globalVariablesAreSet' => StatusUtility::checkIfGlobalVariablesAreSet($this->getExtensionName(), $this->getGlobalVariables())
+            'globalVariablesAreSet' => StatusUtility::checkIfGlobalVariablesAreSet($this->getExtensionName(), $this->getGlobalVariables()),
         ];
+
         return $result;
     }
 
     /**
-    * Check whether any required extension is not installed
-    *
-    * @return	Status
-    */
-    protected function checkIfRequiredExtensionsAreInstalled ()
+     * Check whether any required extension is not installed.
+     *
+     * @return	Status
+     */
+    protected function checkIfRequiredExtensionsAreInstalled()
     {
         $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Required_extensions_not_installed', $this->getExtensionName());
         $value = null;
@@ -119,15 +122,16 @@ class StatusProviderBase implements StatusProviderInterface
                 $message,
                 $status
             );
+
         return $result;
     }
 
     /**
-    * Check whether any conflicting extension has been installed
-    *
-    * @return	Status
-    */
-    protected function checkIfNoConflictingExtensionIsInstalled ()
+     * Check whether any conflicting extension has been installed.
+     *
+     * @return	Status
+     */
+    protected function checkIfNoConflictingExtensionIsInstalled()
     {
         $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Conflicting_extensions_installed', $this->getExtensionName());
         $value = null;
@@ -155,15 +159,16 @@ class StatusProviderBase implements StatusProviderInterface
             $status = Status::OK;
         }
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
+
         return $result;
     }
 
     /**
-    * Check whether frontend login security level is correctly set
-    *
-    * @return	Status
-    */
-    protected function checkIfFrontEndLoginSecurityLevelIsCorrectlySet ()
+     * Check whether frontend login security level is correctly set.
+     *
+     * @return	Status
+     */
+    protected function checkIfFrontEndLoginSecurityLevelIsCorrectlySet()
     {
         $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Front_end_login_security_level', $this->getExtensionName());
         $value = null;
@@ -186,15 +191,16 @@ class StatusProviderBase implements StatusProviderInterface
             $status = Status::ERROR;
         }
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
+
         return $result;
     }
 
     /**
-    * Check whether salted passwords are enabled in front end
-    *
-    * @return	Status
-    */
-    protected function checkIfSaltedPasswordsAreEnabledInFrontEnd ()
+     * Check whether salted passwords are enabled in front end.
+     *
+     * @return	Status
+     */
+    protected function checkIfSaltedPasswordsAreEnabledInFrontEnd()
     {
         $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Salted_passwords_in_front_end', $this->getExtensionName());
 
@@ -202,6 +208,7 @@ class StatusProviderBase implements StatusProviderInterface
         $message = '';
         $status = Status::OK;
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
+
         return $result;
     }
 }

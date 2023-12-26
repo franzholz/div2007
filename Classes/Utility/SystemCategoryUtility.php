@@ -28,116 +28,113 @@ namespace JambageCom\Div2007\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
- *
- * functions for the TYPO3 extension static_info_tables
+ * functions for the TYPO3 extension static_info_tables.
  *
  * @author Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
  */
+class SystemCategoryUtility
+{
+    public const type_local = 0;
+    public const type_foreign = 1;
 
+    /**
+     * The table name collections are stored to.
+     *
+     * @var string
+     */
+    protected static $storageTableName = 'sys_category';
 
+    /**
+     * Name of the categories-relation field (used in the MM_match_fields/fieldname property of the TCA).
+     *
+     * @var string
+     */
+    protected static $relationFieldName = 'categories';
 
-class SystemCategoryUtility {
+    /**
+     * Gets the uids by
+     * looking up the MM relations of this record to the
+     * table name defined in the local field 'table_name'.
+     *
+     * @return array
+     */
+    public static function getForeignUids(
+        $tableName,
+        $fieldName,
+        array $uidArray = [],
+        $orderBy = ''
+    ) {
+        return static::getUids($tableName, $fieldName, $uidArray, $orderBy, type_foreign);
+    }
 
-	const type_local = 0;
-	const type_foreign = 1;
+    /**
+     * Gets the uids by
+     * looking up the MM relations of this record to the
+     * table name defined in the local field 'table_name'.
+     *
+     * @return array
+     */
+    public static function getUids(
+        $tableName,
+        $fieldName,
+        $type = type_local,
+        array $uidArray = [],
+        $orderBy = ''
+    ) {
+        $relatedRecords = [];
+        // Assemble where clause
 
-	/**
-		* The table name collections are stored to
-		*
-		* @var string
-		*/
-	static protected $storageTableName = 'sys_category';
+        // Add condition on tablenames fields
+        $where .= ' AND sys_category_record_mm.tablenames = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr(
+            $tableName,
+            'sys_category_record_mm'
+        );
+        // Add condition on fieldname field
+        $where .= ' AND sys_category_record_mm.fieldname = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr(
+            $fieldName,
+            'sys_category_record_mm'
+        );
 
-	/**
-		* Name of the categories-relation field (used in the MM_match_fields/fieldname property of the TCA)
-		*
-		* @var string
-		*/
-	static protected $relationFieldName = 'categories';
+        if (!empty($uidArray)) {
+            $uidArray = $GLOBALS['TYPO3_DB']->cleanIntArray($uidArray);
+            $inputTable = $tableName;
+            if ($type == type_foreign) {
+                $inputTable = static::$storageTableName;
+            }
 
-	/**
-	* Gets the uids by
-	* looking up the MM relations of this record to the
-	* table name defined in the local field 'table_name'.
-	*
-	* @return array
-	*/
-	static public function getForeignUids (
-		$tableName,
-		$fieldName,
-		array $uidArray = [],
-		$orderBy = ''
-	) {
-		return static::getUids($tableName, $fieldName, $uidArray, $orderBy, type_foreign);
-	}
+            // Add condition on uid field
+            $where .= ' AND ' . $inputTable . '.uid IN (' .
+                implode(',', $uidArray) .
+                ')';
+        }
 
-	/**
-	* Gets the uids by
-	* looking up the MM relations of this record to the
-	* table name defined in the local field 'table_name'.
-	*
-	* @return array
-	*/
-	static public function getUids (
-		$tableName,
-		$fieldName,
-		$type = type_local,
-		array $uidArray = [],
-		$orderBy = ''
-	) {
-		$relatedRecords = [];
-		// Assemble where clause
+        $outputTable = static::$storageTableName;
+        if ($type == type_foreign) {
+            $outputTable = $tableName;
+        }
 
-		// Add condition on tablenames fields
-		$where .= ' AND sys_category_record_mm.tablenames = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr(
-			$tableName,
-			'sys_category_record_mm'
-		);
-		// Add condition on fieldname field
-		$where .= ' AND sys_category_record_mm.fieldname = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr(
-			$fieldName,
-			'sys_category_record_mm'
-		);
+        $resource = $GLOBALS['TYPO3_DB']->exec_SELECT_mm_query(
+            'DISTINCT ' . $outputTable . '.uid',
+            static::$storageTableName,
+            'sys_category_record_mm',
+            $tableName,
+            $where,
+            '',
+            $orderBy
+        );
 
-		if (!empty($uidArray)) {
-			$uidArray = $GLOBALS['TYPO3_DB']->cleanIntArray($uidArray);
-			$inputTable = $tableName;
-			if ($type == type_foreign) {
-				$inputTable = static::$storageTableName;
-			}
+        if ($resource) {
+            while ($record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resource)) {
+                $relatedRecords[] = $record['uid'];
+            }
+            $GLOBALS['TYPO3_DB']->sql_free_result($resource);
+        }
 
-			// Add condition on uid field
-			$where .= ' AND ' . $inputTable . '.uid IN (' .
-				implode(',', $uidArray) .
-				')';
-		}
-
-		$outputTable = static::$storageTableName;
-		if ($type == type_foreign) {
-			$outputTable = $tableName;
-		}
-
-		$resource = $GLOBALS['TYPO3_DB']->exec_SELECT_mm_query(
-			'DISTINCT ' . $outputTable . '.uid',
-			static::$storageTableName,
-			'sys_category_record_mm',
-			$tableName,
-			$where,
-			'',
-			$orderBy
-		);
-
-		if ($resource) {
-			while ($record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resource)) {
-				$relatedRecords[] = $record['uid'];
-			}
-			$GLOBALS['TYPO3_DB']->sql_free_result($resource);
-		}
-
-		return $relatedRecords;
-	}
+        return $relatedRecords;
+    }
 }
-

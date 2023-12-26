@@ -2,7 +2,6 @@
 
 namespace JambageCom\Div2007\Utility;
 
-
 /***************************************************************
 *  Copyright notice
 *
@@ -30,19 +29,21 @@ namespace JambageCom\Div2007\Utility;
  * obsolete functions. These are here because it takes time for extensions to get rid of them.
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
  */
-
-class ObsoleteUtility {
-
+class ObsoleteUtility
+{
     /**
-    * Get External CObjects
-    * @param	object		tx_div2007_alpha_language_base object
-    * @param	string		Configuration Key
-    */
-    static public function getExternalCObject (
+     * Get External CObjects.
+     *
+     * @param	object		tx_div2007_alpha_language_base object
+     * @param	string		Configuration Key
+     */
+    public static function getExternalCObject(
         $pOb,
         $mConfKey
     ) {
@@ -62,19 +63,16 @@ class ObsoleteUtility {
             ) .
             '';
         }
+
         return $result;
     }
 
     /**
-    * Invokes a user process
-    *
-    * @param object $pObject: the name of the parent object
-    * @param array  $conf:    the base TypoScript setup
-    * @param array  $mConfKey: the configuration array of the user process
-    * @param array  $passVar: the array of variables to be passed to the user process
-    * @return array the updated array of passed variables
-    */
-    static public function userProcess (
+     * Invokes a user process.
+     *
+     * @return array the updated array of passed variables
+     */
+    public static function userProcess(
         $pObject,
         $conf,
         $mConfKey,
@@ -94,9 +92,7 @@ class ObsoleteUtility {
                 $passVar
             );
         }
+
         return $passVar;
     } // userProcess
-
 }
-
-

@@ -1,4 +1,5 @@
 <?php
+
 namespace JambageCom\Div2007\SessionHandler;
 
 /*
@@ -14,35 +15,32 @@ namespace JambageCom\Div2007\SessionHandler;
 * The TYPO3 project - inspiring people to share!
 */
 
-
 /**
-* TYPO3 session handling utility.
-*
-* @author Bernhard Kraft <kraftb@think-open.at>
-* @copyright 2018
-*/
-class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandlerInterface {
-
+ * TYPO3 session handling utility.
+ *
+ * @author Bernhard Kraft <kraftb@think-open.at>
+ * @copyright 2018
+ */
+class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandlerInterface
+{
     /**
-    * The session variable key. You must overwrite this class or use the setSessionKey method to make it working.
-    *
-    * @var string
-    */
+     * The session variable key. You must overwrite this class or use the setSessionKey method to make it working.
+     *
+     * @var string
+     */
     protected $sessionKey = self::class;
 
     /**
-    * An "fe_user" object instance. Required for session access.
-    *
-    * @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
-    */
-    protected $frontendUser = null;
+     * An "fe_user" object instance. Required for session access.
+     *
+     * @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
+     */
+    protected $frontendUser;
 
     /**
-    * Constructor for session handling class
-    *
-    * @return void
-    */
-    public function __construct ($setCookie = true)
+     * Constructor for session handling class.
+     */
+    public function __construct($setCookie = true)
     {
         if (basename($_SERVER['PHP_SELF']) !== 'phpunit') {
             if (
@@ -65,18 +63,15 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
         }
     }
 
-    public function allowCookie ()
+    public function allowCookie()
     {
         $this->frontendUser->dontSetCookie = false;
     }
 
     /**
-    * Set session data
-    *
-    * @param $data: The session data. It should by an array. Otherwise it will be converted into an array.
-    * @return void
-    */
-    public function setSessionData ($data)
+     * Set session data.
+     */
+    public function setSessionData($data)
     {
         if (
             empty($GLOBALS['TYPO3_CONF_VARS']['FE']['maxSessionDataSize']) ||
@@ -92,12 +87,11 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     }
 
     /**
-    * Get session data
-    *
-    * @param string $subKey: The subkey of the session key for the extension for which you read or write the session data.
-    * @return array data The session data
-    */
-    public function getSessionData ($subKey = '')
+     * Get session data.
+     *
+     * @return array data The session data
+     */
+    public function getSessionData($subKey = '')
     {
         $result = [];
         $sessionKey = $this->getSessionKey();
@@ -109,7 +103,7 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
             isset($data[$subKey])
         ) {
             $result = $data[$subKey];
-        } else if (
+        } elseif (
             $subKey == '' &&
             is_array($data)
         ) {
@@ -119,4 +113,3 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
         return $result;
     }
 }
-

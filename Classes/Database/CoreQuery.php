@@ -15,36 +15,29 @@ namespace JambageCom\Div2007\Database;
  * The TYPO3 project - inspiring people to share!
  */
 
-
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-
-class CoreQuery {
+class CoreQuery
+{
     /**
      * @var TypoScriptFrontendController
      */
-    static protected $typoScriptFrontendController = null;
+    protected static $typoScriptFrontendController;
 
-    public function __construct (TypoScriptFrontendController $typoScriptFrontendController = null)
+    public function __construct(?TypoScriptFrontendController $typoScriptFrontendController = null)
     {
         if (is_object($typoScriptFrontendController)) {
             static::setTypoScriptFrontendController($typoScriptFrontendController);
         }
     }
 
-
-    static public function setTypoScriptFrontendController (TypoScriptFrontendController $typoScriptFrontendController)
+    public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController)
     {
         static::$typoScriptFrontendController = $typoScriptFrontendController;
     }
 
-    /***********************************************
-     *
-     * Database functions, making of queries
-     *
-     ***********************************************/
+    // Database functions, making of queries
     /**
      * Returns an UPDATE/DELETE sql query which will "delete" the record.
      * If the $GLOBALS['TCA'] config for the table tells us to NOT "physically" delete the record but rather set the "deleted" field to "1" then an UPDATE query is returned doing just that. Otherwise it truely is a DELETE query.
@@ -52,10 +45,12 @@ class CoreQuery {
      * @param string $table The table name, should be in $GLOBALS['TCA']
      * @param int $uid The UID of the record from $table which we are going to delete
      * @param bool $doExec If set, the query is executed. IT'S HIGHLY RECOMMENDED TO USE THIS FLAG to execute the query directly!!!
-     * @return string The query, ready to execute unless $doExec was TRUE in which case the return value is FALSE.
+     *
+     * @return string the query, ready to execute unless $doExec was TRUE in which case the return value is FALSE
+     *
      * @see DBgetUpdate(), DBgetInsert(), user_feAdmin
      */
-    static public function DBgetDelete ($table, $uid, $doExec = false)
+    public static function DBgetDelete($table, $uid, $doExec = false)
     {
         $uid = (int)$uid;
         if (!$uid) {
@@ -88,17 +83,19 @@ class CoreQuery {
      *
      * @param string $table The table name, should be in $GLOBALS['TCA']
      * @param int $uid The UID of the record from $table which we are going to update
-     * @param array $dataArray The data array where key/value pairs are fieldnames/values for the record to update.
+     * @param array $dataArray the data array where key/value pairs are fieldnames/values for the record to update
      * @param string $fieldList Comma list of fieldnames which are allowed to be updated. Only values from the data record for fields in this list will be updated!!
      * @param bool $doExec If set, the query is executed. IT'S HIGHLY RECOMMENDED TO USE THIS FLAG to execute the query directly!!!
-     * @return string The query, ready to execute unless $doExec was TRUE in which case the return value is FALSE.
+     *
+     * @return string the query, ready to execute unless $doExec was TRUE in which case the return value is FALSE
+     *
      * @see DBgetInsert(), DBgetDelete(), user_feAdmin
      */
-    static public function DBgetUpdate ($table, $uid, array $dataArray, $fieldList, $doExec = false)
+    public static function DBgetUpdate($table, $uid, array $dataArray, $fieldList, $doExec = false)
     {
         // uid can never be set
         unset($dataArray['uid']);
-        $uid = (int) $uid;
+        $uid = (int)$uid;
         if ($uid) {
             $fieldList = implode(',', GeneralUtility::trimExplode(',', $fieldList, true));
             $updateFields = [];
@@ -114,9 +111,11 @@ class CoreQuery {
                 if ($doExec) {
                     return static::getDatabaseConnection()->exec_UPDATEquery($table, 'uid=' . $uid, $updateFields);
                 }
+
                 return static::getDatabaseConnection()->UPDATEquery($table, 'uid=' . $uid, $updateFields);
             }
         }
+
         return '';
     }
 
@@ -131,10 +130,12 @@ class CoreQuery {
      * @param array $dataArray The data array where key/value pairs are fieldnames/values for the record to insert
      * @param string $fieldList Comma list of fieldnames which are allowed to be inserted. Only values from the data record for fields in this list will be inserted!!
      * @param bool $doExec If set, the query is executed. IT'S HIGHLY RECOMMENDED TO USE THIS FLAG to execute the query directly!!!
-     * @return string The query, ready to execute unless $doExec was TRUE in which case the return value is FALSE.
+     *
+     * @return string the query, ready to execute unless $doExec was TRUE in which case the return value is FALSE
+     *
      * @see DBgetUpdate(), DBgetDelete(), user_feAdmin
      */
-    static public function DBgetInsert ($table, $pid, array $dataArray, $fieldList, $doExec = false)
+    public static function DBgetInsert($table, $pid, array $dataArray, $fieldList, $doExec = false)
     {
         $extraList = 'pid';
         if (isset($GLOBALS['TCA'][$table]['ctrl']['tstamp'])) {
@@ -154,12 +155,12 @@ class CoreQuery {
         }
         if (isset($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'])) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'];
-            $dataArray[$field] = (int) static::getTypoScriptFrontendController()->fe_user->user['uid'];
+            $dataArray[$field] = (int)static::getTypoScriptFrontendController()->fe_user->user['uid'];
             $extraList .= ',' . $field;
         }
         if (isset($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'])) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'];
-            list($dataArray[$field]) = explode(',', static::getTypoScriptFrontendController()->fe_user->user['usergroup']);
+            [$dataArray[$field]] = explode(',', static::getTypoScriptFrontendController()->fe_user->user['usergroup']);
             $dataArray[$field] = (int)$dataArray[$field];
             $extraList .= ',' . $field;
         }
@@ -185,17 +186,19 @@ class CoreQuery {
     }
 
     /**
-     * Checks if a frontend user is allowed to edit a certain record
+     * Checks if a frontend user is allowed to edit a certain record.
      *
      * @param string $table The table name, found in $GLOBALS['TCA']
      * @param array $row The record data array for the record in question
      * @param array $feUserRow The array of the fe_user which is evaluated, typ. $GLOBALS['TSFE']->fe_user->user
      * @param string $allowedGroups Commalist of the only fe_groups uids which may edit the record. If not set, then the usergroup field of the fe_user is used.
-     * @param bool|int $feEditSelf TRUE, if the fe_user may edit his own fe_user record.
+     * @param bool|int $feEditSelf TRUE, if the fe_user may edit his own fe_user record
+     *
      * @return bool
+     *
      * @see user_feAdmin
      */
-    static public function DBmayFEUserEdit ($table, $row, $feUserRow, $allowedGroups = '', $feEditSelf = 0)
+    public static function DBmayFEUserEdit($table, $row, $feUserRow, $allowedGroups = '', $feEditSelf = 0)
     {
         if ($allowedGroups) {
             $groupList = implode(
@@ -232,6 +235,7 @@ class CoreQuery {
                 }
             }
         }
+
         return $ok;
     }
 
@@ -243,11 +247,13 @@ class CoreQuery {
      * @param string $table The table name
      * @param array $feUserRow The array of the fe_user which is evaluated, typ. $GLOBALS['TSFE']->fe_user->user
      * @param string $allowedGroups Commalist of the only fe_groups uids which may edit the record. If not set, then the usergroup field of the fe_user is used.
-     * @param bool|int $feEditSelf TRUE, if the fe_user may edit his own fe_user record.
+     * @param bool|int $feEditSelf TRUE, if the fe_user may edit his own fe_user record
+     *
      * @return string The where clause part. ALWAYS returns a string. If no access at all, then " AND 1=0
+     *
      * @see DBmayFEUserEdit(), user_feAdmin::displayEditScreen()
      */
-    static public function DBmayFEUserEditSelect ($table, $feUserRow, $allowedGroups = '', $feEditSelf = 0)
+    public static function DBmayFEUserEditSelect($table, $feUserRow, $allowedGroups = '', $feEditSelf = 0)
     {
         // Returns where-definition that selects user-editable records.
         if ($allowedGroups) {
@@ -286,25 +292,25 @@ class CoreQuery {
                 $whereDef .= ' AND ' . $GLOBALS['TCA'][$table]['ctrl']['fe_admin_lock'] . '=0';
             }
         }
+
         return $whereDef;
     }
 
     /**
-     * Returns the database connection
+     * Returns the database connection.
      *
      * @return \TYPO3\CMS\Core\Database\DatabaseConnection
      */
-    static protected function getDatabaseConnection ()
+    protected static function getDatabaseConnection()
     {
         return $GLOBALS['TYPO3_DB'];
     }
 
     /**
-     * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     * @return TypoScriptFrontendController
      */
-    static protected function getTypoScriptFrontendController ()
+    protected static function getTypoScriptFrontendController()
     {
         return static::$typoScriptFrontendController ?: $GLOBALS['TSFE'];
     }
 }
-

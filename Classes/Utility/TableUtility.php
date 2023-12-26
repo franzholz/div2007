@@ -2,7 +2,6 @@
 
 namespace JambageCom\Div2007\Utility;
 
-
 /***************************************************************
 *  Copyright notice
 *
@@ -27,10 +26,12 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 
 /**
- * table functions. It requires TYPO3 6.2
+ * table functions. It requires TYPO3 6.2.
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
  */
@@ -39,17 +40,14 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
-use JambageCom\Div2007\Utility\CompatibilityUtility;
-
-
-class TableUtility {
-
+class TableUtility
+{
     /**
-    * Fields that are considered as system.
-    *
-    * @var array
-    */
-    static protected $systemFields = [
+     * Fields that are considered as system.
+     *
+     * @var array
+     */
+    protected static $systemFields = [
         'uid',
         'pid',
         'tstamp',
@@ -71,18 +69,22 @@ class TableUtility {
     ];
 
     /**
-    * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
-    * Usage: 3
-    *
-    * @param	array		Configuration array for the field, taken from $TCA
-    * @param	string		Field name
-    * @param	array		TSconfig array from which to get further configuration settings for the field name
-    * @param	string		Prefix string for the key "*foreign_table_where" from $fieldValue array
-    * @return	string		resulting where string with accomplished marker substitution
-    * @internal
-    * @see t3lib_transferData::renderRecord(), t3lib_TCEforms::foreignTable()
-    */
-    static public function foreign_table_where_query ($fieldValue, $field = '', $TSconfig = [], $prefix = '') {
+     * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
+     * Usage: 3.
+     *
+     * @param	array		Configuration array for the field, taken from $TCA
+     * @param	string		Field name
+     * @param	array		TSconfig array from which to get further configuration settings for the field name
+     * @param	string		Prefix string for the key "*foreign_table_where" from $fieldValue array
+     *
+     * @return	string		resulting where string with accomplished marker substitution
+     *
+     * @internal
+     *
+     * @see t3lib_transferData::renderRecord(), t3lib_TCEforms::foreignTable()
+     */
+    public static function foreign_table_where_query($fieldValue, $field = '', $TSconfig = [], $prefix = '')
+    {
         $foreign_table = $fieldValue['config'][$prefix . 'foreign_table'];
         $rootLevel = $GLOBALS['TCA'][$foreign_table]['ctrl']['rootLevel'];
 
@@ -90,7 +92,7 @@ class TableUtility {
 
         if (strstr($fTWHERE, '###REC_FIELD_')) {
             $fTWHERE_parts = explode('###REC_FIELD_', $fTWHERE);
-            foreach($fTWHERE_parts as $kk => $vv) {
+            foreach ($fTWHERE_parts as $kk => $vv) {
                 if ($kk) {
                     $fTWHERE_subpart = explode('###', $vv, 2);
                     $fTWHERE_parts[$kk] = $TSconfig['_THIS_ROW'][$fTWHERE_subpart[0]] . $fTWHERE_subpart[1];
@@ -116,15 +118,11 @@ class TableUtility {
             $fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', $currentPid, $fTWHERE);
             $fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', '', $fTWHERE);
         }
+
         return $fTWHERE;
     }
 
-
-    /*******************************************
-     *
-     * SQL-related, selecting records, searching
-     *
-     *******************************************/
+    // SQL-related, selecting records, searching
     /**
      * Returns the WHERE clause " AND NOT [tablename].[deleted-field]" if a deleted-field
      * is configured in $GLOBALS['TCA'] for the tablename, $table
@@ -137,17 +135,21 @@ class TableUtility {
      *
      * @param string $table Table name present in $GLOBALS['TCA']
      * @param string $tableAlias Table alias if any
+     *
      * @return string WHERE clause for filtering out deleted records, eg " AND tablename.deleted=0
+     *
      * @deprecated since TYPO3 v9, will be removed in TYPO3 v10.0, the DeletedRestriction functionality should be used instead.
      */
-    static public function deleteClause($table, $tableAlias = '')
+    public static function deleteClause($table, $tableAlias = '')
     {
         if (empty($GLOBALS['TCA'][$table]['ctrl']['delete'])) {
             return '';
         }
         $expressionBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable($table)
-            ->expr();
+            ->expr()
+        ;
+
         return ' AND ' . $expressionBuilder->eq(
             ($tableAlias ?: $table) . '.' . $GLOBALS['TCA'][$table]['ctrl']['delete'],
             0
@@ -155,14 +157,17 @@ class TableUtility {
     }
 
     /**
-    * Creating where-clause for checking group access to elements in enableFields function
-    *
-    * @param	string		Field with group list
-    * @param	string		Table name
-    * @return	string		AND sql-clause
-    * @see enableFields()
-    */
-    static public function getMultipleGroupsWhereClause ($field, $table) {
+     * Creating where-clause for checking group access to elements in enableFields function.
+     *
+     * @param	string		Field with group list
+     * @param	string		Table name
+     *
+     * @return	string		AND sql-clause
+     *
+     * @see enableFields()
+     */
+    public static function getMultipleGroupsWhereClause($field, $table)
+    {
         $memberGroups = GeneralUtility::intExplode(',', $GLOBALS['TSFE']->gr_list);
         $orChecks = [];
         $orChecks[] = $field . '=\'\''; // If the field is empty, then OK
@@ -177,17 +182,20 @@ class TableUtility {
     }
 
     /**
-    * Returns a part of a WHERE clause which will filter out records with start/end times or hidden/fe_groups fields set to values that should de-select them according to the current time, preview settings or user login. Definitely a frontend function.
-    * Is using the $GLOBALS['TCA'] arrays "ctrl" part where the key "enablefields" determines for each table which of these features applies to that table.
-    *
-    * @param	string		Table name found in the $GLOBALS['TCA'] array
-    * @param	integer		If $show_hidden is set (0/1), any hidden-fields in records are ignored. NOTICE: If you call this function, consider what to do with the show_hidden parameter. Maybe it should be set? See TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer->enableFields where it's implemented correctly.
-    * @param	array		Array you can pass where keys can be "disabled", "starttime", "endtime", "fe_group" (keys from "enablefields" in TCA) and if set they will make sure that part of the clause is not added. Thus disables the specific part of the clause. For previewing etc.
-    * @param	boolean		If set, enableFields will be applied regardless of any versioning preview settings which might otherwise disable enableFields
-    * @return	string		The clause starting like " AND ...=... AND ...=..."
-    * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::enableFields(), deleteClause()
-    */
-    static public function enableFields ($table, $show_hidden = -1, $ignore_array = [], $noVersionPreview = true) {
+     * Returns a part of a WHERE clause which will filter out records with start/end times or hidden/fe_groups fields set to values that should de-select them according to the current time, preview settings or user login. Definitely a frontend function.
+     * Is using the $GLOBALS['TCA'] arrays "ctrl" part where the key "enablefields" determines for each table which of these features applies to that table.
+     *
+     * @param	string		Table name found in the $GLOBALS['TCA'] array
+     * @param	int		If $show_hidden is set (0/1), any hidden-fields in records are ignored. NOTICE: If you call this function, consider what to do with the show_hidden parameter. Maybe it should be set? See TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer->enableFields where it's implemented correctly.
+     * @param	array		Array you can pass where keys can be "disabled", "starttime", "endtime", "fe_group" (keys from "enablefields" in TCA) and if set they will make sure that part of the clause is not added. Thus disables the specific part of the clause. For previewing etc.
+     * @param	bool		If set, enableFields will be applied regardless of any versioning preview settings which might otherwise disable enableFields
+     *
+     * @return	string		The clause starting like " AND ...=... AND ...=..."
+     *
+     * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::enableFields(), deleteClause()
+     */
+    public static function enableFields($table, $show_hidden = -1, $ignore_array = [], $noVersionPreview = true)
+    {
         if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
             $show_hidden = $table == 'pages' ? CompatibilityUtility::includeHiddenPages() : CompatibilityUtility::includeHiddenContent();
         }
@@ -198,18 +206,17 @@ class TableUtility {
         $ctrl = $GLOBALS['TCA'][$table]['ctrl'];
         $query = '';
         if (is_array($ctrl)) {
-
-                // Delete field check:
+            // Delete field check:
             if (isset($ctrl['delete'])) {
                 $query .= ' AND ' . $table . '.' . $ctrl['delete'] . '=0';
             }
 
-                // Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
+            // Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
             if (isset($ctrl['versioningWS']) && $noVersionPreview) {
                 $query .= ' AND ' . $table . '.t3ver_state<=0 AND ' . $table . '.pid<>-1'; // Shadow state for new items MUST be ignored!
             }
 
-                // Enable fields:
+            // Enable fields:
             if (isset($ctrl['enablecolumns']) && is_array($ctrl['enablecolumns'])) {
                 if (empty($ctrl['versioningWS']) || $noVersionPreview) { // In case of versioning-preview, enableFields are ignored (checked in versionOL())
                     if (
@@ -242,8 +249,8 @@ class TableUtility {
                         $query .= static::getMultipleGroupsWhereClause($field, $table);
                     }
 
-                        // Call hook functions for additional enableColumns
-                        // It is used by the extension ingmar_accessctrl which enables assigning more than one usergroup to content and page records
+                    // Call hook functions for additional enableColumns
+                    // It is used by the extension ingmar_accessctrl which enables assigning more than one usergroup to content and page records
                     if (
                         isset($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns']) &&
                         is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'])
@@ -252,7 +259,7 @@ class TableUtility {
                             'table' => $table,
                             'show_hidden' => $show_hidden,
                             'ignore_array' => $ignore_array,
-                            'ctrl' => $ctrl
+                            'ctrl' => $ctrl,
                         ];
                         foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_page.php']['addEnableColumns'] as $_funcRef) {
                             $query .= GeneralUtility::callUserFunction($_funcRef, $_params, $tmp = 'TableUtility');
@@ -272,17 +279,21 @@ class TableUtility {
         return $query;
     }
 
-
     /**
-    * Removes Page UID numbers from the input array which are not available due to enableFields() or the list of bad doktype numbers ($this->checkPid_badDoktypeList)
-    *
-    * @param array $listArr Array of Page UID numbers for select and for which pages with enablefields and bad doktypes should be removed.
-    * @return array Returns the array of remaining page UID numbers
-    * @access private
-    * @see getWhere(),checkPid()
-    * @todo Define visibility
-    */
-    static public function checkPidArray ($listArr) {
+     * Removes Page UID numbers from the input array which are not available due to enableFields() or the list of bad doktype numbers ($this->checkPid_badDoktypeList).
+     *
+     * @param array $listArr array of Page UID numbers for select and for which pages with enablefields and bad doktypes should be removed
+     *
+     * @return array Returns the array of remaining page UID numbers
+     *
+     * @access private
+     *
+     * @see getWhere(),checkPid()
+     *
+     * @todo Define visibility
+     */
+    public static function checkPidArray($listArr)
+    {
         $outArr = [];
         if (is_array($listArr) && count($listArr)) {
             $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . static::enableFields('pages') . ' AND doktype NOT IN (' . $this->checkPid_badDoktypeList . ')');
@@ -295,24 +306,25 @@ class TableUtility {
             }
             $GLOBALS['TYPO3_DB']->sql_free_result($res);
         }
+
         return $outArr;
     }
 
-
     /**
-    * @return array
-    */
-    static public function getSystemFields () {
+     * @return array
+     */
+    public static function getSystemFields()
+    {
         return static::$systemFields;
     }
 
-
     /**
-    * Returns an array containing the regular field names.
-    *
-    * @return array
-    */
-    static public function getFields ($table, $prefix = false) {
+     * Returns an array containing the regular field names.
+     *
+     * @return array
+     */
+    public static function getFields($table, $prefix = false)
+    {
         $result = false;
 
         if (
@@ -334,25 +346,25 @@ class TableUtility {
         return $result;
     }
 
-
     /**
-    * Returns informations about the table and foreign table
-    * This is used by various tables.
-    *
-    * @param	string		name of the table
-    * @param	string		field of the table
-    *
-    * @return	array		infos about the table and foreign table:
-                    table         ... name of the table
-                    foreign_table ... name of the foreign table
-                    foreign_table_field ... name of the field which contains the table name of the first table
-                    mmtable       ... name of the mm table
-                    foreign_field ... name of the field in the mm table which joins with
-                                    the foreign table
-    * @access	public
-    *
-    */
-    static public function getForeignTableInfo ($tablename, $fieldname) {
+     * Returns informations about the table and foreign table
+     * This is used by various tables.
+     *
+     * @param	string		name of the table
+     * @param	string		field of the table
+     *
+     * @return	array		infos about the table and foreign table:
+     * table         ... name of the table
+     * foreign_table ... name of the foreign table
+     * foreign_table_field ... name of the field which contains the table name of the first table
+     * mmtable       ... name of the mm table
+     * foreign_field ... name of the field in the mm table which joins with
+     * the foreign table
+     *
+     * @access	public
+     */
+    public static function getForeignTableInfo($tablename, $fieldname)
+    {
         $result = [];
         if (
             $tablename != '' &&
@@ -378,7 +390,7 @@ class TableUtility {
                 $localFieldname = $tableConf['foreign_field'];
                 $foreignFieldname = $tableConf['foreign_selector'];
                 $foreignTableFieldname = $tableConf['foreign_table_field'];
-            } else if (
+            } elseif (
                 isset($tableConf['MM'])
             ) {
                 $mmTablename = $tableConf['MM'];
@@ -392,9 +404,9 @@ class TableUtility {
 
             if (
                 $type == 'inline' &&
-                is_array($mmTableConf)  && 
+                is_array($mmTableConf) &&
                 !isset($tableConf['MM'] // This method is wrong for a mm table.
-            )) {
+                )) {
                 $foreignTable = $mmTableConf['foreign_table'];
             } else {
                 $foreignTable = $tableConf['foreign_table'];
@@ -415,12 +427,14 @@ class TableUtility {
     }
 
     /**
-    * Determine the recursive page ids including the given root page id
-    * @param integer $uid  root page id
-    * @return array
-    */
-    static public function getAllSubPages ($uid) {
-
+     * Determine the recursive page ids including the given root page id.
+     *
+     * @param int $uid  root page id
+     *
+     * @return array
+     */
+    public static function getAllSubPages($uid)
+    {
         $uidArray = [];
         $result = [];
 
@@ -449,7 +463,7 @@ class TableUtility {
             }
         }
         $result = array_unique($result);
+
         return $result;
     }
 }
-
