@@ -14,7 +14,7 @@ required for Ajax calls since TYPO3 9.5. With this you can use the
 method FrontendUtility::getPageId() to get the current page id out of
 the speaking url of the routing enhancer.
 
-All class.tx_div2007_xxx.php files have been removed since version 1.18. 
+All class.tx_div2007_xxx.php files have been removed in versions 2.x. 
 Most code of the former extensions div and lib is not present any more.
 This means that the MVC design pattern of it has been given up.
 Parts of the former methods have been integrated into the namespace classes.
