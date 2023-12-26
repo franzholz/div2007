@@ -2,7 +2,6 @@
 
 namespace JambageCom\Div2007\Utility;
 
-
 /***************************************************************
 *  Copyright notice
 *
@@ -30,14 +29,15 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 
 /**
- * Collection of static functions for flexforms
- *
+ * Collection of static functions for flexforms.
  *
  * @package    TYPO3
  * @subpackage div2007
+ *
  * @author     Fabien Udriot <fudriot@omic.ch>
  * @copyright  2006-2007 Fabien Udriot
  * @license    http://www.opensource.org/licenses/lgpl-license.php LGPL
+ *
  * @since      0.1
  */
 
@@ -45,69 +45,68 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
- * Collection of static functions for flexforms
+ * Collection of static functions for flexforms.
  *
  * This class contains diverse static functions to support flexform handling.
  *
  * @package    TYPO3
  * @subpackage div2007
+ *
  * @author     Fabien Udriot <fudriot@omic.ch>
  */
-class FlexformUtility {
+class FlexformUtility
+{
+    /**
+     * The current loaded flexform.
+     *
+     * @var array
+     */
+    protected static $flexForm = []; // the current loaded flexform
 
     /**
-    * The current loaded flexform
-    *
-    * @var array
-    */
-    static protected $flexForm = []; //the current loaded flexform
+     * A set of flexforms that are stored in case they are going to be used.
+     *
+     * @var array
+     */
+    protected static $flexForms = [];
 
     /**
-    * A set of flexforms that are stored in case they are going to be used.
-    *
-    * @var array
-    */
-    static protected $flexForms = [];
-
-    /**
-    * Load a flexform into memory
-    *
-    * @param   mixed       $flexForm can be an xml string or an array or a key array.
-    * @param   string      $flexFormName (optinal) give a name to the flexform in order to be stored for further use.
-    * @return  void
-    */
-    static public function load (
+     * Load a flexform into memory.
+     *
+     * @param   mixed       $flexForm can be an xml string or an array or a key array
+     * @param   string      $flexFormName (optinal) give a name to the flexform in order to be stored for further use
+     */
+    public static function load(
         $flexForm,
         $flexFormName = ''
     ) {
-        //handle the case $flexForm is a string. It can be a xml string or key array
-        if(is_string($flexForm)) {
-            //test if $flexForm already exists in the memory. In this case load the flexform according to its key
-            if(array_key_exists($flexForm, static::$flexForms)) {
+        // handle the case $flexForm is a string. It can be a xml string or key array
+        if (is_string($flexForm)) {
+            // test if $flexForm already exists in the memory. In this case load the flexform according to its key
+            if (array_key_exists($flexForm, static::$flexForms)) {
                 static::$flexForm = static::$flexForms[$flexForm];
             } else {
-                //if false, it means it is *still* a string to convert in an array
+                // if false, it means it is *still* a string to convert in an array
                 static::$flexForm = GeneralUtility::xml2array($flexForm);
             }
         } else {
-            //else it is right away an array, load it in memory
+            // else it is right away an array, load it in memory
             static::$flexForm = $flexForm;
         }
 
-        //true when the flexform is going to be stored for further use
-        if($flexFormName != '') {
+        // true when the flexform is going to be stored for further use
+        if ($flexFormName != '') {
             static::setFlexForm($flexFormName, static::$flexForm);
         }
     }
 
     /**
-    * Add a flexform in memory
-    *
-    * @param   string     the flexForm name
-    * @param   array      the flexForm
-    * @return  void
-    */
-    static public function setFlexForm (
+     * Add a flexform in memory.
+     *
+     * @param   string     the flexForm name
+     * @param   array      the flexForm
+     */
+    public static function setFlexForm(
         $flexFormName,
         $flexForm
     ) {
@@ -115,40 +114,38 @@ class FlexformUtility {
     }
 
     /**
-    * Get a flexform from memory
-    *
-    * @param   string     the flexForm name
-    * @return  array      the flexform
-    */
-    static public function getFlexForm ($flexFormName) {
+     * Get a flexform from memory.
+     *
+     * @param   string     the flexForm name
+     *
+     * @return  array      the flexform
+     */
+    public static function getFlexForm($flexFormName)
+    {
         $result = false;
-        if(array_key_exists($flexFormName, static::$flexForms)) {
+        if (array_key_exists($flexFormName, static::$flexForms)) {
             $result = static::$flexForms[$flexFormName];
         }
+
         return $result;
     }
 
     /**
-    * Return value from somewhere inside the loaded flexForm structure
-    *
-    * @param   mixed      $flexForm, (optional) a flexForm array or a key array that contains a flexform
-    * @param   string     $fieldName, Field name to extract. Can be given like "test/el/2/test/el/field_templateObject" where each part will dig a level deeper in the FlexForm data.
-    * @param   string     $sheet Sheet pointer, eg. "sDEF"
-    * @param   string     $lang Language pointer, eg. "lDEF"
-    * @param   string     $value Value pointer, eg. "vDEF"
-    * @return  string      The content.
-    */
-    static public function get () {
-
-        //true when the first argument is a flexForm or a reference to flexForm
-        if(
+     * Return value from somewhere inside the loaded flexForm structure.
+     *
+     * @return  string      the content
+     */
+    public static function get()
+    {
+        // true when the first argument is a flexForm or a reference to flexForm
+        if (
             is_array(func_get_arg(0)) ||
             array_key_exists(
                 func_get_arg(0),
                 static::$flexForms
             )
         ) {
-            //case 1, $args 1 is an array...     case 2, $args 1 is a key array that contains a flexform
+            // case 1, $args 1 is an array...     case 2, $args 1 is a key array that contains a flexform
             is_array(func_get_arg(0)) ? $_flexForm = func_get_arg(0) : $_flexForm = static::getFlexForm(func_get_arg(0));
             $index = 1;
         } else {
@@ -177,31 +174,33 @@ class FlexformUtility {
                     $value
                 );
         }
+
         return $result;
     }
 
     /**
-    * Returns part of $sheetArray pointed to by the keys in $fieldNameArray
-    *
-    * @param   array      Multidimensiona array, typically FlexForm contents
-    * @param   array      Array where each value points to a key in the FlexForms content - the input array will have the value returned pointed to by these keys. All integer keys will not take their integer counterparts, but rather traverse the current position in the array an return element number X (whether this is right behavior is not settled yet...)
-    * @param   string     Value for outermost key, typ. "vDEF" depending on language.
-    * @return  string     The value, typ. string. private
-    */
-    static public function _getFFValueFromSheetArray (
+     * Returns part of $sheetArray pointed to by the keys in $fieldNameArray.
+     *
+     * @param   array      Multidimensiona array, typically FlexForm contents
+     * @param   array      Array where each value points to a key in the FlexForms content - the input array will have the value returned pointed to by these keys. All integer keys will not take their integer counterparts, but rather traverse the current position in the array an return element number X (whether this is right behavior is not settled yet...)
+     * @param   string     Value for outermost key, typ. "vDEF" depending on language.
+     *
+     * @return  string     The value, typ. string. private
+     */
+    public static function _getFFValueFromSheetArray(
         $sheetArray,
         $fieldNameArr,
         $value
     ) {
         $result = '';
         $tempArr = $sheetArray;
-        foreach($fieldNameArr as $k => $v) {
+        foreach ($fieldNameArr as $k => $v) {
             if (
                 MathUtility::canBeInterpretedAsInteger($v)
             ) {
                 if (is_array($tempArr)) {
                     $c = 0;
-                    foreach($tempArr as $values) {
+                    foreach ($tempArr as $values) {
                         if ($c == $v) {
                             $tempArr = $values;
                             break 2;
@@ -209,21 +208,21 @@ class FlexformUtility {
                         $c++;
                     }
                 }
-            } else if (
-                is_array($tempArr) && 
+            } elseif (
+                is_array($tempArr) &&
                 isset($tempArr[$v])
             ) {
                 $tempArr = $tempArr[$v];
             }
         }
-        
+
         if (
-            is_array($tempArr) && 
+            is_array($tempArr) &&
             isset($tempArr[$value])
         ) {
             $result = $tempArr[$value];
         }
+
         return $result;
     }
 }
-

@@ -20,24 +20,23 @@ namespace JambageCom\Div2007\Utility;
  * TYPO3 system functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
 
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use JambageCom\Div2007\Utility\TableUtility;
-
-
-class SystemUtility {
+class SystemUtility
+{
     /**
      * @return string
      */
-    static public function getRecursivePids ($storagePid, $recursionDepth, $whereClause = '') {
+    public static function getRecursivePids($storagePid, $recursionDepth, $whereClause = '')
+    {
         if ($recursionDepth <= 0) {
             return $storagePid;
         }
@@ -62,23 +61,19 @@ class SystemUtility {
 
         return $result;
     }
-    
+
     /**
-    * Invokes a user process
-    *
-    * @param object $pObject: the name of the parent object
-    * @param array  $conf:    the base TypoScript setup
-    * @param array  $mConfKey: the configuration array of the user process
-    * @param array  $passVar: the array of variables to be passed to the user process
-    * @return array the updated array of passed variables
-    */
-    static public function userProcess (
+     * Invokes a user process.
+     *
+     * @return array the updated array of passed variables
+     */
+    public static function userProcess(
         $pObject,
         $conf,
         $mConfKey,
         $passVar
     ) {
-        return \JambageCom\Div2007\Utility\ObsoleteUtility::userProcess(
+        return ObsoleteUtility::userProcess(
             $pObject,
             $conf,
             $mConfKey,
@@ -87,11 +82,11 @@ class SystemUtility {
     }
 
     /**
-    * Fetches the FE user groups (fe_groups) of the logged in FE user
-    *
-    * @return array of the FE groups
-    */
-    static public function fetchFeGroups ()
+     * Fetches the FE user groups (fe_groups) of the logged in FE user.
+     *
+     * @return array of the FE groups
+     */
+    public static function fetchFeGroups()
     {
         $result = [];
 
@@ -100,17 +95,18 @@ class SystemUtility {
             isset($GLOBALS['TSFE']->fe_user->user) &&
             isset($GLOBALS['TSFE']->fe_user->user['usergroup'])
         ) {
-           $result = explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']); 
+            $result = explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
         }
+
         return $result;
     }
 
     /**
-    * Fetches the FE user groups (fe_groups) of the logged in FE user as an array of record
-    *
-    * @return array of the records of all FE groups
-    */
-    static public function readFeGroupsRecords ()
+     * Fetches the FE user groups (fe_groups) of the logged in FE user as an array of record.
+     *
+     * @return array of the records of all FE groups
+     */
+    public static function readFeGroupsRecords()
     {
         $result = false;
         $feGroups = static::fetchFeGroups();
@@ -124,42 +120,44 @@ class SystemUtility {
                 $where_clause
             );
         }
+
         return $result;
     }
 
     /**
-    * Adds the time zone to the given unix time parameter
-    *
-    * @param string $time: incoming and outgoing UNIX time
-    * @return array of the records of all FE groups
-    */
-    static public function addTimeZone (&$time) {
+     * Adds the time zone to the given unix time parameter.
+     *
+     * @return array of the records of all FE groups
+     */
+    public static function addTimeZone(&$time)
+    {
         if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['serverTimeZone'])) {
             $time += ($GLOBALS['TYPO3_CONF_VARS']['SYS']['serverTimeZone'] * 3600);
         }
     }
 
     /**
-    * Reads the current time and considers the time zone
-    *
-    * @return array of the records of all FE groups
-    */
-    static public function createTime ()
+     * Reads the current time and considers the time zone.
+     *
+     * @return array of the records of all FE groups
+     */
+    public static function createTime()
     {
         $result = time();
         static::addTimeZone($result);
+
         return $result;
     }
 
     /**
-    * Returns a class-name prefixed with $this->prefixId and with all underscores substituted to dashes (-)
-    * this is an initial state, not yet finished! Therefore the debug lines have been left.
-    *
-    * @param	string		$str Input 
-    * @param	string		$prefixId
-    * @return	string		The combined class name (with the correct prefix)
-    */
-    static public function unserialize (
+     * Returns a class-name prefixed with $this->prefixId and with all underscores substituted to dashes (-)
+     * this is an initial state, not yet finished! Therefore the debug lines have been left.
+     *
+     * @param	string		$str Input
+     *
+     * @return	string		The combined class name (with the correct prefix)
+     */
+    public static function unserialize(
         $str,
         $errorCheck = true
     ) {
@@ -200,7 +198,7 @@ class SystemUtility {
                             } else {
                                 $errorOffset = $i;
                             }
-                        break;
+                            break;
                         case 's':
                             if (isset($var)) {
                                 if (substr($str, $i, 1) == '"') {
@@ -210,8 +208,7 @@ class SystemUtility {
                                     if (
                                         $fixPos !== false &&
                                         in_array(substr($param2, $fixPos + 2, 1), $codeArray)
-                                    )
-                                    {
+                                    ) {
                                         $i += $fixPos; // fix wrong string length if it is really shorter now
                                         $param2 = substr($param2, 0, $fixPos);
                                     } else {
@@ -223,13 +220,13 @@ class SystemUtility {
                                         substr($str, $i + 1, 1) == ';'
                                     ) {
                                         $i += 2;
-                                        if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k'] == '' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'])	{
+                                        if ($controlArray[$controlIndex] == 'a' && $controlData[$controlIndex]['k'] == '' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param']) {
                                             $controlData[$controlIndex]['k'] = $param2;
                                             continue 2;
                                         }
                                     }
 
-                                    if ($controlArray[$controlIndex] == 'a' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'] && isset($controlData[$controlIndex]['k']))	{
+                                    if ($controlArray[$controlIndex] == 'a' && $controlCount[$controlIndex] < $controlData[$controlIndex]['param'] && isset($controlData[$controlIndex]['k'])) {
                                         $controlCount[$controlIndex]++;
                                         $var[$controlData[$controlIndex]['k']] = $param2;
                                         $controlData[$controlIndex]['k'] = '';
@@ -239,10 +236,10 @@ class SystemUtility {
                                 $var = '';
                             }
 
-                        break;
+                            break;
                         default:
                             $errorOffset = $i;
-                        break;
+                            break;
                     }
                 } else {
                     $errorOffset = $i;
@@ -251,35 +248,38 @@ class SystemUtility {
                 $errorOffset = $i;
             }
             if ($errorOffset >= 0) {
-                    if ($errorCheck) {
-                        trigger_error('unserialize_fh002(): Error at offset ' . $errorOffset . ' of ' . $len . ' bytes \'' . substr($str, $errorOffset, 12) . '\'', E_USER_NOTICE);
-                        $result = false;
-                    }
+                if ($errorCheck) {
+                    trigger_error('unserialize_fh002(): Error at offset ' . $errorOffset . ' of ' . $len . ' bytes \'' . substr($str, $errorOffset, 12) . '\'', E_USER_NOTICE);
+                    $result = false;
+                }
                 break;
             }
         }
         if (isset($var) && (!$errorCheck || $errorOffset == 0)) {
             $result = $var;
         }
+
         return $result;
     }
 
     /**
-    * This is will calculate your setup as a PHP function
-    * This function is called in your stdWrap preUserFunc function.
-    * 		preUserFunc = \JambageCom\Div2007\UtilitySystemUtility->phpFunc
-    *		preUserFunc {
-    *			php = round($value,12);
-    *		}
-    * The $value in the PHP string will be replaced by your value and the function
-    * will be evaluated.
-    *
-    * @param	string		value
-    * @param	array		the configuration. only the 'php' part is used.
-    * @return	string		The processed string
-    * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::parseFunc()
-    */
-    static public function phpFunc (
+     * This is will calculate your setup as a PHP function
+     * This function is called in your stdWrap preUserFunc function.
+     * 		preUserFunc = \JambageCom\Div2007\UtilitySystemUtility->phpFunc
+     *		preUserFunc {
+     *			php = round($value,12);
+     *		}
+     * The $value in the PHP string will be replaced by your value and the function
+     * will be evaluated.
+     *
+     * @param	string		value
+     * @param	array		the configuration. only the 'php' part is used.
+     *
+     * @return	string		The processed string
+     *
+     * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::parseFunc()
+     */
+    public static function phpFunc(
         $content,
         $conf
     ) {
@@ -289,23 +289,24 @@ class SystemUtility {
             $evalStr = str_replace('$value', $content, $conf['php']);
             $result = eval('return ' . $evalStr);
         }
+
         return $result;
     }
-    
+
     /**
      * Initializes the caching system.
      */
-    static protected function getPageCache()
+    protected static function getPageCache()
     {
         return GeneralUtility::makeInstance(CacheManager::class)->getCache('pages');
     }
 
     /**
-     * Clears cache content for a list of page ids
+     * Clears cache content for a list of page ids.
      *
      * @param string $pidList A list of INTEGER numbers which points to page uids for which to clear entries in the pages cache (page content cache)
      */
-    static public function clearPageCacheContent_pidList($pidList)
+    public static function clearPageCacheContent_pidList($pidList)
     {
         $pageCache = static::getPageCache();
         $pageIds = GeneralUtility::trimExplode(',', $pidList);
@@ -314,5 +315,3 @@ class SystemUtility {
         }
     }
 }
-
-

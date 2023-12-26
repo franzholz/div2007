@@ -1,4 +1,5 @@
 <?php
+
 namespace JambageCom\Div2007\SessionHandler;
 
 /*
@@ -14,33 +15,31 @@ namespace JambageCom\Div2007\SessionHandler;
  * The TYPO3 project - inspiring people to share!
  */
 
-
 /**
  * PHP session handling utility.
  *
  * @author Bernhard Kraft <kraftb@think-open.at>
  * @copyright 2018
  */
-class PhpSessionHandler extends AbstractSessionHandler implements SessionHandlerInterface {
-
+class PhpSessionHandler extends AbstractSessionHandler implements SessionHandlerInterface
+{
     /**
-    * Constructor for session handling class
-    *
-    * @return void
-    */
-    public function __construct () {
+     * Constructor for session handling class.
+     */
+    public function __construct()
+    {
         if (basename($_SERVER['PHP_SELF']) !== 'phpunit') {
             session_start();
         }
     }
 
     /**
-    * Get session data
-    *
-    * @param string $subKey: The subkey of the session key for the extension for which you read or write the session data.
-    * @return data The session data
-    */
-    public function getSessionData ($subKey = '') {
+     * Get session data.
+     *
+     * @return data The session data
+     */
+    public function getSessionData($subKey = '')
+    {
         $data = [];
         $result = [];
 
@@ -58,7 +57,7 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
             isset($data[$subKey])
         ) {
             $result = $data[$subKey];
-        } else if (
+        } elseif (
             $subKey == '' &&
             is_array($data)
         ) {
@@ -69,12 +68,10 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
     }
 
     /**
-    * Set session data
-    *
-    * @param array $data: The session data
-    * @return void
-    */
-    public function setSessionData ($data) {
+     * Set session data.
+     */
+    public function setSessionData($data)
+    {
         if (!is_array($data)) {
             $data = [];
         }
@@ -82,4 +79,3 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
         $_SESSION[$sessionKey] = $data;
     }
 }
-

@@ -33,17 +33,16 @@ namespace JambageCom\Div2007\Utility;
  * error functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage tt_products
- *
- *
  */
-
-
-class ErrorUtility {
-
-    static public function getMessage ($languageObj, array $errorCode) {
+class ErrorUtility
+{
+    public static function getMessage($languageObj, array $errorCode)
+    {
         $result = '';
         $i = 0;
         $indice = '';
@@ -63,7 +62,7 @@ class ErrorUtility {
                     } else {
                         continue;
                     }
-                } else if (method_exists($languageObj, 'getLabel')) {
+                } elseif (method_exists($languageObj, 'getLabel')) {
                     $message = $languageObj->getLabel($indice);
                     $plugin = $languageObj->getLabel('plugin');
                     if ($message && $plugin) {
@@ -73,7 +72,7 @@ class ErrorUtility {
                         continue;
                     }
                 }
-            } else  {
+            } else {
                 $result .= $indice;
                 if (isset($messageArray[$i])) {
                     $result .= htmlspecialchars($messageArray[$i]);
@@ -90,4 +89,3 @@ class ErrorUtility {
         return $result;
     }
 }
-

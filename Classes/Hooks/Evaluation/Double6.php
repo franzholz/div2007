@@ -16,23 +16,25 @@ namespace JambageCom\Div2007\Hooks\Evaluation;
  */
 
 /**
- * Evaluation function for weights in Gramm
+ * Evaluation function for weights in Gramm.
  *
  * @package    TYPO3
  * @subpackage div2007
+ *
  * @author     Franz Holzinger <franz@ttproducts.de>
  */
-
-class Double6 {
+class Double6
+{
     /**
-    * Evaluation of 'input'-type values based on 'eval' list
-    *
-    * @param	string		Value to evaluate
-    * @param	string		Is-in string
-    * @param	boolean		if true the value is set
-    * @return	string		Modified $value
-    */
-    public function evaluateFieldValue ($value, $is_in, $set)
+     * Evaluation of 'input'-type values based on 'eval' list.
+     *
+     * @param	string		Value to evaluate
+     * @param	string		Is-in string
+     * @param	bool		if true the value is set
+     *
+     * @return	string		Modified $value
+     */
+    public function evaluateFieldValue($value, $is_in, $set)
     {
         if ($set) {
             $theDec = 0;
@@ -56,4 +58,3 @@ class Double6 {
         return $value;
     }
 }
-

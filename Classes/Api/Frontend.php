@@ -21,11 +21,11 @@ namespace JambageCom\Div2007\Api;
  * Frontend functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
 
 use TYPO3\CMS\Core\Context\Context;
@@ -35,31 +35,28 @@ use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
-
-
-class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
-
+class Frontend implements \TYPO3\CMS\Core\SingletonInterface
+{
     /**
      * @var TypoScriptFrontendController
      */
-    protected $typoScriptFrontendController = null;
+    protected $typoScriptFrontendController;
 
     /**
-    * An "fe_user" object instance. Required for session access.
-    *
-    * @var FrontendUserAuthentication
-    */
-    protected $frontendUser = null;
+     * An "fe_user" object instance. Required for session access.
+     *
+     * @var FrontendUserAuthentication
+     */
+    protected $frontendUser;
 
     /**
-    * Constructor for session handling class
-    *
-    * @return void
-    */
-    public function __construct ($typoScriptFrontendController = '') {
+     * Constructor for session handling class.
+     */
+    public function __construct($typoScriptFrontendController = '')
+    {
         if (!empty($typoScriptFrontendController)) {
             $this->typoScriptFrontendController = $typoScriptFrontendController;
-        } else if (isset($GLOBALS['TSFE'])) {
+        } elseif (isset($GLOBALS['TSFE'])) {
             $this->typoScriptFrontendController = $GLOBALS['TSFE'];
         }
 
@@ -78,9 +75,9 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
      *
      * @param array $recs The data array to merge into/override the current recs values. The $recs array is constructed as [table]][uid] = scalar-value (eg. string/integer).
      * @param int $maxSizeOfSessionData The maximum size of stored session data. If zero, no limit is applied and even confirmation of cookie session is discarded.
-     * @param boolean $checkCookie The cookie check for write allowance is enabled by default.
+     * @param bool $checkCookie the cookie check for write allowance is enabled by default
      */
-    public function record_registration ($recs, $maxSizeOfSessionData = 0, $checkCookie = true)
+    public function record_registration($recs, $maxSizeOfSessionData = 0, $checkCookie = true)
     {
         // Storing value ONLY if there is a confirmed cookie set,
         // otherwise a shellscript could easily be spamming the fe_sessions table
@@ -124,12 +121,11 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
             }
         }
     }
-    
 
     /**
      * @return TypoScriptFrontendController
      */
-    public function getTypoScriptFrontendController ()
+    public function getTypoScriptFrontendController()
     {
         if ($this->typoScriptFrontendController instanceof TypoScriptFrontendController) {
             return $this->typoScriptFrontendController;
@@ -137,12 +133,12 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
 
         $id = '';
         if (method_exists(GeneralUtility::class, '_GP')) {
-            $id = (int) GeneralUtility::_GP('id');
+            $id = (int)GeneralUtility::_GP('id');
         }
 
         $type = '';
         if (method_exists(GeneralUtility::class, '_GP')) {
-            $type = (int) GeneralUtility::_GP('type');
+            $type = (int)GeneralUtility::_GP('type');
         }
 
         // This usually happens when typolink is created by the TYPO3 Backend, where no TSFE object
@@ -157,12 +153,12 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
         );
         $this->typoScriptFrontendController->sys_page = GeneralUtility::makeInstance(PageRepository::class);
         $this->typoScriptFrontendController->tmpl = GeneralUtility::makeInstance(TemplateService::class);
+
         return $this->typoScriptFrontendController;
     }
 
-
-    public function getLanguageId () {
-
+    public function getLanguageId()
+    {
         $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
         // (previously known as TSFE->sys_language_uid)
         $result = $languageAspect->getId();
@@ -170,4 +166,3 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface {
         return $result;
     }
 }
-

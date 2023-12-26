@@ -20,31 +20,31 @@ namespace JambageCom\Div2007\Utility;
  * HTML functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+class HtmlUtility
+{
+    private static $initialized = false;
+    protected static $xhtmlFix = false;
 
-class HtmlUtility {
-    static private   $initialized = false;
-    static protected $xhtmlFix = false;
-
-    static public function setInitialized ($initialized)
+    public static function setInitialized($initialized)
     {
         static::$initialized = $initialized;
     }
 
-    static public function getInitialized ()
+    public static function getInitialized()
     {
         return static::$initialized;
     }
 
-    static public function useXHTML ()
+    public static function useXHTML()
     {
         $result = false;
         if (
@@ -56,43 +56,45 @@ class HtmlUtility {
                 (
                     isset($config['xhtmlDoctype']) &&
                     stripos($config['xhtmlDoctype'], 'xthml') !== false
-                )
-                    ||
-                (
-                    isset($config['doctype']) &&
-                    stripos($config['doctype'], 'xthml') !== false
-                )
+                ) ||
+                    (
+                        isset($config['doctype']) &&
+                        stripos($config['doctype'], 'xthml') !== false
+                    )
             ) {
                 $result = true;
             }
         }
+
         return $result;
     }
 
-    static public function generateXhtmlFix ()
+    public static function generateXhtmlFix()
     {
         static::$xhtmlFix = (static::useXHTML() ? '/' : '');
         static::setInitialized(true);
+
         return static::$xhtmlFix;
     }
 
-    static public function getXhtmlFix ()
+    public static function getXhtmlFix()
     {
         return static::$xhtmlFix;
     }
 
-    static public function determineXhtmlFix ()
+    public static function determineXhtmlFix()
     {
         if (static::getInitialized()) {
             $result = static::getXhtmlFix();
         } else {
             $result = static::generateXhtmlFix();
         }
+
         return $result;
     }
 
     /**
-     * Attention. Because this method might not work as intended. I recommend to use 
+     * Attention. Because this method might not work as intended. I recommend to use
      * a linux command line tool "tidy" to convert your files from HTML to XTHML.
      *
      * Tries to convert the content to be XHTML compliant and other stuff like that.
@@ -116,11 +118,13 @@ class HtmlUtility {
      * - Add "alt" attribute to img-tags if it's not there already.
      *
      * @param string $content Content to clean up
-     * @param boolean $onlyForXhtml The conversion is only done when XHTML is activated for a page in the TYPO3 config.doctype setup.
-     * @return string Cleaned up content returned.
+     * @param bool $onlyForXhtml The conversion is only done when XHTML is activated for a page in the TYPO3 config.doctype setup.
+     *
+     * @return string cleaned up content returned
+     *
      * @access private
      */
-    static public function XHTML_clean ($content, $onlyForXhtml = true)
+    public static function XHTML_clean($content, $onlyForXhtml = true)
     {
         if (
             !$onlyForXhtml ||
@@ -129,9 +133,9 @@ class HtmlUtility {
             $htmlParser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Html\HtmlParser::class);
             $result = $htmlParser->HTMLcleaner($content, [], 1, 0, ['xhtml' => 1]);
         } else {
-            $result =  $content;
+            $result = $content;
         }
+
         return $result;
     }
 }
-

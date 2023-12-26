@@ -18,39 +18,37 @@ namespace JambageCom\Div2007\Utility;
 /**
  * deprecated. Use the class \JambageCom\Div2007\Api\StaticInfoTablesApi instead.
  * functions for the TYPO3 extension static_info_tables
- * It will be removed in 2025
+ * It will be removed in 2025.
  *
  * attention: This class must also work under TYPO3 6.2
  */
 
-
+use TYPO3\CMS\Core\Localization\Locales;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
-use TYPO3\CMS\Core\Localization\Locales;
 
-use JambageCom\Div2007\Utility\ExtensionUtility;
-use JambageCom\Div2007\Utility\TableUtility;
+class StaticInfoTablesUtility
+{
+    private static $staticInfo = false;
+    private static $cache = [];
+    private static $versionNumber;
 
-class StaticInfoTablesUtility {
-
-    static private $staticInfo = false;
-    static private $cache = [];
-    static private $versionNumber;
-
-
-    static public function getStaticInfo () {
+    public static function getStaticInfo()
+    {
         return static::$staticInfo;
     }
 
-    static public function getVersionNumer () {
+    public static function getVersionNumer()
+    {
         return static::$versionNumber;
     }
 
     /**
-    * Getting all tt_products_cat categories into internal array
-    */
-    static public function init () {
+     * Getting all tt_products_cat categories into internal array.
+     */
+    public static function init()
+    {
         $result = false;
 
         if (
@@ -91,12 +89,12 @@ class StaticInfoTablesUtility {
     } // init
 
     /**
-    * Returns the current language as iso-2-alpha code
-    *
-    * @return	string		'DE', 'EN', 'DK', ...
-    */
-    static public function getCurrentLanguage () {
-
+     * Returns the current language as iso-2-alpha code.
+     *
+     * @return	string		'DE', 'EN', 'DK', ...
+     */
+    public static function getCurrentLanguage()
+    {
         if (is_object($GLOBALS['TSFE'])) {
             $langCodeT3 = $GLOBALS['TSFE']->lang;
         } elseif (is_object($GLOBALS['LANG'])) {
@@ -107,7 +105,7 @@ class StaticInfoTablesUtility {
         if ($langCodeT3 == 'default') {
             return 'EN';
         }
-            // Return cached value if any
+        // Return cached value if any
         if (isset(self::$cache['getCurrentLanguage'][$langCodeT3])) {
             return self::$cache['getCurrentLanguage'][$langCodeT3];
         }
@@ -124,47 +122,48 @@ class StaticInfoTablesUtility {
 
         $lang = $lang ? $lang : strtoupper($langCodeT3);
 
-            // Initialize cache array
+        // Initialize cache array
         if (
             !isset(self::$cache['getCurrentLanguage']) ||
             !is_array(self::$cache['getCurrentLanguage'])
         ) {
             self::$cache['getCurrentLanguage'] = [];
         }
-            // Cache retrieved value
+        // Cache retrieved value
         self::$cache['getCurrentLanguage'][$langCodeT3] = $lang;
 
         return $lang;
     }
 
     /**
-    * Returns a label field for the current language
-    *
-    * @param	string		table name
-    * @param	boolean		DEPRECATED
-    * @param	string		language to be used
-    * @param	boolean		If set, we are looking for the "local" title field
-    * @return	string		field name
-    */
-    static public function getTCAlabelField ($table, $bLoadTCA = true, $lang = '', $local = false) {
-
+     * Returns a label field for the current language.
+     *
+     * @param	string		table name
+     * @param	bool		DEPRECATED
+     * @param	string		language to be used
+     * @param	bool		If set, we are looking for the "local" title field
+     *
+     * @return	string		field name
+     */
+    public static function getTCAlabelField($table, $bLoadTCA = true, $lang = '', $local = false)
+    {
         $labelFields = [];
-        if(
+        if (
             $table &&
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields']) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'])
         ) {
-            $locales = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Localization\Locales::class);
-            $isoArray = (array) $locales->getIsoMapping();
+            $locales = GeneralUtility::makeInstance(Locales::class);
+            $isoArray = (array)$locales->getIsoMapping();
 
             $lang = $lang ? $lang : static::getCurrentLanguage();
-            $lang = isset($isoArray[$lang]) ? $isoArray[$lang] : $lang;
-            
-            foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'] as $field) {
+            $lang = $isoArray[$lang] ?? $lang;
+
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'] as $field) {
                 if ($local) {
-                    $labelField = str_replace ('##', 'local', $field);
+                    $labelField = str_replace('##', 'local', $field);
                 } else {
-                    $labelField = str_replace ('##',  strtolower($lang), $field);
+                    $labelField = str_replace('##', strtolower($lang), $field);
                 }
                 if (
                     isset($GLOBALS['TCA'][$table]['columns'][$labelField]) &&
@@ -174,18 +173,21 @@ class StaticInfoTablesUtility {
                 }
             }
         }
+
         return $labelFields;
     }
 
     /**
-    * Returns the type of an iso code: nr, 2, 3
-    *
-    * @param	string		iso code
-    * @return	string		iso code type
-    */
-    static public function isoCodeType ($isoCode) {
+     * Returns the type of an iso code: nr, 2, 3.
+     *
+     * @param	string		iso code
+     *
+     * @return	string		iso code type
+     */
+    public static function isoCodeType($isoCode)
+    {
         $type = '';
-        $isoCodeAsInteger = 
+        $isoCodeAsInteger =
             MathUtility::canBeInterpretedAsInteger($isoCode);
         if ($isoCodeAsInteger) {
             $type = 'nr';
@@ -194,21 +196,24 @@ class StaticInfoTablesUtility {
         } elseif (strlen($isoCode) == 3) {
             $type = '3';
         }
+
         return $type;
     }
 
     /**
-    * Returns a iso code field for the passed table and iso code
-    *
-    *  $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables']
-    *
-    * @param	string		table name
-    * @param	string		iso code
-    * @param	boolean		If set (default) the TCA definition of the table should be loaded with tx_div2007_core::loadTCA(). It will be needed to set it to false if you call this function from inside of tca.php
-    * @param	integer		index in the table's isocode_field array in the global variable
-    * @return	string		field name
-    */
-    static public function getIsoCodeField ($table, $isoCode, $bLoadTCA = false, $index = 0) {
+     * Returns a iso code field for the passed table and iso code.
+     *
+     *  $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables']
+     *
+     * @param	string		table name
+     * @param	string		iso code
+     * @param	bool		If set (default) the TCA definition of the table should be loaded with tx_div2007_core::loadTCA(). It will be needed to set it to false if you call this function from inside of tca.php
+     * @param	int		index in the table's isocode_field array in the global variable
+     *
+     * @return	string		field name
+     */
+    public static function getIsoCodeField($table, $isoCode, $bLoadTCA = false, $index = 0)
+    {
         $result = false;
 
         if (
@@ -219,7 +224,7 @@ class StaticInfoTablesUtility {
 
             if ($isoCodeField != '') {
                 $type = static::isoCodeType($isoCode);
-                $isoCodeField = str_replace ('##', $type, $isoCodeField);
+                $isoCodeField = str_replace('##', $type, $isoCodeField);
 
                 if (
                     isset($GLOBALS['TCA'][$table]['columns'][$isoCodeField]) &&
@@ -229,26 +234,28 @@ class StaticInfoTablesUtility {
                 }
             }
         }
+
         return $result;
     }
 
     /**
-    * Fetches short title from an iso code
-    *
-    * @param	string		table name
-    * @param	string		iso code
-    * @param	string		language code - if not set current default language is used
-    * @param	boolean		local name only - if set local title is returned
-    * @return	string		short title
-    */
-    static public function getTitleFromIsoCode ($table, $isoCode, $lang = '', $local = false) {
-
+     * Fetches short title from an iso code.
+     *
+     * @param	string		table name
+     * @param	string		iso code
+     * @param	string		language code - if not set current default language is used
+     * @param	bool		local name only - if set local title is returned
+     *
+     * @return	string		short title
+     */
+    public static function getTitleFromIsoCode($table, $isoCode, $lang = '', $local = false)
+    {
         $title = '';
         $titleFields = static::getTCAlabelField($table, true, $lang, $local);
-        if (count ($titleFields)) {
+        if (count($titleFields)) {
             $prefixedTitleFields = [];
-            
-            if (version_compare(static::$versionNumber, '11.5.0', '>=')) {            
+
+            if (version_compare(static::$versionNumber, '11.5.0', '>=')) {
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
                     $prefixedTitleFields[] = $table . '.' . $titleField;
                 }
@@ -268,7 +275,7 @@ class StaticInfoTablesUtility {
                 if ($code != '') {
                     $tmpField = static::getIsoCodeField($table, $code, true, $index);
                     $tmpValue = $GLOBALS['TYPO3_DB']->fullQuoteStr($code, $table);
-                    if ($tmpField && $tmpValue)	{
+                    if ($tmpField && $tmpValue) {
                         $whereClause .= ' AND ' . $table . '.' . $tmpField . ' = ' . $tmpValue;
                     }
                 }
@@ -286,7 +293,7 @@ class StaticInfoTablesUtility {
             );
 
             if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                if (version_compare(static::$versionNumber, '11.5.0', '>=')) {            
+                if (version_compare(static::$versionNumber, '11.5.0', '>=')) {
                     foreach ($titleFields as $titleField => $titleFieldProperty) {
                         if ($row[$titleField]) {
                             $title = $row[$titleField];
@@ -309,24 +316,25 @@ class StaticInfoTablesUtility {
     }
 
     /**
-    * Get a list of countries by specific parameters or parts of names of countries
-    * in different languages. Parameters might be left empty.
-    *
-    * @param   string      a name of the country or a part of it in any language
-    * @param   string      ISO alpha-2 code of the country
-    * @param   string      ISO alpha-3 code of the country
-    * @param   array       Database row.
-    * @return  array       Array of rows of country records
-    */
-    static public function fetchCountries ($country, $iso2 = '', $iso3 = '', $isonr = '') {
-
+     * Get a list of countries by specific parameters or parts of names of countries
+     * in different languages. Parameters might be left empty.
+     *
+     * @param   string      a name of the country or a part of it in any language
+     * @param   string      ISO alpha-2 code of the country
+     * @param   string      ISO alpha-3 code of the country
+     * @param   array       database row
+     *
+     * @return  array       Array of rows of country records
+     */
+    public static function fetchCountries($country, $iso2 = '', $iso3 = '', $isonr = '')
+    {
         $resultArray = [];
         $where = '';
 
         $table = 'static_countries';
         if ($country != '') {
             $value = $GLOBALS['TYPO3_DB']->fullQuoteStr(trim('%' . $country . '%'), $table);
-            $where = 'cn_official_name_local LIKE '. $value . ' OR cn_official_name_en LIKE ' . $value;
+            $where = 'cn_official_name_local LIKE ' . $value . ' OR cn_official_name_en LIKE ' . $value;
 
             foreach ($GLOBALS['TCA'][$table]['columns'] as $fieldname => $fieldArray) {
                 if (str_starts_with($fieldname, 'cn_short_')) {
@@ -343,21 +351,21 @@ class StaticInfoTablesUtility {
             $where = 'cn_iso_2=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(trim($iso2), $table);
         }
 
-        if ($iso3 !='') {
+        if ($iso3 != '') {
             $where = 'cn_iso_3=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(trim($iso3), $table);
         }
 
         if ($where != '') {
             $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $table, $where);
 
-            if ($res)   {
+            if ($res) {
                 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
                     $resultArray[] = $row;
                 }
             }
             $GLOBALS['TYPO3_DB']->sql_free_result($res);
         }
+
         return $resultArray;
     }
 }
-

@@ -28,21 +28,22 @@ namespace JambageCom\Div2007\Base;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
-* Part of the div2007 (Collection of static functions) extension.
-*
-* interface for the language object
-* You can use a pibase object for it.
-*
-* @author  Kasper Skaarhoj <kasperYYYY@typo3.com>
-* @maintainer	Franz Holzinger <franz@ttproducts.de>
-* @package TYPO3
-* @subpackage div2007
-*
-*/
+ * Part of the div2007 (Collection of static functions) extension.
+ *
+ * interface for the language object
+ * You can use a pibase object for it.
+ *
+ * @author  Kasper Skaarhoj <kasperYYYY@typo3.com>
+ *
+ * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
+ * @package TYPO3
+ * @subpackage div2007
+ */
 
-
-    // this class must be overridden and filled out. You can use the init method.
-class BrowserBase {
+// this class must be overridden and filled out. You can use the init method.
+class BrowserBase
+{
     public $ctrlVars = [];
     public $internal = [];
     public $autoCacheFields = [];
@@ -52,39 +53,37 @@ class BrowserBase {
     public $moreParams = '';
     public $conf;
 
-    public function getAutoCacheEnable () {
+    public function getAutoCacheEnable()
+    {
         return $this->autoCacheEnable;
     }
 
-    public function getIsUserIntObject () {
+    public function getIsUserIntObject()
+    {
         return $this->is_USER_INT_obj;
     }
 
     /**
-    * Initializes the control class for the browser
-    *
-    * @param	array		configuration
-    * @param	array		ctrlVars: control array with the pointer variable as index
-    * @param	array		ctrlLimits: limits to the pointer variable: the first index corresponds to the control array
-    * 						[...]['range'][0]  ... lowest range value
-    * 						[...]['range'][1]  ... highest range value
-    * 						[...]['list']      ... list of allowed values
-    * @param	boolean		$autoCacheEnable: auto cache enabled
-    * @param	boolean		$is_USER_INT_obj: if it is a USER_INT object
-    * @param	integer		resCount: total number of items in the query
-    * @param	integer		limit: maximum number of items shown in the list
-    * @param	integer		maxPages: maximum number of pages to browse
-    * @param	boolean		bShowFirstLast: if the first and last entry will have a marker
-    * @param	boolean		bAlwaysPrev: if the previous text is always shown even if there is no previous possible
-    * @param	integer		pagefloat: page float
-    * @param	array		imageArray: path - path to the images
-    *									onmouseover
-    *									onmouseout
-    * @param	array		imageActiveArray: same as imageArray but for actively selected images
-    *
-    * @return	void
-    */
-    public function init (
+     * Initializes the control class for the browser.
+     *
+     * @param	array		configuration
+     * @param	array		ctrlVars: control array with the pointer variable as index
+     * @param	array		ctrlLimits: limits to the pointer variable: the first index corresponds to the control array
+     * 						[...]['range'][0]  ... lowest range value
+     * 						[...]['range'][1]  ... highest range value
+     * 						[...]['list']      ... list of allowed values
+     * @param	int		resCount: total number of items in the query
+     * @param	int		limit: maximum number of items shown in the list
+     * @param	int		maxPages: maximum number of pages to browse
+     * @param	bool		bShowFirstLast: if the first and last entry will have a marker
+     * @param	bool		bAlwaysPrev: if the previous text is always shown even if there is no previous possible
+     * @param	int		pagefloat: page float
+     * @param	array		imageArray: path - path to the images
+     *									onmouseover
+     *									onmouseout
+     * @param	array		imageActiveArray: same as imageArray but for actively selected images
+     */
+    public function init(
         $conf,
         $ctrlVars,
         $ctrlLimits,
@@ -116,4 +115,3 @@ class BrowserBase {
         $this->internal['imageactive'] = $imageActiveArray;
     }
 }
-

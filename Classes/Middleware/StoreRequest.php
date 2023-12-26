@@ -20,25 +20,19 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use TYPO3\CMS\Core\Configuration\Features;
-use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Routing\SiteMatcher;
 use TYPO3\CMS\Core\Routing\SiteRouteResult;
-use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
-
 /**
  * Stores the original request for an Ajax call before processing a request for the TYPO3 Frontend.
- *
  */
 class StoreRequest implements MiddlewareInterface
 {
     /**
-     * Hook to store the current request
+     * Hook to store the current request.
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -61,7 +55,7 @@ class StoreRequest implements MiddlewareInterface
                 GeneralUtility::makeInstance(SiteFinder::class),
                 $contextFactory
             );
-        } else {        
+        } else {
             $matcher = GeneralUtility::makeInstance(
                 SiteMatcher::class,
                 GeneralUtility::makeInstance(SiteFinder::class)

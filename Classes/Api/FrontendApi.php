@@ -15,41 +15,39 @@ namespace JambageCom\Div2007\Api;
  * The TYPO3 project - inspiring people to share!
  */
 
- /**
+/**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
  * Control functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
-
 
 use TYPO3\CMS\Core\Routing\RouteNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
-
-class FrontendApi {
-
+class FrontendApi
+{
     /**
      * This method is needed only for Ajax calls.
      * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId() instead of this method.
-     * 
+     *
      * @return int
      */
-    static public function getPageId (...$params)
+    public static function getPageId(...$params)
     {
         $request = null;
         $site = null;
         $result = 0;
 
         if (method_exists(GeneralUtility::class, '_GP')) {
-            $result = (int) GeneralUtility::_GP('id');
+            $result = (int)GeneralUtility::_GP('id');
             if (
                 $result
             ) {
@@ -62,7 +60,7 @@ class FrontendApi {
             $params[0] instanceof \Psr\Http\Message\ServerRequestInterface
         ) {
             $request = $params[0];
-        } else if (isset($GLOBALS['TYPO3_REQUEST'])) {
+        } elseif (isset($GLOBALS['TYPO3_REQUEST'])) {
             $request = $GLOBALS['TYPO3_REQUEST'];
         }
 
@@ -73,7 +71,7 @@ class FrontendApi {
         ) {
             $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
         }
-        
+
         if ($request instanceof \Psr\Http\Message\ServerRequestInterface) {
             $matcher = GeneralUtility::makeInstance(
                 \TYPO3\CMS\Core\Routing\SiteMatcher::class,
@@ -94,7 +92,7 @@ class FrontendApi {
                 if (method_exists($previousResult, 'getPageId')) {
                     $result = $previousResult->getPageId();
                 }
-           // Check for the route
+                // Check for the route
                 if (!$result) {
                     $pageArguments = $site->getRouter()->matchRequest($request, $previousResult);
                     $result = $pageArguments->getPageId();
@@ -110,15 +108,13 @@ class FrontendApi {
 
         return $result;
     }
-    
+
     /**
      * Get an empty fluid view to which you can assign your variables:
      *     $view->assignMultiple( ... );
      *     $view->render();
-     * 
-     * @return StandaloneView
      */
-    static public function getStandaloneView ($extensionKey, $templateNameAndPath): StandaloneView
+    public static function getStandaloneView($extensionKey, $templateNameAndPath): StandaloneView
     {
         $view = GeneralUtility::makeInstance(StandaloneView::class);
         $view->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($templateNameAndPath));
@@ -127,4 +123,3 @@ class FrontendApi {
         return $view;
     }
 }
-

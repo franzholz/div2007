@@ -33,38 +33,38 @@ namespace JambageCom\Div2007\Base;
  * hook functions for the TYPO3 cms
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
 
 use JambageCom\Div2007\Utility\FlexformUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
-
-class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface {
+class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface
+{
     public $extensionKey = '';	// extension key must be overridden
     public $extKey = '';	// DEPRECATED
 
     /**
-    * Draw the item in the page module
-    *
-    * @param	array		parameters
-    * @param	object		the parent object
-    * @return	  string
-    */
-
-    public function pmDrawItem ($params, $pObj) {
-
+     * Draw the item in the page module.
+     *
+     * @param	array		parameters
+     * @param	object		the parent object
+     *
+     * @return	  string
+     */
+    public function pmDrawItem($params, $pObj)
+    {
         $codes = '';
         $extensionKey = '';
         if (
             $this->extensionKey != ''
         ) {
             $extensionKey = $this->extensionKey;
-        } else if (
+        } elseif (
             $this->extKey != ''
         ) {
             $extensionKey = $this->extKey;
@@ -89,7 +89,7 @@ class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface {
                     'display_mode'
                 );
         }
+
         return $codes;
     }
 }
-

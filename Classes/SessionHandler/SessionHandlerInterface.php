@@ -1,4 +1,5 @@
 <?php
+
 namespace JambageCom\Div2007\SessionHandler;
 
 /*
@@ -14,43 +15,37 @@ namespace JambageCom\Div2007\SessionHandler;
  * The TYPO3 project - inspiring people to share!
  */
 
-
 /**
  * Interface definition for session handling class.
  *
  * @author Bernhard Kraft <kraftb@think-open.at>
  * @copyright 2018
  */
-interface SessionHandlerInterface {
+interface SessionHandlerInterface
+{
+    /**
+     * Get session key.
+     *
+     * @return data The session data
+     */
+    public function getSessionKey();
 
     /**
-    * Get session key
-    *
-    * @return data The session data
-    */
-    public function getSessionKey ();
+     * Get session key.
+     *
+     * @return data The session data for the captcha extension
+     */
+    public function setSessionKey($key);
 
     /**
-    * Get session key
-    *
-    * @param string $key: The session key for the extension for which you read the session data.
-    * @return data The session data for the captcha extension
-    */
-    public function setSessionKey ($key);
+     * Get session data.
+     *
+     * @return data The session data for the captcha extension
+     */
+    public function getSessionData();
 
     /**
-    * Get session data
-    *
-    * @return data The session data for the captcha extension
-    */
-    public function getSessionData ();
-
-    /**
-    * Set session data
-    *
-    * @param array $data: The session data for the captcha extension. If it is not an array, then an empty array will be stored.
-    * @return void
-    */
-    public function setSessionData ($data);
+     * Set session data.
+     */
+    public function setSessionData($data);
 }
-

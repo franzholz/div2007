@@ -1,4 +1,5 @@
 <?php
+
 namespace JambageCom\Div2007\Captcha;
 
 /*
@@ -23,11 +24,8 @@ namespace JambageCom\Div2007\Captcha;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
-use JambageCom\Div2007\Captcha\CaptchaBase;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-
 /**
- * Hook for captcha image marker when extension 'captcha' is used
+ * Hook for captcha image marker when extension 'captcha' is used.
  */
 class Captcha extends CaptchaBase
 {
@@ -35,10 +33,10 @@ class Captcha extends CaptchaBase
     protected $name = 'captcha';
 
     /**
-    * Sets the value of captcha markers
-    * return boolean
-    */
-    public function addGlobalMarkers (array &$markerArray, $enable = true)
+     * Sets the value of captcha markers
+     * return boolean.
+     */
+    public function addGlobalMarkers(array &$markerArray, $enable = true)
     {
         $result = false;
         $markerPrefix = $this->getMarkerPrefix();
@@ -62,13 +60,11 @@ class Captcha extends CaptchaBase
     }
 
     /**
-    * Evaluates the captcha word
-    *
-    * @param array $captchaWord: captcha word which is to be checked
-    * @param string $name: qualifier name of the captcha
-    * @return boolean true if the evaluation is successful, false in error case
-    */
-    public function evalValues ($captchaWord, $name)
+     * Evaluates the captcha word.
+     *
+     * @return bool true if the evaluation is successful, false in error case
+     */
+    public function evalValues($captchaWord, $name)
     {
         $result = true;
         if (

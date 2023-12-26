@@ -1,4 +1,5 @@
 <?php
+
 namespace JambageCom\Div2007\Captcha;
 
 /*
@@ -22,27 +23,24 @@ namespace JambageCom\Div2007\Captcha;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
-* Determines the use of captcha
-*/
+ * Determines the use of captcha.
+ */
 class CaptchaManager
 {
     /**
-    * Determines captcha object for the specified qualifier name
-    *
-    * @param string $extensionKey: the key of the requesting extension
-    * @param string $name: qualifier name of the captcha
-    * @return object, if the use of captcha is enabled, null otherwise
-    */
-    static public function getCaptcha ($extensionKey, $name)
+     * Determines captcha object for the specified qualifier name.
+     *
+     * @return object, if the use of captcha is enabled, null otherwise
+     */
+    public static function getCaptcha($extensionKey, $name)
     {
         $result = null;
         $captchaArray = [
-            \JambageCom\Div2007\Captcha\Captcha::class,
-            \JambageCom\Div2007\Captcha\Freecap::class
+            Captcha::class,
+            Freecap::class,
         ];
         if (
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]['captcha']) &&
@@ -65,16 +63,16 @@ class CaptchaManager
                 }
             }
         }
+
         return $result;
     }
 
-
     /**
-    * Determines whether at least one captcha extension is available
-    *
-    * @return boolean true if at least one captcha extension is available
-    */
-    static public function isLoaded ($extensionKey)
+     * Determines whether at least one captcha extension is available.
+     *
+     * @return bool true if at least one captcha extension is available
+     */
+    public static function isLoaded($extensionKey)
     {
         $isLoaded = false;
         if (
@@ -91,7 +89,7 @@ class CaptchaManager
                 }
             }
         }
+
         return $isLoaded;
     }
 }
-

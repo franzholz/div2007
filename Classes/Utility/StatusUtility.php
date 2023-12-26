@@ -21,26 +21,25 @@ namespace JambageCom\Div2007\Utility;
  * Methods for the status provider reports module
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Reports\Status;
 
-class StatusUtility {
-
+class StatusUtility
+{
     /**
-    * Check whether salted passwords are enabled in front end
-    *
-    * @return	Status
-    */
-    static public function checkIfGlobalVariablesAreSet ($extensionName, $globalVariables)
+     * Check whether salted passwords are enabled in front end.
+     *
+     * @return	Status
+     */
+    public static function checkIfGlobalVariablesAreSet($extensionName, $globalVariables)
     {
         $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Global_variables_in_front_end', $extensionName);
         $value = null;
@@ -55,7 +54,7 @@ class StatusUtility {
                 if (
                     isset($subkeyVariables) &&
                     is_array($subkeyVariables)
-                ) {                        
+                ) {
                     foreach ($subkeyVariables as $key => $expression) {
                         if (is_scalar($expression)) {
                             if ($GLOBALS['TYPO3_CONF_VARS'][$subkey][$key] != $expression) {
@@ -71,7 +70,7 @@ class StatusUtility {
             }
         }
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
+
         return $result;
     }
 }
-

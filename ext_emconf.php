@@ -1,9 +1,6 @@
 <?php
 
-/*********************************************************************
-* Extension configuration file for ext "div2007".
-*
-*********************************************************************/
+// Extension configuration file for ext "div2007".
 
 $EM_CONF[$_EXTKEY] = [
   'title' => 'Static Methods since 2007',
@@ -16,20 +13,15 @@ $EM_CONF[$_EXTKEY] = [
   'author' => 'Franz Holzinger',
   'author_email' => 'franz@ttproducts.de',
   'author_company' => 'jambage.com',
-  'constraints' =>
-  [
-    'depends' =>
-    [
+  'constraints' => [
+    'depends' => [
       'php' => '7.4.0-8.4.99',
       'typo3' => '10.4.0-12.4.99',
     ],
-    'suggests' =>
-    [
+    'suggests' => [
         'typo3db_legacy' => '1.0.0-1.2.99',
     ],
-    'conflicts' =>
-    [
+    'conflicts' => [
     ],
-  ]
+  ],
 ];
-

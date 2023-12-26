@@ -15,28 +15,22 @@ namespace JambageCom\Div2007\Api;
  * The TYPO3 project - inspiring people to share!
  */
 
- /**
+/**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
  * Control functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
-
-
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-
-class OldCompatibilityApi {
-
-    public function getClass ($variable)
+class OldCompatibilityApi
+{
+    public function getClass($variable)
     {
         return get_class($variable);
     }
 }
-

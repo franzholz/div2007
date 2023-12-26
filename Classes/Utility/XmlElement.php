@@ -2,7 +2,6 @@
 
 namespace JambageCom\Div2007\Utility;
 
-
 /***************************************************************
 *  Copyright notice
 *
@@ -27,20 +26,19 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 
 /**
- * XML class
+ * XML class.
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
  */
-
-
-class XmlElement {
-  public $name;
-  public $attributes;
-  public $content;
-  public $children;
-};
-
-
+class XmlElement
+{
+    public $name;
+    public $attributes;
+    public $content;
+    public $children;
+}

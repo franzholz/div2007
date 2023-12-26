@@ -1,4 +1,5 @@
 <?php
+
 namespace JambageCom\Div2007\Captcha;
 
 /*
@@ -22,51 +23,48 @@ namespace JambageCom\Div2007\Captcha;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
-use JambageCom\Div2007\Captcha\CaptchaBase;
-use SJBR\SrFreecap\PiBaseApi;
 use SJBR\SrFreecap\Domain\Session\SessionStorage;
-
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use SJBR\SrFreecap\PiBaseApi;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /**
- * Hook for captcha image marker when extension 'sr_freecap' is used
+ * Hook for captcha image marker when extension 'sr_freecap' is used.
  */
 class Freecap extends CaptchaBase
 {
     protected $extensionKey = 'sr_freecap';
-    protected $name         = 'freecap';
+    protected $name = 'freecap';
     protected $markerPrefix = 'SR_FREECAP';
 
     /**
-    * SrFreecap object
-    *
-    * @var SJBR\SrFreecap\PiBaseApi
-    */
-    protected $srFreecap = null;
+     * SrFreecap object.
+     *
+     * @var SJBR\SrFreecap\PiBaseApi
+     */
+    protected $srFreecap;
 
     /**
-    * Session object
-    *
-    * @var SJBR\SrFreecap\Domain\Session
-    */
-    protected $session = null;
-    
+     * Session object.
+     *
+     * @var SJBR\SrFreecap\Domain\Session
+     */
+    protected $session;
 
-    public function getApi () {
+    public function getApi()
+    {
         return $this->srFreecap;
     }
 
-    public function getSession () {
+    public function getSession()
+    {
         return $this->session;
     }
 
     /**
-    * Sets the value of captcha markers
-    * return boolean
-    */
-    public function addGlobalMarkers (array &$markerArray, $enable = true)
+     * Sets the value of captcha markers
+     * return boolean.
+     */
+    public function addGlobalMarkers(array &$markerArray, $enable = true)
     {
         $result = false;
         $markerPrefix = $this->getMarkerPrefix();
@@ -91,7 +89,7 @@ class Freecap extends CaptchaBase
                     '###' . $defaultMarkerPrefix . '_NOTICE###' => '',
                     '###' . $defaultMarkerPrefix . '_CANT_READ###' => '',
                     '###' . $defaultMarkerPrefix . '_IMAGE###' => '',
-                    '###' . $defaultMarkerPrefix . '_ACCESSIBLE###' => ''
+                    '###' . $defaultMarkerPrefix . '_ACCESSIBLE###' => '',
                 ];
         }
         $markerArray = array_merge($markerArray, $captchaMarkerArray);
@@ -100,13 +98,11 @@ class Freecap extends CaptchaBase
     }
 
     /**
-    * Evaluates the captcha word
-    *
-    * @param array $captchaWord: captcha word which is to be checked
-    * @param string $name: qualifier name of the captcha
-    * @return boolean true if the evaluation is successful, false in error case
-    */
-    public function evalValues ($captchaWord, $name)
+     * Evaluates the captcha word.
+     *
+     * @return bool true if the evaluation is successful, false in error case
+     */
+    public function evalValues($captchaWord, $name)
     {
         $result = true;
         if (
@@ -134,9 +130,9 @@ class Freecap extends CaptchaBase
     }
 
     /**
-    * Initializes de SrFreecap object
-    */
-    protected function initialize ()
+     * Initializes de SrFreecap object.
+     */
+    protected function initialize()
     {
         $result = false;
 
@@ -161,17 +157,17 @@ class Freecap extends CaptchaBase
     }
 
     /**
-    * Gets a frontend user from TSFE->fe_user
-    *
-    * @return	\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthtenication	The current frontend user object
-    * @throws	SessionNotFoundException
-    */
+     * Gets a frontend user from TSFE->fe_user.
+     *
+     * @return	\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthtenication	The current frontend user object
+     *
+     * @throws	SessionNotFoundException
+     */
     protected function getFrontendUser()
     {
-        if ($GLOBALS ['TSFE']->fe_user) {
-            return $GLOBALS ['TSFE']->fe_user;
+        if ($GLOBALS['TSFE']->fe_user) {
+            return $GLOBALS['TSFE']->fe_user;
         }
         throw new SessionNotFoundException('No frontend user found in session!');
     }
 }
-

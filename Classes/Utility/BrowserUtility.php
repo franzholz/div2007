@@ -25,24 +25,22 @@ namespace JambageCom\Div2007\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
-use JambageCom\Div2007\Utility\FrontendUtility;
-
 /**
-* front end functions.
-*
-* @author	Franz Holzinger <franz@ttproducts.de>
-* @maintainer Franz Holzinger <franz@ttproducts.de>
-* @package TYPO3
-* @subpackage div2007
-*/
-
-
-class BrowserUtility {
+ * front end functions.
+ *
+ * @author	Franz Holzinger <franz@ttproducts.de>
+ *
+ * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
+ * @package TYPO3
+ * @subpackage div2007
+ */
+class BrowserUtility
+{
     /**
      * Returns a results browser. This means a bar of page numbers plus a "previous" and "next" link. For each entry in the bar the ctrlVars "pointer" will be pointing to the "result page" to show.
      * Using $this->ctrlVars['pointer'] as pointer to the page to display. Can be overwritten with another string ($pointerName) to make it possible to have more than one pagebrowser on a page)
@@ -63,17 +61,18 @@ class BrowserUtility {
      * @param   object      language object of type \JambageCom\Div2007\Base\TranslationBase
      * @param   object      cObject
      * @param   string      prefix id
-     * @param   boolean     if CSS styled content with div tags shall be used
-     * @param   integer     determines how the results of the pagerowser will be shown. See description below
+     * @param   bool     if CSS styled content with div tags shall be used
+     * @param   int     determines how the results of the pagerowser will be shown. See description below
      * @param   string      Attributes for the table tag which is wrapped around the table cells containing the browse links
      *                      (only used if no CSS style is set)
-     * @param   array       Array with elements to overwrite the default $wrapper-array.
-     * @param   string      varname for the pointer.
-     * @param   boolean     enable htmlspecialchars() for the getLabel function (set this to false if you want e.g. use images instead of text for links like 'previous' and 'next').
+     * @param   array       array with elements to overwrite the default $wrapper-array
+     * @param   string      varname for the pointer
+     * @param   bool     enable htmlspecialchars() for the getLabel function (set this to false if you want e.g. use images instead of text for links like 'previous' and 'next').
      * @param   array       Additional query string to be passed as parameters to the links
+     *
      * @return  string      Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
      */
-    static public function render (
+    public static function render(
         \JambageCom\Div2007\Base\BrowserBase $pObject,
         \JambageCom\Div2007\Base\TranslationBase $languageObj,
         $cObj,
@@ -85,12 +84,11 @@ class BrowserUtility {
         $pointerName = 'pointer',
         $hscText = true,
         $addQueryString = []
-    )
-    {
+    ) {
         $usedLang = '';
         $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
         $linkArray = $addQueryString;
-            // Initializing variables:
+        // Initializing variables:
         $pointer = intval($pObject->ctrlVars[$pointerName]);
         $count = intval($pObject->internal['resCount']);
         $limit =
@@ -99,7 +97,7 @@ class BrowserUtility {
                 1,
                 1000
             );
-        $totalPages = ceil($count/$limit);
+        $totalPages = ceil($count / $limit);
         $maxPages =
             MathUtility::forceIntegerInRange(
                 $pObject->internal['maxPages'],
@@ -112,16 +110,16 @@ class BrowserUtility {
                 $pObject->ctrlVars
             );
 
-            // $showResultCount determines how the results of the pagerowser will be shown.
-            // If set to 0: only the result-browser will be shown
-            //           1: (default) the text "Displaying results..." and the result-browser will be shown.
-            //           2: only the text "Displaying results..." will be shown
+        // $showResultCount determines how the results of the pagerowser will be shown.
+        // If set to 0: only the result-browser will be shown
+        //           1: (default) the text "Displaying results..." and the result-browser will be shown.
+        //           2: only the text "Displaying results..." will be shown
         $showResultCount = intval($showResultCount);
 
-            // if this is set, two links named "<< First" and "LAST >>" will be shown and point to the very first or last page.
+        // if this is set, two links named "<< First" and "LAST >>" will be shown and point to the very first or last page.
         $bShowFirstLast = $pObject->internal['bShowFirstLast'];
 
-            // if this has a value the "previous" button is always visible (will be forced if "bShowFirstLast" is set)
+        // if this has a value the "previous" button is always visible (will be forced if "bShowFirstLast" is set)
         $alwaysPrev =
             (
                 $bShowFirstLast ?
@@ -145,7 +143,7 @@ class BrowserUtility {
             $pagefloat = -1; // pagefloat disabled
         }
 
-                // default values for "traditional" wrapping with a table. Can be overwritten by vars from $wrapArr
+        // default values for "traditional" wrapping with a table. Can be overwritten by vars from $wrapArr
         if ($bCSSStyled) {
             $wrapper['disabledLinkWrap'] = '<span class="disabledLinkWrap">|</span>';
             $wrapper['inactiveLinkWrap'] = '<span class="inactiveLinkWrap">|</span>';
@@ -170,12 +168,12 @@ class BrowserUtility {
             is_array($pObject->internal['image']) &&
             $pObject->internal['image']['path']
         ) {
-            $onMouseOver = ($pObject->internal['image']['onmouseover'] ? 'onmouseover="'.$pObject->internal['image']['onmouseover'] . '" ': '');
-            $onMouseOut = ($pObject->internal['image']['onmouseout'] ? 'onmouseout="' . $pObject->internal['image']['onmouseout'] . '" ': '');
-            $onMouseOverActive = ($pObject->internal['imageactive']['onmouseover'] ? 'onmouseover="' . $pObject->internal['imageactive']['onmouseover'] . '" ': '');
+            $onMouseOver = ($pObject->internal['image']['onmouseover'] ? 'onmouseover="' . $pObject->internal['image']['onmouseover'] . '" ' : '');
+            $onMouseOut = ($pObject->internal['image']['onmouseout'] ? 'onmouseout="' . $pObject->internal['image']['onmouseout'] . '" ' : '');
+            $onMouseOverActive = ($pObject->internal['imageactive']['onmouseover'] ? 'onmouseover="' . $pObject->internal['imageactive']['onmouseover'] . '" ' : '');
             $onMouseOutActive = (
                 $pObject->internal['imageactive']['onmouseout'] ?
-                    'onmouseout="' . $pObject->internal['imageactive']['onmouseout'] . '" ':
+                    'onmouseout="' . $pObject->internal['imageactive']['onmouseout'] . '" ' :
                     ''
             );
             $wrapper['browseTextWrap'] = '<img src="' . $pObject->internal['image']['path'] . $pObject->internal['image']['filemask'] . '" ' . $onMouseOver . $onMouseOut . '>';
@@ -196,10 +194,10 @@ class BrowserUtility {
             </div>';
         }
 
-            // now overwrite all entries in $wrapper which are also in $wrapArr
+        // now overwrite all entries in $wrapper which are also in $wrapArr
         $wrapper = array_merge($wrapper, $wrapArr);
 
-        if ($showResultCount != 2) { //show pagebrowser
+        if ($showResultCount != 2) { // show pagebrowser
             if ($pagefloat > -1) {
                 $lastPage =
                     min(
@@ -221,7 +219,7 @@ class BrowserUtility {
             }
             $links = [];
 
-                // Make browse-table/links:
+            // Make browse-table/links:
             if ($bShowFirstLast) { // Link to first page
                 if ($pointer > 0) {
                     $linkArray[$pointerName] = null;
@@ -287,22 +285,22 @@ class BrowserUtility {
                 }
             }
 
-            for($a = $firstPage; $a < $lastPage; $a++) { // Links to pages
+            for ($a = $firstPage; $a < $lastPage; $a++) { // Links to pages
                 $pageText = '';
                 if ($pObject->internal['showRange']) {
                     $pageText = (($a * $limit) + 1) . '-' .
                         min(
                             $count,
-                            (($a + 1) * $limit)
+                            ($a + 1) * $limit
                         );
-                } else if ($totalPages > 1) {
+                } elseif ($totalPages > 1) {
                     if ($wrapper['browseTextWrap']) {
                         if ($pointer == $a) { // current page
-                            $pageText = $cObj->wrap(($a + 1), $wrapper['activeBrowseTextWrap']);
+                            $pageText = $cObj->wrap($a + 1, $wrapper['activeBrowseTextWrap']);
                         } else {
                             $pageText =
                                 $cObj->wrap(
-                                    ($a + 1),
+                                    $a + 1,
                                     $wrapper['browseTextWrap']
                                 );
                         }
@@ -327,7 +325,7 @@ class BrowserUtility {
                                 $pageText,
                                 $wrapper['activeLinkWrap']
                             );
-                    } else if ($pageText != '') {
+                    } elseif ($pageText != '') {
                         $linkArray[$pointerName] = ($a ? $a : '');
                         $link =
                             static::linkTPKeepCtrlVars(
@@ -339,7 +337,7 @@ class BrowserUtility {
                                 $bUseCache
                             );
                     }
-                } else if ($pageText != '') {
+                } elseif ($pageText != '') {
                     $linkArray[$pointerName] = ($a ? $a : '');
                     $link =
                         $cObj->wrap(
@@ -432,10 +430,10 @@ class BrowserUtility {
                 // this will render the resultcount in a more flexible way using markers (new in TYPO3 3.8.0).
                 // the formatting string is expected to hold template markers (see function header). Example: 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###'
 
-                $markerArray['###FROM###'] = $cObj->wrap($count > 0 ? $pR1 : 0,$wrapper['showResultsNumbersWrap']);
+                $markerArray['###FROM###'] = $cObj->wrap($count > 0 ? $pR1 : 0, $wrapper['showResultsNumbersWrap']);
                 $markerArray['###TO###'] = $cObj->wrap(min($count, $pR2), $wrapper['showResultsNumbersWrap']);
                 $markerArray['###OUT_OF###'] = $cObj->wrap($count, $wrapper['showResultsNumbersWrap']);
-                $markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . $languageObj->getLabel('list_browseresults_to', $usedLang, 'to') . ' ' . min($count,$pR2),$wrapper['showResultsNumbersWrap']);
+                $markerArray['###FROM_TO###'] = $cObj->wrap(($count > 0 ? $pR1 : 0) . ' ' . $languageObj->getLabel('list_browseresults_to', $usedLang, 'to') . ' ' . min($count, $pR2), $wrapper['showResultsNumbersWrap']);
                 $markerArray['###CURRENT_PAGE###'] = $cObj->wrap($pointer + 1, $wrapper['showResultsNumbersWrap']);
                 $markerArray['###TOTAL_PAGES###'] = $cObj->wrap($totalPages, $wrapper['showResultsNumbersWrap']);
                 $list_browseresults_displays = $languageObj->getLabel('list_browseresults_displays_marker', $usedLang, 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
@@ -463,6 +461,7 @@ class BrowserUtility {
             $resultCountMsg = '';
         }
         $rc = $cObj->wrap($resultCountMsg . $theLinks, $wrapper['browseBoxWrap']);
+
         return $rc;
     }
 
@@ -472,17 +471,19 @@ class BrowserUtility {
      * This is an advanced form of evaluation of whether a URL should be cached or not.
      *
      * @param   object      parent object of type \JambageCom\Div2007\Base\BrowserBase
-     * @return  boolean     Returns true (1) if conditions are met.
+     *
+     * @return  bool     returns true (1) if conditions are met
+     *
      * @see linkTPKeepCtrlVars()
      */
-    static public function autoCache ($pObject, $inArray)
+    public static function autoCache($pObject, $inArray)
     {
         $bUseCache = true;
 
         if (is_array($inArray)) {
-            foreach($inArray as $fN => $fV) {
+            foreach ($inArray as $fN => $fV) {
                 $bIsCachable = false;
-                if (!strcmp($inArray[$fN],'')) {
+                if (!strcmp($inArray[$fN], '')) {
                     $bIsCachable = true;
                 } elseif (
                     isset($pObject->autoCacheFields[$fN]) &&
@@ -500,7 +501,7 @@ class BrowserUtility {
                         isset($pObject->autoCacheFields[$fN]['list']) &&
                         is_array($pObject->autoCacheFields[$fN]['list']) &&
                         in_array($inArray[$fN], $pObject->autoCacheFields[$fN]['list'])
-                    ){
+                    ) {
                         $bIsCachable = true;
                     }
                 }
@@ -511,6 +512,7 @@ class BrowserUtility {
                 }
             }
         }
+
         return $bUseCache;
     }
 
@@ -524,13 +526,15 @@ class BrowserUtility {
      * @param   string      prefix id
      * @param   string      The content string to wrap in <a> tags
      * @param   array       Array of values to override in the current piVars. Contrary to static::linkTP the keys in this array must correspond to the real piVars array and therefore NOT be prefixed with the $this->prefixId string. Further, if a value is a blank string it means the piVar key will not be a part of the link (unset)
-     * @param   boolean     If $cache is set, the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
-     * @param   boolean     If set, then the current values of piVars will NOT be preserved anyways... Practical if you want an easy way to set piVars without having to worry about the prefix, "tx_xxxxx[]"
-     * @param   integer     Alternative page ID for the link. (By default this function links to the SAME page!)
+     * @param   bool     If $cache is set, the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
+     * @param   bool     If set, then the current values of piVars will NOT be preserved anyways... Practical if you want an easy way to set piVars without having to worry about the prefix, "tx_xxxxx[]"
+     * @param   int     Alternative page ID for the link. (By default this function links to the SAME page!)
+     *
      * @return  string      The input string wrapped in <a> tags
+     *
      * @see static::linkTP()
      */
-    static public function linkTPKeepCtrlVars (
+    public static function linkTPKeepCtrlVars(
         \JambageCom\Div2007\Base\BrowserBase $pObject,
         $cObj,
         $prefixId,
@@ -539,8 +543,7 @@ class BrowserUtility {
         $cache = 0,
         $clearAnyway = 0,
         $altPageId = 0
-    )
-    {
+    ) {
         $overruledCtrlVars = '';
 
         if (
@@ -573,11 +576,12 @@ class BrowserUtility {
                 $cObj,
                 $str,
                 [
-                    $prefixId => $overruledCtrlVars
+                    $prefixId => $overruledCtrlVars,
                 ],
                 $cache,
                 $altPageId
             );
+
         return $result;
     }
 
@@ -589,28 +593,29 @@ class BrowserUtility {
      * @param   object      cObject
      * @param   string      The content string to wrap in <a> tags
      * @param   array       Array with URL parameters as key/value pairs. They will be "imploded" and added to the list of parameters defined in the $pObject TypoScript property "parent.addParams" plus $pObject->moreParams.
-     * @param   boolean     If $cache is set (0/1), the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
-     * @param   integer     Alternative page ID for the link. (By default this function links to the SAME page!)
+     * @param   bool     If $cache is set (0/1), the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
+     * @param   int     Alternative page ID for the link. (By default this function links to the SAME page!)
+     *
      * @return  string      The input string wrapped in <a> tags
+     *
      * @see pi_linkTP_keepPIvars(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink()
      */
-    static public function linkTP (
+    public static function linkTP(
         \JambageCom\Div2007\Base\BrowserBase $pObject,
         $cObj,
         $str,
         $urlParameters = [],
         $cache = 0,
         $altPageId = 0
-    )
-    {
+    ) {
         $conf = [];
         $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
-        $conf['additionalParams'] = 
+        $conf['additionalParams'] =
             ($pObject->conf['parent.']['addParams'] ?? '') .
             GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) .
             $pObject->moreParams;
         $result = $cObj->typoLink($str, $conf);
+
         return $result;
     }
 }
-

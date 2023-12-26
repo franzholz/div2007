@@ -28,39 +28,40 @@ namespace JambageCom\Div2007\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 /**
- * view functions
+ * view functions.
  *
  * @author	Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
  */
 
-use \TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-use \JambageCom\Div2007\Utility\HtmlUtility;
-
-class ViewUtility {
+class ViewUtility
+{
     /**
-    * Returns the help page with a mini guide how to setup the extension
-    *
-    * example:
-    * 	$content .= ViewUtility::displayHelpPage($this->cObj->fileResource('EXT:myextension/template/help.tmpl'));
-    * 	unset($this->errorMessage);
-    *
-    * @param   object      language object of type \JambageCom\Div2007\Base\TranslationBase
-    * @param   object	   cObj
-    * @param   string	   HTML template content
-    * @param   string	   extension key
-    * @param   string	   error message for the marker ###ERROR_MESSAGE###
-    * @param   string	   CODE of plugin
-    *
-    * @return	string		HTML to display the help page
-    * @access	public
-    *
-    */
-    static public function displayHelpPage (
+     * Returns the help page with a mini guide how to setup the extension.
+     *
+     * example:
+     * 	$content .= ViewUtility::displayHelpPage($this->cObj->fileResource('EXT:myextension/template/help.tmpl'));
+     * 	unset($this->errorMessage);
+     *
+     * @param   object      language object of type \JambageCom\Div2007\Base\TranslationBase
+     * @param   object	   cObj
+     * @param   string	   HTML template content
+     * @param   string	   extension key
+     * @param   string	   error message for the marker ###ERROR_MESSAGE###
+     * @param   string	   CODE of plugin
+     *
+     * @return	string		HTML to display the help page
+     *
+     * @access	public
+     */
+    public static function displayHelpPage(
         \JambageCom\Div2007\Base\TranslationBase $languageObjj,
         \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
         $helpTemplate,
@@ -70,8 +71,8 @@ class ViewUtility {
     ) {
         $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
 
-            // Get language version
-        $helpTemplate_lang='';
+        // Get language version
+        $helpTemplate_lang = '';
         if ($languageObjj->getLocalLangKey()) {
             $helpTemplate_lang =
                 $parser->getSubpart(
@@ -85,14 +86,13 @@ class ViewUtility {
                 $helpTemplate_lang :
                 $parser->getSubpart($helpTemplate, '###TEMPLATE_DEFAULT###')
         );
-            // Markers and substitution:
-        $extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey);
-		$markerArray['###PATH###'] =     \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix($extensionPath);
+        // Markers and substitution:
+        $extensionPath = ExtensionManagementUtility::extPath($extensionKey);
+        $markerArray['###PATH###'] = \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix($extensionPath);
         $markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<strong>' . $errorMessage . '</strong><br' . HtmlUtility::generateXhtmlFix() . '>' : '');
         $markerArray['###CODE###'] = $theCode;
         $result = $parser->substituteMarkerArray($helpTemplate, $markerArray);
+
         return $result;
     }
 }
-
-

@@ -14,34 +14,32 @@ namespace JambageCom\Div2007\Api;
  *
  * The TYPO3 project - inspiring people to share!
  */
- 
+
 /**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
  * HTML functions
  *
  * @author  Franz Holzinger <franz@ttproducts.de>
+ *
  * @maintainer	Franz Holzinger <franz@ttproducts.de>
+ *
  * @package TYPO3
  * @subpackage div2007
- *
- *
  */
-
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-
-
-class Css implements \TYPO3\CMS\Core\SingletonInterface {
-
+class Css implements \TYPO3\CMS\Core\SingletonInterface
+{
     /**
-     * Returns a class-name
+     * Returns a class-name.
      *
      * @param   string      The class name
      * @param   string      type (HTML tag or combination) You can use '-' as the inside separator sign
+     *
      * @return  string      The combined class name
+     *
      * @see pi_getClassName()
      */
-    public function getClassName ($class, $type = '')
+    public function getClassName($class, $type = '')
     {
         $result = '';
         if ($type != '') {
@@ -49,10 +47,9 @@ class Css implements \TYPO3\CMS\Core\SingletonInterface {
         }
         $separators = ' -_';
         $result .= ucwords($class, $separators);
-        
+
         $result = preg_replace('/[^A-Za-z0-9]/', '', $result);
 
         return $result;
     }
 }
-

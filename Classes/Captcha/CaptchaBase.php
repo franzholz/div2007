@@ -1,4 +1,5 @@
 <?php
+
 namespace JambageCom\Div2007\Captcha;
 
 /*
@@ -23,63 +24,60 @@ namespace JambageCom\Div2007\Captcha;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
-use JambageCom\Div2007\Captcha\CaptchaInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
- * Hook for captcha image marker when extension 'captcha' is used
+ * Hook for captcha image marker when extension 'captcha' is used.
  */
 abstract class CaptchaBase implements CaptchaInterface
 {
     protected $extensionKey; // override the extension key
     protected $name;         // override the qualifier name
     protected $markerPrefix = 'CAPTCHA';
-    private   $defaultMarkerPrefix = 'CAPTCHA';
+    private $defaultMarkerPrefix = 'CAPTCHA';
 
-    public function getExtensionKey ()
+    public function getExtensionKey()
     {
         return $this->extensionKey;
     }
 
     /**
-    * Returns the qualifier name for this captcha
-    *
-    * @return string the type name for this captcha
-    */
-    public function getName ()
+     * Returns the qualifier name for this captcha.
+     *
+     * @return string the type name for this captcha
+     */
+    public function getName()
     {
         return $this->name;
     }
 
     /**
-    * Returns the prefix name for the marker key
-    *
-    * @return string prefix name
-    */
-    public function getMarkerPrefix ()
+     * Returns the prefix name for the marker key.
+     *
+     * @return string prefix name
+     */
+    public function getMarkerPrefix()
     {
         return $this->markerPrefix;
     }
 
     /**
-    * Returns the default prefix name for the marker key
-    *
-    * @return string prefix name
-    */
-    public function getDefaultMarkerPrefix ()
+     * Returns the default prefix name for the marker key.
+     *
+     * @return string prefix name
+     */
+    public function getDefaultMarkerPrefix()
     {
         return $this->defaultMarkerPrefix;
     }
 
     /**
-    * Determines whether the required captcha extension is loaded
-    *
-    * @return boolean true if the required captcha extension is loaded
-    */
-    public function isLoaded ()
+     * Determines whether the required captcha extension is loaded.
+     *
+     * @return bool true if the required captcha extension is loaded
+     */
+    public function isLoaded()
     {
         return ExtensionManagementUtility::isLoaded($this->getExtensionKey());
     }
-
 }
-
