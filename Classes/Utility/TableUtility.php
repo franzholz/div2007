@@ -34,6 +34,7 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
+use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -297,7 +298,7 @@ class TableUtility
         if (is_array($listArr) && count($listArr)) {
             $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . static::enableFields('pages') . ' AND doktype NOT IN (' . $this->checkPid_badDoktypeList . ')');
             if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
-                $GLOBALS['TT']->setTSlogMessage($error . ': ' . $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery, 3);
+                GeneralUtility::makeInstance(TimeTracker::class)->setTSlogMessage($error . ': ' . $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery, 3);
             } else {
                 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
                     $outArr[] = $row['uid'];
