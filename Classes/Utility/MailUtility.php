@@ -83,13 +83,7 @@ class MailUtility
             return $result;
         }
 
-        $charset = 'UTF-8';
-        if (
-            isset($GLOBALS['TSFE']->renderCharset) &&
-            $GLOBALS['TSFE']->renderCharset != ''
-        ) {
-            $charset = $GLOBALS['TSFE']->renderCharset;
-        }
+        $charset = 'utf-8';
 
         if (!is_array($toEMail) && strlen($toEMail)) {
             $emailArray = GeneralUtility::trimExplode(',', $toEMail);
