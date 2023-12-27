@@ -14,7 +14,7 @@ namespace JambageCom\Div2007\Middleware;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\Routing\RequestContextFactory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -48,7 +48,7 @@ class StoreRequest implements MiddlewareInterface
             version_compare($version, '12.4.0', '>=')
         ) {
             $container = GeneralUtility::getContainer();
-            $contextFactory = $container->get(\TYPO3\CMS\Core\Routing\RequestContextFactory::class);
+            $contextFactory = $container->get(RequestContextFactory::class);
             $matcher = GeneralUtility::makeInstance(
                 SiteMatcher::class,
                 GeneralUtility::makeInstance(Features::class),

@@ -14,7 +14,7 @@ namespace JambageCom\Div2007\Base;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -346,7 +346,7 @@ class TranslationBase
             return false;
         }
 
-        $callingClassName = \TYPO3\CMS\Core\Localization\LocalizationFactory::class;
+        $callingClassName = LocalizationFactory::class;
 
         /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
         $languageFactory = GeneralUtility::makeInstance($callingClassName);

@@ -14,7 +14,6 @@ namespace JambageCom\Div2007\Api;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 /**
  * not supported since TYPO3 12!
  * Migrate to OldStaticInfoTablesApi!
@@ -23,7 +22,7 @@ namespace JambageCom\Div2007\Api;
  *
  * attention: This class must also work under TYPO3 7.6
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
 use JambageCom\Div2007\Utility\ExtensionUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 use SJBR\StaticInfoTables\Domain\Repository\CurrencyRepository;
@@ -38,7 +37,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-class OldStaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface
+class OldStaticInfoTablesApi implements SingletonInterface
 {
     private $hasBeenInitialized = false;
     private $cache = [];

@@ -37,13 +37,16 @@ namespace JambageCom\Div2007\Security;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory;
+use TYPO3\CMS\Saltedpasswords\Salt\SaltFactory;
+use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAwareInterface
+class StorageSecurity implements SingletonInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -76,10 +79,10 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
                 case 'salted':
                     $objHash = null;
 
-                    if (class_exists(\TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::class)) {
-                        $objHash = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory::class)->getDefaultHashInstance('FE');
-                    } elseif (class_exists(\TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::class)) {
-                        $objHash = \TYPO3\CMS\Saltedpasswords\Salt\SaltFactory::getSaltingInstance(null);
+                    if (class_exists(PasswordHashFactory::class)) {
+                        $objHash = GeneralUtility::makeInstance(PasswordHashFactory::class)->getDefaultHashInstance('FE');
+                    } elseif (class_exists(SaltFactory::class)) {
+                        $objHash = SaltFactory::getSaltingInstance(null);
                     }
 
                     if (is_object($objHash)) {
@@ -168,7 +171,7 @@ class StorageSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAware
                     $password != '' &&
                     ExtensionManagementUtility::isLoaded('rsaauth')
                 ) {
-                    $backend = \TYPO3\CMS\Rsaauth\Backend\BackendFactory::getBackend();
+                    $backend = BackendFactory::getBackend();
                     if (is_object($backend) && $backend->isAvailable()) {
                         $decryptedPassword = $backend->decrypt($privateKey, $password);
                         if ($decryptedPassword) {

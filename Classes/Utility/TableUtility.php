@@ -24,7 +24,6 @@ namespace JambageCom\Div2007\Utility;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-
 /**
  * table functions. It requires TYPO3 6.2.
  *
@@ -35,7 +34,7 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Frontend\Page\PageRepository;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -450,7 +449,7 @@ class TableUtility
         }
 
         foreach ($uidArray as $currentUid) {
-            $records = \TYPO3\CMS\Frontend\Page\PageRepository::getRecordsByField(
+            $records = PageRepository::getRecordsByField(
                 'pages',
                 'pid',
                 $currentUid

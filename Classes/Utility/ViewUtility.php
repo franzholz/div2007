@@ -37,7 +37,10 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use JambageCom\Div2007\Base\TranslationBase;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -62,14 +65,14 @@ class ViewUtility
      * @access	public
      */
     public static function displayHelpPage(
-        \JambageCom\Div2007\Base\TranslationBase $languageObjj,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
+        TranslationBase $languageObjj,
+        ContentObjectRenderer $cObj,
         $helpTemplate,
         $extensionKey,
         $errorMessage = '',
         $theCode = ''
     ) {
-        $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $parser = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
 
         // Get language version
         $helpTemplate_lang = '';
@@ -88,7 +91,7 @@ class ViewUtility
         );
         // Markers and substitution:
         $extensionPath = ExtensionManagementUtility::extPath($extensionKey);
-        $markerArray['###PATH###'] = \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix($extensionPath);
+        $markerArray['###PATH###'] = PathUtility::stripPathSitePrefix($extensionPath);
         $markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<strong>' . $errorMessage . '</strong><br' . HtmlUtility::generateXhtmlFix() . '>' : '');
         $markerArray['###CODE###'] = $theCode;
         $result = $parser->substituteMarkerArray($helpTemplate, $markerArray);

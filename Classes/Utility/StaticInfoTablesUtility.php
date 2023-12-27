@@ -14,7 +14,6 @@ namespace JambageCom\Div2007\Utility;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 /**
  * deprecated. Use the class \JambageCom\Div2007\Api\StaticInfoTablesApi instead.
  * functions for the TYPO3 extension static_info_tables
@@ -22,7 +21,7 @@ namespace JambageCom\Div2007\Utility;
  *
  * attention: This class must also work under TYPO3 6.2
  */
-
+use SJBR\StaticInfoTables\PiBaseApi;
 use TYPO3\CMS\Core\Localization\Locales;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -62,7 +61,7 @@ class StaticInfoTablesUtility
                 $sitVersion = $eInfo['version'];
                 $class = '';
                 if (version_compare($sitVersion, '6.0.0', '>=')) {
-                    $class = \SJBR\StaticInfoTables\PiBaseApi::class;
+                    $class = PiBaseApi::class;
                 } else {
                     return false;
                 }

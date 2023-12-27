@@ -14,7 +14,6 @@ namespace JambageCom\Div2007\Utility;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 /**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
@@ -28,7 +27,15 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Core\Mail\MailMessage;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
+use JambageCom\Div2007\Api\CompatibilityApi;
+use JambageCom\Div2007\Api\OldCompatibilityApi;
+use Symfony\Component\Mime\Crypto\DkimSigner;
+use Symfony\Component\Mailer\SentMessage;
+use Symfony\Component\Mailer\Exception\TransportException;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class MailUtility
@@ -167,7 +174,7 @@ class MailUtility
             }
         }
 
-        $mail = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Mail\MailMessage::class);
+        $mail = GeneralUtility::makeInstance(MailMessage::class);
         // HTML
         if (trim($HTMLContent)) {
             $HTMLContent = static::embedMedia($mail, $HTMLContent);
@@ -185,10 +192,10 @@ class MailUtility
             if ($PLAINContent != '') {
                 $mail->addPart($PLAINContent, 'text/plain');
             }
-        } elseif ($mail instanceof \Symfony\Component\Mime\Email) {
+        } elseif ($mail instanceof Email) {
             $mail
                 ->setTo($toEMail)
-                ->from(new \Symfony\Component\Mime\Address($fromEMail, $fromName))
+                ->from(new Address($fromEMail, $fromName))
                 ->subject($subject)
             ;
             if ($HTMLContent != '') {
@@ -201,9 +208,9 @@ class MailUtility
             $apiClass = '';
 
             if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
-                $apiClass = \JambageCom\Div2007\Api\CompatibilityApi::class;
+                $apiClass = CompatibilityApi::class;
             } else {
-                $apiClass = \JambageCom\Div2007\Api\OldCompatibilityApi::class;
+                $apiClass = OldCompatibilityApi::class;
             }
 
             $compatibilityApi = GeneralUtility::makeInstance($apiClass);
@@ -382,9 +389,9 @@ class MailUtility
                     throw new \Exception(DIV2007_EXT . ': Signer file not found ("' . $absFilename . '")');
                 }
 
-                if (class_exists(\Symfony\Component\Mime\Crypto\DkimSigner::class)) {
+                if (class_exists(DkimSigner::class)) {
                     $signer = GeneralUtility::makeInstance(
-                        \Symfony\Component\Mime\Crypto\DkimSigner::class,
+                        DkimSigner::class,
                         $absFilename,
                         $signerRow['domain'],
                         $signerRow['selector']
@@ -425,7 +432,7 @@ class MailUtility
                             $debug == 'DEBUG'
                         ) &&
                         is_object($resultSend) &&
-                        $resultSend instanceof \Symfony\Component\Mailer\SentMessage
+                        $resultSend instanceof SentMessage
                     ) {
                         debug($resultSend->getOriginalMessage(), 'MailUtility::send original message'); // keep this
                         debug($resultSend->getDebug(), 'MailUtility::send debug'); // keep this
@@ -439,7 +446,7 @@ class MailUtility
                         }
                     }
                 } catch (Exception $e) {
-                    if ($e instanceof \Symfony\Component\Mailer\Exception\TransportException) {
+                    if ($e instanceof TransportException) {
                         debug($e->getDebug(), 'MailUtility::send Exception debug'); // keep this
                     }
                 }
@@ -458,7 +465,7 @@ class MailUtility
      * @return string the subtituted HTML content
      */
     public static function embedMedia(
-        \TYPO3\CMS\Core\Mail\MailMessage $mail,
+        MailMessage $mail,
         $htmlContent
     ) {
         $substitutedHtmlContent = $htmlContent;
@@ -502,7 +509,7 @@ class MailUtility
             if ($mail instanceof \Swift_Message) {
                 $embedded = $mail->embed(\Swift_Image::fromPath(PATH_site . $source));
             } else {
-                $mail->embedFromPath(\TYPO3\CMS\Core\Core\Environment::getPublicPath() . '/' . $source, $key);
+                $mail->embedFromPath(Environment::getPublicPath() . '/' . $source, $key);
                 $embedded = 'cid:' . $key;
             }
 

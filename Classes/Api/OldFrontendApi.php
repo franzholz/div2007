@@ -14,7 +14,6 @@ namespace JambageCom\Div2007\Api;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 /**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
@@ -27,7 +26,12 @@ namespace JambageCom\Div2007\Api;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Core\Routing\SiteMatcher;
+use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\Routing\SiteRouteResult;
+use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Routing\RouteNotFoundException;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class OldFrontendApi
@@ -53,7 +57,7 @@ class OldFrontendApi
 
         if (
             isset($params['0']) &&
-            $params['0'] instanceof \Psr\Http\Message\ServerRequestInterface
+            $params['0'] instanceof ServerRequestInterface
         ) {
             $request = $params['0'];
         }
@@ -65,20 +69,20 @@ class OldFrontendApi
             $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
         }
 
-        if ($request instanceof \Psr\Http\Message\ServerRequestInterface) {
+        if ($request instanceof ServerRequestInterface) {
             $matcher = GeneralUtility::makeInstance(
-                \TYPO3\CMS\Core\Routing\SiteMatcher::class,
-                GeneralUtility::makeInstance(\TYPO3\CMS\Core\Site\SiteFinder::class)
+                SiteMatcher::class,
+                GeneralUtility::makeInstance(SiteFinder::class)
             );
-            /** @var \TYPO3\CMS\Core\Routing\SiteRouteResult $routeResult */
+            /** @var SiteRouteResult $routeResult */
             $routeResult = $matcher->matchRequest($request);
-            /** @var \TYPO3\CMS\Core\Site\Entity\Site $site */
+            /** @var Site $site */
             $site = $routeResult->getSite();
         }
 
         if (
             isset($site) &&
-            $site instanceof \TYPO3\CMS\Core\Site\Entity\Site
+            $site instanceof Site
         ) {
             try {
                 $previousResult = $request->getAttribute('routing', null);
@@ -90,7 +94,7 @@ class OldFrontendApi
                     $pageArguments = $site->getRouter()->matchRequest($request, $previousResult);
                     $result = $pageArguments->getPageId();
                 }
-            } catch (\TYPO3\CMS\Core\Routing\RouteNotFoundException $e) {
+            } catch (RouteNotFoundException $e) {
                 return GeneralUtility::makeInstance(ErrorController::class)->pageNotFoundAction(
                     $request,
                     'The requested page does not exist',

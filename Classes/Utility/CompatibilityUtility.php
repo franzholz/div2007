@@ -14,7 +14,6 @@ namespace JambageCom\Div2007\Utility;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 /**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
@@ -27,14 +26,15 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CompatibilityUtility
 {
     public static function getPageRepository()
     {
-        $classname = \TYPO3\CMS\Core\Domain\Repository\PageRepository::class;
+        $classname = PageRepository::class;
         $pageRepository = GeneralUtility::makeInstance($classname);
 
         return $pageRepository;
@@ -42,7 +42,7 @@ class CompatibilityUtility
 
     public static function isLoggedIn()
     {
-        $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
+        $context = GeneralUtility::makeInstance(Context::class);
         $result = $context->getPropertyFromAspect('frontend.user', 'isLoggedIn');
 
         return $result;
@@ -50,7 +50,7 @@ class CompatibilityUtility
 
     public static function includeHiddenContent()
     {
-        $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
+        $context = GeneralUtility::makeInstance(Context::class);
         $result = $context->getPropertyFromAspect('visibility', 'includeHiddenContent');
 
         return $result;
@@ -58,7 +58,7 @@ class CompatibilityUtility
 
     public static function includeHiddenPages()
     {
-        $context = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Context\Context::class);
+        $context = GeneralUtility::makeInstance(Context::class);
         $result = $context->getPropertyFromAspect('visibility', 'includeHiddenPages');
 
         return $result;

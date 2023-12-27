@@ -26,7 +26,7 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Core\Html\HtmlParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class HtmlUtility
@@ -130,7 +130,7 @@ class HtmlUtility
             !$onlyForXhtml ||
             static::useXHTML()
         ) {
-            $htmlParser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Html\HtmlParser::class);
+            $htmlParser = GeneralUtility::makeInstance(HtmlParser::class);
             $result = $htmlParser->HTMLcleaner($content, [], 1, 0, ['xhtml' => 1]);
         } else {
             $result = $content;

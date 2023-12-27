@@ -14,7 +14,6 @@ namespace JambageCom\Div2007\Api;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 /**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
@@ -27,7 +26,7 @@ namespace JambageCom\Div2007\Api;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -35,7 +34,7 @@ use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 use TYPO3\CMS\Frontend\Page\PageRepository;
 
-class Frontend implements \TYPO3\CMS\Core\SingletonInterface
+class Frontend implements SingletonInterface
 {
     /**
      * @var TypoScriptFrontendController

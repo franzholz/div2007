@@ -14,7 +14,6 @@ namespace JambageCom\Div2007\Api;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 /**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
@@ -27,10 +26,10 @@ namespace JambageCom\Div2007\Api;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
 use JambageCom\Div2007\Base\TranslationBase;
 
-class Language implements \TYPO3\CMS\Core\SingletonInterface
+class Language implements SingletonInterface
 {
     /**
      * translation for a code value which corresponds to a TCA value array

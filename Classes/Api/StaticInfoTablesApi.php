@@ -14,14 +14,13 @@ namespace JambageCom\Div2007\Api;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 /**
  * functions for the TYPO3 extension static_info_tables.
  *
  * Alternative: see TYPO3 12 TYPO3\CMS\Core\Country\CountryProvider class
  * https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Country/Index.html
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
 use JambageCom\Div2007\Utility\ExtensionUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 use SJBR\StaticInfoTables\Domain\Repository\CurrencyRepository;
@@ -37,7 +36,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-class StaticInfoTablesApi implements \TYPO3\CMS\Core\SingletonInterface
+class StaticInfoTablesApi implements SingletonInterface
 {
     private $hasBeenInitialized = false;
     private $cache = [];

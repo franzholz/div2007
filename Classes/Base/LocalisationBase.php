@@ -14,7 +14,8 @@ namespace JambageCom\Div2007\Base;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -81,7 +82,7 @@ class LocalisationBase
         $this->scriptRelPath = $scriptRelPath;
         $this->lookupFilename = $lookupFilename;
 
-        $this->typoVersion = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
+        $this->typoVersion = VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
 
         $this->hasBeenInitialized = true;
         if ($useDiv2007Language) {
@@ -325,7 +326,7 @@ class LocalisationBase
                 ($this->scriptRelPath ? dirname($this->scriptRelPath) . '/' : '') . $langFile;
         }
 
-        $callingClassName = \TYPO3\CMS\Core\Localization\LocalizationFactory::class;
+        $callingClassName = LocalizationFactory::class;
 
         /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
         $languageFactory = GeneralUtility::makeInstance($callingClassName);
@@ -354,7 +355,7 @@ class LocalisationBase
         $charset = 'UTF-8';
 
         if ($this->altLLkey) {
-            $callingClassName = \TYPO3\CMS\Core\Localization\LocalizationFactory::class;
+            $callingClassName = LocalizationFactory::class;
 
             /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
             $languageFactory = GeneralUtility::makeInstance($callingClassName);

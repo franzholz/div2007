@@ -2,6 +2,7 @@
 
 namespace JambageCom\Div2007\Captcha;
 
+use TYPO3\CMS\Core\SingletonInterface;
 /*
  *  Copyright notice
  *
@@ -22,11 +23,10 @@ namespace JambageCom\Div2007\Captcha;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
-
 /**
  * Inferface for captcha hooks.
  */
-interface CaptchaInterface extends \TYPO3\CMS\Core\SingletonInterface
+interface CaptchaInterface extends SingletonInterface
 {
     /**
      * Determines whether the required captcha extension is loaded.

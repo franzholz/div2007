@@ -37,7 +37,7 @@ namespace JambageCom\Div2007\Security;
  * @package TYPO3
  * @subpackage agency
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -45,7 +45,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
 use TYPO3\CMS\Rsaauth\Storage\StorageFactory;
 
-class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAwareInterface
+class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
