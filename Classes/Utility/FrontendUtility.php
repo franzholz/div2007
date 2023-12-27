@@ -165,11 +165,11 @@ class FrontendUtility
             if (is_array($value)) {
                 foreach ($value as $Nvalue) {
                     $JSPart .= '
-    updateForm(\'' . $formName . '\',\'' . $arrPrefix . '[' . $fKey . '][]\',' . GeneralUtility::quoteJSvalue($Nvalue, true) . ');';
+    updateForm(\'' . $formName . '\',\'' . $arrPrefix . '[' . $fKey . '][]\',' . GeneralUtility::quoteJSvalue($Nvalue) . ');';
                 }
             } else {
                 $JSPart .= '
-    updateForm(\'' . $formName . '\',\'' . $arrPrefix . '[' . $fKey . ']\',' . GeneralUtility::quoteJSvalue($value, true) . ');';
+    updateForm(\'' . $formName . '\',\'' . $arrPrefix . '[' . $fKey . ']\',' . GeneralUtility::quoteJSvalue($value) . ');';
             }
         }
         $JSPart = '<script type="text/javascript">
