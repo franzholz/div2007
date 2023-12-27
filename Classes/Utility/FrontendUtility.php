@@ -110,7 +110,7 @@ class FrontendUtility
     {
         $result = false;
         $context = GeneralUtility::makeInstance(Context::class);
-        $tsfe = $this->getTypoScriptFrontendController();
+        $tsfe = static::getTypoScriptFrontendController();
 
         if (
             isset($tsfe->fe_user) &&
