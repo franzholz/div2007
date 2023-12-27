@@ -85,9 +85,7 @@ class ViewUtility
         }
 
         $helpTemplate = (
-            $helpTemplate_lang ?
-                $helpTemplate_lang :
-                $parser->getSubpart($helpTemplate, '###TEMPLATE_DEFAULT###')
+            $helpTemplate_lang ?: $parser->getSubpart($helpTemplate, '###TEMPLATE_DEFAULT###')
         );
         // Markers and substitution:
         $extensionPath = ExtensionManagementUtility::extPath($extensionKey);

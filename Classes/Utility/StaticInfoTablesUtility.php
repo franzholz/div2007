@@ -119,7 +119,7 @@ class StaticInfoTablesUtility
         }
         $GLOBALS['TYPO3_DB']->sql_free_result($res);
 
-        $lang = $lang ? $lang : strtoupper($langCodeT3);
+        $lang = $lang ?: strtoupper($langCodeT3);
 
         // Initialize cache array
         if (
@@ -155,7 +155,7 @@ class StaticInfoTablesUtility
             $locales = GeneralUtility::makeInstance(Locales::class);
             $isoArray = (array)$locales->getIsoMapping();
 
-            $lang = $lang ? $lang : static::getCurrentLanguage();
+            $lang = $lang ?: static::getCurrentLanguage();
             $lang = $isoArray[$lang] ?? $lang;
 
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'] as $field) {

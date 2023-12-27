@@ -265,7 +265,7 @@ class BrowserUtility
                         $hscText
                     );
                 if ($pointer > 0) {
-                    $linkArray[$pointerName] = ($pointer - 1 ? $pointer - 1 : '');
+                    $linkArray[$pointerName] = ($pointer - 1 ?: '');
                     $links[] =
                         $cObj->wrap(
                             static::linkTPKeepCtrlVars(
@@ -328,7 +328,7 @@ class BrowserUtility
                                 $wrapper['activeLinkWrap']
                             );
                     } elseif ($pageText != '') {
-                        $linkArray[$pointerName] = ($a ? $a : '');
+                        $linkArray[$pointerName] = ($a ?: '');
                         $link =
                             static::linkTPKeepCtrlVars(
                                 $pObject,
@@ -340,7 +340,7 @@ class BrowserUtility
                             );
                     }
                 } elseif ($pageText != '') {
-                    $linkArray[$pointerName] = ($a ? $a : '');
+                    $linkArray[$pointerName] = ($a ?: '');
                     $link =
                         $cObj->wrap(
                             static::linkTPKeepCtrlVars(
@@ -611,7 +611,7 @@ class BrowserUtility
         $altPageId = 0
     ) {
         $conf = [];
-        $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
+        $conf['parameter'] = $altPageId ?: ($pObject->tmpPageId ?: $GLOBALS['TSFE']->id);
         $conf['additionalParams'] =
             ($pObject->conf['parent.']['addParams'] ?? '') .
             GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) .

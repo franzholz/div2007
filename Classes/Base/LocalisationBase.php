@@ -313,7 +313,7 @@ class LocalisationBase
         $langFileParam = '',
         $overwrite = true
     ) {
-        $langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
+        $langFile = ($langFileParam ?: 'locallang.xml');
 
         if (
             str_starts_with($langFile, 'EXT:') ||

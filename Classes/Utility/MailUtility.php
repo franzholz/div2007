@@ -169,7 +169,7 @@ class MailUtility
             } else {
                 // First line is subject
                 $parts = explode(chr(10), $PLAINContent, 2);
-                $subject = trim($parts[0]) ? trim($parts[0]) : $defaultSubject;
+                $subject = trim($parts[0]) ?: $defaultSubject;
                 $PLAINContent = trim($parts[1]);
             }
         }

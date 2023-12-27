@@ -154,7 +154,7 @@ class OldStaticInfoTablesApi implements SingletonInterface
                 $isoCodeArray[] = $item;
                 switch ($type) {
                     case 'SUBDIVISIONS':
-                        $isoCodeArray[] = trim($country) ? trim($country) : $this->defaultCountry;
+                        $isoCodeArray[] = trim($country) ?: $this->defaultCountry;
                         break;
                     case 'LANGUAGES':
                         $isoCodeArray = GeneralUtility::trimExplode('_', $code, 1);
@@ -202,7 +202,7 @@ class OldStaticInfoTablesApi implements SingletonInterface
                 $defaultSelectedArray = [$this->defaultCountry];
                 break;
             case 'SUBDIVISIONS':
-                $param = (trim($country) ? trim($country) : $this->defaultCountry);
+                $param = (trim($country) ?: $this->defaultCountry);
                 $nameArray = $this->initCountrySubdivisions($param, $addWhere);
                 if ($param == $this->defaultCountry) {
                     $defaultSelectedArray = [$this->defaultCountryZone];
@@ -507,7 +507,7 @@ class OldStaticInfoTablesApi implements SingletonInterface
         }
         $GLOBALS['TYPO3_DB']->sql_free_result($res);
 
-        $lang = $lang ? $lang : strtoupper($langCodeT3);
+        $lang = $lang ?: strtoupper($langCodeT3);
 
         // Initialize cache array
         if (!is_array($this->cache['getCurrentLanguage'])) {
@@ -572,7 +572,7 @@ class OldStaticInfoTablesApi implements SingletonInterface
             $formatedAmount .= $this->currencyInfo['cu_iso_3'] . chr(32);
         }
         $formatedAmount .= $this->currencyInfo['cu_symbol_left'];
-        $formatedAmount .= number_format($amount, (int)$this->currencyInfo['cu_decimal_digits'], $this->currencyInfo['cu_decimal_point'], ($this->currencyInfo['cu_thousands_point']) ? $this->currencyInfo['cu_thousands_point'] : chr(32));
+        $formatedAmount .= number_format($amount, (int)$this->currencyInfo['cu_decimal_digits'], $this->currencyInfo['cu_decimal_point'], $this->currencyInfo['cu_thousands_point'] ?: chr(32));
         $formatedAmount .= (($this->currencyInfo['cu_symbol_right']) ? chr(32) : '') . $this->currencyInfo['cu_symbol_right'];
         if ($displayCurrencyCode === 'RIGHT') {
             $formatedAmount .= chr(32) . $this->currencyInfo['cu_iso_3'];
@@ -605,7 +605,7 @@ class OldStaticInfoTablesApi implements SingletonInterface
             $locales = GeneralUtility::makeInstance(Locales::class);
             $isoArray = (array)$locales->getIsoMapping();
 
-            $lang = $lang ? $lang : static::getCurrentLanguage();
+            $lang = $lang ?: static::getCurrentLanguage();
             $lang = $isoArray[$lang] ?? $lang;
 
             foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'] as $field) {
