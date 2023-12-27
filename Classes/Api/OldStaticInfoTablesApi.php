@@ -219,8 +219,7 @@ class OldStaticInfoTablesApi implements SingletonInterface
         }
 
         if (!$defaultSelectedArray) {
-            reset($nameArray);
-            $defaultSelectedArray = [key($nameArray)];
+            $defaultSelectedArray = [array_key_first($nameArray)];
         }
         $bEmptySelected = (empty($selectedArray) || ((count($selectedArray) == 1) && empty($selectedArray[0])));
         $selectedArray = ((!$bEmptySelected || count($mergeArray)) ? $selectedArray : $defaultSelectedArray);
