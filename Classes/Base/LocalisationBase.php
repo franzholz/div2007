@@ -14,6 +14,7 @@ namespace JambageCom\Div2007\Base;
  *
  * The TYPO3 project - inspiring people to share!
  */
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
@@ -82,7 +83,7 @@ class LocalisationBase
         $this->scriptRelPath = $scriptRelPath;
         $this->lookupFilename = $lookupFilename;
 
-        $this->typoVersion = VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
+        $this->typoVersion = VersionNumberUtility::convertVersionNumberToInteger(GeneralUtility::makeInstance(Typo3Version::class)->getVersion());
 
         $this->hasBeenInitialized = true;
         if ($useDiv2007Language) {

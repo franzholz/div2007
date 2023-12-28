@@ -284,7 +284,7 @@ class MailUtility
             ) {
                 $signerXmlFilename =
                     GeneralUtility::resolveBackPath(
-                        PATH_typo3conf . '../' . $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['dkimFile']
+                        Environment::getLegacyConfigPath() . '../' . $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['dkimFile']
                     );
                 // determine the file type
                 $basename = basename($signerXmlFilename);
@@ -350,7 +350,7 @@ class MailUtility
             ) {
                 $signerFilename =
                     GeneralUtility::resolveBackPath(
-                        PATH_typo3conf . '../' . $signerRow['privateKeyFile']
+                        Environment::getLegacyConfigPath() . '../' . $signerRow['privateKeyFile']
                     );
 
                 $absFilename = GeneralUtility::getFileAbsFileName($signerFilename);

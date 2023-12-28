@@ -34,8 +34,9 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -168,7 +169,7 @@ class TableUtility
      */
     public static function getMultipleGroupsWhereClause($field, $table)
     {
-        $memberGroups = GeneralUtility::intExplode(',', $GLOBALS['TSFE']->gr_list);
+        $memberGroups = GeneralUtility::intExplode(',', implode(',', GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('frontend.user', 'groupIds')));
         $orChecks = [];
         $orChecks[] = $field . '=\'\''; // If the field is empty, then OK
         $orChecks[] = $field . ' IS NULL'; // If the field is NULL, then OK
