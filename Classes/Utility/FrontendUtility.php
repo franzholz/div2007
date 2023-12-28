@@ -254,7 +254,7 @@ class FrontendUtility
         }
 
         $lookupFile = explode('?', $filename);
-        $scriptPath = (defined('PATH_thisScript') ? PATH_thisScript : Environment::getCurrentScript());
+        $scriptPath = Environment::getCurrentScript();
 
         $path =
             GeneralUtility::resolveBackPath(

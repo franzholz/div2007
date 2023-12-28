@@ -174,19 +174,7 @@ class MailUtility
             $HTMLContent = static::embedMedia($mail, $HTMLContent);
         }
 
-        if ($mail instanceof \Swift_Message) {
-            $mail->setCharset($charset)
-                ->setTo($toEMail)
-                ->setFrom([$fromEMail => $fromName])
-                ->setSubject($subject)
-            ;
-            if ($HTMLContent != '') {
-                $mail->setBody($HTMLContent, 'text/html');
-            }
-            if ($PLAINContent != '') {
-                $mail->addPart($PLAINContent, 'text/plain');
-            }
-        } elseif ($mail instanceof Email) {
+        if ($mail instanceof Email) {
             $mail
                 ->setTo($toEMail)
                 ->from(new Address($fromEMail, $fromName))
@@ -214,19 +202,11 @@ class MailUtility
         }
 
         if ($returnPath) {
-            if ($mail instanceof \Swift_Message) {
-                $mail->setReturnPath($returnPath);
-            } else {
-                $mail->returnPath($returnPath);
-            }
+            $mail->returnPath($returnPath);
         }
 
         if ($replyTo) {
-            if ($mail instanceof \Swift_Message) {
-                $mail->setReplyTo([$replyTo => $fromEmail]);
-            } else {
-                $mail->replyTo($replyTo);
-            }
+            $mail->replyTo($replyTo);
         }
 
         if (isset($attachment)) {
@@ -238,11 +218,7 @@ class MailUtility
 
             foreach ($attachmentArray as $theAttachment) {
                 if (file_exists($theAttachment)) {
-                    if ($mail instanceof \Swift_Message) {
-                        $mail->attach(\Swift_Attachment::fromPath($theAttachment));
-                    } else {
-                        $mail->attachFromPath($theAttachment);
-                    }
+                    $mail->attachFromPath($theAttachment);
                 }
             }
         }
@@ -391,22 +367,6 @@ class MailUtility
                         $signerRow['selector']
                     );
                     $mail = $signer->sign($mail);
-                } elseif (class_exists(\Swift_Signers_DKIMSigner::class)) {
-                    //  create a signer
-                    $signer = \Swift_Signers_DKIMSigner::newInstance(
-                        file_get_contents($absFilename),
-                        $signerRow['domain'],
-                        $signerRow['selector']
-                    );
-
-                    // ignore the additional headers
-                    $signer->ignoreHeader('Content-Transfer-Encoding');
-                    $signer->ignoreHeader('X-Swift-Return-Path');
-                    $signer->ignoreHeader('X-Mailer');
-                    if ($mail instanceof \Swift_Message) {
-                        // add the signer
-                        $mail->attachSigner($signer);
-                    }
                 } else {
                     throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: no mail signer class found.', 1612340604
                     );
@@ -500,12 +460,8 @@ class MailUtility
         foreach ($media as $key => $filename) {
             $embedded = '';
             $source = ltrim($filename, '/');
-            if ($mail instanceof \Swift_Message) {
-                $embedded = $mail->embed(\Swift_Image::fromPath(PATH_site . $source));
-            } else {
-                $mail->embedFromPath(Environment::getPublicPath() . '/' . $source, $key);
-                $embedded = 'cid:' . $key;
-            }
+            $mail->embedFromPath(Environment::getPublicPath() . '/' . $source, $key);
+            $embedded = 'cid:' . $key;
 
             $substitutedHtmlContent = str_replace(
                 '"' . $filename . '"',

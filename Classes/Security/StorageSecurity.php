@@ -39,7 +39,6 @@ namespace JambageCom\Div2007\Security;
  */
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory;
-use TYPO3\CMS\Saltedpasswords\Salt\SaltFactory;
 use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -81,8 +80,6 @@ class StorageSecurity implements SingletonInterface, LoggerAwareInterface
 
                     if (class_exists(PasswordHashFactory::class)) {
                         $objHash = GeneralUtility::makeInstance(PasswordHashFactory::class)->getDefaultHashInstance('FE');
-                    } elseif (class_exists(SaltFactory::class)) {
-                        $objHash = SaltFactory::getSaltingInstance(null);
                     }
 
                     if (is_object($objHash)) {
