@@ -76,7 +76,7 @@ class Frontend implements SingletonInterface
      * @param int $maxSizeOfSessionData The maximum size of stored session data. If zero, no limit is applied and even confirmation of cookie session is discarded.
      * @param bool $checkCookie the cookie check for write allowance is enabled by default
      */
-    public function record_registration($recs, $maxSizeOfSessionData = 0, $checkCookie = true)
+    public function record_registration($recs, $maxSizeOfSessionData = 0, $checkCookie = true): void
     {
         // Storing value ONLY if there is a confirmed cookie set,
         // otherwise a shellscript could easily be spamming the fe_sessions table

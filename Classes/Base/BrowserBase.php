@@ -98,7 +98,7 @@ class BrowserBase
         $imageArray,
         $imageActiveArray,
         $dontLinkActivePage = 0
-    ) {
+    ): void {
         $this->conf = $conf;
         $this->ctrlVars = $ctrlVars;
         $this->autoCacheFields = $ctrlLimits;

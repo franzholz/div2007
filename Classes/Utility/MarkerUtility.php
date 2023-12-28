@@ -37,7 +37,7 @@ namespace JambageCom\Div2007\Utility;
  */
 class MarkerUtility
 {
-    public static function addMarkers(array &$markerArray, $prefix, $separator, $key, $variable)
+    public static function addMarkers(array &$markerArray, $prefix, $separator, $key, $variable): void
     {
         $markerkey = $prefix . $separator . strtoupper($key);
         if (is_string($variable)) {

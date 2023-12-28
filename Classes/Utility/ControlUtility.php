@@ -124,7 +124,7 @@ class ControlUtility
         &$piVars,
         ContentObjectRenderer $cObj,
         array $conf
-    ) {
+    ): void {
         if (isset($conf['_DEFAULT_PI_VARS.']) && is_array($conf['_DEFAULT_PI_VARS.'])) {
             $conf['_DEFAULT_PI_VARS.'] = static::applyStdWrapRecursive($cObj, $conf['_DEFAULT_PI_VARS.']);
             $tmp = $conf['_DEFAULT_PI_VARS.'];
@@ -138,7 +138,7 @@ class ControlUtility
      *
      * @param string $key
      */
-    public static function _GETset($inputGet, $key = '')
+    public static function _GETset($inputGet, $key = ''): void
     {
         if ($key != '') {
             if (strpos($key, '|') !== false) {

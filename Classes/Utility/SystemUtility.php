@@ -129,7 +129,7 @@ class SystemUtility
      *
      * @return array of the records of all FE groups
      */
-    public static function addTimeZone(&$time)
+    public static function addTimeZone(&$time): void
     {
         if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['serverTimeZone'])) {
             $time += ($GLOBALS['TYPO3_CONF_VARS']['SYS']['serverTimeZone'] * 3600);
@@ -306,7 +306,7 @@ class SystemUtility
      *
      * @param string $pidList A list of INTEGER numbers which points to page uids for which to clear entries in the pages cache (page content cache)
      */
-    public static function clearPageCacheContent_pidList($pidList)
+    public static function clearPageCacheContent_pidList($pidList): void
     {
         $pageCache = static::getPageCache();
         $pageIds = GeneralUtility::trimExplode(',', $pidList);

@@ -191,7 +191,7 @@ class FrontendUtility
         return $result;
     }
 
-    public static function addJavascriptFile($filename, $key)
+    public static function addJavascriptFile($filename, $key): void
     {
         $script =
             '<script type="text/javascript" src="' .
@@ -201,7 +201,7 @@ class FrontendUtility
         $GLOBALS['TSFE']->additionalHeaderData[$key] = $script;
     }
 
-    public static function addCssFile($filename, $key)
+    public static function addCssFile($filename, $key): void
     {
         $GLOBALS['TSFE']->additionalHeaderData[$key] =
             '<link rel="stylesheet" href="' .
@@ -1236,7 +1236,7 @@ class FrontendUtility
     public static function fixImageCodeAbsRefPrefix(
         &$imageCode,
         $domain = ''
-    ) {
+    ): void {
         $absRefPrefix = '';
         $absRefPrefixDomain = '';
         $bSetAbsRefPrefix = false;
@@ -1365,7 +1365,7 @@ class FrontendUtility
         return '';
     }
 
-    public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController)
+    public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController): void
     {
         static::$typoScriptFrontendController = $typoScriptFrontendController;
     }

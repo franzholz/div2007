@@ -54,7 +54,7 @@ class LocalisationBase
         $scriptRelPath,
         $lookupFilename = '',
         $useDiv2007Language = true
-    ) {
+    ): void {
         if (
             isset($GLOBALS['TSFE']->config['config']) &&
             isset($GLOBALS['TSFE']->config['config']['language'])
@@ -93,7 +93,7 @@ class LocalisationBase
         }
     }
 
-    public function setLocallang(array &$locallang)
+    public function setLocallang(array &$locallang): void
     {
         $this->LOCAL_LANG = &$locallang;
     }
@@ -103,7 +103,7 @@ class LocalisationBase
         return $this->LOCAL_LANG;
     }
 
-    public function setLocallangCharset(&$locallang)
+    public function setLocallangCharset(&$locallang): void
     {
         $this->LOCAL_LANG_charset = &$locallang;
     }
@@ -113,7 +113,7 @@ class LocalisationBase
         return $this->LOCAL_LANG_charset;
     }
 
-    public function setLocallangLoaded($loaded = true)
+    public function setLocallangLoaded($loaded = true): void
     {
         $this->LOCAL_LANG_loaded = $loaded;
     }
@@ -123,7 +123,7 @@ class LocalisationBase
         return $this->LOCAL_LANG_loaded;
     }
 
-    public function setLLkey($llKey)
+    public function setLLkey($llKey): void
     {
         $this->LLkey = $llKey;
     }
@@ -146,7 +146,7 @@ class LocalisationBase
     {return $this->extKey;
     }
 
-    public function setConf($conf) // DEPRECATED
+    public function setConf($conf): void // DEPRECATED
     {$this->conf = $conf;
     }
 
@@ -158,7 +158,7 @@ class LocalisationBase
     {return $this->typoVersion;
     }
 
-    public function setLookupFilename($lookupFilename)
+    public function setLookupFilename($lookupFilename): void
     {
         $this->lookupFilename = $lookupFilename;
     }

@@ -34,7 +34,7 @@ class HtmlUtility
     private static $initialized = false;
     protected static $xhtmlFix = false;
 
-    public static function setInitialized($initialized)
+    public static function setInitialized($initialized): void
     {
         static::$initialized = $initialized;
     }
