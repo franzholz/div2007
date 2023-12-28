@@ -45,7 +45,7 @@ abstract class AbstractSessionHandler
      *
      * @return data The session data for the captcha extension
      */
-    public function setSessionKey($key)
+    public function setSessionKey($key): void
     {
         $this->sessionKey = $key;
     }

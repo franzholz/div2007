@@ -2,6 +2,8 @@
 
 namespace JambageCom\Div2007\Utility;
 
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 /***************************************************************
 *  Copyright notice
 *
@@ -24,7 +26,6 @@ namespace JambageCom\Div2007\Utility;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-
 /**
  * extension functions.
  *
@@ -50,7 +51,7 @@ class ExtensionUtility
         $result = '';
 
         if (!$path) {
-            $path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey);
+            $path = ExtensionManagementUtility::extPath($extKey);
         }
 
         if (is_dir($path)) {
@@ -128,19 +129,19 @@ class ExtensionUtility
         if (str_starts_with($filepath, 'EXT:')) {
             [$extensionKey, $relativePath] = explode('/', substr($filepath, 4), 2);
 
-            if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {
+            if (ExtensionManagementUtility::isLoaded($extensionKey)) {
                 if ($relative) {
                     $extensionPath =
-                        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(
+                        ExtensionManagementUtility::extPath(
                             $extensionKey
                         );
                     $result =
-                        \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(
+                        PathUtility::stripPathSitePrefix(
                             $extensionPath
                         ) . $relativePath;
                 } else {
                     $result =
-                        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(
+                        ExtensionManagementUtility::extPath(
                             $extensionKey
                         ) . $relativePath;
                 }

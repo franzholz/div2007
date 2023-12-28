@@ -63,7 +63,7 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
         }
     }
 
-    public function allowCookie()
+    public function allowCookie(): void
     {
         $this->frontendUser->dontSetCookie = false;
     }
@@ -71,7 +71,7 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     /**
      * Set session data.
      */
-    public function setSessionData($data)
+    public function setSessionData($data): void
     {
         if (
             empty($GLOBALS['TYPO3_CONF_VARS']['FE']['maxSessionDataSize']) ||

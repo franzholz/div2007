@@ -14,7 +14,7 @@ namespace JambageCom\Div2007\Database;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -28,7 +28,7 @@ class QueryBuilderApi
      * @param string $searchFieldList The fields to search in
      * @param string $searchTable The table name you search in (recommended for DBAL compliance. Will be prepended field names as well)
      *
-     * @return \TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression the WHERE clause
+     * @return CompositeExpression the WHERE clause
      */
     public static function searchWhere($searchWords, $searchFieldList, $searchTable)
     {

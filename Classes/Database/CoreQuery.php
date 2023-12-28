@@ -32,7 +32,7 @@ class CoreQuery
         }
     }
 
-    public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController)
+    public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController): void
     {
         static::$typoScriptFrontendController = $typoScriptFrontendController;
     }

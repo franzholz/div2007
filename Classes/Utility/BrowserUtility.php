@@ -24,7 +24,9 @@ namespace JambageCom\Div2007\Utility;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-
+use JambageCom\Div2007\Base\BrowserBase;
+use JambageCom\Div2007\Base\TranslationBase;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -73,8 +75,8 @@ class BrowserUtility
      * @return  string      Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
      */
     public static function render(
-        \JambageCom\Div2007\Base\BrowserBase $pObject,
-        \JambageCom\Div2007\Base\TranslationBase $languageObj,
+        BrowserBase $pObject,
+        TranslationBase $languageObj,
         $cObj,
         $prefixId,
         $bCSSStyled = true,
@@ -86,7 +88,7 @@ class BrowserUtility
         $addQueryString = []
     ) {
         $usedLang = '';
-        $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $parser = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $linkArray = $addQueryString;
         // Initializing variables:
         $pointer = intval($pObject->ctrlVars[$pointerName]);
@@ -263,7 +265,7 @@ class BrowserUtility
                         $hscText
                     );
                 if ($pointer > 0) {
-                    $linkArray[$pointerName] = ($pointer - 1 ? $pointer - 1 : '');
+                    $linkArray[$pointerName] = ($pointer - 1 ?: '');
                     $links[] =
                         $cObj->wrap(
                             static::linkTPKeepCtrlVars(
@@ -326,7 +328,7 @@ class BrowserUtility
                                 $wrapper['activeLinkWrap']
                             );
                     } elseif ($pageText != '') {
-                        $linkArray[$pointerName] = ($a ? $a : '');
+                        $linkArray[$pointerName] = ($a ?: '');
                         $link =
                             static::linkTPKeepCtrlVars(
                                 $pObject,
@@ -338,7 +340,7 @@ class BrowserUtility
                             );
                     }
                 } elseif ($pageText != '') {
-                    $linkArray[$pointerName] = ($a ? $a : '');
+                    $linkArray[$pointerName] = ($a ?: '');
                     $link =
                         $cObj->wrap(
                             static::linkTPKeepCtrlVars(
@@ -535,7 +537,7 @@ class BrowserUtility
      * @see static::linkTP()
      */
     public static function linkTPKeepCtrlVars(
-        \JambageCom\Div2007\Base\BrowserBase $pObject,
+        BrowserBase $pObject,
         $cObj,
         $prefixId,
         $str,
@@ -601,7 +603,7 @@ class BrowserUtility
      * @see pi_linkTP_keepPIvars(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink()
      */
     public static function linkTP(
-        \JambageCom\Div2007\Base\BrowserBase $pObject,
+        BrowserBase $pObject,
         $cObj,
         $str,
         $urlParameters = [],
@@ -609,7 +611,7 @@ class BrowserUtility
         $altPageId = 0
     ) {
         $conf = [];
-        $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
+        $conf['parameter'] = $altPageId ?: ($pObject->tmpPageId ?: $GLOBALS['TSFE']->id);
         $conf['additionalParams'] =
             ($pObject->conf['parent.']['addParams'] ?? '') .
             GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) .

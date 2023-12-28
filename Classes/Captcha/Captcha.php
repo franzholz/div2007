@@ -2,6 +2,8 @@
 
 namespace JambageCom\Div2007\Captcha;
 
+use JambageCom\Div2007\Utility\HtmlUtility;
+use ThinkopenAt\Captcha\Utility;
 /*
  *  Copyright notice
  *
@@ -23,7 +25,6 @@ namespace JambageCom\Div2007\Captcha;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
-
 /**
  * Hook for captcha image marker when extension 'captcha' is used.
  */
@@ -45,7 +46,7 @@ class Captcha extends CaptchaBase
             $enable &&
             $this->isLoaded()
         ) {
-            $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::determineXhtmlFix();
+            $xhtmlFix = HtmlUtility::determineXhtmlFix();
 
             $markerArray['###' . $markerPrefix . '_IMAGE###'] =
                 '<img src="/index.php?eID=captcha" alt=""' . $xhtmlFix . '>';
@@ -74,7 +75,7 @@ class Captcha extends CaptchaBase
             if ($captchaWord == '') {
                 $result = false;
             } else {
-                $result = \ThinkopenAt\Captcha\Utility::checkCaptcha($captchaWord);
+                $result = Utility::checkCaptcha($captchaWord);
             }
         }
 

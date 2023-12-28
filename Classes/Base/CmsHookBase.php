@@ -39,11 +39,11 @@ namespace JambageCom\Div2007\Base;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
 use JambageCom\Div2007\Utility\FlexformUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
-class CmsHookBase implements \TYPO3\CMS\Core\SingletonInterface
+class CmsHookBase implements SingletonInterface
 {
     public $extensionKey = '';	// extension key must be overridden
     public $extKey = '';	// DEPRECATED

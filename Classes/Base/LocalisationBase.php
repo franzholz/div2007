@@ -14,7 +14,9 @@ namespace JambageCom\Div2007\Base;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -52,7 +54,7 @@ class LocalisationBase
         $scriptRelPath,
         $lookupFilename = '',
         $useDiv2007Language = true
-    ) {
+    ): void {
         if (
             isset($GLOBALS['TSFE']->config['config']) &&
             isset($GLOBALS['TSFE']->config['config']['language'])
@@ -81,7 +83,7 @@ class LocalisationBase
         $this->scriptRelPath = $scriptRelPath;
         $this->lookupFilename = $lookupFilename;
 
-        $this->typoVersion = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
+        $this->typoVersion = VersionNumberUtility::convertVersionNumberToInteger(GeneralUtility::makeInstance(Typo3Version::class)->getVersion());
 
         $this->hasBeenInitialized = true;
         if ($useDiv2007Language) {
@@ -91,7 +93,7 @@ class LocalisationBase
         }
     }
 
-    public function setLocallang(array &$locallang)
+    public function setLocallang(array &$locallang): void
     {
         $this->LOCAL_LANG = &$locallang;
     }
@@ -101,7 +103,7 @@ class LocalisationBase
         return $this->LOCAL_LANG;
     }
 
-    public function setLocallangCharset(&$locallang)
+    public function setLocallangCharset(&$locallang): void
     {
         $this->LOCAL_LANG_charset = &$locallang;
     }
@@ -111,7 +113,7 @@ class LocalisationBase
         return $this->LOCAL_LANG_charset;
     }
 
-    public function setLocallangLoaded($loaded = true)
+    public function setLocallangLoaded($loaded = true): void
     {
         $this->LOCAL_LANG_loaded = $loaded;
     }
@@ -121,7 +123,7 @@ class LocalisationBase
         return $this->LOCAL_LANG_loaded;
     }
 
-    public function setLLkey($llKey)
+    public function setLLkey($llKey): void
     {
         $this->LLkey = $llKey;
     }
@@ -144,7 +146,7 @@ class LocalisationBase
     {return $this->extKey;
     }
 
-    public function setConf($conf) // DEPRECATED
+    public function setConf($conf): void // DEPRECATED
     {$this->conf = $conf;
     }
 
@@ -156,7 +158,7 @@ class LocalisationBase
     {return $this->typoVersion;
     }
 
-    public function setLookupFilename($lookupFilename)
+    public function setLookupFilename($lookupFilename): void
     {
         $this->lookupFilename = $lookupFilename;
     }
@@ -312,7 +314,7 @@ class LocalisationBase
         $langFileParam = '',
         $overwrite = true
     ) {
-        $langFile = ($langFileParam ? $langFileParam : 'locallang.xml');
+        $langFile = ($langFileParam ?: 'locallang.xml');
 
         if (
             str_starts_with($langFile, 'EXT:') ||
@@ -325,7 +327,7 @@ class LocalisationBase
                 ($this->scriptRelPath ? dirname($this->scriptRelPath) . '/' : '') . $langFile;
         }
 
-        $callingClassName = \TYPO3\CMS\Core\Localization\LocalizationFactory::class;
+        $callingClassName = LocalizationFactory::class;
 
         /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
         $languageFactory = GeneralUtility::makeInstance($callingClassName);
@@ -354,7 +356,7 @@ class LocalisationBase
         $charset = 'UTF-8';
 
         if ($this->altLLkey) {
-            $callingClassName = \TYPO3\CMS\Core\Localization\LocalizationFactory::class;
+            $callingClassName = LocalizationFactory::class;
 
             /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
             $languageFactory = GeneralUtility::makeInstance($callingClassName);

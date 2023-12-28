@@ -2,6 +2,7 @@
 
 namespace JambageCom\Div2007\Api;
 
+use TYPO3\CMS\Core\SingletonInterface;
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -14,7 +15,6 @@ namespace JambageCom\Div2007\Api;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 /**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
@@ -27,7 +27,7 @@ namespace JambageCom\Div2007\Api;
  * @package TYPO3
  * @subpackage div2007
  */
-class Css implements \TYPO3\CMS\Core\SingletonInterface
+class Css implements SingletonInterface
 {
     /**
      * Returns a class-name.

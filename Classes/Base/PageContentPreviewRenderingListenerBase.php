@@ -39,12 +39,12 @@ namespace JambageCom\Div2007\Base;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
 use JambageCom\Div2007\Utility\FlexformUtility;
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
-class PageContentPreviewRenderingListenerBase implements \TYPO3\CMS\Core\SingletonInterface
+class PageContentPreviewRenderingListenerBase implements SingletonInterface
 {
     public $extensionKey = '';	// extension key must be overridden
 

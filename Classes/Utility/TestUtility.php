@@ -4,7 +4,7 @@ namespace JambageCom\Div2007\Utility;
 
 class TestUtility
 {
-    public static function test()
+    public static function test(): bool
     {
         return true;
     }

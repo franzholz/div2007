@@ -24,7 +24,16 @@ namespace JambageCom\Div2007\Utility;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-
+use JambageCom\Div2007\Api\FrontendApi;
+use JambageCom\Div2007\Api\OldFrontendApi;
+use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use JambageCom\Div2007\Base\BrowserBase;
+use JambageCom\Div2007\Base\TranslationBase;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use JambageCom\Div2007\Api\Frontend;
+use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -48,7 +57,7 @@ class FrontendUtility
      */
     protected static $typoScriptFrontendController;
 
-    public static function test()
+    public static function test(): bool
     {
         return true;
     }
@@ -78,10 +87,10 @@ class FrontendUtility
     {
         $result = false;
         if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
-            $api = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\FrontendApi::class);
+            $api = GeneralUtility::makeInstance(FrontendApi::class);
             $result = $api->getPageId($params);
         } else {
-            $api = GeneralUtility::makeInstance(\JambageCom\Div2007\Api\OldFrontendApi::class);
+            $api = GeneralUtility::makeInstance(OldFrontendApi::class);
             $result = $api->getPageId($params);
         }
 
@@ -101,7 +110,7 @@ class FrontendUtility
     {
         $result = false;
         $context = GeneralUtility::makeInstance(Context::class);
-        $tsfe = $this->getTypoScriptFrontendController();
+        $tsfe = static::getTypoScriptFrontendController();
 
         if (
             isset($tsfe->fe_user) &&
@@ -156,11 +165,11 @@ class FrontendUtility
             if (is_array($value)) {
                 foreach ($value as $Nvalue) {
                     $JSPart .= '
-    updateForm(\'' . $formName . '\',\'' . $arrPrefix . '[' . $fKey . '][]\',' . GeneralUtility::quoteJSvalue($Nvalue, true) . ');';
+    updateForm(\'' . $formName . '\',\'' . $arrPrefix . '[' . $fKey . '][]\',' . GeneralUtility::quoteJSvalue($Nvalue) . ');';
                 }
             } else {
                 $JSPart .= '
-    updateForm(\'' . $formName . '\',\'' . $arrPrefix . '[' . $fKey . ']\',' . GeneralUtility::quoteJSvalue($value, true) . ');';
+    updateForm(\'' . $formName . '\',\'' . $arrPrefix . '[' . $fKey . ']\',' . GeneralUtility::quoteJSvalue($value) . ');';
             }
         }
         $JSPart = '<script type="text/javascript">
@@ -182,7 +191,7 @@ class FrontendUtility
         return $result;
     }
 
-    public static function addJavascriptFile($filename, $key)
+    public static function addJavascriptFile($filename, $key): void
     {
         $script =
             '<script type="text/javascript" src="' .
@@ -192,7 +201,7 @@ class FrontendUtility
         $GLOBALS['TSFE']->additionalHeaderData[$key] = $script;
     }
 
-    public static function addCssFile($filename, $key)
+    public static function addCssFile($filename, $key): void
     {
         $GLOBALS['TSFE']->additionalHeaderData[$key] =
             '<link rel="stylesheet" href="' .
@@ -235,7 +244,7 @@ class FrontendUtility
         $path = '';
 
         $extensionPath = ExtensionManagementUtility::extPath(DIV2007_EXT);
-        $relativeExtensionPath = \TYPO3\CMS\Core\Utility\PathUtility::stripPathSitePrefix(
+        $relativeExtensionPath = PathUtility::stripPathSitePrefix(
             $extensionPath
         );
 
@@ -245,7 +254,7 @@ class FrontendUtility
         }
 
         $lookupFile = explode('?', $filename);
-        $scriptPath = (defined('PATH_thisScript') ? PATH_thisScript : \TYPO3\CMS\Core\Core\Environment::getCurrentScript());
+        $scriptPath = Environment::getCurrentScript();
 
         $path =
             GeneralUtility::resolveBackPath(
@@ -351,7 +360,7 @@ class FrontendUtility
     public static function getContentObjectRendererClassname()
     {
         $useClassName = false;
-        $callingClassName = \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::class;
+        $callingClassName = ContentObjectRenderer::class;
 
         return $callingClassName;
     }
@@ -408,8 +417,8 @@ class FrontendUtility
      * @return  string      Output HTML-Table, wrapped in <div>-tags with a class attribute (if $wrapArr is not passed,
      */
     public static function listBrowser(
-        \JambageCom\Div2007\Base\BrowserBase $pObject,
-        \JambageCom\Div2007\Base\TranslationBase $languageObj,
+        BrowserBase $pObject,
+        TranslationBase $languageObj,
         $cObj,
         $prefixId,
         $bCSSStyled = true,
@@ -421,7 +430,7 @@ class FrontendUtility
         $addQueryString = []
     ) {
         $usedLang = '';
-        $parser = GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\MarkerBasedTemplateService::class);
+        $parser = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $linkArray = $addQueryString;
         // Initializing variables:
         $pointer = intval($pObject->ctrlVars[$pointerName]);
@@ -598,7 +607,7 @@ class FrontendUtility
                         $hscText
                     );
                 if ($pointer > 0) {
-                    $linkArray[$pointerName] = ($pointer - 1 ? $pointer - 1 : '');
+                    $linkArray[$pointerName] = ($pointer - 1 ?: '');
                     $links[] =
                         $cObj->wrap(
                             static::linkTPKeepCtrlVars(
@@ -661,7 +670,7 @@ class FrontendUtility
                                 $wrapper['activeLinkWrap']
                             );
                     } elseif ($pageText != '') {
-                        $linkArray[$pointerName] = ($a ? $a : '');
+                        $linkArray[$pointerName] = ($a ?: '');
                         $link =
                             static::linkTPKeepCtrlVars(
                                 $pObject,
@@ -673,7 +682,7 @@ class FrontendUtility
                             );
                     }
                 } elseif ($pageText != '') {
-                    $linkArray[$pointerName] = ($a ? $a : '');
+                    $linkArray[$pointerName] = ($a ?: '');
                     $link =
                         $cObj->wrap(
                             static::linkTPKeepCtrlVars(
@@ -918,7 +927,7 @@ class FrontendUtility
      * @see static::linkTP()
      */
     public static function linkTPKeepCtrlVars(
-        \JambageCom\Div2007\Base\BrowserBase $pObject,
+        BrowserBase $pObject,
         $cObj,
         $prefixId,
         $str,
@@ -986,7 +995,7 @@ class FrontendUtility
      * @see pi_linkTP_keepPIvars(), TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::typoLink()
      */
     public static function linkTP(
-        \JambageCom\Div2007\Base\BrowserBase $pObject,
+        BrowserBase $pObject,
         $cObj,
         $str,
         $urlParameters = [],
@@ -995,7 +1004,7 @@ class FrontendUtility
     ) {
         $conf = [];
         $conf['no_cache'] = $pObject->getIsUserIntObject() ? 0 : !$cache;
-        $conf['parameter'] = $altPageId ? $altPageId : ($pObject->tmpPageId ? $pObject->tmpPageId : $GLOBALS['TSFE']->id);
+        $conf['parameter'] = $altPageId ?: ($pObject->tmpPageId ?: $GLOBALS['TSFE']->id);
         $conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) . $pObject->moreParams;
         $result = $cObj->typoLink($str, $conf);
 
@@ -1049,7 +1058,7 @@ class FrontendUtility
 
             if (!isset($conf['language'])) {
                 $api =
-                    GeneralUtility::makeInstance(\JambageCom\Div2007\Api\Frontend::class);
+                    GeneralUtility::makeInstance(Frontend::class);
                 $sys_language_uid = $api->getLanguageId();
                 if ($sys_language_uid) {
                     $conf['language'] = $sys_language_uid;
@@ -1227,7 +1236,7 @@ class FrontendUtility
     public static function fixImageCodeAbsRefPrefix(
         &$imageCode,
         $domain = ''
-    ) {
+    ): void {
         $absRefPrefix = '';
         $absRefPrefixDomain = '';
         $bSetAbsRefPrefix = false;
@@ -1298,7 +1307,7 @@ class FrontendUtility
             $fName != ''
         ) {
             if ($sanitize) {
-                $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
+                $sanitizer = GeneralUtility::makeInstance(FilePathSanitizer::class);
                 $incFile = $sanitizer->sanitize($fName);
             } else {
                 $incFile = GeneralUtility::getFileAbsFileName($fName);
@@ -1356,7 +1365,7 @@ class FrontendUtility
         return '';
     }
 
-    public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController)
+    public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController): void
     {
         static::$typoScriptFrontendController = $typoScriptFrontendController;
     }

@@ -37,7 +37,7 @@ namespace JambageCom\Div2007\Security;
  * @package TYPO3
  * @subpackage agency
  */
-
+use TYPO3\CMS\Core\SingletonInterface;
 use JambageCom\Div2007\Utility\HtmlUtility;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -45,7 +45,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
 use TYPO3\CMS\Rsaauth\Storage\StorageFactory;
 
-class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface, LoggerAwareInterface
+class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -78,7 +78,7 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface, Logger
      *
      * @param	string
      */
-    public function setEncryptionMarker($encryptionMarker)
+    public function setEncryptionMarker($encryptionMarker): void
     {
         $this->encryptionMarker = $encryptionMarker;
     }
@@ -98,7 +98,7 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface, Logger
      *
      * @param	string
      */
-    public function setHiddenMarker($hiddenMarker)
+    public function setHiddenMarker($hiddenMarker): void
     {
         $this->hiddenMarker = $hiddenMarker;
     }
@@ -317,7 +317,7 @@ class TransmissionSecurity implements \TYPO3\CMS\Core\SingletonInterface, Logger
         $extensionKey,
         $formId,
         $checkPasswordAgain = false
-    ) {
+    ): void {
         if (
             $this->getTransmissionSecurityLevel() == 'rsa' &&
             $checkPasswordAgain
@@ -350,7 +350,7 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
      */
     public function getEmptyMarkers(
         array &$markerArray
-    ) {
+    ): void {
         $markerArray[$this->getEncryptionMarker()] = '';
         $markerArray[$this->getHiddenMarker()] = '';
     }
@@ -363,7 +363,7 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
         $extensionKey = '',
         $checkPasswordAgain = false,
         $loginForm = false
-    ) {
+    ): bool {
         $markerArray[$this->getEncryptionMarker()] = '';
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $extraHiddenFieldsArray = [];

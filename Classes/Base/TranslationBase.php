@@ -14,7 +14,7 @@ namespace JambageCom\Div2007\Base;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
+use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -47,7 +47,7 @@ class TranslationBase
         $scriptRelPath = '', // obsolete
         $lookupFilename = '',
         $useDiv2007Language = true
-    ) {
+    ): void {
         if (
             isset($GLOBALS['TSFE']->config['config']) &&
             isset($GLOBALS['TSFE']->config['config']['language'])
@@ -94,7 +94,7 @@ class TranslationBase
         }
     }
 
-    public function setLocalLang(array $locallang)
+    public function setLocalLang(array $locallang): void
     {
         $this->LOCAL_LANG = $locallang;
     }
@@ -105,7 +105,7 @@ class TranslationBase
         return $this->LOCAL_LANG;
     }
 
-    public function setLocalLangCharset($locallang)
+    public function setLocalLangCharset($locallang): void
     {
         $this->LOCAL_LANG_charset = $locallang;
     }
@@ -115,7 +115,7 @@ class TranslationBase
         return $this->LOCAL_LANG_charset;
     }
 
-    public function setLocalLangLoaded($loaded = true)
+    public function setLocalLangLoaded($loaded = true): void
     {
         $this->LOCAL_LANG_loaded = $loaded;
     }
@@ -125,7 +125,7 @@ class TranslationBase
         return $this->LOCAL_LANG_loaded;
     }
 
-    public function setLocalLangKey($localLangKey)
+    public function setLocalLangKey($localLangKey): void
     {
         $this->LocalLangKey = $localLangKey;
     }
@@ -141,7 +141,7 @@ class TranslationBase
         return $this->extensionKey;
     }
 
-    public function setConfLocalLang($conf)
+    public function setConfLocalLang($conf): void
     {
         $this->confLocalLang = $conf;
     }
@@ -151,7 +151,7 @@ class TranslationBase
         return $this->confLocalLang;
     }
 
-    public function setLookupFilename($lookupFilename)
+    public function setLookupFilename($lookupFilename): void
     {
         $this->lookupFilename = $lookupFilename;
     }
@@ -346,7 +346,7 @@ class TranslationBase
             return false;
         }
 
-        $callingClassName = \TYPO3\CMS\Core\Localization\LocalizationFactory::class;
+        $callingClassName = LocalizationFactory::class;
 
         /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
         $languageFactory = GeneralUtility::makeInstance($callingClassName);

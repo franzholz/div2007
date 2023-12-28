@@ -14,7 +14,6 @@ namespace JambageCom\Div2007\Api;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
 /**
  * Part of the div2007 (Static Methods for Extensions since 2007) extension.
  *
@@ -27,15 +26,15 @@ namespace JambageCom\Div2007\Api;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
-use TYPO3\CMS\Frontend\Page\PageRepository;
 
-class Frontend implements \TYPO3\CMS\Core\SingletonInterface
+class Frontend implements SingletonInterface
 {
     /**
      * @var TypoScriptFrontendController
@@ -77,7 +76,7 @@ class Frontend implements \TYPO3\CMS\Core\SingletonInterface
      * @param int $maxSizeOfSessionData The maximum size of stored session data. If zero, no limit is applied and even confirmation of cookie session is discarded.
      * @param bool $checkCookie the cookie check for write allowance is enabled by default
      */
-    public function record_registration($recs, $maxSizeOfSessionData = 0, $checkCookie = true)
+    public function record_registration($recs, $maxSizeOfSessionData = 0, $checkCookie = true): void
     {
         // Storing value ONLY if there is a confirmed cookie set,
         // otherwise a shellscript could easily be spamming the fe_sessions table

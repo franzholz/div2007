@@ -26,7 +26,7 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -85,7 +85,7 @@ class ControlUtility
      * @return array Current section of configuration after stdWrap applied
      */
     public static function applyStdWrapRecursive(
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
+        ContentObjectRenderer $cObj,
         array $conf,
         $level = 0
     ) {
@@ -122,9 +122,9 @@ class ControlUtility
      */
     public static function setPiVarDefaults(
         &$piVars,
-        \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer $cObj,
+        ContentObjectRenderer $cObj,
         array $conf
-    ) {
+    ): void {
         if (isset($conf['_DEFAULT_PI_VARS.']) && is_array($conf['_DEFAULT_PI_VARS.'])) {
             $conf['_DEFAULT_PI_VARS.'] = static::applyStdWrapRecursive($cObj, $conf['_DEFAULT_PI_VARS.']);
             $tmp = $conf['_DEFAULT_PI_VARS.'];
@@ -138,7 +138,7 @@ class ControlUtility
      *
      * @param string $key
      */
-    public static function _GETset($inputGet, $key = '')
+    public static function _GETset($inputGet, $key = ''): void
     {
         if ($key != '') {
             if (strpos($key, '|') !== false) {

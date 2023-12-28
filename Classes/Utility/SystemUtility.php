@@ -26,7 +26,7 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -41,7 +41,7 @@ class SystemUtility
             return $storagePid;
         }
 
-        $cObj = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::class);
+        $cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
         $recursiveStoragePids = '';
         $storagePids = GeneralUtility::intExplode(',', $storagePid);
         if ($whereClause == '') {
@@ -129,7 +129,7 @@ class SystemUtility
      *
      * @return array of the records of all FE groups
      */
-    public static function addTimeZone(&$time)
+    public static function addTimeZone(&$time): void
     {
         if (!empty($GLOBALS['TYPO3_CONF_VARS']['SYS']['serverTimeZone'])) {
             $time += ($GLOBALS['TYPO3_CONF_VARS']['SYS']['serverTimeZone'] * 3600);
@@ -306,7 +306,7 @@ class SystemUtility
      *
      * @param string $pidList A list of INTEGER numbers which points to page uids for which to clear entries in the pages cache (page content cache)
      */
-    public static function clearPageCacheContent_pidList($pidList)
+    public static function clearPageCacheContent_pidList($pidList): void
     {
         $pageCache = static::getPageCache();
         $pageIds = GeneralUtility::trimExplode(',', $pidList);

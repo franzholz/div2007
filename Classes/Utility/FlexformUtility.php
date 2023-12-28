@@ -79,7 +79,7 @@ class FlexformUtility
     public static function load(
         $flexForm,
         $flexFormName = ''
-    ) {
+    ): void {
         // handle the case $flexForm is a string. It can be a xml string or key array
         if (is_string($flexForm)) {
             // test if $flexForm already exists in the memory. In this case load the flexform according to its key
@@ -109,7 +109,7 @@ class FlexformUtility
     public static function setFlexForm(
         $flexFormName,
         $flexForm
-    ) {
+    ): void {
         static::$flexForms[$flexFormName] = $flexForm;
     }
 

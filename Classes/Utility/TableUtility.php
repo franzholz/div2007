@@ -24,7 +24,6 @@ namespace JambageCom\Div2007\Utility;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-
 /**
  * table functions. It requires TYPO3 6.2.
  *
@@ -35,7 +34,9 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -168,7 +169,7 @@ class TableUtility
      */
     public static function getMultipleGroupsWhereClause($field, $table)
     {
-        $memberGroups = GeneralUtility::intExplode(',', $GLOBALS['TSFE']->gr_list);
+        $memberGroups = GeneralUtility::intExplode(',', implode(',', GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('frontend.user', 'groupIds')));
         $orChecks = [];
         $orChecks[] = $field . '=\'\''; // If the field is empty, then OK
         $orChecks[] = $field . ' IS NULL'; // If the field is NULL, then OK
@@ -298,7 +299,7 @@ class TableUtility
         if (is_array($listArr) && count($listArr)) {
             $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . static::enableFields('pages') . ' AND doktype NOT IN (' . $this->checkPid_badDoktypeList . ')');
             if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
-                $GLOBALS['TT']->setTSlogMessage($error . ': ' . $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery, 3);
+                GeneralUtility::makeInstance(TimeTracker::class)->setTSlogMessage($error . ': ' . $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery, 3);
             } else {
                 while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
                     $outArr[] = $row['uid'];
@@ -450,7 +451,7 @@ class TableUtility
         }
 
         foreach ($uidArray as $currentUid) {
-            $records = \TYPO3\CMS\Frontend\Page\PageRepository::getRecordsByField(
+            $records = PageRepository::getRecordsByField(
                 'pages',
                 'pid',
                 $currentUid

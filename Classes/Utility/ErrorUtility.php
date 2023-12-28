@@ -83,7 +83,7 @@ class ErrorUtility
         }
 
         if ($result == '') {
-            $result = 'ERROR in ' . ($plugin ? $plugin : 'undefined plugin') . ' in call of \JambageCom\Div2007\Utility\ErrorUtility::getMessage: ' . ($message ? $message : ' undefined language code "' . htmlspecialchars($indice) . '"' . htmlspecialchars(implode(',', $errorCode)));
+            $result = 'ERROR in ' . ($plugin ?: 'undefined plugin') . ' in call of \JambageCom\Div2007\Utility\ErrorUtility::getMessage: ' . ($message ?: ' undefined language code "' . htmlspecialchars($indice) . '"' . htmlspecialchars(implode(',', $errorCode)));
         }
 
         return $result;
