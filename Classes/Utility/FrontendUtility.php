@@ -57,7 +57,7 @@ class FrontendUtility
      */
     protected static $typoScriptFrontendController;
 
-    public static function test()
+    public static function test(): bool
     {
         return true;
     }

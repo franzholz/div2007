@@ -78,7 +78,7 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
      *
      * @param	string
      */
-    public function setEncryptionMarker($encryptionMarker)
+    public function setEncryptionMarker($encryptionMarker): void
     {
         $this->encryptionMarker = $encryptionMarker;
     }
@@ -98,7 +98,7 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
      *
      * @param	string
      */
-    public function setHiddenMarker($hiddenMarker)
+    public function setHiddenMarker($hiddenMarker): void
     {
         $this->hiddenMarker = $hiddenMarker;
     }
@@ -317,7 +317,7 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
         $extensionKey,
         $formId,
         $checkPasswordAgain = false
-    ) {
+    ): void {
         if (
             $this->getTransmissionSecurityLevel() == 'rsa' &&
             $checkPasswordAgain
@@ -350,7 +350,7 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
      */
     public function getEmptyMarkers(
         array &$markerArray
-    ) {
+    ): void {
         $markerArray[$this->getEncryptionMarker()] = '';
         $markerArray[$this->getHiddenMarker()] = '';
     }
@@ -363,7 +363,7 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
         $extensionKey = '',
         $checkPasswordAgain = false,
         $loginForm = false
-    ) {
+    ): bool {
         $markerArray[$this->getEncryptionMarker()] = '';
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $extraHiddenFieldsArray = [];

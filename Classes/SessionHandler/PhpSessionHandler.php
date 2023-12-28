@@ -70,7 +70,7 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
     /**
      * Set session data.
      */
-    public function setSessionData($data)
+    public function setSessionData($data): void
     {
         if (!is_array($data)) {
             $data = [];
