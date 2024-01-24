@@ -24,6 +24,9 @@
 			<trans-unit id="Front_end_login_security_level" resname="Front_end_login_security_level">
 				<source>Front end login security level</source>
 			</trans-unit>
+			<trans-unit id="must_be_normal" resname="must_be_normal">
+				<source>Use the Install tool to set the front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) to "" or "normal".</source>
+			</trans-unit>
 			<trans-unit id="must_be_normal_or_rsa" resname="must_be_normal_or_rsa">
 				<source>Use the Install tool to set the front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) to "", "normal" or "rsa".</source>
 			</trans-unit>

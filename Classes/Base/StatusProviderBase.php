@@ -174,7 +174,7 @@ class StatusProviderBase implements StatusProviderInterface
         $value = null;
         $message = null;
         $status = Status::OK;
-        $supportedTransmissionSecurityLevels = ['', 'normal', 'rsa'];
+        $supportedTransmissionSecurityLevels = ['', 'normal'];
 
         if (
             in_array(
@@ -187,7 +187,7 @@ class StatusProviderBase implements StatusProviderInterface
             $status = Status::OK;
         } else {
             $value = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
-            $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:must_be_normal_or_rsa', $this->getExtensionName());
+            $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:must_be_normal', $this->getExtensionName());
             $status = Status::ERROR;
         }
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
