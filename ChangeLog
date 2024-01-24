@@ -1,3 +1,6 @@
+2024-01-24 Franz Holzinger  <franz@ttproducts.de>
+    * deprecation no. 81852: Remove usage of extension rsaauth
+
 2023-12-25 Franz Holzinger  <franz@ttproducts.de>
     * remove all deprecated files announced to be removed in 2024
     * remove unused constants PATH_BE_DIV2007 and PATH_FE_DIV2007_REL

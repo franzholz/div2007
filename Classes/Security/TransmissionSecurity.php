@@ -42,8 +42,6 @@ use JambageCom\Div2007\Utility\HtmlUtility;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Rsaauth\Backend\BackendFactory;
-use TYPO3\CMS\Rsaauth\Storage\StorageFactory;
 
 class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
 {
@@ -51,12 +49,12 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
 
     // Extension key
     protected $extensionKey = DIV2007_EXT;
-    // The storage security level: normal or rsa
+    // The storage security level: normal
     protected $transmissionSecurityLevel = 'normal';
     public $encryptionMarker = '###ENCRYPTION###';
     public $hiddenMarker = '###HIDDENFIELDS###';
-    protected $encryptionAttribute = 'data-rsa-encryption=""';
-    public $requiredExtensions = ['rsa' => ['rsaauth']];
+    protected $encryptionAttribute = '';
+    public $requiredExtensions = [];
     public $allowLog = true;
 
     /**
@@ -74,7 +72,7 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
     }
 
     /**
-     * Sets the encryption marker for which the replacement is used by the RSA encryption extension.
+     * No functionality any more.
      *
      * @param	string
      */
@@ -84,7 +82,7 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
     }
 
     /**
-     * Returns the encryption marker for which the replacement is used by the RSA encryption extension.
+     * No functionality any more.
      *
      * @return	string
      */
@@ -94,7 +92,7 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
     }
 
     /**
-     * Sets the hidden fields marker for which the RSA encryption extension itself or its hooks might add entries.
+     * No functionality any more.
      *
      * @param	string
      */
@@ -104,7 +102,7 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
     }
 
     /**
-     * Returns the hidden fields marker for which the RSA encryption extension itself or its hooks might add entries.
+     * No functionality any more.
      *
      * @return	string
      */
@@ -114,7 +112,7 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
     }
 
     /**
-     * Returns the encryption attribute used by the RSA encryption extension.
+     * No functionality any more.
      *
      * @return	string
      */
@@ -129,11 +127,7 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
     protected function setTransmissionSecurityLevel($level = '')
     {
         if ($level == '') {
-            if (isset($GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'])) {
-                $level = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
-            } else {
-                $level = 'normal';
-            }
+            $level = 'normal';
         }
         $this->transmissionSecurityLevel = $level;
     }
@@ -165,9 +159,9 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
     }
 
     /**
-     * Decrypts fields that were encrypted for transmission.
+     * No functionality any more!
      *
-     * @return bool  true if any entry inside of the $row array has been decrypted
+     * @return bool  false
      */
     public function decryptIncomingFields(
         array &$row,
@@ -178,127 +172,6 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
 
         if (count($row)) {
             switch ($this->getTransmissionSecurityLevel()) {
-                case 'rsa':
-                    $needsDecryption = false;
-                    foreach ($row as $field => $value) {
-                        if (isset($value) && $value != '') {
-                            if (is_array($value)) {
-                                $row2 = $value;
-                                foreach ($row2 as $field2 => $value2) {
-                                    if (
-                                        is_string($value2) &&
-                                        substr($value2, 0, 4) == 'rsa:'
-                                    ) {
-                                        $needsDecryption = true;
-                                    }
-                                }
-                            } elseif (
-                                is_string($value) &&
-                                substr($value, 0, 4) == 'rsa:'
-                            ) {
-                                $needsDecryption = true;
-                            }
-                        }
-                    }
-
-                    if (!$needsDecryption) {
-                        return $decrypted;
-                    }
-
-                    // Get services from rsaauth
-                    // Can't simply use the authentication service because we have two fields to decrypt
-                    /** @var $backend \TYPO3\CMS\Rsaauth\Backend\AbstractBackend */
-                    $backend = BackendFactory::getBackend();
-                    /** @var $storage \TYPO3\CMS\Rsaauth\Storage\AbstractStorage */
-                    $storage = StorageFactory::getStorage();
-                    $errorDecryptField = '';
-
-                    if (is_object($backend) && is_object($storage)) {
-                        $key = $storage->get();
-                        if ($key != null) {
-                            foreach ($row as $field => $value) {
-                                if (isset($value) && $value != '') {
-                                    if (is_array($value)) {
-                                        $row2 = $value;
-                                        foreach ($row2 as $field2 => $value2) {
-                                            if (
-                                                is_string($value2) &&
-                                                substr($value2, 0, 4) == 'rsa:'
-                                            ) {
-                                                // Decode password
-                                                $result =
-                                                    $backend->decrypt(
-                                                        $key,
-                                                        substr($value2, 4)
-                                                    );
-                                                if ($result !== null) {
-                                                    $row2[$field2] = $result;
-                                                    $decrypted = true;
-                                                } else {
-                                                    $errorDecryptField = $field . '|' . $field2;
-                                                }
-                                            }
-                                        } // foreach
-                                        $row[$field] = $row2;
-                                    } elseif (
-                                        is_string($value) &&
-                                        substr($value, 0, 4) == 'rsa:'
-                                    ) {
-                                        // Decode password
-                                        $result = $backend->decrypt($key, substr($value, 4));
-                                        if ($result !== null) {
-                                            $row[$field] = $result;
-                                            $decrypted = true;
-                                        } else {
-                                            $errorDecryptField = $field;
-                                        }
-                                    }
-                                }
-                            } // foreach
-
-                            if ($errorDecryptField != '') {
-                                // RSA auth service failed to process incoming password
-                                // May happen if the key is wrong
-                                // May happen if multiple instances of rsaauth are on same page
-                                // May happen if the entered password has been empty
-                                $errorCode = SECURITY_RSA_AUTH_FAILED_INCOMING;
-                                $errorMessage =
-                                    $GLOBALS['TSFE']->sL(
-                                        'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_process_incoming_field_failed');
-                                $errorMessage = sprintf($errorMessage, $errorDecryptField);
-
-                                if ($this->allowLog) {
-                                    $this->logger->critical($errorMessage);
-                                }
-                            }
-
-                            if ($decrypted) {
-                                // Remove the key
-                                $storage->put(null);
-                            }
-                        } else {
-                            $errorCode = SECURITY_RSA_AUTH_FAILED_PRIVATE_KEY;
-                            // RSA auth service failed to retrieve private key
-                            // May happen if the key was already removed
-                            $errorMessage =
-                                $GLOBALS['TSFE']->sL(
-                                    'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_retrieve_private_key_failed');
-                            if ($this->allowLog) {
-                                $this->logger->critical($errorMessage);
-                            }
-                        }
-                    } else {
-                        $errorCode = SECURITY_RSA_AUTH_BACKEND_NOT_AVAILABLE;
-                        // Required RSA auth backend not available
-                        // Should not happen. It should have been checked before the call of this function
-                        $errorMessage =
-                            $GLOBALS['TSFE']->sL(
-                                'LLL:EXT:' . $this->extensionKey . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf:security.internal_rsaauth_backend_not_available');
-                        if ($this->allowLog) {
-                            $this->logger->critical($errorMessage);
-                        }
-                    }
-                    break;
                 case 'normal':
                 default:
                     // Nothing to decrypt
@@ -310,7 +183,7 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
     }
 
     /**
-     * Adds a JavaScript string which contains a workaround to avoid the encryption of a password again field. Both passwords are compared immediately on the JavaScript side before using RSA encryption.
+     * No functionality any more.
      */
     public function getJavaScript(
         &$javaScript,
@@ -318,35 +191,11 @@ class TransmissionSecurity implements SingletonInterface, LoggerAwareInterface
         $formId,
         $checkPasswordAgain = false
     ): void {
-        if (
-            $this->getTransmissionSecurityLevel() == 'rsa' &&
-            $checkPasswordAgain
-        ) {
-            $javaScript .=
-'<script type="text/javascript">
-document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', function(event) {
-        var password = document.getElementById(\'' . $extensionKey . '-password\'); 
-        var password_again = document.getElementById(\'' . $extensionKey . '-password_again\');
 
-        if (!password.value.trim().length) {
-            event.stopImmediatePropagation();
-            return false; 
-        }
-        if (password.value != password_again.value) {
-            document.getElementById(\'password_again_failure\').value = 1;
-            password.value = \'X\';
-            event.stopImmediatePropagation();
-        } else {
-            document.getElementById(\'' . $extensionKey . '[submit-security]\').value = \'1\'; 
-        }
-        password_again.value = \'\';
-    });
-</script>';
-        }
     }
 
     /**
-     * Adds values to the ###HIDDENFIELDS### and ###ENCRYPTION### markers as empty values. Call this method if the RSA encryption is inactive.
+     * No functionality any more.
      */
     public function getEmptyMarkers(
         array &$markerArray
@@ -356,7 +205,7 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
     }
 
     /**
-     * Adds values to the ###HIDDENFIELDS### and ###ENCRYPTION### markers which are needed for RSA encryption.
+     * No functionality any more!
      */
     public function getMarkers(
         array &$markerArray,
@@ -368,29 +217,7 @@ document.getElementById(\'' . $formId . '\').addEventListener(\'submit\', functi
         $xhtmlFix = HtmlUtility::determineXhtmlFix();
         $extraHiddenFieldsArray = [];
 
-        if (
-            $loginForm &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs']) &&
-            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'])
-        ) {
-            $_params = [];
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['felogin']['loginFormOnSubmitFuncs'] as $funcRef) {
-                [$onSubmit, $hiddenFields] = GeneralUtility::callUserFunction($funcRef, $_params, $this);
-                $extraHiddenFieldsArray[] = $hiddenFields;
-            }
-        }
-
         switch ($this->getTransmissionSecurityLevel()) {
-            case 'rsa':
-                if (
-                    $checkPasswordAgain &&
-                    $extensionKey != ''
-                ) {
-                    $extraHiddenFieldsArray[] = '<input type="hidden" name="password_again_failure" value="0"' . $xhtmlFix . '>' . LF . '<input type="hidden" name="' . $extensionKey . '[submit-security]" value="0"' . $xhtmlFix . '>';
-                }
-
-                $markerArray[$this->getEncryptionMarker()] = ' ' . $this->getEncryptionAttribute();
-                break;
             case 'normal':
             default:
                 break;
