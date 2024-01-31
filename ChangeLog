@@ -1,3 +1,7 @@
+2024-01-27 Franz Holzinger  <franz@ttproducts.de>
+    * Decryption function in StorageSecurity must use openssl_private_decrypt and no other method,
+    because the encryption uses openssl_public_encrypt.
+
 2024-01-24 Franz Holzinger  <franz@ttproducts.de>
     * deprecation no. 81852: Remove usage of extension rsaauth
 
