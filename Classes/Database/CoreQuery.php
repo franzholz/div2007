@@ -200,6 +200,11 @@ class CoreQuery
      */
     public static function DBmayFEUserEdit($table, $row, $feUserRow, $allowedGroups = '', $feEditSelf = 0)
     {
+        if (empty($feUserRow)) {
+            return false;
+        }
+
+        $result = false;
         if ($allowedGroups) {
             $groupList = implode(
                 ',',
@@ -211,32 +216,14 @@ class CoreQuery
         } else {
             $groupList = $feUserRow['usergroup'];
         }
-        $ok = 0;
         // Points to the field that allows further editing from frontend if not set. If set the record is locked.
-        if (empty($GLOBALS['TCA'][$table]['ctrl']['fe_admin_lock']) || empty($row[$GLOBALS['TCA'][$table]['ctrl']['fe_admin_lock']])) {
-            // Points to the field (int) that holds the fe_users-id of the creator fe_user
-            if (!empty($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'])) {
-                $rowFEUser = (int)$row[$GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id']];
-                if ($rowFEUser && $rowFEUser === (int)$feUserRow['uid']) {
-                    $ok = 1;
-                }
-            }
-            // If $feEditSelf is set, fe_users may always edit them selves...
-            if ($feEditSelf && $table === 'fe_users' && (int)$feUserRow['uid'] === (int)$row['uid']) {
-                $ok = 1;
-            }
-            // Points to the field (int) that holds the fe_group-id of the creator fe_user's first group
-            if (!empty($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'])) {
-                $rowFEUser = (int)$row[$GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id']];
-                if ($rowFEUser) {
-                    if (GeneralUtility::inList($groupList, $rowFEUser)) {
-                        $ok = 1;
-                    }
-                }
-            }
+
+        // If $feEditSelf is set, fe_users may always edit themselves...
+        if ($feEditSelf && $table === 'fe_users' && (int)$feUserRow['uid'] === (int)$row['uid']) {
+            $result = true;
         }
 
-        return $ok;
+        return $result;
     }
 
     /**

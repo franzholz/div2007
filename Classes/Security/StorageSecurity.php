@@ -40,27 +40,14 @@ namespace JambageCom\Div2007\Security;
 use TYPO3\CMS\Core\SingletonInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Crypto\PasswordHashing\PasswordHashFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 class StorageSecurity implements SingletonInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    // Extension key
-    protected $extensionKey = DIV2007_EXT;
-
-    /**
-     * Gets the storage security level.
-     *
-     * @return	string	the storage security level
-     */
-    protected function getStorageSecurityLevel()
-    {
-        $result = 'normal';
-
-        return $result;
-    }
 
     /**
      * Encrypts the password for secure storage.
@@ -72,12 +59,8 @@ class StorageSecurity implements SingletonInterface, LoggerAwareInterface
     {
         $encryptedPassword = $password;
         if ($password != '') {
-            switch ($this->getStorageSecurityLevel()) {
-                case 'normal':
-                default:
-                    // No encryption!
-                    break;
-            }
+            $hashInstance = GeneralUtility::makeInstance(PasswordHashFactory::class)->getDefaultHashInstance('FE');
+            $encryptedPassword = $hashInstance->getHashedPassword($password);
         }
 
         return $encryptedPassword;
@@ -122,10 +105,11 @@ class StorageSecurity implements SingletonInterface, LoggerAwareInterface
         return $result;
     }
 
+
     /**
-     * No function because rsaauth has been removed! 
+     * Decrypts the password for auto-login on confirmation or invitation acceptation.
      *
-     * @return	bool  true always
+     * @return	bool  true if decryption is successfull or no rsaauth is used
      */
     public function decryptPasswordForAutoLogin(
         &$password,
@@ -133,8 +117,23 @@ class StorageSecurity implements SingletonInterface, LoggerAwareInterface
         &$errorMessage,
         $autoLoginKey
     ) {
+        $result = true;
         $errorMessage = '';
 
-        return true;
+        if ($autoLoginKey != '') {
+            $privateKey = $autoLoginKey;
+            if (
+                $password != ''
+            ) {
+                $originalPassword = $password;
+                $result = openssl_private_decrypt(
+                    $originalPassword,
+                    $password,
+                    $privateKey
+                ); 
+            }
+        }
+
+        return $result;
     }
 }
