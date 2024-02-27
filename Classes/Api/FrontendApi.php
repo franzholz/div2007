@@ -39,7 +39,7 @@ class FrontendApi
 {
     /**
      * This method is needed only for Ajax calls.
-     * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId() instead of this method.
+     * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId($request) instead of this method.
      *
      * @return int
      */
