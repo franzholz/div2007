@@ -66,7 +66,7 @@ class StatusProviderBase implements StatusProviderInterface
      *
      * @return array List of status
      */
-    public function getStatus()
+    public function getStatus(): array
     {
         $result = [
             'requiredExtensionsAreInstalled' => $this->checkIfRequiredExtensionsAreInstalled(),
@@ -77,6 +77,11 @@ class StatusProviderBase implements StatusProviderInterface
         ];
 
         return $result;
+    }
+
+    public function getLabel(): string
+    {
+        return 'Div2007 (' . §this->getExtensionName() . ')';
     }
 
     /**
