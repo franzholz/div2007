@@ -25,7 +25,6 @@ namespace JambageCom\Div2007\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 use JambageCom\Div2007\Api\FrontendApi;
-use JambageCom\Div2007\Api\OldFrontendApi;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
@@ -85,14 +84,8 @@ class FrontendUtility
      */
     public static function getPageId(...$params)
     {
-        $result = false;
-        if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
-            $api = GeneralUtility::makeInstance(FrontendApi::class);
-            $result = $api->getPageId($params);
-        } else {
-            $api = GeneralUtility::makeInstance(OldFrontendApi::class);
-            $result = $api->getPageId($params);
-        }
+        $api = GeneralUtility::makeInstance(FrontendApi::class);
+        $result = $api->getPageId($params);
 
         return $result;
     }
