@@ -30,8 +30,6 @@ namespace JambageCom\Div2007\Utility;
 use TYPO3\CMS\Core\Mail\MailMessage;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
-use JambageCom\Div2007\Api\CompatibilityApi;
-use JambageCom\Div2007\Api\OldCompatibilityApi;
 use Symfony\Component\Mime\Crypto\DkimSigner;
 use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mailer\Exception\TransportException;
@@ -187,17 +185,7 @@ class MailUtility
                 $mail->text($PLAINContent);
             }
         } else {
-            $apiClass = '';
-
-            if (version_compare(PHP_VERSION, '8.0.0') >= 0) {
-                $apiClass = CompatibilityApi::class;
-            } else {
-                $apiClass = OldCompatibilityApi::class;
-            }
-
-            $compatibilityApi = GeneralUtility::makeInstance($apiClass);
-
-            throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . $compatibilityApi->getClass($mail) . '. ', 1612276260
+            throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . $mail::class . '. ', 1612276260
             );
         }
 

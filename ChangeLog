@@ -1,4 +1,8 @@
 
+2024-03-07 Franz Holzinger <franz@ttproducts.de>
+    * Remove classes CompatibilityApi and OldCompatibilityApi, because PHP 8 is required now.
+    * Remove class OldFrontendApi
+
 2024-02-27 Franz Holzinger  <franz@ttproducts.de>
     * compatibility TYPO3 12: comply with new StatusProviderInterface
     * no support for other versions than TYPO3 12, because of interface changes.
