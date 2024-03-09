@@ -27,7 +27,13 @@ namespace JambageCom\Div2007\Api;
  * @subpackage div2007
  */
 use TYPO3\CMS\Core\SingletonInterface;
+
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
+use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 use JambageCom\Div2007\Base\TranslationBase;
+
 
 class Language implements SingletonInterface
 {
@@ -68,5 +74,26 @@ class Language implements SingletonInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Find a site language by id. This will return the first occurrence of a
+     * language found. The same language id might be used for other languages
+     * in other site configurations.
+     *
+     * @param int $languageId
+     * @return SiteLanguage|null
+     */
+    public function getLanguageById(int $languageId): ?SiteLanguage
+    {
+        foreach (GeneralUtility::makeInstance(SiteFinder::class)->getAllSites() as $site) {
+            foreach ($site->getAllLanguages() as $language) {
+                if ($languageId === $language->getLanguageId()) {
+                    return $language;
+                }
+            }
+        }
+
+        return null;
     }
 }
