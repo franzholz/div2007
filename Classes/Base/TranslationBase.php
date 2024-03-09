@@ -18,6 +18,8 @@ use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+
 
 class TranslationBase
 {
@@ -31,6 +33,11 @@ class TranslationBase
     public $scriptRelPath = '/Resources/Private/Language/';          // relative path to the extension directory where the locallang XLF / XML files are stored. The leading and trailing slashes must be included. E.g. '/Resources/Private/Language/'
     protected $extensionKey = '';	// extension key must be overridden
     protected $lookupFilename = ''; // filename used for the lookup method
+
+    /**
+     * @var TypoScriptFrontendController|null
+     */
+    protected $typoScriptFrontendController;
 
     /**
      * Should normally be set in the main function with the TypoScript content passed to the method.
@@ -48,20 +55,14 @@ class TranslationBase
         $lookupFilename = '',
         $useDiv2007Language = true
     ): void {
-        if (
-            isset($GLOBALS['TSFE']->config['config']) &&
-            isset($GLOBALS['TSFE']->config['config']['language'])
-        ) {
-            $this->setLocalLangKey($GLOBALS['TSFE']->config['config']['language']);
-            if (!empty($GLOBALS['TSFE']->config['config']['language_alt'])) {
-                $this->altLocalLangKey = $GLOBALS['TSFE']->config['config']['language_alt'];
-            }
-        }
+        $tsfe = $this->getTypoScriptFrontendController();
+        $this->setLocalLangKey($tsfe->getLanguage()->getTwoLetterIsoCode());
 
         if ($extensionKey != '') {
             $this->extensionKey = $extensionKey;
         }
-        $conf = $GLOBALS['TSFE']->tmpl->setup['lib.'][DIV2007_EXT . '.'] ?? '';
+        $conf = $tsfe->tmpl->setup['lib.'][DIV2007_EXT . '.'] ?? '';
+
         if (
             isset($conf) &&
             is_array($conf) &&
@@ -168,17 +169,8 @@ class TranslationBase
 
     public function getLanguage()
     {
-        $result = 'default';
-
-        if (
-            isset($GLOBALS['TSFE']->config) &&
-            is_array($GLOBALS['TSFE']->config) &&
-            isset($GLOBALS['TSFE']->config['config']) &&
-            is_array($GLOBALS['TSFE']->config['config']) &&
-            isset($GLOBALS['TSFE']->config['config']['language'])
-        ) {
-            $result = $GLOBALS['TSFE']->config['config']['language'];
-        }
+        $tsfe = $this->getTypoScriptFrontendController();
+        $result = $tsfe->getLanguage()->getTwoLetterIsoCode();
 
         return $result;
     }
@@ -478,7 +470,8 @@ class TranslationBase
         if ($extensionKey == '') {
             $extensionKey = $this->getExtensionKey();
         }
-        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
+        $tsfe = $this->getTypoScriptFrontendController();
+        $result = $tsfe->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
 
         return $result;
     }
@@ -503,5 +496,14 @@ class TranslationBase
         $parts = explode(':', $restStr);
 
         return $parts[1];
+    }
+
+    /**
+     * @return TypoScriptFrontendController|null
+     * @internal for reducing usage of global TSFE objects and to avoid conflicts when different frontend environments are used
+     */
+    public function getTypoScriptFrontendController()
+    {
+        return $this->typoScriptFrontendController ?: $GLOBALS['TSFE'] ?? throw new RuntimeException('No TypoScriptFontendController found in div2007 TranslationBase.', 1710013027);
     }
 }

@@ -1,3 +1,5 @@
+2024-03-09 Franz Holzinger <franz@ttproducts.de>
+    * compatibility TYPO3 11: config.language is not available any more.
 
 2024-03-07 Franz Holzinger <franz@ttproducts.de>
     * Remove classes CompatibilityApi and OldCompatibilityApi, because PHP 8 is required now.
