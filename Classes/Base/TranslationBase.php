@@ -14,14 +14,15 @@ namespace JambageCom\Div2007\Base;
  *
  * The TYPO3 project - inspiring people to share!
  */
-
-
+use TYPO3\CMS\Core\Localization\LocalizationFactory;
+use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Charset\CharsetConverter;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 
-class TranslationBase {
+class TranslationBase
+{
     public $LOCAL_LANG = [];   // Local Language content
     public $LOCAL_LANG_charset = [];   // Local Language content charset for individual labels (overriding)
     public $LOCAL_LANG_loaded = 0;  // Flag that tells if the locallang file has been fetch (or tried to be fetched) already.
@@ -34,36 +35,34 @@ class TranslationBase {
     protected $lookupFilename = ''; // filename used for the lookup method
 
     /**
-    * Should normally be set in the main function with the TypoScript content passed to the method.
-    *
-    * $conf[LOCAL_LANG][_key_] is reserved for Local Language overrides.
-    * $conf[userFunc] / $conf[includeLibs]  reserved for setting up the USER / USER_INT object. See TSref
-    */
+     * @var TypoScriptFrontendController|null
+     */
+    protected $typoScriptFrontendController;
+
+    /**
+     * Should normally be set in the main function with the TypoScript content passed to the method.
+     *
+     * $conf[LOCAL_LANG][_key_] is reserved for Local Language overrides.
+     * $conf[userFunc] / $conf[includeLibs]  reserved for setting up the USER / USER_INT object. See TSref
+     */
     protected $confLocalLang = [];
     private $hasBeenInitialized = false;
 
-
-    public function init (
+    public function init(
         $extensionKey = '',
         $confLocalLang = [], // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
-        $scriptRelPath = '', // obsolete 
+        $scriptRelPath = '', // obsolete
         $lookupFilename = '',
         $useDiv2007Language = true
-    ) {
-        if (
-            isset($GLOBALS['TSFE']->config['config']) &&
-            isset($GLOBALS['TSFE']->config['config']['language'])
-        ) {
-            $this->setLocalLangKey($GLOBALS['TSFE']->config['config']['language']);
-            if (!empty($GLOBALS['TSFE']->config['config']['language_alt'])) {
-                $this->altLocalLangKey = $GLOBALS['TSFE']->config['config']['language_alt'];
-            }
-        }
+    ): void {
+        $tsfe = $this->getTypoScriptFrontendController();
+        $this->setLocalLangKey($tsfe->getLanguage()->getTwoLetterIsoCode());
 
         if ($extensionKey != '') {
             $this->extensionKey = $extensionKey;
         }
-        $conf = $GLOBALS['TSFE']->tmpl->setup['lib.'][DIV2007_EXT . '.'] ?? '';
+        $conf = $tsfe->tmpl->setup['lib.'][DIV2007_EXT . '.'] ?? '';
+
         if (
             isset($conf) &&
             is_array($conf) &&
@@ -71,7 +70,7 @@ class TranslationBase {
         ) {
             $internalConfLocalLang = $conf['_LOCAL_LANG.'];
         }
-        
+
         if (
             isset($internalConfLocalLang) &&
             is_array($internalConfLocalLang) &&
@@ -79,10 +78,10 @@ class TranslationBase {
             is_array($confLocalLang)
         ) {
             $confLocalLang =
-                array_merge_recursive(
-                    $confLocalLang,
-                    $internalConfLocalLang
-                );
+            array_merge_recursive(
+                $confLocalLang,
+                $internalConfLocalLang
+            );
         }
 
         $this->setConfLocalLang($confLocalLang);
@@ -96,77 +95,82 @@ class TranslationBase {
         }
     }
 
-    public function setLocalLang (array $locallang) {
+    public function setLocalLang(array $locallang): void
+    {
         $this->LOCAL_LANG = $locallang;
     }
 
-    /* former getLocallang */
-    public function getLocalLang () {
+    // former getLocallang
+    public function getLocalLang()
+    {
         return $this->LOCAL_LANG;
     }
 
-    public function setLocalLangCharset ($locallang) {
+    public function setLocalLangCharset($locallang): void
+    {
         $this->LOCAL_LANG_charset = $locallang;
     }
 
-    public function getLocalLangCharset () {
+    public function getLocalLangCharset()
+    {
         return $this->LOCAL_LANG_charset;
     }
 
-    public function setLocalLangLoaded ($loaded = true) {
+    public function setLocalLangLoaded($loaded = true): void
+    {
         $this->LOCAL_LANG_loaded = $loaded;
     }
 
-    public function getLocalLangLoaded () {
+    public function getLocalLangLoaded()
+    {
         return $this->LOCAL_LANG_loaded;
     }
 
-    public function setLocalLangKey ($localLangKey) {
+    public function setLocalLangKey($localLangKey): void
+    {
         $this->LocalLangKey = $localLangKey;
     }
 
-    /* former getLLkey */
-    public function getLocalLangKey () {
+    // former getLLkey
+    public function getLocalLangKey()
+    {
         return $this->LocalLangKey;
     }
 
-    public function getExtensionKey () {
+    public function getExtensionKey()
+    {
         return $this->extensionKey;
     }
 
-    public function setConfLocalLang ($conf) {
+    public function setConfLocalLang($conf): void
+    {
         $this->confLocalLang = $conf;
     }
 
-    public function getConfLocalLang () {
+    public function getConfLocalLang()
+    {
         return $this->confLocalLang;
     }
 
-    public function setLookupFilename ($lookupFilename) {
+    public function setLookupFilename($lookupFilename): void
+    {
         $this->lookupFilename = $lookupFilename;
     }
 
-    public function getLookupFilename () {
+    public function getLookupFilename()
+    {
         return $this->lookupFilename;
     }
-    
-    public function needsInit () {
+
+    public function needsInit()
+    {
         return !$this->hasBeenInitialized;
     }
 
-    public function getLanguage () {
-
-        $result = 'default';
-
-        if (
-            isset($GLOBALS['TSFE']->config) &&
-            is_array($GLOBALS['TSFE']->config) &&
-            isset($GLOBALS['TSFE']->config['config']) &&
-            is_array($GLOBALS['TSFE']->config['config']) &&
-            isset($GLOBALS['TSFE']->config['config']['language'])
-        ) {
-            $result = $GLOBALS['TSFE']->config['config']['language'];
-        }
+    public function getLanguage()
+    {
+        $tsfe = $this->getTypoScriptFrontendController();
+        $result = $tsfe->getLanguage()->getTwoLetterIsoCode();
 
         return $result;
     }
@@ -174,17 +178,18 @@ class TranslationBase {
     /**
      * This method has been used under TYPO3 versions above 4.6 as getLL
      * Returns the localized label of the LOCAL_LANG key, $key used since TYPO3 4.6
-     * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->localLangTestPrefixAlt and ->localLangTestPrefix
-     * 
+     * Notice that for debugging purposes prefixes for the output values can be set with the internal vars ->localLangTestPrefixAlt and ->localLangTestPrefix.
+     *
      * former getLL method
      *
-     * @param   string      The key from the LOCAL_LANG array for which to return the value.
+     * @param   string      the key from the LOCAL_LANG array for which to return the value
      * @param   string      input: if set then this language is used if possible. output: the used language
-     * @param   string      Alternative string to return IF no value is found set for the key, neither for the local language nor the default.
-     * @param   boolean     If true, the output label is passed through htmlspecialchars()
+     * @param   string      alternative string to return IF no value is found set for the key, neither for the local language nor the default
+     * @param   bool     If true, the output label is passed through htmlspecialchars()
+     *
      * @return  string / boolean The prefixed value from LOCAL_LANG. false, if no entry could be found.
      */
-    public function getLabel (
+    public function getLabel(
         $key,
         &$usedLang = '',
         $alternativeLabel = '',
@@ -192,7 +197,7 @@ class TranslationBase {
     ) {
         $output = false;
         $word = '';
-                /** @var CharsetConverter $charsetConverter */
+        /** @var CharsetConverter $charsetConverter */
         $charsetConverter = GeneralUtility::makeInstance(CharsetConverter::class);
 
         if (
@@ -205,22 +210,22 @@ class TranslationBase {
                 !isset($this->LOCAL_LANG[$usedLang][$key][0]['source'])
             )
         ) {
-                // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
+            // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if (!empty($this->LOCAL_LANG_charset[$usedLang][$key])) {
                 try {
                     $word =
-                        $charsetConverter->conv(
-                            $this->LOCAL_LANG[$usedLang][$key][0]['target'],
-                            $this->LOCAL_LANG_charset[$usedLang][$key],
-                            'utf-8'
-                        );
+                    $charsetConverter->conv(
+                        $this->LOCAL_LANG[$usedLang][$key][0]['target'],
+                        $this->LOCAL_LANG_charset[$usedLang][$key],
+                        'utf-8'
+                    );
                 } catch (UnknownCharsetException $e) {
-                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '" ' . ' for language "' . $usedLang . '" ' . $e->getMessage(), 1652354355);
+                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '"  for language "' . $usedLang . '" ' . $e->getMessage(), 1652354355);
                 }
             } else {
                 $word = $this->LOCAL_LANG[$usedLang][$key][0]['target'];
             }
-        } else if (
+        } elseif (
             $this->getLocalLangKey() != '' &&
             isset($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]) &&
             is_array($this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]) &&
@@ -232,17 +237,17 @@ class TranslationBase {
         ) {
             $usedLang = $this->getLocalLangKey();
 
-                // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
+            // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if (!empty($this->LOCAL_LANG_charset[$usedLang][$key])) {
                 try {
                     $word =
-                        $charsetConverter->conv(
-                            $this->LOCAL_LANG[$usedLang][$key][0]['target'],
-                            $this->LOCAL_LANG_charset[$usedLang][$key],
-                            'utf-8'
-                        );
+                    $charsetConverter->conv(
+                        $this->LOCAL_LANG[$usedLang][$key][0]['target'],
+                        $this->LOCAL_LANG_charset[$usedLang][$key],
+                        'utf-8'
+                    );
                 } catch (UnknownCharsetException $e) {
-                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '" ' . ' for language "' . $usedLang . '" ' . $e->getMessage(), 1652359060);
+                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '"  for language "' . $usedLang . '" ' . $e->getMessage(), 1652359060);
                 }
             } else {
                 $word = $this->LOCAL_LANG[$this->getLocalLangKey()][$key][0]['target'];
@@ -258,17 +263,17 @@ class TranslationBase {
         ) {
             $usedLang = $this->altLocalLangKey;
 
-                // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
+            // The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
             if (isset($this->LOCAL_LANG_charset[$usedLang][$key])) {
                 try {
                     $word =
-                        $charsetConverter->conv(
-                            $this->LOCAL_LANG[$usedLang][$key][0]['target'],
-                            $this->LOCAL_LANG_charset[$usedLang][$key],
-                            'utf-8'
-                        );
+                    $charsetConverter->conv(
+                        $this->LOCAL_LANG[$usedLang][$key][0]['target'],
+                        $this->LOCAL_LANG_charset[$usedLang][$key],
+                        'utf-8'
+                    );
                 } catch (UnknownCharsetException $e) {
-                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '" ' . ' for language "' . $usedLang . '" ' . $e->getMessage(), 1652359097);
+                    throw new \RuntimeException('Invalid charset "' . $this->LOCAL_LANG_charset[$usedLang][$key] . '"  for language "' . $usedLang . '" ' . $e->getMessage(), 1652359097);
                 }
             } else {
                 $word = $this->LOCAL_LANG[$this->altLocalLangKey][$key][0]['target'];
@@ -283,10 +288,10 @@ class TranslationBase {
             )
         ) {
             $usedLang = 'default';
-                // Get default translation (without charset conversion, English)
+            // Get default translation (without charset conversion, English)
             $word = $this->LOCAL_LANG[$usedLang][$key][0]['target'];
         } else {
-                // Return alternative string or empty
+            // Return alternative string or empty
             $word = (isset($this->localLangTestPrefixAlt)) ? $this->localLangTestPrefixAlt . $alternativeLabel : $alternativeLabel;
         }
 
@@ -308,10 +313,11 @@ class TranslationBase {
      * former method loadLL
      *
      * @param   string      language file to load
-     * @param   boolean     If true, then former language items can be overwritten from the new file
-     * @return  boolean
+     * @param   bool     If true, then former language items can be overwritten from the new file
+     *
+     * @return  bool
      */
-    public function loadLocalLang (
+    public function loadLocalLang(
         $langFileParam = '',
         $overwrite = true
     ) {
@@ -324,7 +330,7 @@ class TranslationBase {
             str_starts_with($langFile, 'fileadmin')
         ) {
             $basePath = $langFile;
-        } else if ($extensionKey != '') {
+        } elseif ($extensionKey != '') {
             $basePath = ExtensionManagementUtility::extPath($extensionKey);
             $basePath .= $this->scriptRelPath;
             $basePath .= $langFile;
@@ -332,7 +338,7 @@ class TranslationBase {
             return false;
         }
 
-        $callingClassName = \TYPO3\CMS\Core\Localization\LocalizationFactory::class;
+        $callingClassName = LocalizationFactory::class;
 
         /** @var $languageFactory \TYPO3\CMS\Core\Localization\LocalizationFactory */
         $languageFactory = GeneralUtility::makeInstance($callingClassName);
@@ -340,19 +346,19 @@ class TranslationBase {
 
         if (!file_exists($filePath)) {
             debug($basePath, 'ERROR: ' . DIV2007_EXT . ' called by "' . $extensionKey . '" - file "' . $basePath . '" cannot be found!'); // keep this
+
             return false;
         }
 
         $tempLOCAL_LANG = $languageFactory->getParsedData(
             $basePath,
             $this->getLocalLangKey(),
-            'UTF-8'
+                                                          'UTF-8'
         );
 
         if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
             foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
                 if (isset($tempLOCAL_LANG[$langKey]) && is_array($tempLOCAL_LANG[$langKey])) {
-
                     if ($overwrite) {
                         $this->LOCAL_LANG[$langKey] = array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
                     } else {
@@ -377,10 +383,10 @@ class TranslationBase {
                     if (isset($tempLOCAL_LANG[$langKey]) && is_array($tempLOCAL_LANG[$langKey])) {
                         if ($overwrite) {
                             $this->LOCAL_LANG[$langKey] =
-                                array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
+                            array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
                         } else {
                             $this->LOCAL_LANG[$langKey] =
-                                array_merge($tempLOCAL_LANG[$langKey], $this->LOCAL_LANG[$langKey]);
+                            array_merge($tempLOCAL_LANG[$langKey], $this->LOCAL_LANG[$langKey]);
                         }
                     }
                 }
@@ -389,7 +395,7 @@ class TranslationBase {
             }
         }
 
-            // Overlaying labels from TypoScript (including fictitious language keys for non-system languages!):
+        // Overlaying labels from TypoScript (including fictitious language keys for non-system languages!):
         $confLocalLang = $this->getConfLocalLang();
 
         if (is_array($confLocalLang)) {
@@ -400,7 +406,7 @@ class TranslationBase {
                     }
                     $languageKey = substr($languageKey, 0, -1);
 
-                        // Remove the dot after the language key
+                    // Remove the dot after the language key
                     foreach ($languageArray as $labelKey => $labelValue) {
                         if (!isset($this->LOCAL_LANG[$languageKey][$labelKey])) {
                             $this->LOCAL_LANG[$languageKey][$labelKey] = [];
@@ -451,11 +457,12 @@ class TranslationBase {
 
         $this->LOCAL_LANG_loaded = 1;
         $result = true;
+
         return $result;
     }
 
     // notice: this method will not consider the _LOCAL_LANG setup overwritings
-    public function translate ($key, $extensionKey = '', $filename = '')
+    public function translate($key, $extensionKey = '', $filename = '')
     {
         if ($filename == '') {
             $filename = $this->getLookupFilename();
@@ -463,19 +470,23 @@ class TranslationBase {
         if ($extensionKey == '') {
             $extensionKey = $this->getExtensionKey();
         }
-        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);    
+        $tsfe = $this->getTypoScriptFrontendController();
+        $result = $tsfe->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
+
         return $result;
     }
 
     /**
-    * Split Label function for front-end applications.
-    *
-    * former method sL 
-    *
-    * @param	string		Key string. Accepts the "LLL:" prefix.
-    * @return	string		Label value, if any.
-    */
-    static public function splitLabel ($input) {
+     * Split Label function for front-end applications.
+     *
+     * former method sL
+     *
+     * @param	string		Key string. Accepts the "LLL:" prefix.
+     *
+     * @return	string		label value, if any
+     */
+    public static function splitLabel($input)
+    {
         $restStr = trim(substr($input, 4));
         $extPrfx = '';
         if (!strcmp(substr($restStr, 0, 4), 'EXT:')) {
@@ -483,7 +494,16 @@ class TranslationBase {
             $extPrfx = 'EXT:';
         }
         $parts = explode(':', $restStr);
-        return ($parts[1]);
+
+        return $parts[1];
+    }
+
+    /**
+     * @return TypoScriptFrontendController|null
+     * @internal for reducing usage of global TSFE objects and to avoid conflicts when different frontend environments are used
+     */
+    public function getTypoScriptFrontendController()
+    {
+        return $this->typoScriptFrontendController ?: $GLOBALS['TSFE'] ?? throw new RuntimeException('No TypoScriptFontendController found in div2007 TranslationBase.', 1710013027);
     }
 }
-
