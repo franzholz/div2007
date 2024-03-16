@@ -3,10 +3,10 @@
 // Extension configuration file for ext "div2007".
 
 $EM_CONF[$_EXTKEY] = [
-  'title' => 'Static Methods since 2007',
-  'description' => 'This library offers classes and functions to other TYPO3 extensions. It provides a modified t3lib_div of TYPO3 4.7.10. Replacement for tslib_pibase methods.',
+  'title' => 'Extension Library since 2007',
+  'description' => 'This library offers classes and functions to other TYPO3 extensions. Replacement for tslib_pibase methods.',
   'category' => 'misc',
-  'version' => '2.1.1',
+  'version' => '2.1.2',
   'state' => 'stable',
   'author' => 'Franz Holzinger',
   'author_email' => 'franz@ttproducts.de',
