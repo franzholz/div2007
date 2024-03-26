@@ -22,20 +22,13 @@ Parts of the former methods have been integrated into the namespace classes.
 Requirements
 ------------
 
-2.1.0 and later require PHP 8 and TYPO3 12.x
-
-1.16 - 2.0.99 require PHP 7.4 - 8 and TYPO3 10.4 - 12.x
-
-1.13 - 11.15 require PHP 7.4 - 8 and TYPO3 10.4 - 11.5
-
-1.12.x are the last versions which support PHP 7.2 - 7.4 .
-
-1.11.8 has been the last version which supports PHP < 7.2 .
-
-1.11.6 has been the last version which supports TYPO3 6.2 .
-
-1.7.20 has been the last version which supports TYPO3 4.5 - 6.1 and PHP
-< 5.5 .
+• 2.1.0 and later require PHP 8 and TYPO3 12.x
+• 1.16 - 2.0.99 require PHP 7.4 - 8 and TYPO3 10.4 - 12.x
+• 1.13 - 11.15 require PHP 7.4 - 8 and TYPO3 10.4 - 11.5
+• 1.12.x are the last versions which support PHP 7.2 - 7.4 .
+• 1.11.8 has been the last version which supports PHP < 7.2 .
+• 1.11.6 has been the last version which supports TYPO3 6.2 .
+• 1.7.20 has been the last version which supports TYPO3 4.5 - 6.1 and PHP < 5.5 .
 
 Starting with version 1.12.0 TYPO3 7.6 and PHP 7.2.0 are the minimum
 requirements to use the extension div2007.
