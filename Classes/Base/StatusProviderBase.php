@@ -81,7 +81,7 @@ class StatusProviderBase implements StatusProviderInterface
 
     public function getLabel(): string
     {
-        return 'Div2007 (' . §this->getExtensionName() . ')';
+        return 'Div2007 (' . $this->getExtensionName() . ')';
     }
 
     /**
