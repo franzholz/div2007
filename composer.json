@@ -1,15 +1,14 @@
 {
   "name": "jambagecom/div2007",
   "type": "typo3-cms-extension",
-  "description": "Static Methods since 2007 for TYPO3 CMS. It offers many functions for Front End extensions. You can replace t3lib_div and tslib_pibase by div2007.",
+  "description": "Extension library since 2007 for TYPO3 CMS. It offers many functions for Front End extensions. You can replace TYPO3\\CMS\\Frontend\\Plugin\\AbstractPlugin by div2007.",
   "keywords": [
     "TYPO3",
     "extension",
     "library",
-    "t3lib_div",
     "tslib_pibase",
-    "static_info_tables",
-    "t3skin"
+    "AbstractPlugin",
+    "static_info_tables"
   ],
   "support": {
     "issues": "https://github.com/franzholz/div2007/issues"
@@ -26,7 +25,7 @@
     "GPL-2.0-or-later"
   ],
   "require": {
-    "php": "^7.4 || ^8.0",
+    "php": "^8.0",
     "typo3/cms-core": "^12.4",
     "typo3/cms-reports": "^12.4"
   },
