@@ -75,7 +75,7 @@ class FrontendUtility {
     /**
      * This method is needed only for Ajax calls.
      * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId instead of this method.
-     * 
+     *
      * @return int
      */
     static public function getPageId (...$params)
@@ -103,7 +103,7 @@ class FrontendUtility {
     static public function getFrontEndUser ($field = '') {
         $result = false;
 		$context = GeneralUtility::makeInstance(Context::class);
-        $tsfe = $this->getTypoScriptFrontendController();
+        $tsfe = static::getTypoScriptFrontendController();
 
         if (
             isset($tsfe->fe_user) &&
@@ -827,7 +827,7 @@ class FrontendUtility {
                         $bIsCachable = true;
                     }
 
-                    if (    
+                    if (
                         isset($pObject->autoCacheFields[$fN]['list']) &&
                         is_array($pObject->autoCacheFields[$fN]['list']) &&
                         in_array($fV, $pObject->autoCacheFields[$fN]['list'])
@@ -1129,7 +1129,7 @@ class FrontendUtility {
 
     static public function translate ($extensionKey, $filename, $key)
     {
-        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key); 
+        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
         return $result;
     }
 
@@ -1224,7 +1224,7 @@ class FrontendUtility {
         }
 
         if (
-            $domain != '' && 
+            $domain != '' &&
             !$bSetAbsRefPrefix
         ) {
             $parse = [];
@@ -1307,7 +1307,7 @@ class FrontendUtility {
         $tsfe = static::getTypoScriptFrontendController();
         $docType = $tsfe->xhtmlDoctype;
         if (
-            $docType !== 'xhtml_strict' && 
+            $docType !== 'xhtml_strict' &&
             $docType !== 'xhtml_11' &&
             (
                 !isset($tsfe->config['config']['doctype']) ||
