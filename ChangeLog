@@ -1,3 +1,6 @@
+2024-04-10 Franz Holzinger <franz@ttproducts.de>
+    * add support for Backend usage of the class TranslationBase
+
 2024-04-03 Franz Holzinger <franz@ttproducts.de>
     * improve checkMXRecord: use the ports 25, 587, 2525. Reduce the timeout to 5.
 
