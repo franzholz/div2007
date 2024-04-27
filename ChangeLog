@@ -1,3 +1,6 @@
+2024-04-27 Franz Holzinger <franz@ttproducts.de>
+   * fix #68: use OAEP as encryption padding scheme
+
 2024-04-10 Franz Holzinger <franz@ttproducts.de>
     * add support for Backend usage of the class TranslationBase
 
