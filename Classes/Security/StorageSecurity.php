@@ -94,7 +94,8 @@ class StorageSecurity implements SingletonInterface, LoggerAwareInterface
                 @openssl_public_encrypt(
                     $password,
                     $cryptedPassword,
-                    $publicKey
+                    $publicKey,
+                    OPENSSL_PKCS1_OAEP_PADDING
                 )
             ) {
                 $autoLoginKey = $privateKey;
@@ -130,6 +131,7 @@ class StorageSecurity implements SingletonInterface, LoggerAwareInterface
                     $originalPassword,
                     $password,
                     $privateKey
+                    OPENSSL_PKCS1_OAEP_PADDING
                 ); 
             }
         }
