@@ -2,6 +2,12 @@
 2024-04-27 Franz Holzinger <franz@ttproducts.de>
    * fix #68: use OAEP as encryption padding scheme
 
+2024-04-10 Franz Holzinger <franz@ttproducts.de>
+    * add support for Backend usage of the class TranslationBase
+
+2024-04-03 Franz Holzinger <franz@ttproducts.de>
+    * improve checkMXRecord: use the ports 25, 587, 2525. Reduce the timeout to 5.
+
 2024-03-09 Franz Holzinger <franz@ttproducts.de>
     * compatibility TYPO3 11: config.language is not available any more.
 
