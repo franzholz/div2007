@@ -1,3 +1,6 @@
+2024-06-14 Franz Holzinger <franz@ttproducts.de>
+   * fix error with not working container extension: PageContentPreviewRenderingEvent must remain null if no content has been generated in PageContentPreviewRenderingListenerBase.
+
 2024-04-10 Franz Holzinger <franz@ttproducts.de>
     * add support for Backend usage of the class TranslationBase
 
