@@ -55,7 +55,9 @@ class PageContentPreviewRenderingListenerBase implements SingletonInterface
         $pageContext = $event->getPageLayoutContext();
         $pageRecord = $pageContext->getPageRecord();
         $codes = $this->pmDrawItem($record, $pageRecord);
-        $event->setPreviewContent($content . $codes);
+        if (strlen($content . $codes)) {
+            $event->setPreviewContent($content . $codes);
+        }
     }
 
     /**
@@ -64,9 +66,9 @@ class PageContentPreviewRenderingListenerBase implements SingletonInterface
      * @param	array		record
      * @param	object		the parent object
      */
-    public function pmDrawItem(array $record, array $pageRecord): string
+    public function pmDrawItem(array $record, array $pageRecord): ?string
     {
-        $codes = '';
+        $codes = null;
         $extensionKey = '';
         if (
             $this->extensionKey != ''
