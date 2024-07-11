@@ -77,8 +77,7 @@ class FrontendApi
 
         if ($request instanceof ServerRequestInterface) {
             $matcher = GeneralUtility::makeInstance(
-                SiteMatcher::class,
-                GeneralUtility::makeInstance(SiteFinder::class)
+                SiteMatcher::class
             );
             /** @var SiteRouteResult $routeResult */
             $routeResult = $matcher->matchRequest($request);
