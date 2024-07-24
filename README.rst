@@ -1,5 +1,11 @@
+|TYPO3| |Monthly Downloads| |Latest Stable Version|
+
+=======================
 TYPO3 extension div2007
 =======================
+
+:Repository:  https://github.com/franzholz/div2007
+:TER:         https://extensions.typo3.org/extension/div2007/
 
 What is does
 ------------
@@ -22,7 +28,7 @@ Parts of the former methods have been integrated into the namespace classes.
 Requirements
 ------------
 
-• 2.1.0 and later require PHP 8 and TYPO3 12.x
+• 2.1.0 and later require PHP 8 and TYPO3 12.x or TYPO3 13
 • 1.16 - 2.0.99 require PHP 7.4 - 8 and TYPO3 10.4 - 12.x
 • 1.13 - 11.15 require PHP 7.4 - 8 and TYPO3 10.4 - 11.5
 • 1.12.x are the last versions which support PHP 7.2 - 7.4 .
@@ -58,3 +64,14 @@ example:
        privacy_policy.hint_1 = A telephone call or an email sent to us is enough to be deleted from our database. You can do this at any time.
      }
    }
+
+
+.. |TYPO3| image:: https://img.shields.io/badge/TYPO3-Extension-orange?logo=TYPO3
+   :target: https://extensions.typo3.org/extension/div2007
+.. |Monthly Downloads| image:: https://poser.pugx.org/jambagecom/div2007/d/monthly
+   :target: https://packagist.org/packages/jambagecom/div2007
+.. |Latest Stable Version| image:: http://poser.pugx.org/jambagecom/div2007/v
+   :target: https://packagist.org/packages/jambagecom/div2007
+
+
+
