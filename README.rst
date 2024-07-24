@@ -73,5 +73,3 @@ example:
 .. |Latest Stable Version| image:: http://poser.pugx.org/jambagecom/div2007/v
    :target: https://packagist.org/packages/jambagecom/div2007
 
-
-
