@@ -1,3 +1,7 @@
+2024-07-26 Franz Holzinger <franz@ttproducts.de>
+    * support TYPO3 13
+    * bugfix getFileInfo: use the storage of the file and not the default storage
+
 2024-07-11 Franz Holzinger <franz@ttproducts.de>
    * fix error with SiteMatcher constructor: The parameters are injected by Dependency Injection and not passed.
 
