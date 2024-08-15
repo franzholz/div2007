@@ -226,17 +226,21 @@ class AbstractPlugin
      */
     public function __construct($_ = null, TypoScriptFrontendController $frontendController = null)
     {
-        trigger_error(
-            'AbstractPlugin "pibase" is deprecated since TYPO3 v12.4 and will be removed with v13.0',
-            E_USER_DEPRECATED
-        );
         $this->frontendController = $frontendController ?: $GLOBALS['TSFE'];
         $this->templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         // Setting piVars:
         if ($this->prefixId) {
             $this->piVars = self::getRequestPostOverGetParameterWithPrefix($this->prefixId);
         }
-        $this->LLkey = $this->frontendController->getLanguage()->getTypo3Language();
+        $request = $GLOBALS['TYPO3_REQUEST'];
+        $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
+        if ($language->hasCustomTypo3Language()) {
+            $locale = GeneralUtility::makeInstance(Locales::class)->createLocale($language->getTypo3Language());
+        } else {
+            $locale = $language->getLocale();
+        }
+
+        $this->LLkey = $locale->getLanguageCode();
 
         $locales = GeneralUtility::makeInstance(Locales::class);
         if ($locales->isValidLanguageKey($this->LLkey)) {
