@@ -1358,6 +1358,61 @@ class FrontendUtility
         return '';
     }
 
+    /***********************************************
+     *
+     * Database functions, making of queries
+     *
+     ***********************************************/
+    /**
+     * Generates a list of Page-uid's from $id. List does not include $id itself
+     * (unless the id specified is negative in which case it does!)
+     * The only pages WHICH PREVENTS DECENDING in a branch are
+     * - deleted pages,
+     * - pages in a recycler (doktype = 255) or of the Backend User Section (doktpe = 6) type
+     * - pages that has the extendToSubpages set, WHERE start/endtime, hidden
+     * and fe_users would hide the records.
+     * Apart from that, pages with enable-fields excluding them, will also be
+     * removed. HOWEVER $dontCheckEnableFields set will allow
+     * enableFields-excluded pages to be included anyway - including
+     * extendToSubpages sections!
+     * Mount Pages are also descended but notice that these ID numbers are not
+     * useful for links unless the correct MPvar is set.
+     *
+     * @param int $id The id of the start page from which point in the page tree to descend. IF NEGATIVE the id itself is included in the end of the list (only if $begin is 0) AND the output does NOT contain a last comma. Recommended since it will resolve the input ID for mount pages correctly and also check if the start ID actually exists!
+     * @param int $depth The number of levels to descend. If you want to descend infinitely, just set this to 100 or so. Should be at least "1" since zero will just make the function return (no descend...)
+     * @param int $begin Is an optional integer that determines at which level in the tree to start collecting uid's. Zero means 'start right away', 1 = 'next level and out'
+     * @param bool $dontCheckEnableFields See function description
+     * @param string $addSelectFields Additional fields to select. Syntax: ",[fieldname],[fieldname],...
+     * @param string $moreWhereClauses Additional where clauses. Syntax: " AND [fieldname]=[value] AND ...
+     * @param array $prevId_array array of IDs from previous recursions. In order to prevent infinite loops with mount pages.
+     * @param int $recursionLevel Internal: Zero for the first recursion, incremented for each recursive call.
+     * @return string Returns the list of ids as a comma separated string
+     */
+    public static function getTreeList($id, $depth, $begin = 0, $dontCheckEnableFields = false, $addSelectFields = '', $moreWhereClauses = '', array $prevId_array = [], $recursionLevel = 0)
+    {
+        $addCurrentPageId = false;
+        $id = (int)$id;
+        if ($id < 0) {
+            $id = abs($id);
+            $addCurrentPageId = true;
+        }
+        $cObj = static::getContentObjectRenderer();
+
+        $pageRepository = static::getTypoScriptFrontendController()->sys_page;
+        if ($dontCheckEnableFields) {
+            $backupEnableFields = $pageRepository->where_hid_del;
+            $pageRepository->where_hid_del = '';
+        }
+        $result = $pageRepository->getDescendantPageIdsRecursive($id, (int)$depth, (int)$begin, [], (bool)$dontCheckEnableFields);
+        if ($dontCheckEnableFields) {
+            $pageRepository->where_hid_del = $backupEnableFields;
+        }
+        if ($addCurrentPageId) {
+            $result = array_merge([$id], $result);
+        }
+        return implode(',', $result);
+    }
+
     public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController): void
     {
         static::$typoScriptFrontendController = $typoScriptFrontendController;
