@@ -26,10 +26,12 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use Psr\Http\Message\ServerRequestInterface;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Div2007\Api\FrontendApi;
 
 class ControlUtility
 {
@@ -46,7 +48,7 @@ class ControlUtility
             $variable != ''
         ) {
             if ($prefixId != '') {
-                $value = GeneralUtility::_GP($prefixId);
+                $value = FrontendApi::getParameter($prefixId);
                 if (
                     isset($value) &&
                     is_array($value) &&
@@ -55,10 +57,10 @@ class ControlUtility
                     $result = $value[$variable];
                 }
             } else {
-                $result = GeneralUtility::_GP($variable);
+                $result = FrontendApi::getParameter($variable);
             }
         } elseif ($prefixId != '') {
-            $result = GeneralUtility::_GP($prefixId);
+            $result = FrontendApi::getParameter($prefixId);
         }
 
         if ($htmlSpecialChars && isset($result)) {

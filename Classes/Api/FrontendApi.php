@@ -41,6 +41,8 @@ class FrontendApi
      * This method is needed only for Ajax calls.
      * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId($request) instead of this method.
      *
+     * The first parameter can be the request object
+     *
      * @return int
      */
     public static function getPageId(...$params)
@@ -48,31 +50,13 @@ class FrontendApi
         $request = null;
         $site = null;
         $result = 0;
-
-        if (method_exists(GeneralUtility::class, '_GP')) {
-            $result = (int)GeneralUtility::_GP('id');
-            if (
-                $result
-            ) {
-                return $result;
-            }
-        }
-
         if (
             isset($params[0]) &&
             $params[0] instanceof ServerRequestInterface
         ) {
             $request = $params[0];
-        } elseif (isset($GLOBALS['TYPO3_REQUEST'])) {
-            $request = $GLOBALS['TYPO3_REQUEST'];
-        }
-
-        if (
-            $request === null &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST']) &&
-            is_object($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'])
-        ) {
-            $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
+        } else {
+            $request = static::getGlobalRequestObject();
         }
 
         if ($request instanceof ServerRequestInterface) {
@@ -123,5 +107,46 @@ class FrontendApi
         $view->setPartialRootPaths(['EXT:' . $extensionKey . '/Resources/Private/Partials']);
 
         return $view;
+    }
+
+    /**
+     * Read the parameter. Replacement for GeneralUtility::_GP.
+     *
+     * The second parameter can be the request object
+     *
+     * @return string
+     */
+    public static function getParameter($param, ...$params)
+    {
+        $result = null;
+        $request = null;
+        if (
+            isset($params[0]) &&
+            $params[0] instanceof ServerRequestInterface
+        ) {
+            $request = $params[0];
+        } else {
+            $request = static::getGlobalRequestObject();
+        }
+
+        if (is_object($request)) {
+            $result = $request->getParsedBody()[$param] ?? $request->getQueryParams()[$param] ?? null;
+        }
+        return $result;
+    }
+
+    public static getGlobalRequestObject()
+    {
+        $request = null;
+        if (isset($GLOBALS['TYPO3_REQUEST'])) {
+            $request = $GLOBALS['TYPO3_REQUEST'];
+        } elseif (
+            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST']) &&
+            is_object($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST']) &&
+            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'] instanceof ServerRequestInterface
+        ) {
+            $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
+        }
+        return $request;
     }
 }

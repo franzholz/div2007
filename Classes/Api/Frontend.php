@@ -34,6 +34,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
+use JambageCom\Div2007\Api\FrontendApi;
+
 class Frontend implements SingletonInterface
 {
     /**
@@ -130,15 +132,8 @@ class Frontend implements SingletonInterface
             return $this->typoScriptFrontendController;
         }
 
-        $id = '';
-        if (method_exists(GeneralUtility::class, '_GP')) {
-            $id = (int)GeneralUtility::_GP('id');
-        }
-
-        $type = '';
-        if (method_exists(GeneralUtility::class, '_GP')) {
-            $type = (int)GeneralUtility::_GP('type');
-        }
+        $id = (int) FrontendApi::getParameter('id');
+        $type = (int) FrontendApi::getParameter('type');
 
         // This usually happens when typolink is created by the TYPO3 Backend, where no TSFE object
         // is there. This functionality is currently completely internal, as these links cannot be
