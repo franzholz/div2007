@@ -165,8 +165,9 @@ class Freecap extends CaptchaBase
      */
     protected function getFrontendUser()
     {
-        if ($GLOBALS['TSFE']->fe_user) {
-            return $GLOBALS['TSFE']->fe_user;
+        $frontendUser = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user');
+        if ($frontendUser) {
+            return $frontendUser;
         }
         throw new SessionNotFoundException('No frontend user found in session!');
     }
