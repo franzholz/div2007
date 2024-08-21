@@ -24,20 +24,21 @@ namespace JambageCom\Div2007\Utility;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-use JambageCom\Div2007\Api\FrontendApi;
-use TYPO3\CMS\Core\Utility\PathUtility;
-use TYPO3\CMS\Core\Core\Environment;
-use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use JambageCom\Div2007\Base\BrowserBase;
-use JambageCom\Div2007\Base\TranslationBase;
-use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
-use JambageCom\Div2007\Api\Frontend;
-use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
+
+use JambageCom\Div2007\Api\Frontend;
+use JambageCom\Div2007\Api\FrontendApi;
+use JambageCom\Div2007\Base\BrowserBase;
+use JambageCom\Div2007\Base\TranslationBase;
 
 /**
  * front end functions.
@@ -1066,7 +1067,7 @@ class FrontendUtility
                 $paramsNew = $urlParameters;
             }
             $conf['additionalParams'] = $paramsOld . $paramsNew;
-            $result = $cObj->typolink($label, $conf);
+            $result = $cObj->typoLink($label, $conf);
         } else {
             $result = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink: parameter $cObj is not an object';
         }
@@ -1107,7 +1108,7 @@ class FrontendUtility
             );
 
             if ($result !== false) {
-                $result = $cObj->lastTypoLinkUrl;
+                $result = $cObj->lastTypoLinkResult;
             }
         } else {
             $out = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink_URL: parameter $cObj is not an object';
@@ -1356,6 +1357,61 @@ class FrontendUtility
         }
 
         return '';
+    }
+
+    /***********************************************
+     *
+     * Database functions, making of queries
+     *
+     ***********************************************/
+    /**
+     * Generates a list of Page-uid's from $id. List does not include $id itself
+     * (unless the id specified is negative in which case it does!)
+     * The only pages WHICH PREVENTS DECENDING in a branch are
+     * - deleted pages,
+     * - pages in a recycler (doktype = 255) or of the Backend User Section (doktpe = 6) type
+     * - pages that has the extendToSubpages set, WHERE start/endtime, hidden
+     * and fe_users would hide the records.
+     * Apart from that, pages with enable-fields excluding them, will also be
+     * removed. HOWEVER $dontCheckEnableFields set will allow
+     * enableFields-excluded pages to be included anyway - including
+     * extendToSubpages sections!
+     * Mount Pages are also descended but notice that these ID numbers are not
+     * useful for links unless the correct MPvar is set.
+     *
+     * @param int $id The id of the start page from which point in the page tree to descend. IF NEGATIVE the id itself is included in the end of the list (only if $begin is 0) AND the output does NOT contain a last comma. Recommended since it will resolve the input ID for mount pages correctly and also check if the start ID actually exists!
+     * @param int $depth The number of levels to descend. If you want to descend infinitely, just set this to 100 or so. Should be at least "1" since zero will just make the function return (no descend...)
+     * @param int $begin Is an optional integer that determines at which level in the tree to start collecting uid's. Zero means 'start right away', 1 = 'next level and out'
+     * @param bool $dontCheckEnableFields See function description
+     * @param string $addSelectFields Additional fields to select. Syntax: ",[fieldname],[fieldname],...
+     * @param string $moreWhereClauses Additional where clauses. Syntax: " AND [fieldname]=[value] AND ...
+     * @param array $prevId_array array of IDs from previous recursions. In order to prevent infinite loops with mount pages.
+     * @param int $recursionLevel Internal: Zero for the first recursion, incremented for each recursive call.
+     * @return string Returns the list of ids as a comma separated string
+     */
+    public static function getTreeList($id, $depth, $begin = 0, $dontCheckEnableFields = false, $addSelectFields = '', $moreWhereClauses = '', array $prevId_array = [], $recursionLevel = 0)
+    {
+        $addCurrentPageId = false;
+        $id = (int)$id;
+        if ($id < 0) {
+            $id = abs($id);
+            $addCurrentPageId = true;
+        }
+        $cObj = static::getContentObjectRenderer();
+
+        $pageRepository = static::getTypoScriptFrontendController()->sys_page;
+        if ($dontCheckEnableFields) {
+            $backupEnableFields = $pageRepository->where_hid_del;
+            $pageRepository->where_hid_del = '';
+        }
+        $result = $pageRepository->getDescendantPageIdsRecursive($id, (int)$depth, (int)$begin, [], (bool)$dontCheckEnableFields);
+        if ($dontCheckEnableFields) {
+            $pageRepository->where_hid_del = $backupEnableFields;
+        }
+        if ($addCurrentPageId) {
+            $result = array_merge([$id], $result);
+        }
+        return implode(',', $result);
     }
 
     public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController): void

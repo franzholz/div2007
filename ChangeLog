@@ -1,5 +1,13 @@
 
 
+2024-08-19 Franz Holzinger <franz@ttproducts.de>
+    * TYPO3 12: use $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user');
+    * TYPO3 13 does not allow to set the property dontSetCookie of frontend.user
+    * TYPO3 13 demands frontend.typoscript
+    * TYPO3 13: add removed method getTreeList to class FrontendUtility
+    * compatibility: new method JambageCom\Div2007\Api\FrontendApi::getParameterMerged as
+                     replacement for GeneralUtility::_GP
+
 2024-08-09 Franz Holzinger <franz@ttproducts.de>
     * add class JambageCom\Div2007\Compatibility\AbstractPlugin as replacement for
       TYPO3\CMS\Frontend\Plugin\AbstractPlugin

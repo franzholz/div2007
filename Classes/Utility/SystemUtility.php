@@ -91,13 +91,12 @@ class SystemUtility
     public static function fetchFeGroups()
     {
         $result = [];
+        $feUserRecord = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user')->user;
 
         if (
-            isset($GLOBALS['TSFE']->fe_user) &&
-            isset($GLOBALS['TSFE']->fe_user->user) &&
-            isset($GLOBALS['TSFE']->fe_user->user['usergroup'])
+            isset($feUserRecord['usergroup'])
         ) {
-            $result = explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
+            $result = explode(',', $feUserRecord['usergroup']);
         }
 
         return $result;

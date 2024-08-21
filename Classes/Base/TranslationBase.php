@@ -19,6 +19,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Http\ApplicationType;
+use TYPO3\CMS\Core\Localization\Locales;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Site\Entity\Site;
@@ -26,6 +27,7 @@ use TYPO3\CMS\Core\Site\Entity\SiteInterface;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 
@@ -65,20 +67,27 @@ class TranslationBase
     ): void {
         $conf = [];
         $typo3Language = $this->getLanguage();
+        $this->setLocalLangKey($typo3Language);
 
         $isFrontend = (ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend());
         if ($isFrontend) {
-            $tsfe = $this->getTypoScriptFrontendController();
-            if (
-                $tsfe instanceof TypoScriptFrontendController &&
-                $tsfe->tmpl instanceof TemplateService &&
-                is_array($tsfe->tmpl->setup)
-            ) {
-                $conf = $tsfe->tmpl->setup['lib.']['div2007.'] ?? '';
+            $typo3VersionArray =
+                VersionNumberUtility::convertVersionStringToArray(VersionNumberUtility::getCurrentTypo3Version());
+            $typo3VersionMain = $typo3VersionArray['version_main'];
+            $conf = [];
+            if ($typo3VersionMain < 12) {
+                $tsfe = $this->getTypoScriptFrontendController();
+                if (
+                    $tsfe instanceof TypoScriptFrontendController &&
+                    $tsfe->tmpl instanceof TemplateService &&
+                    is_array($tsfe->tmpl->setup)
+                ) {
+                    $conf = $tsfe->tmpl->setup['lib.']['div2007.'] ?? '';
+                }
+            } else {
+                $conf = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getSetupArray()['plugin.']['div2007.'] ?? [];
             }
         }
-
-        $this->setLocalLangKey($typo3Language);
 
         if ($extensionKey != '') {
             $this->extensionKey = $extensionKey;
@@ -191,21 +200,20 @@ class TranslationBase
     public function getLanguage()
     {
         $typo3Language = 'en';
-        $isFrontend = (ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend());
+        $request = $GLOBALS['TYPO3_REQUEST'];
+        $isFrontend = (ApplicationType::fromRequest($request)->isFrontend());
         if ($isFrontend) {
-            $tsfe = $this->getTypoScriptFrontendController();
-            if (
-                $tsfe instanceof TypoScriptFrontendController
-            ) {
-                $typo3Language = $tsfe->getLanguage()->getTwoLetterIsoCode();
+            $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
+            if ($language->hasCustomTypo3Language()) {
+                $locale = GeneralUtility::makeInstance(Locales::class)->createLocale($language->getTypo3Language());
+            } else {
+                $locale = $language->getLocale();
             }
+            $typo3Language = $locale->getLanguageCode();
         } else {
             $currentSite = $this->getCurrentSite();
             $currentSiteLanguage = $this->getCurrentSiteLanguage() ?? $currentSite?->getDefaultLanguage();
-            debug (get_class($currentSiteLanguage), 'Klasse von $currentSiteLanguage');
-            // $targetLanguageId = $currentSiteLanguage?->getLanguageId() ?? 0;
             $typo3Language = $currentSiteLanguage?->getTypo3Language();
-            debug ($typo3Language, 'getLanguage +++ $typo3Language');
         }
 
         return $typo3Language;

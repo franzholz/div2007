@@ -43,18 +43,10 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     public function __construct($setCookie = true)
     {
         if (basename($_SERVER['PHP_SELF']) !== 'phpunit') {
-            if (
-                isset($GLOBALS['TSFE']) &&
-                is_object($GLOBALS['TSFE']) &&
-                isset($GLOBALS['TSFE']->fe_user)
-            ) {
-                $this->frontendUser = $GLOBALS['TSFE']->fe_user;
-            } else {
-                $detail = '';
-                if (isset($GLOBALS['TSFE'])) {
-                    $detail = '->fe_user';
-                }
-                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: Empty $GLOBALS[\'TSFE\']' . $detail . ' ', 1612216764);
+            $this->frontendUser = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user');
+
+            if (empty($this->frontendUser)) {
+                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: Empty attribute frontend.user' . $detail . ' ', 1612216764);
             }
 
             if ($setCookie) {
@@ -65,7 +57,11 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
 
     public function allowCookie(): void
     {
-        $this->frontendUser->dontSetCookie = false;
+        $vars = get_class_vars(get_class($this->frontendUser));
+
+        if (isset($vars['dontSetCookie'])) {
+            $this->frontendUser->dontSetCookie = false;
+        }
     }
 
     /**
