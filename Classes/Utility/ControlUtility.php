@@ -48,7 +48,7 @@ class ControlUtility
             $variable != ''
         ) {
             if ($prefixId != '') {
-                $value = FrontendApi::getParameter($prefixId);
+                $value = FrontendApi::getParameterMerged($prefixId);
                 if (
                     isset($value) &&
                     is_array($value) &&
@@ -57,10 +57,10 @@ class ControlUtility
                     $result = $value[$variable];
                 }
             } else {
-                $result = FrontendApi::getParameter($variable);
+                $result = FrontendApi::getParameterMerged($variable);
             }
         } elseif ($prefixId != '') {
-            $result = FrontendApi::getParameter($prefixId);
+            $result = FrontendApi::getParameterMerged($prefixId);
         }
 
         if ($htmlSpecialChars && isset($result)) {

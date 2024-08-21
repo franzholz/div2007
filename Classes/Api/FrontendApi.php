@@ -27,11 +27,12 @@ namespace JambageCom\Div2007\Api;
  * @subpackage div2007
  */
 use Psr\Http\Message\ServerRequestInterface;
-use TYPO3\CMS\Core\Routing\SiteMatcher;
-use TYPO3\CMS\Core\Site\SiteFinder;
-use TYPO3\CMS\Core\Routing\SiteRouteResult;
-use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Routing\RouteNotFoundException;
+use TYPO3\CMS\Core\Routing\SiteRouteResult;
+use TYPO3\CMS\Core\Routing\SiteMatcher;
+use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Site\SiteFinder;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
@@ -135,7 +136,35 @@ class FrontendApi
         return $result;
     }
 
-    public static getGlobalRequestObject()
+    /**
+     * Read the parameter. Replacement for GeneralUtility::_GP.
+     *
+     * The second parameter can be the request object
+     *
+     * @return string
+     */
+    public static function getParameterMerged($param, ...$params)
+    {
+        $getMergedWithPost = null;
+        $request = null;
+        if (
+            isset($params[0]) &&
+            $params[0] instanceof ServerRequestInterface
+        ) {
+            $request = $params[0];
+        } else {
+            $request = static::getGlobalRequestObject();
+        }
+
+        if (is_object($request)) {
+            $getMergedWithPost = $request->getQueryParams()[$param] ?? [];
+            ArrayUtility::mergeRecursiveWithOverrule($getMergedWithPost, $request->getParsedBody()[$param] ?? []);
+        }
+        return $getMergedWithPost;
+    }
+
+
+    public static function getGlobalRequestObject()
     {
         $request = null;
         if (isset($GLOBALS['TYPO3_REQUEST'])) {

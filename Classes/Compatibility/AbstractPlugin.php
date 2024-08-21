@@ -226,13 +226,13 @@ class AbstractPlugin
      */
     public function __construct($_ = null, TypoScriptFrontendController $frontendController = null)
     {
+        $request = $GLOBALS['TYPO3_REQUEST'];
         $this->frontendController = $frontendController ?: $GLOBALS['TSFE'];
         $this->templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         // Setting piVars:
         if ($this->prefixId) {
             $this->piVars = self::getRequestPostOverGetParameterWithPrefix($this->prefixId);
         }
-        $request = $GLOBALS['TYPO3_REQUEST'];
         $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
         if ($language->hasCustomTypo3Language()) {
             $locale = GeneralUtility::makeInstance(Locales::class)->createLocale($language->getTypo3Language());
@@ -1376,8 +1376,11 @@ class AbstractPlugin
      */
     private static function getRequestPostOverGetParameterWithPrefix($parameter)
     {
-        $postParameter = isset($_POST[$parameter]) && is_array($_POST[$parameter]) ? $_POST[$parameter] : [];
-        $getParameter = isset($_GET[$parameter]) && is_array($_GET[$parameter]) ? $_GET[$parameter] : [];
+        $request = $GLOBALS['TYPO3_REQUEST'];
+        $postParameter = $request->getParsedBody()[$parameter] ?? [];
+        $postParameter = is_array($postParameter) ? $postParameter : [];
+        $getParameter = $request->getQueryParams()[$parameter] ?? [];
+        $getParameter = is_array($getParameter) ? $getParameter : [];
         $mergedParameters = $getParameter;
         ArrayUtility::mergeRecursiveWithOverrule($mergedParameters, $postParameter);
         return $mergedParameters;

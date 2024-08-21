@@ -1067,7 +1067,7 @@ class FrontendUtility
                 $paramsNew = $urlParameters;
             }
             $conf['additionalParams'] = $paramsOld . $paramsNew;
-            $result = $cObj->typolink($label, $conf);
+            $result = $cObj->typoLink($label, $conf);
         } else {
             $result = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink: parameter $cObj is not an object';
         }
@@ -1108,7 +1108,7 @@ class FrontendUtility
             );
 
             if ($result !== false) {
-                $result = $cObj->lastTypoLinkUrl;
+                $result = $cObj->lastTypoLinkResult;
             }
         } else {
             $out = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink_URL: parameter $cObj is not an object';
