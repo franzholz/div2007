@@ -1108,7 +1108,7 @@ class FrontendUtility
             );
 
             if ($result !== false) {
-                $result = $cObj->lastTypoLinkResult;
+                $result = $cObj->lastTypoLinkResult->getUrl()   ;
             }
         } else {
             $out = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink_URL: parameter $cObj is not an object';
