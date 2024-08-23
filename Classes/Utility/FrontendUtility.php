@@ -26,6 +26,7 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -1341,7 +1342,8 @@ class FrontendUtility
     public static function getBorderAttribute($borderAttr)
     {
         $tsfe = static::getTypoScriptFrontendController();
-        $docType = $tsfe->xhtmlDoctype;
+
+        $docType = GeneralUtility::makeInstance(PageRenderer::class)->getDocType();
         if (
             $docType !== 'xhtml_strict' &&
             $docType !== 'xhtml_11' &&
