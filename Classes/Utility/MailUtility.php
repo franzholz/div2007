@@ -545,26 +545,32 @@ class MailUtility
             return false;
         }
 
+        $ports = [25, 587, 2525];
+        $timeout = 5;
+
         // gets domain name
         [$username, $domain] = explode('@', $email);
         // checks for if MX records in the DNS
         $mxhosts = [];
         if (!getmxrr($domain, $mxhosts)) {
             // no mx records, ok to check domain
-            if (@fsockopen($domain, 25, $errno, $errstr, 30)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            // mx records found
-            foreach ($mxhosts as $host) {
-                if (@fsockopen($host, 25, $errno, $errstr, 30)) {
+            foreach ($ports as $port) {
+                if (@fsockopen($domain, $port, $errno, $errstr, $timeout)) {
                     return true;
                 }
             }
 
             return false;
+        } else {
+            // mx records found
+            foreach ($mxhosts as $host) {
+                foreach ($ports as $port) {
+                    if (@fsockopen($host, $port, $errno, $errstr, $timeout)) {
+                        return true;
+                    }
+                }
+            }
         }
+        return false;
     }
 }

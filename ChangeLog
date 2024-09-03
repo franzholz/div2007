@@ -1,3 +1,6 @@
+2024-09-03 Franz Holzinger <franz@ttproducts.de>
+    * for compatibility with TYPO3 10 and 11: Use OldStatusProviderBase instead of StatusProviderBase and maybe VersionNumberUtility for a switch.
+
 2024-06-14 Franz Holzinger <franz@ttproducts.de>
    * fix error with not working container extension: PageContentPreviewRenderingEvent must remain null if no content has been generated in PageContentPreviewRenderingListenerBase.
 

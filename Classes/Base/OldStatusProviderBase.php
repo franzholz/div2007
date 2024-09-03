@@ -24,18 +24,17 @@ namespace JambageCom\Div2007\Base;
 *  This copyright notice MUST APPEAR in all copies of the script!
 */
 
+use JambageCom\Div2007\Utility\StatusUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
 
-use JambageCom\Div2007\Utility\StatusUtility;
-
 /**
  * checking of the required or conflicting configurations.
  */
-class StatusProviderBase implements StatusProviderInterface
+class OldStatusProviderBase implements StatusProviderInterface
 {
     /**
      * @var string Extension key: must be overridden
@@ -67,7 +66,7 @@ class StatusProviderBase implements StatusProviderInterface
      *
      * @return array List of status
      */
-    public function getStatus(): array
+    public function getStatus()
     {
         $result = [
             'requiredExtensionsAreInstalled' => $this->checkIfRequiredExtensionsAreInstalled(),
@@ -80,7 +79,7 @@ class StatusProviderBase implements StatusProviderInterface
         return $result;
     }
 
-    public function getLabel(): string
+    public function getLabel()
     {
         return 'Div2007 (' . $this->getExtensionName() . ')';
     }

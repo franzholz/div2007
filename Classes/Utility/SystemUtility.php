@@ -26,9 +26,11 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
+
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 class SystemUtility
 {
@@ -89,13 +91,12 @@ class SystemUtility
     public static function fetchFeGroups()
     {
         $result = [];
+        $feUserRecord = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user')->user;
 
         if (
-            isset($GLOBALS['TSFE']->fe_user) &&
-            isset($GLOBALS['TSFE']->fe_user->user) &&
-            isset($GLOBALS['TSFE']->fe_user->user['usergroup'])
+            isset($feUserRecord['usergroup'])
         ) {
-            $result = explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
+            $result = explode(',', $feUserRecord['usergroup']);
         }
 
         return $result;

@@ -29,7 +29,6 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 
 use TYPO3\CMS\Core\Resource\ResourceFactory;
-use TYPO3\CMS\Core\Resource\StorageRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -84,13 +83,11 @@ class FileAbstractionUtility
     ) {
         $result = false;
 
-        $storageRepository = GeneralUtility::makeInstance(StorageRepository::class);
-        $storage = $storageRepository->findByUid(1);
         $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
         $fileObj = $resourceFactory->getFileReferenceObject(intval($fileReferenceUid));
 
         if (is_object($fileObj)) {
-            $fileInfo = $storage->getFileInfo($fileObj);
+            $fileInfo = $fileObj->getStorage()->getFileInfo($fileObj);
             $result = true;
         }
 
