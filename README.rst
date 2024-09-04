@@ -28,7 +28,7 @@ Parts of the former methods have been integrated into the namespace classes.
 Requirements
 ------------
 
-• 2.2.0 contains the class JambageCom\Div2007\Compatibility\AbstractPlugin as replacement for
+• 2.2.0 and 2.0.5 contain the class JambageCom\Div2007\Compatibility\AbstractPlugin as replacement for
   TYPO3\CMS\Frontend\Plugin\AbstractPlugin needed for TYPO3 13
 • 2.1.0 and later require PHP 8 and TYPO3 12.x or TYPO3 13
 • 1.16 - 2.0.99 require PHP 7.4 - 8 and TYPO3 10.4 - 12.x
