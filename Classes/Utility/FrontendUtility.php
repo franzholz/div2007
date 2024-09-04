@@ -1108,7 +1108,10 @@ class FrontendUtility
                 $conf
             );
 
-            if ($result !== false) {
+            if (
+                $result !== false &&
+                is_object($cObj->lastTypoLinkResult)
+            ) {
                 $result = $cObj->lastTypoLinkResult->getUrl()   ;
             }
         } else {

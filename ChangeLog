@@ -1,5 +1,4 @@
 
-
 2024-08-19 Franz Holzinger <franz@ttproducts.de>
     * TYPO3 12: use $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user');
     * TYPO3 13 does not allow to set the property dontSetCookie of frontend.user
