@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
@@ -226,6 +227,8 @@ class AbstractPlugin
      */
     public function __construct($_ = null, TypoScriptFrontendController $frontendController = null)
     {
+        $typo3VersionArray = VersionNumberUtility::convertVersionStringToArray(VersionNumberUtility::getCurrentTypo3Version());
+        $typo3VersionMain = $typo3VersionArray['version_main'];
         $request = $GLOBALS['TYPO3_REQUEST'];
         $this->frontendController = $frontendController ?: $GLOBALS['TSFE'];
         $this->templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
@@ -233,20 +236,31 @@ class AbstractPlugin
         if ($this->prefixId) {
             $this->piVars = self::getRequestPostOverGetParameterWithPrefix($this->prefixId);
         }
-        $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
-        if ($language->hasCustomTypo3Language()) {
-            $locale = GeneralUtility::makeInstance(Locales::class)->createLocale($language->getTypo3Language());
+        if ($typo3VersionMain >= 12) {
+            $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
+
+            if ($language->getTypo3Language() !== '') {
+                $locale = GeneralUtility::makeInstance(Locales::class)->createLocale($language->getTypo3Language());
+            } else {
+                $locale = $language->getLocale();
+            }
+
+            $this->LLkey = $locale->getLanguageCode();
+            $locales = GeneralUtility::makeInstance(Locales::class);
+            if ($locales->isValidLanguageKey($this->LLkey)) {
+                $alternativeLanguageKeys = $locales->getLocaleDependencies($this->LLkey);
+                $alternativeLanguageKeys = array_reverse($alternativeLanguageKeys);
+                $this->altLLkey = implode(',', $alternativeLanguageKeys);
+            }
         } else {
-            $locale = $language->getLocale();
-        }
-
-        $this->LLkey = $locale->getLanguageCode();
-
-        $locales = GeneralUtility::makeInstance(Locales::class);
-        if ($locales->isValidLanguageKey($this->LLkey)) {
-            $alternativeLanguageKeys = $locales->getLocaleDependencies($this->LLkey);
-            $alternativeLanguageKeys = array_reverse($alternativeLanguageKeys);
-            $this->altLLkey = implode(',', $alternativeLanguageKeys);
+            $this->LLkey = $this->frontendController->getLanguage()->getTypo3Language();
+            $locales = GeneralUtility::makeInstance(Locales::class);
+            if (in_array($this->LLkey, $locales->getLocales())) {
+                foreach ($locales->getLocaleDependencies($this->LLkey) as $language) {
+                    $this->altLLkey .= $language . ',';
+                }
+                $this->altLLkey = rtrim($this->altLLkey, ',');
+            }
         }
     }
 

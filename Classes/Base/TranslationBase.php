@@ -199,17 +199,28 @@ class TranslationBase
 
     public function getLanguage()
     {
+        $typo3VersionArray = VersionNumberUtility::convertVersionStringToArray(VersionNumberUtility::getCurrentTypo3Version());
+        $typo3VersionMain = $typo3VersionArray['version_main'];
         $typo3Language = 'en';
         $request = $GLOBALS['TYPO3_REQUEST'];
         $isFrontend = (ApplicationType::fromRequest($request)->isFrontend());
         if ($isFrontend) {
-            $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
-            if ($language->hasCustomTypo3Language()) {
-                $locale = GeneralUtility::makeInstance(Locales::class)->createLocale($language->getTypo3Language());
+            if ($typo3VersionMain >= 12) {
+                $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
+                if ($language->getTypo3Language() !== '') {
+                    $locale = GeneralUtility::makeInstance(Locales::class)->createLocale($language->getTypo3Language());
+                } else {
+                    $locale = $language->getLocale();
+                }
+                $typo3Language = $locale->getLanguageCode();
             } else {
-                $locale = $language->getLocale();
+                $tsfe = $this->getTypoScriptFrontendController();
+                if (
+                    $tsfe instanceof TypoScriptFrontendController
+                ) {
+                    $typo3Language = $tsfe->getLanguage()->getTwoLetterIsoCode();
+                }
             }
-            $typo3Language = $locale->getLanguageCode();
         } else {
             $currentSite = $this->getCurrentSite();
             $currentSiteLanguage = $this->getCurrentSiteLanguage() ?? $currentSite?->getDefaultLanguage();
