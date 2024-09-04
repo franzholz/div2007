@@ -26,6 +26,7 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -1107,8 +1108,11 @@ class FrontendUtility
                 $conf
             );
 
-            if ($result !== false) {
-                $result = $cObj->lastTypoLinkResult;
+            if (
+                $result !== false &&
+                is_object($cObj->lastTypoLinkResult)
+            ) {
+                $result = $cObj->lastTypoLinkResult->getUrl()   ;
             }
         } else {
             $out = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink_URL: parameter $cObj is not an object';
@@ -1341,7 +1345,8 @@ class FrontendUtility
     public static function getBorderAttribute($borderAttr)
     {
         $tsfe = static::getTypoScriptFrontendController();
-        $docType = $tsfe->xhtmlDoctype;
+
+        $docType = GeneralUtility::makeInstance(PageRenderer::class)->getDocType();
         if (
             $docType !== 'xhtml_strict' &&
             $docType !== 'xhtml_11' &&

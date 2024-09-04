@@ -24,12 +24,13 @@ namespace JambageCom\Div2007\Base;
 *  This copyright notice MUST APPEAR in all copies of the script!
 */
 
-use JambageCom\Div2007\Utility\StatusUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Reports\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
+
+use JambageCom\Div2007\Utility\StatusUtility;
 
 /**
  * checking of the required or conflicting configurations.
