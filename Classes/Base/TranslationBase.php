@@ -204,7 +204,7 @@ class TranslationBase
         $isFrontend = (ApplicationType::fromRequest($request)->isFrontend());
         if ($isFrontend) {
             $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
-            if ($language->hasCustomTypo3Language()) {
+            if ($language->getTypo3Language() !== '') {
                 $locale = GeneralUtility::makeInstance(Locales::class)->createLocale($language->getTypo3Language());
             } else {
                 $locale = $language->getLocale();

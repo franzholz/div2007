@@ -31,6 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\HttpUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
@@ -233,8 +234,9 @@ class AbstractPlugin
         if ($this->prefixId) {
             $this->piVars = self::getRequestPostOverGetParameterWithPrefix($this->prefixId);
         }
+
         $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
-        if ($language->hasCustomTypo3Language()) {
+        if ($language->getTypo3Language() !== '') {
             $locale = GeneralUtility::makeInstance(Locales::class)->createLocale($language->getTypo3Language());
         } else {
             $locale = $language->getLocale();

@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    autowire: false
+    autoconfigure: true
+    public: false
+
+  JambageCom\Div2007\:
+    resource: '../Classes/'
+    exclude: ['../Classes/{Api,Base,Captcha,Compatibility,Constants,Database,Middleware,Security,SessionHandler,Utility}/']
+

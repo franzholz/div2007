@@ -1,0 +1,9 @@
+##
+## @package TYPO3
+## @subpackage div2007
+##
+
+lib.div2007 {
+
+
+}
