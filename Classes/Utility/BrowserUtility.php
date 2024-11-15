@@ -91,18 +91,18 @@ class BrowserUtility
         $parser = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
         $linkArray = $addQueryString;
         // Initializing variables:
-        $pointer = intval($pObject->ctrlVars[$pointerName]);
-        $count = intval($pObject->internal['resCount']);
+        $pointer = intval($pObject->ctrlVars[$pointerName] ?? 0);
+        $count = intval($pObject->internal['resCount'] ?? 0);
         $limit =
             MathUtility::forceIntegerInRange(
-                $pObject->internal['limit'],
+                $pObject->internal['limit'] ?? 1,
                 1,
                 1000
             );
         $totalPages = ceil($count / $limit);
         $maxPages =
             MathUtility::forceIntegerInRange(
-                $pObject->internal['maxPages'],
+                $pObject->internal['maxPages'] ?? 1,
                 1,
                 100
             );
@@ -119,14 +119,14 @@ class BrowserUtility
         $showResultCount = intval($showResultCount);
 
         // if this is set, two links named "<< First" and "LAST >>" will be shown and point to the very first or last page.
-        $bShowFirstLast = $pObject->internal['bShowFirstLast'];
+        $bShowFirstLast = $pObject->internal['bShowFirstLast'] ?? 0;
 
         // if this has a value the "previous" button is always visible (will be forced if "bShowFirstLast" is set)
         $alwaysPrev =
             (
                 $bShowFirstLast ?
                     true :
-                    $pObject->internal['bAlwaysPrev']
+                    $pObject->internal['bAlwaysPrev'] ?? 0
             );
 
         if (isset($pObject->internal['pagefloat'])) {
@@ -166,9 +166,7 @@ class BrowserUtility
         }
 
         if (
-            isset($pObject->internal['image']) &&
-            is_array($pObject->internal['image']) &&
-            $pObject->internal['image']['path']
+            isset($pObject->internal['image']['path'])
         ) {
             $onMouseOver = ($pObject->internal['image']['onmouseover'] ? 'onmouseover="' . $pObject->internal['image']['onmouseover'] . '" ' : '');
             $onMouseOut = ($pObject->internal['image']['onmouseout'] ? 'onmouseout="' . $pObject->internal['image']['onmouseout'] . '" ' : '');
@@ -289,14 +287,14 @@ class BrowserUtility
 
             for ($a = $firstPage; $a < $lastPage; $a++) { // Links to pages
                 $pageText = '';
-                if ($pObject->internal['showRange']) {
+                if (!empty($pObject->internal['showRange'])) {
                     $pageText = (($a * $limit) + 1) . '-' .
                         min(
                             $count,
                             ($a + 1) * $limit
                         );
                 } elseif ($totalPages > 1) {
-                    if ($wrapper['browseTextWrap']) {
+                    if (isset($wrapper['browseTextWrap'])) {
                         if ($pointer == $a) { // current page
                             $pageText = $cObj->wrap($a + 1, $wrapper['activeBrowseTextWrap']);
                         } else {
@@ -321,11 +319,11 @@ class BrowserUtility
 
                 $link = null;
                 if ($pointer == $a) { // current page
-                    if ($pObject->internal['dontLinkActivePage']) {
+                    if (!empty($pObject->internal['dontLinkActivePage'])) {
                         $link =
                             $cObj->wrap(
                                 $pageText,
-                                $wrapper['activeLinkWrap']
+                                $wrapper['activeLinkWrap'] ?? ''
                             );
                     } elseif ($pageText != '') {
                         $linkArray[$pointerName] = ($a ?: '');
@@ -351,7 +349,7 @@ class BrowserUtility
                                 $linkArray,
                                 $bUseCache
                             ),
-                            $wrapper['inactiveLinkWrap']
+                            $wrapper['inactiveLinkWrap'] ?? ''
                         );
                 }
                 if (!empty($link)) {
@@ -368,7 +366,7 @@ class BrowserUtility
                         $hscText
                     );
                 if ($pointer == $totalPages - 1) { // Link to next page
-                    $links[] = $cObj->wrap($nextText, $wrapper['disabledLinkWrap']);
+                    $links[] = $cObj->wrap($nextText, $wrapper['disabledLinkWrap'] ?? '');
                 } else {
                     $linkArray[$pointerName] = $pointer + 1;
                     $links[] =
@@ -381,7 +379,7 @@ class BrowserUtility
                                 $linkArray,
                                 $bUseCache
                             ),
-                            $wrapper['inactiveLinkWrap']
+                            $wrapper['inactiveLinkWrap'] ?? ''
                         );
                 }
             }
@@ -404,7 +402,7 @@ class BrowserUtility
                                 $linkArray,
                                 $bUseCache
                             ),
-                            $wrapper['inactiveLinkWrap']
+                            $wrapper['inactiveLinkWrap'] ?? ''
                         );
                 } else {
                     $links[] =
@@ -415,11 +413,11 @@ class BrowserUtility
                                 'Last >>',
                                 $hscText
                             ),
-                            $wrapper['disabledLinkWrap']
+                            $wrapper['disabledLinkWrap'] ?? ''
                         );
                 }
             }
-            $theLinks = $cObj->wrap(implode(chr(10), $links), $wrapper['browseLinksWrap']);
+            $theLinks = $cObj->wrap(implode(chr(10), $links), $wrapper['browseLinksWrap'] ?? '');
         } else {
             $theLinks = '';
         }
@@ -458,11 +456,11 @@ class BrowserUtility
                     $count
                 );
             }
-            $resultCountMsg = $cObj->wrap($resultCountMsg, $wrapper['showResultsWrap']);
+            $resultCountMsg = $cObj->wrap($resultCountMsg, $wrapper['showResultsWrap'] ?? '');
         } else {
             $resultCountMsg = '';
         }
-        $rc = $cObj->wrap($resultCountMsg . $theLinks, $wrapper['browseBoxWrap']);
+        $rc = $cObj->wrap($resultCountMsg . $theLinks, $wrapper['browseBoxWrap'] ?? '');
 
         return $rc;
     }
