@@ -31,6 +31,8 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+use JambageCom\Div2007\Utility\FrontendUtility;
+
 
 class SystemUtility
 {
@@ -43,7 +45,6 @@ class SystemUtility
             return $storagePid;
         }
 
-        $cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
         $recursiveStoragePids = '';
         $storagePids = GeneralUtility::intExplode(',', $storagePid);
         if ($whereClause == '') {
@@ -51,7 +52,7 @@ class SystemUtility
         }
 
         foreach ($storagePids as $startPid) {
-            $pids = $cObj->getTreeList($startPid, $recursionDepth, 0, $whereClause);
+            $pids = FrontendUtility::getTreeList($startPid, $recursionDepth, 0, $whereClause);
             if ((string)$pids !== '') {
                 $recursiveStoragePids .= $pids . ',';
             }
