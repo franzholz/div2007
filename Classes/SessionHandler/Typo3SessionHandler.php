@@ -22,7 +22,6 @@ namespace JambageCom\Div2007\SessionHandler;
  * @copyright 2018
  */
 
-use TYPO3\CMS\Core\Session\UserSession;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
 
 
@@ -71,9 +70,8 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     public function setSessionData($data): void
     {
         if (
-            empty($GLOBALS['TYPO3_CONF_VARS']['FE']['maxSessionDataSize']) ||
             empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['checkCookieSet']) ||
-            $this->frontendUser->isCookieSet()
+            true // TODO: Check if cookies are allowed.
         ) {
             if (!is_array($data)) {
                 $data = [];
@@ -108,17 +106,5 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
         }
 
         return $result;
-    }
-
-    /**
-     * Returns whether a cookie was already found in the system
-     *
-     * @return bool Returns TRUE if a cookie is found
-     */
-    public function isCookieSet()
-    {
-        return (
-            $this->frontendUser->getSession() instanceof UserSession
-        );
     }
 }
