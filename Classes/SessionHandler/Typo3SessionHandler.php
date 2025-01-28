@@ -46,7 +46,7 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
      */
     public function __construct(
         ?FrontendUserAuthentication $frontendUser = null,
-        $setCookie = true,
+        $setCookie = true, // Unused
     )
     {
         if (basename($_SERVER['PHP_SELF']) !== 'phpunit') {
@@ -56,10 +56,6 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
 
             if (empty($this->frontendUser)) {
                 throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: Empty attribute frontend.user' . ' ', 1612216764);
-            }
-
-            if ($setCookie) {
-                $this->allowCookie();
             }
         }
     }
