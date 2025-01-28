@@ -21,6 +21,11 @@ namespace JambageCom\Div2007\SessionHandler;
  * @author Bernhard Kraft <kraftb@think-open.at>
  * @copyright 2018
  */
+
+use TYPO3\CMS\Core\Session\UserSession;
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+
+
 class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandlerInterface
 {
     /**
@@ -40,27 +45,23 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     /**
      * Constructor for session handling class.
      */
-    public function __construct($setCookie = true)
+    public function __construct(
+        ?FrontendUserAuthentication $frontendUser = null,
+        $setCookie = true,
+    )
     {
         if (basename($_SERVER['PHP_SELF']) !== 'phpunit') {
-            $this->frontendUser = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user');
+            if (isset($frontendUser)) {
+                $this->frontendUser = $frontendUser;
+            }
 
             if (empty($this->frontendUser)) {
-                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: Empty attribute frontend.user' . $detail . ' ', 1612216764);
+                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: Empty attribute frontend.user' . ' ', 1612216764);
             }
 
             if ($setCookie) {
                 $this->allowCookie();
             }
-        }
-    }
-
-    public function allowCookie(): void
-    {
-        $vars = get_class_vars(get_class($this->frontendUser));
-
-        if (isset($vars['dontSetCookie'])) {
-            $this->frontendUser->dontSetCookie = false;
         }
     }
 
@@ -107,5 +108,17 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
         }
 
         return $result;
+    }
+
+    /**
+     * Returns whether a cookie was already found in the system
+     *
+     * @return bool Returns TRUE if a cookie is found
+     */
+    public function isCookieSet()
+    {
+        return (
+            $this->frontendUser->getSession() instanceof UserSession
+        );
     }
 }
