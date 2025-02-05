@@ -1,3 +1,6 @@
+2025-02-05 Franz Holzinger <franz@ttproducts.de>
+    * PHP 8 SessionHandler
+
 2025-01-27 Franz Holzinger <franz@ttproducts.de>
     * TranslationBase: Use Dependency Injection parameter LanguageServiceFactory for the case where no $LANG global object is available.
     * new method getTypo3LanguageKey

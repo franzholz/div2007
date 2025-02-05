@@ -35,7 +35,7 @@ abstract class AbstractSessionHandler
      *
      * @return data The session data
      */
-    public function getSessionKey()
+    public function getSessionKey(): string
     {
         return $this->sessionKey;
     }
@@ -55,10 +55,10 @@ abstract class AbstractSessionHandler
      *
      * @return data The session data
      */
-    abstract public function getSessionData($subKey = '');
+    abstract public function getSessionData($subKey = ''): string | array;
 
     /**
      * Set session data.
      */
-    abstract public function setSessionData($data);
+    abstract public function setSessionData(array $data): void;
 }

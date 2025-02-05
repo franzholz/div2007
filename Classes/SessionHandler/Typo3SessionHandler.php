@@ -57,48 +57,55 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
             if (empty($this->frontendUser)) {
                 throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: Empty attribute frontend.user' . ' ', 1612216764);
             }
+
+            $session = $this->frontendUser->getSession();
+            if (empty($session)) {
+                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: The frontend.user session must not be empty.' . ' ', 1738760876);
+            }
         }
     }
 
     /**
      * Set session data.
      */
-    public function setSessionData($data): void
+    public function setSessionData(array $data): void
     {
         if (
-            empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['checkCookieSet']) ||
-            true // TODO: Check if cookies are allowed.
+            true ||
+            // TODO: Check if cookies are allowed
+            empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['checkCookieSet'])
         ) {
-            if (!is_array($data)) {
-                $data = [];
-            }
             $sessionKey = $this->getSessionKey();
             $this->frontendUser->setAndSaveSessionData($sessionKey, $data);
         }
+
     }
 
     /**
      * Get session data.
      *
-     * @return array data The session data
+     * @return string|array| data The session data
      */
-    public function getSessionData($subKey = '')
+    public function getSessionData($subKey = ''): string | array
     {
-        $result = [];
+        $result = '';
         $sessionKey = $this->getSessionKey();
         $data = $this->frontendUser->getSessionData($sessionKey);
 
-        if (
-            $subKey != '' &&
-            is_array($data) &&
-            isset($data[$subKey])
-        ) {
-            $result = $data[$subKey];
-        } elseif (
-            $subKey == '' &&
-            is_array($data)
-        ) {
-            $result = $data;
+        if (is_array($data)) {
+            if (
+                $subKey != '' &&
+                isset($data[$subKey])
+            ) {
+                $result = $data[$subKey];
+            } elseif (
+                $subKey == '' &&
+                is_array($data)
+            ) {
+                $result = $data;
+            }
+        } else if ($subKey == '') {
+            $result = [];
         }
 
         return $result;
