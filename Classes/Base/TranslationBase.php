@@ -19,15 +19,15 @@ use Psr\Http\Message\ServerRequestInterface;
 
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Http\ApplicationType;
+use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Localization\Locales;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
-use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\Entity\SiteInterface;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 
@@ -43,6 +43,7 @@ class TranslationBase
     public $scriptRelPath = '/Resources/Private/Language/';          // relative path to the extension directory where the locallang XLF / XML files are stored. The leading and trailing slashes must be included. E.g. '/Resources/Private/Language/'
     protected $extensionKey = '';	// extension key must be overridden
     protected $lookupFilename = ''; // filename used for the lookup method
+    protected $request = null;
 
     /**
      * @var TypoScriptFrontendController|null
@@ -58,34 +59,34 @@ class TranslationBase
     protected $confLocalLang = [];
     private $hasBeenInitialized = false;
 
+    public function __construct(
+        private readonly LanguageServiceFactory $languageServiceFactory,
+    ) {
+    }
+
     public function init(
         $extensionKey = '',
         $confLocalLang = [], // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
-        $scriptRelPath = '', // obsolete
+        ?ServerRequestInterface $request = null,
         $lookupFilename = '',
         $useDiv2007Language = true
     ): void {
         $conf = [];
-        $typo3Language = $this->getLanguage();
+        if (!isset($request)) {
+            $request = $GLOBALS['TYPO3_REQUEST'];
+        }
+        $this->request = $request;
+        $typo3Language = $this->getLanguage($request);
         $this->setLocalLangKey($typo3Language);
 
-        $isFrontend = (ApplicationType::fromRequest($GLOBALS['TYPO3_REQUEST'])->isFrontend());
+        $isFrontend = (ApplicationType::fromRequest($request)->isFrontend());
         if ($isFrontend) {
-            $typo3VersionArray =
-                VersionNumberUtility::convertVersionStringToArray(VersionNumberUtility::getCurrentTypo3Version());
-            $typo3VersionMain = $typo3VersionArray['version_main'];
             $conf = [];
-            if ($typo3VersionMain < 12) {
-                $tsfe = $this->getTypoScriptFrontendController();
-                if (
-                    $tsfe instanceof TypoScriptFrontendController &&
-                    $tsfe->tmpl instanceof TemplateService &&
-                    is_array($tsfe->tmpl->setup)
-                ) {
-                    $conf = $tsfe->tmpl->setup['lib.']['div2007.'] ?? '';
-                }
-            } else {
-                $conf = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getSetupArray()['plugin.']['div2007.'] ?? [];
+            $tsfe = $request->getAttribute('frontend.typoscript');
+            if (
+                $tsfe instanceof TypoScriptFrontendController
+            ) {
+                $conf = $tsfe->getSetupArray()['plugin.']['div2007.'] ?? [];
             }
         }
 
@@ -197,10 +198,12 @@ class TranslationBase
         return !$this->hasBeenInitialized;
     }
 
-    public function getLanguage()
+    public function getLanguage(?ServerRequestInterface $request = null)
     {
         $typo3Language = 'en';
-        $request = $GLOBALS['TYPO3_REQUEST'];
+        if (!isset($request)) {
+            $request = $GLOBALS['TYPO3_REQUEST'];
+        }
         $isFrontend = (ApplicationType::fromRequest($request)->isFrontend());
         if ($isFrontend) {
             $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
@@ -212,7 +215,7 @@ class TranslationBase
             $typo3Language = $locale->getLanguageCode();
         } else {
             $currentSite = $this->getCurrentSite();
-            $currentSiteLanguage = $this->getCurrentSiteLanguage() ?? $currentSite?->getDefaultLanguage();
+            $currentSiteLanguage = $this->getCurrentSiteLanguage($request) ?? $currentSite?->getDefaultLanguage();
             $typo3Language = $currentSiteLanguage?->getTypo3Language();
         }
 
@@ -542,6 +545,11 @@ class TranslationBase
         return $parts[1];
     }
 
+    public function getTypo3LanguageKey(): string
+    {
+        return $this->getLanguageService()->lang;
+    }
+
     /**
      * @return TypoScriptFrontendController|null
      * @internal for reducing usage of global TSFE objects and to avoid conflicts when different frontend environments are used
@@ -560,8 +568,8 @@ class TranslationBase
         if ($this->typoScriptFrontendController instanceof TypoScriptFrontendController) {
             return $this->typoScriptFrontendController->getSite();
         }
-        if (isset($GLOBALS['TYPO3_REQUEST']) && $GLOBALS['TYPO3_REQUEST'] instanceof ServerRequestInterface) {
-            return $GLOBALS['TYPO3_REQUEST']->getAttribute('site', null);
+        if (isset($this->request) && $this->request instanceof ServerRequestInterface) {
+            return $this->request->getAttribute('site', null);
         }
         return null;
     }
@@ -570,19 +578,24 @@ class TranslationBase
      * If the current request has a site language, this means that the SiteResolver has detected a
      * page with a site configuration and a selected language, so let's choose that one.
      */
-    protected function getCurrentSiteLanguage(): ?SiteLanguage
+    protected function getCurrentSiteLanguage(?ServerRequestInterface $request = null
+): ?SiteLanguage
     {
+        if (!isset($request)) {
+            $request = $GLOBALS['TYPO3_REQUEST'];
+        }
         if ($this->typoScriptFrontendController instanceof TypoScriptFrontendController) {
             return $this->typoScriptFrontendController->getLanguage();
         }
-        if (isset($GLOBALS['TYPO3_REQUEST']) && $GLOBALS['TYPO3_REQUEST'] instanceof ServerRequestInterface) {
-            return $GLOBALS['TYPO3_REQUEST']->getAttribute('language', null);
+        if (isset($request) && $request instanceof ServerRequestInterface) {
+            return $request->getAttribute('language', null);
         }
         return null;
     }
 
     protected function getLanguageService(): LanguageService
     {
-        return $GLOBALS['LANG'];
+        return $GLOBALS['LANG'] ?? $this->languageServiceFactory->create('default');
     }
+
 }

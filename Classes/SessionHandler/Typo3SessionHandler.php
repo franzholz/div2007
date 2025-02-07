@@ -21,6 +21,10 @@ namespace JambageCom\Div2007\SessionHandler;
  * @author Bernhard Kraft <kraftb@think-open.at>
  * @copyright 2018
  */
+
+use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
+
+
 class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandlerInterface
 {
     /**
@@ -39,71 +43,78 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
 
     /**
      * Constructor for session handling class.
+     *
+     * Usage requirement:
+     *
+     * An object of this class must be generated once in the MiddleWare of the extension
+     * to which your derived class belongs to.
      */
-    public function __construct($setCookie = true)
+    public function __construct(
+        ?FrontendUserAuthentication $frontendUser = null,
+        $setCookie = true, // Unused
+    )
     {
         if (basename($_SERVER['PHP_SELF']) !== 'phpunit') {
-            $this->frontendUser = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user');
+            if (isset($frontendUser)) {
+                $this->frontendUser = $frontendUser;
+            }
 
             if (empty($this->frontendUser)) {
-                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: Empty attribute frontend.user' . $detail . ' ', 1612216764);
+                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: Empty attribute frontend.user' . ' ', 1612216764);
             }
-
-            if ($setCookie) {
-                $this->allowCookie();
+            $session = null;
+            try {
+                $session = $this->frontendUser->getSession();
+            } catch (TypeError $e) {
+             // continue
             }
-        }
-    }
-
-    public function allowCookie(): void
-    {
-        $vars = get_class_vars(get_class($this->frontendUser));
-
-        if (isset($vars['dontSetCookie'])) {
-            $this->frontendUser->dontSetCookie = false;
+            if (empty($session)) {
+                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: The frontend.user session must not be empty. Check if Dependency Injection or a MiddleWare is used.' . ' ', 1738760876);
+            }
         }
     }
 
     /**
      * Set session data.
      */
-    public function setSessionData($data): void
+    public function setSessionData(array $data): void
     {
         if (
-            empty($GLOBALS['TYPO3_CONF_VARS']['FE']['maxSessionDataSize']) ||
-            empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['checkCookieSet']) ||
-            $this->frontendUser->isCookieSet()
+            true ||
+            // TODO: Check if cookies are allowed
+            empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['checkCookieSet'])
         ) {
-            if (!is_array($data)) {
-                $data = [];
-            }
             $sessionKey = $this->getSessionKey();
             $this->frontendUser->setAndSaveSessionData($sessionKey, $data);
         }
+
     }
 
     /**
      * Get session data.
      *
-     * @return array data The session data
+     * @return data ... The session data
      */
     public function getSessionData($subKey = '')
     {
-        $result = [];
+        $result = '';
         $sessionKey = $this->getSessionKey();
         $data = $this->frontendUser->getSessionData($sessionKey);
 
-        if (
-            $subKey != '' &&
-            is_array($data) &&
-            isset($data[$subKey])
-        ) {
-            $result = $data[$subKey];
-        } elseif (
-            $subKey == '' &&
-            is_array($data)
-        ) {
-            $result = $data;
+        if (is_array($data)) {
+            if (
+                $subKey != '' &&
+                isset($data[$subKey])
+            ) {
+                $result = $data[$subKey];
+            } elseif (
+                $subKey == '' &&
+                is_array($data)
+            ) {
+                $result = $data;
+            }
+        } else if ($subKey == '') {
+            $result = [];
         }
 
         return $result;

@@ -28,24 +28,24 @@ interface SessionHandlerInterface
      *
      * @return data The session data
      */
-    public function getSessionKey();
+    public function getSessionKey(): string;
 
     /**
      * Get session key.
      *
      * @return data The session data for the captcha extension
      */
-    public function setSessionKey($key);
+    public function setSessionKey(string $key): void;
 
     /**
      * Get session data.
      *
      * @return data The session data for the captcha extension
      */
-    public function getSessionData();
+    public function getSessionData(string $subKey = '');
 
     /**
      * Set session data.
      */
-    public function setSessionData($data);
+    public function setSessionData(array $data): void;
 }

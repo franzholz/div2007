@@ -34,6 +34,18 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
     }
 
     /**
+     * Set session data.
+     */
+    public function setSessionData(array $data): void
+    {
+        if (!is_array($data)) {
+            $data = [];
+        }
+        $sessionKey = $this->getSessionKey();
+        $_SESSION[$sessionKey] = $data;
+    }
+
+    /**
      * Get session data.
      *
      * @return data The session data
@@ -41,7 +53,7 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
     public function getSessionData($subKey = '')
     {
         $data = [];
-        $result = [];
+        $result = '';
 
         $sessionKey = $this->getSessionKey();
         if (
@@ -65,17 +77,5 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
         }
 
         return $result;
-    }
-
-    /**
-     * Set session data.
-     */
-    public function setSessionData($data): void
-    {
-        if (!is_array($data)) {
-            $data = [];
-        }
-        $sessionKey = $this->getSessionKey();
-        $_SESSION[$sessionKey] = $data;
     }
 }

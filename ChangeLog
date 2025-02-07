@@ -1,3 +1,13 @@
+2025-02-05 Franz Holzinger <franz@ttproducts.de>
+    * PHP 8 SessionHandler
+
+2025-01-27 Franz Holzinger <franz@ttproducts.de>
+    * TranslationBase: Use Dependency Injection parameter LanguageServiceFactory for the case where no $LANG global object is available.
+    * new method getTypo3LanguageKey
+
+2025-01-16 Franz Holzinger <franz@ttproducts.de>
+    * TYPO3 13: TranslationBase with new parameter $request
+
 2024-11-15 Franz Holzinger <franz@ttproducts.de>
     * fix undefined array indices in record browser
 
