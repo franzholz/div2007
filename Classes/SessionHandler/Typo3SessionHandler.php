@@ -43,6 +43,11 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
 
     /**
      * Constructor for session handling class.
+     *
+     * Usage requirement:
+     *
+     * An object of this class must be generated once in the MiddleWare of the extension
+     * to which your derived class belongs to.
      */
     public function __construct(
         ?FrontendUserAuthentication $frontendUser = null,
@@ -57,10 +62,14 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
             if (empty($this->frontendUser)) {
                 throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: Empty attribute frontend.user' . ' ', 1612216764);
             }
-
-            $session = $this->frontendUser->getSession();
+            $session = null;
+            try {
+                $session = $this->frontendUser->getSession();
+            } catch (TypeError $e) {
+             // continue
+            }
             if (empty($session)) {
-                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: The frontend.user session must not be empty.' . ' ', 1738760876);
+                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: The frontend.user session must not be empty. Check if Dependency Injection or a MiddleWare is used.' . ' ', 1738760876);
             }
         }
     }
@@ -84,9 +93,9 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
     /**
      * Get session data.
      *
-     * @return string|array| data The session data
+     * @return data ... The session data
      */
-    public function getSessionData($subKey = ''): string | array
+    public function getSessionData($subKey = '')
     {
         $result = '';
         $sessionKey = $this->getSessionKey();

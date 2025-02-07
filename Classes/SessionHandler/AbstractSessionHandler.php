@@ -55,7 +55,7 @@ abstract class AbstractSessionHandler
      *
      * @return data The session data
      */
-    abstract public function getSessionData($subKey = ''): string | array;
+    abstract public function getSessionData($subKey = '');
 
     /**
      * Set session data.

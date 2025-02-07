@@ -50,7 +50,7 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
      *
      * @return data The session data
      */
-    public function getSessionData($subKey = ''): string | array
+    public function getSessionData($subKey = '')
     {
         $data = [];
         $result = '';

@@ -42,7 +42,7 @@ interface SessionHandlerInterface
      *
      * @return data The session data for the captcha extension
      */
-    public function getSessionData(string $subKey = ''): string | array;
+    public function getSessionData(string $subKey = '');
 
     /**
      * Set session data.
