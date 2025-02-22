@@ -72,7 +72,6 @@ class StatusProviderBase implements StatusProviderInterface
         $result = [
             'requiredExtensionsAreInstalled' => $this->checkIfRequiredExtensionsAreInstalled(),
             'noConflictingExtensionIsInstalled' => $this->checkIfNoConflictingExtensionIsInstalled(),
-            'frontEndLoginSecurityLevelIsCorrectlySet' => $this->checkIfFrontEndLoginSecurityLevelIsCorrectlySet(),
             'saltedPasswordsAreEnabledInFrontEnd' => $this->checkIfSaltedPasswordsAreEnabledInFrontEnd(),
             'globalVariablesAreSet' => StatusUtility::checkIfGlobalVariablesAreSet($this->getExtensionName(), $this->getGlobalVariables()),
         ];
@@ -163,38 +162,6 @@ class StatusProviderBase implements StatusProviderInterface
             $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:none', $this->getExtensionName());
             $message = '';
             $status = Status::OK;
-        }
-        $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
-
-        return $result;
-    }
-
-    /**
-     * Check whether frontend login security level is correctly set.
-     *
-     * @return	Status
-     */
-    protected function checkIfFrontEndLoginSecurityLevelIsCorrectlySet()
-    {
-        $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Front_end_login_security_level', $this->getExtensionName());
-        $value = null;
-        $message = null;
-        $status = Status::OK;
-        $supportedTransmissionSecurityLevels = ['', 'normal'];
-
-        if (
-            in_array(
-                $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'],
-                $supportedTransmissionSecurityLevels
-            )
-        ) {
-            $value = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
-            $message = '';
-            $status = Status::OK;
-        } else {
-            $value = $GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'];
-            $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:must_be_normal', $this->getExtensionName());
-            $status = Status::ERROR;
         }
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
 

@@ -1,3 +1,7 @@
+
+2025-02-22 Franz Holzinger <franz@ttproducts.de>
+    * TYPO3 11 Deprecation 94312: Remove StatusProviderBase::checkIfFrontEndLoginSecurityLevelIsCorrectlySet
+
 2025-02-05 Franz Holzinger <franz@ttproducts.de>
     * PHP 8 SessionHandler
 
