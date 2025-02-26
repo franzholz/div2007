@@ -1,4 +1,7 @@
 
+2025-02-26 Franz Holzinger <franz@ttproducts.de>
+    * add PHP helper function json_decode_special which decodes and keep special characters like newlines
+
 2025-02-22 Franz Holzinger <franz@ttproducts.de>
     * TYPO3 11 Deprecation 94312: Remove StatusProviderBase::checkIfFrontEndLoginSecurityLevelIsCorrectlySet
 
