@@ -176,6 +176,10 @@ class StatusProviderBase implements StatusProviderInterface
      */
     protected function checkIfFrontEndLoginSecurityLevelIsCorrectlySet()
     {
+        if (!isset($GLOBALS['TYPO3_CONF_VARS']['FE']['loginSecurityLevel'])) {
+            return true;
+        }
+        
         $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Front_end_login_security_level', $this->getExtensionName());
         $value = null;
         $message = null;
