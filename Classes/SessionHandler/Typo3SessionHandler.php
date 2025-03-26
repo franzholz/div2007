@@ -69,7 +69,7 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
              // continue
             }
             if (empty($session)) {
-                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: The frontend.user session must not be empty. Check if Dependency Injection or a MiddleWare is used.' . ' ', 1738760876);
+                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: The frontend.user session must not be empty. A MiddleWare must be used which has created once its derived class.' . ' ', 1738760876);
             }
         }
     }

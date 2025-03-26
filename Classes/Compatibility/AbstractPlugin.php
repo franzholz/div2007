@@ -225,7 +225,7 @@ class AbstractPlugin
      *
      * @param null $_ unused,
      */
-    public function __construct($_ = null, TypoScriptFrontendController $frontendController = null)
+    public function __construct($_ = null, ?TypoScriptFrontendController $frontendController = null)
     {
         $request = $GLOBALS['TYPO3_REQUEST'];
         $this->frontendController = $frontendController ?: $GLOBALS['TSFE'];

@@ -82,7 +82,8 @@ class ObsoleteUtility
             isset($conf) &&
             is_array($conf) &&
             !empty($conf[$mConfKey]) &&
-            !empty($conf[$mConfKey . '.'])
+            !empty($conf[$mConfKey . '.']) &&
+            isset($GLOBALS['TSFE'])
         ) {
             $funcConf = $conf[$mConfKey . '.'];
             $funcConf['parentObj'] = $pObject;

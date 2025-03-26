@@ -53,7 +53,7 @@ class Frontend implements SingletonInterface
     /**
      * Constructor for session handling class.
      */
-    public function __construct($typoScriptFrontendController = '')
+    public function __construct(?TypoScriptFrontendController $typoScriptFrontendController = null)
     {
         if (!empty($typoScriptFrontendController)) {
             $this->typoScriptFrontendController = $typoScriptFrontendController;
