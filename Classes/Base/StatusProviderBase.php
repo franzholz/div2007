@@ -24,13 +24,17 @@ namespace JambageCom\Div2007\Base;
 *  This copyright notice MUST APPEAR in all copies of the script!
 */
 
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Reports\Status;
+
+// use TYPO3\CMS\Reports\Report\Status\Status;
 use TYPO3\CMS\Reports\StatusProviderInterface;
 
 use JambageCom\Div2007\Utility\StatusUtility;
+
 
 /**
  * checking of the required or conflicting configurations.
@@ -94,7 +98,7 @@ class StatusProviderBase implements StatusProviderInterface
         $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Required_extensions_not_installed', $this->getExtensionName());
         $value = null;
         $message = null;
-        $status = Status::OK;
+        $status = ContextualFeedbackSeverity::OK;
         $missingExtensions = [];
 
         if (
@@ -112,11 +116,11 @@ class StatusProviderBase implements StatusProviderInterface
         if (count($missingExtensions)) {
             $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:keys', $this->getExtensionName()) . ' ' . implode(', ', $missingExtensions);
             $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:install', $this->getExtensionName());
-            $status = Status::ERROR;
+            $status = ContextualFeedbackSeverity::ERROR;
         } else {
             $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:none', $this->getExtensionName());
             $message = '';
-            $status = Status::OK;
+            $status = ContextualFeedbackSeverity::OK;
         }
 
         $result =
@@ -127,7 +131,6 @@ class StatusProviderBase implements StatusProviderInterface
                 $message,
                 $status
             );
-
         return $result;
     }
 
@@ -141,7 +144,7 @@ class StatusProviderBase implements StatusProviderInterface
         $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Conflicting_extensions_installed', $this->getExtensionName());
         $value = null;
         $message = null;
-        $status = Status::OK;
+        $status = ContextualFeedbackSeverity::OK;
         $conflictingExtensions = [];
 
         if (
@@ -157,11 +160,11 @@ class StatusProviderBase implements StatusProviderInterface
         if (count($conflictingExtensions)) {
             $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:keys', $this->getExtensionName()) . ' ' . implode(', ', $conflictingExtensions);
             $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:uninstall', $this->getExtensionName());
-            $status = Status::ERROR;
+            $status = ContextualFeedbackSeverity::ERROR;
         } else {
             $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:none', $this->getExtensionName());
             $message = '';
-            $status = Status::OK;
+            $status = ContextualFeedbackSeverity::OK;
         }
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
 
@@ -179,7 +182,7 @@ class StatusProviderBase implements StatusProviderInterface
 
         $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:enabled', $this->getExtensionName());
         $message = '';
-        $status = Status::OK;
+        $status = ContextualFeedbackSeverity::OK;
         $result = GeneralUtility::makeInstance(Status::class, $title, $value, $message, $status);
 
         return $result;
