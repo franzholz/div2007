@@ -28,6 +28,7 @@ namespace JambageCom\Div2007\Utility;
  * @subpackage div2007
  */
 
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Reports\Status;
@@ -44,7 +45,7 @@ class StatusUtility
         $title = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:Global_variables_in_front_end', $extensionName);
         $value = null;
         $message = null;
-        $status = Status::OK;
+        $status = ContextualFeedbackSeverity::OK;
 
         if (
             isset($globalVariables) &&
@@ -61,7 +62,7 @@ class StatusUtility
                                 $value = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:' . ($expression ? 'disabled' : 'enabled'), $extensionName);
                                 $message = LocalizationUtility::translate('LLL:EXT:' . DIV2007_EXT . '/Resources/Private/Language/locallang_statusreport.xlf:global_variable_must_be_set', $extensionName);
                                 $message = sprintf($message, $extensionName, '$GLOBALS[\'TYPO3_CONF_VARS\'][\'' . $subkey . '\'][\'' . $key . '\']', htmlspecialchars($expression));
-                                $status = Status::ERROR;
+                                $status = ContextualFeedbackSeverity::ERROR;
                                 break;
                             }
                         }

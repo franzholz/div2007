@@ -1,4 +1,8 @@
 
+
+2025-04-09 Franz Holzinger <franz@ttproducts.de>
+    * TYPO3 12 Deprecation #97787: use StatusProviderBase for TYPO3 13 and TYPO3 12
+
 2025-02-26 Franz Holzinger <franz@ttproducts.de>
     * add PHP helper function json_decode_special which decodes and keep special characters like newlines
 
