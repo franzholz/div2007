@@ -183,12 +183,13 @@ class StaticInfoTablesApi implements SingletonInterface
      */
     public function buildStaticInfoSelector($type = 'COUNTRIES', $name = '', $class = '', $selectedArray = [], $country = '', $submit = 0, $id = '', $title = '', $addWhere = '', $lang = '', $local = false, $mergeArray = [], $size = 1, &$outSelectedArray = [])
     {
+        $defaultSelectedArray = null;
         if (!$this->isActive()) {
             return false;
         }
         $selector = '';
 
-        if (isset($selectedArray) && !is_array($selectedArray)) {
+        if (isset($selectedArray) && is_string($selectedArray)) {
             $selectedArray = GeneralUtility::trimExplode(',', $selectedArray);
         }
 
@@ -205,22 +206,22 @@ class StaticInfoTablesApi implements SingletonInterface
         switch ($type) {
             case 'COUNTRIES':
                 $nameArray = $this->initCountries('ALL', $lang, $local, $addWhere);
-                $defaultSelectedArray = [$this->defaultCountry];
+                $defaultSelectedArray = $selectedArray ?? [$this->defaultCountry];
                 break;
             case 'SUBDIVISIONS':
                 $param = (trim($country) ?: $this->defaultCountry);
                 $nameArray = $this->initCountrySubdivisions($param, $addWhere);
                 if ($param == $this->defaultCountry) {
-                    $defaultSelectedArray = [$this->defaultCountryZone];
+                    $defaultSelectedArray = $selectedArray ?? [$this->defaultCountryZone];
                 }
                 break;
             case 'CURRENCIES':
                 $nameArray = $this->initCurrencies($addWhere);
-                $defaultSelectedArray = [$this->currency];
+                $defaultSelectedArray = $selectedArray ?? [$this->currency];
                 break;
             case 'LANGUAGES':
                 $nameArray = $this->initLanguages($addWhere);
-                $defaultSelectedArray = [$this->defaultLanguage];
+                $defaultSelectedArray = $selectedArray ?? [$this->defaultLanguage];
                 break;
         }
 
@@ -264,15 +265,10 @@ class StaticInfoTablesApi implements SingletonInterface
         $titleFields = LocalizationUtility::getLabelFields($table, $lang, $local);
         $prefixedTitleFields = [];
         $prefixedTitleFields[] = $table . '.cn_iso_3';
-        if (version_compare($this->versionNumber, '11.5.0', '>=')) {
-            foreach ($titleFields as $titleField => $titleFieldProperty) {
-                $prefixedTitleFields[] = $table . '.' . $titleField;
-            }
-        } else {
-            foreach ($titleFields as $titleField) {
-                $prefixedTitleFields[] = $table . '.' . $titleField;
-            }
+        foreach ($titleFields as $titleField => $titleFieldProperty) {
+            $prefixedTitleFields[] = $table . '.' . $titleField;
         }
+
         array_unique($prefixedTitleFields);
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -305,19 +301,10 @@ class StaticInfoTablesApi implements SingletonInterface
         $statement = $queryBuilder->execute();
         $version12 = version_compare($this->version, '12.0.0', '>=');
         while ($row = ($version12 ? $statement->fetchAssociative() : $statement->fetch())) {
-            if (version_compare($this->versionNumber, '11.5.0', '>=')) {
-                foreach ($titleFields as $titleField => $titleFieldProperty) {
-                    if ($row[$titleField]) {
-                        $nameArray[$row['cn_iso_3']] = $row[$titleField];
-                        break;
-                    }
-                }
-            } else {
-                foreach ($titleFields as $titleField) {
-                    if ($row[$titleField]) {
-                        $nameArray[$row['cn_iso_3']] = $row[$titleField];
-                        break;
-                    }
+            foreach ($titleFields as $titleField => $titleFieldProperty) {
+                if ($row[$titleField]) {
+                    $nameArray[$row['cn_iso_3']] = $row[$titleField];
+                    break;
                 }
             }
         }
@@ -357,14 +344,8 @@ class StaticInfoTablesApi implements SingletonInterface
         $lang = LocalizationUtility::getIsoLanguageKey($lang);
         $titleFields = LocalizationUtility::getLabelFields($table, $lang);
         $prefixedTitleFields = [];
-        if (version_compare($this->versionNumber, '11.5.0', '>=')) {
-            foreach ($titleFields as $titleField => $titleFieldProperty) {
-                $prefixedTitleFields[] = $table . '.' . $titleField;
-            }
-        } else {
-            foreach ($titleFields as $titleField) {
-                $prefixedTitleFields[] = $table . '.' . $titleField;
-            }
+        foreach ($titleFields as $titleField => $titleFieldProperty) {
+            $prefixedTitleFields[] = $table . '.' . $titleField;
         }
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable($table)
@@ -391,19 +372,10 @@ class StaticInfoTablesApi implements SingletonInterface
         $statement = $queryBuilder->execute();
         $version12 = version_compare($this->version, '12.0.0', '>=');
         while ($row = ($version12 ? $statement->fetchAssociative() : $statement->fetch())) {
-            if (version_compare($this->versionNumber, '11.5.0', '>=')) {
-                foreach ($titleFields as $titleField => $titleFieldProperty) {
-                    if ($row[$titleField]) {
-                        $nameArray[$row['zn_code']] = $row[$titleField];
-                        break;
-                    }
-                }
-            } else {
-                foreach ($titleFields as $titleField) {
-                    if ($row[$titleField]) {
-                        $nameArray[$row['zn_code']] = $row[$titleField];
-                        break;
-                    }
+            foreach ($titleFields as $titleField => $titleFieldProperty) {
+                if ($row[$titleField]) {
+                    $nameArray[$row['zn_code']] = $row[$titleField];
+                    break;
                 }
             }
         }
@@ -432,14 +404,8 @@ class StaticInfoTablesApi implements SingletonInterface
         $lang = LocalizationUtility::getIsoLanguageKey($lang);
         $titleFields = LocalizationUtility::getLabelFields($table, $lang);
         $prefixedTitleFields = [];
-        if (version_compare($this->versionNumber, '11.5.0', '>=')) {
-            foreach ($titleFields as $titleField => $titleFieldProperty) {
-                $prefixedTitleFields[] = $table . '.' . $titleField;
-            }
-        } else {
-            foreach ($titleFields as $titleField) {
-                $prefixedTitleFields[] = $table . '.' . $titleField;
-            }
+        foreach ($titleFields as $titleField => $titleFieldProperty) {
+            $prefixedTitleFields[] = $table . '.' . $titleField;
         }
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable($table)
@@ -459,19 +425,10 @@ class StaticInfoTablesApi implements SingletonInterface
         $statement = $queryBuilder->execute();
         $version12 = version_compare($this->version, '12.0.0', '>=');
         while ($row = ($version12 ? $statement->fetchAssociative() : $statement->fetch())) {
-            if (version_compare($this->versionNumber, '11.5.0', '>=')) {
-                foreach ($titleFields as $titleField => $titleFieldProperty) {
-                    if ($row[$titleField]) {
-                        $nameArray[$row['cu_iso_3']] = $row[$titleField];
-                        break;
-                    }
-                }
-            } else {
-                foreach ($titleFields as $titleField) {
-                    if ($row[$titleField]) {
-                        $nameArray[$row['cu_iso_3']] = $row[$titleField];
-                        break;
-                    }
+            foreach ($titleFields as $titleField => $titleFieldProperty) {
+                if ($row[$titleField]) {
+                    $nameArray[$row['cu_iso_3']] = $row[$titleField];
+                    break;
                 }
             }
         }
@@ -721,14 +678,8 @@ class StaticInfoTablesApi implements SingletonInterface
         $titleFields = static::getTCAlabelField($table, true, $lang, $local);
         if (count($titleFields)) {
             $prefixedTitleFields = [];
-            if (version_compare($this->versionNumber, '11.5.0', '>=')) {
-                foreach ($titleFields as $titleField => $titleFieldProperty) {
-                    $prefixedTitleFields[] = $table . '.' . $titleField;
-                }
-            } else {
-                foreach ($titleFields as $titleField) {
-                    $prefixedTitleFields[] = $table . '.' . $titleField;
-                }
+            foreach ($titleFields as $titleField => $titleFieldProperty) {
+                $prefixedTitleFields[] = $table . '.' . $titleField;
             }
 
             $fields = implode(',', $prefixedTitleFields);
@@ -759,19 +710,10 @@ class StaticInfoTablesApi implements SingletonInterface
             );
 
             if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                if (version_compare($this->versionNumber, '11.5.0', '>=')) {
-                    foreach ($titleFields as $titleField => $titleFieldProperty) {
-                        if ($row[$titleField]) {
-                            $title = $row[$titleField];
-                            break;
-                        }
-                    }
-                } else {
-                    foreach ($titleFields as $titleField) {
-                        if ($row[$titleField]) {
-                            $title = $row[$titleField];
-                            break;
-                        }
+                foreach ($titleFields as $titleField => $titleFieldProperty) {
+                    if ($row[$titleField]) {
+                        $title = $row[$titleField];
+                        break;
                     }
                 }
             }
@@ -792,7 +734,7 @@ class StaticInfoTablesApi implements SingletonInterface
      *
      * @return  array       Array of rows of country records
      */
-    public static function fetchCountries($country, $iso2 = '', $iso3 = '', $isonr = '')
+    public function fetchCountries($country = 'Germany', $iso2 = '', $iso3 = '', $isonr = '')
     {
         if (!$this->isActive()) {
             return false;

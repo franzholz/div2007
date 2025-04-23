@@ -17,6 +17,24 @@ namespace JambageCom\Div2007\SessionHandler;
 
 /**
  * TYPO3 session handling utility.
+ * No Dependency Injection for derived class (MySessionHandler) is possible!
+ * Use a MiddleWare to create a singleton derived class once with the needed parameters.
+ *
+ *      $frontendUser = $request->getAttribute('frontend.user');
+ *      $sessionHandler = GeneralUtility::makeInstance(MySessionHandler::class, $frontendUser);
+ *
+ * RequestMiddlewares.php:
+ *
+ *      'mydomain/my-extensionkey/session-start' => [
+ *      'target' => SessionStart::class,
+ *      'description' => 'Initialisation of the session',
+ *      'after' => [
+ *             'typo3/cms-frontend/prepare-tsfe-rendering'
+ *          ],
+ *          'before' => [
+ *              'typo3/cms-frontend/content-length-headers',
+ *          ],
+ *       ]
  *
  * @author Bernhard Kraft <kraftb@think-open.at>
  * @copyright 2018
