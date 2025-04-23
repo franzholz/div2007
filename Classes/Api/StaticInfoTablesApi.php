@@ -734,7 +734,7 @@ class StaticInfoTablesApi implements SingletonInterface
      *
      * @return  array       Array of rows of country records
      */
-    public static function fetchCountries($country, $iso2 = '', $iso3 = '', $isonr = '')
+    public static function fetchCountries($country = '', $iso2 = '', $iso3 = '', $isonr = '')
     {
         if (!$this->isActive()) {
             return false;
