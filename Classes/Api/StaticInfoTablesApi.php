@@ -21,11 +21,6 @@ namespace JambageCom\Div2007\Api;
  * https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Country/Index.html
  */
 use TYPO3\CMS\Core\SingletonInterface;
-use JambageCom\Div2007\Utility\ExtensionUtility;
-use JambageCom\Div2007\Utility\TableUtility;
-use SJBR\StaticInfoTables\Domain\Repository\CurrencyRepository;
-use SJBR\StaticInfoTables\Utility\HtmlElementUtility;
-use SJBR\StaticInfoTables\Utility\LocalizationUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
@@ -35,6 +30,13 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+
+use SJBR\StaticInfoTables\Domain\Repository\CurrencyRepository;
+use SJBR\StaticInfoTables\Utility\HtmlElementUtility;
+use SJBR\StaticInfoTables\Utility\LocalizationUtility;
+
+use JambageCom\Div2007\Utility\ExtensionUtility;
+use JambageCom\Div2007\Utility\TableUtility;
 
 class StaticInfoTablesApi implements SingletonInterface
 {
