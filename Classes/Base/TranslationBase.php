@@ -202,7 +202,7 @@ class TranslationBase
     {
         $typo3Language = 'en';
         if (!isset($request)) {
-            $request = $GLOBALS['TYPO3_REQUEST'];
+            $request = $this->request;
         }
         $isFrontend = (ApplicationType::fromRequest($request)->isFrontend());
         if ($isFrontend) {
@@ -518,10 +518,29 @@ class TranslationBase
             $extensionKey = $this->getExtensionKey();
         }
         $tsfe = $this->getTypoScriptFrontendController();
-        $result = $tsfe->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
+        $result = $this->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
 
         return $result;
     }
+
+    /**
+     * Main and most often used method.
+     *
+     * Resolve strings like these:
+     *
+     * ```
+     * 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.depth_0'
+     * ```
+     * @param string $input Label key/reference
+     * @see LocalizationUtility::translate()
+     */
+    public function sL($input): string
+    {
+        $output = GeneralUtility::makeInstance(LanguageServiceFactory::class)
+            ->createFromSiteLanguage($this->request->getAttribute('language'))->sL($input);
+        return $output;
+    }
+
 
     /**
      * Split Label function for front-end applications.
@@ -582,7 +601,7 @@ class TranslationBase
 ): ?SiteLanguage
     {
         if (!isset($request)) {
-            $request = $GLOBALS['TYPO3_REQUEST'];
+            $request = $this->request;
         }
         if ($this->typoScriptFrontendController instanceof TypoScriptFrontendController) {
             return $this->typoScriptFrontendController->getLanguage();
