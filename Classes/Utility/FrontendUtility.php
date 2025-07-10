@@ -26,6 +26,7 @@ namespace JambageCom\Div2007\Utility;
 ***************************************************************/
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -1158,7 +1159,8 @@ class FrontendUtility
 
     public static function translate($extensionKey, $filename, $key)
     {
-        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
+        $result = GeneralUtility::makeInstance(LanguageServiceFactory::class)
+            ->createFromSiteLanguage($GLOBALS['TYPO3_REQUEST']->getAttribute('language'))->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
 
         return $result;
     }
