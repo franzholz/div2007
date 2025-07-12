@@ -130,9 +130,9 @@ class StorageSecurity implements SingletonInterface, LoggerAwareInterface
                 $result = openssl_private_decrypt(
                     $originalPassword,
                     $password,
-                    $privateKey
+                    $privateKey,
                     OPENSSL_PKCS1_OAEP_PADDING
-                ); 
+                );
             }
         }
 

@@ -16,6 +16,11 @@
     * TranslationBase: Use Dependency Injection parameter LanguageServiceFactory for the case where no $LANG global object is available.
     * new method getTypo3LanguageKey
 
+
+
+2025-07-04 Franz Holzinger <franz@ttproducts.de>
+    * Add TYPO3 core function sL into TranslationBase
+
 2025-01-16 Franz Holzinger <franz@ttproducts.de>
     * TYPO3 13: TranslationBase with new parameter $request
 
