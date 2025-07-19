@@ -190,8 +190,9 @@ class CoreQuery
      *
      * @param string $table The table name, found in $GLOBALS['TCA']
      * @param array $row The record data array for the record in question
-     * @param array $feUserRow The array of the fe_user which is evaluated, typ.
-     *              $frontendUser = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user');
+     * @param array $feUserRow The array of the fe_user login data which is evaluated, typ.
+     *             'uid' => $this->context->getPropertyFromAspect('frontend.user', 'id');
+     *             'usergroup' => $this->context->getPropertyFromAspect('frontend.user', 'groupIds');
      * @param string $allowedGroups Commalist of the only fe_groups uids which may edit the record. If not set, then the usergroup field of the fe_user is used.
      * @param bool|int $feEditSelf TRUE, if the fe_user may edit his own fe_user record
      *
@@ -242,7 +243,7 @@ class CoreQuery
      *
      * @see DBmayFEUserEdit(), user_feAdmin::displayEditScreen()
      */
-    public static function DBmayFEUserEditSelect($table, $feUserRow, $allowedGroups = '', $feEditSelf = 0)
+    public static function DBmayFEUserEditSelect($table, $feUserRow, $allowedGroups = '', $feEditSelf = false)
     {
         // Returns where-definition that selects user-editable records.
         if ($allowedGroups) {
