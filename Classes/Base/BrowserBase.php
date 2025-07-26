@@ -41,26 +41,29 @@ namespace JambageCom\Div2007\Base;
  * @subpackage div2007
  */
 
+use Psr\Http\Message\ServerRequestInterface;
+
+
 // this class must be overridden and filled out. You can use the init method.
 class BrowserBase
 {
     public $ctrlVars = [];
     public $internal = [];
-    public $autoCacheFields = [];
-    public $autoCacheEnable = false;
-    public $is_USER_INT_obj;
     public $tmpPageId = 0;
     public $moreParams = '';
     public $conf;
+    protected $request = null;
 
-    public function getAutoCacheEnable()
+    public function setRequest(
+        ServerRequestInterface $request,
+    ): void
     {
-        return $this->autoCacheEnable;
+        $this->request = $request;
     }
 
-    public function getIsUserIntObject()
+    public function getRequest()
     {
-        return $this->is_USER_INT_obj;
+        return $this->request;
     }
 
     /**
@@ -87,8 +90,8 @@ class BrowserBase
         $conf,
         $ctrlVars,
         $ctrlLimits,
-        $autoCacheEnable,
-        $is_USER_INT_obj,
+        $autoCacheEnable, // unused
+        $is_USER_INT_obj, // unused
         $resCount,
         $limit,
         $maxPages,
@@ -101,9 +104,6 @@ class BrowserBase
     ): void {
         $this->conf = $conf;
         $this->ctrlVars = $ctrlVars;
-        $this->autoCacheFields = $ctrlLimits;
-        $this->autoCacheEnable = $autoCacheEnable;
-        $this->is_USER_INT_obj = $is_USER_INT_obj;
         $this->internal['resCount'] = $resCount;
         $this->internal['limit'] = $limit;
         $this->internal['maxPages'] = $maxPages;

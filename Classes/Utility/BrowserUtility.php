@@ -106,11 +106,6 @@ class BrowserUtility
                 1,
                 100
             );
-        $bUseCache =
-            static::autoCache(
-                $pObject,
-                $pObject->ctrlVars
-            );
 
         // $showResultCount determines how the results of the pagerowser will be shown.
         // If set to 0: only the result-browser will be shown
@@ -235,8 +230,7 @@ class BrowserUtility
                                     '<< First',
                                     $hscText
                                 ),
-                                $linkArray,
-                                $bUseCache
+                                $linkArray
                             ),
                             $wrapper['inactiveLinkWrap']
                         );
@@ -271,8 +265,7 @@ class BrowserUtility
                                 $cObj,
                                 $prefixId,
                                 $previousText,
-                                $linkArray,
-                                $bUseCache
+                                $linkArray
                             ),
                             $wrapper['inactiveLinkWrap']
                         );
@@ -333,8 +326,7 @@ class BrowserUtility
                                 $cObj,
                                 $prefixId,
                                 $pageText,
-                                $linkArray,
-                                $bUseCache
+                                $linkArray
                             );
                     }
                 } elseif ($pageText != '') {
@@ -346,8 +338,7 @@ class BrowserUtility
                                 $cObj,
                                 $prefixId,
                                 $pageText,
-                                $linkArray,
-                                $bUseCache
+                                $linkArray
                             ),
                             $wrapper['inactiveLinkWrap'] ?? ''
                         );
@@ -376,8 +367,7 @@ class BrowserUtility
                                 $cObj,
                                 $prefixId,
                                 $nextText,
-                                $linkArray,
-                                $bUseCache
+                                $linkArray
                             ),
                             $wrapper['inactiveLinkWrap'] ?? ''
                         );
@@ -399,8 +389,7 @@ class BrowserUtility
                                     'Last >>',
                                     $hscText
                                 ),
-                                $linkArray,
-                                $bUseCache
+                                $linkArray
                             ),
                             $wrapper['inactiveLinkWrap'] ?? ''
                         );
@@ -465,56 +454,6 @@ class BrowserUtility
         return $rc;
     }
 
-    /**
-     * Returns true if the array $inArray contains only values allowed to be cached based on the configuration in $pObject->pi_autoCacheFields
-     * Used by static::linkTPKeepCtrlVars
-     * This is an advanced form of evaluation of whether a URL should be cached or not.
-     *
-     * @param   object      parent object of type \JambageCom\Div2007\Base\BrowserBase
-     *
-     * @return  bool     returns true (1) if conditions are met
-     *
-     * @see linkTPKeepCtrlVars()
-     */
-    public static function autoCache($pObject, $inArray)
-    {
-        $bUseCache = true;
-
-        if (is_array($inArray)) {
-            foreach ($inArray as $fN => $fV) {
-                $bIsCachable = false;
-                if (!strcmp($inArray[$fN], '')) {
-                    $bIsCachable = true;
-                } elseif (
-                    isset($pObject->autoCacheFields[$fN]) &&
-                    is_array($pObject->autoCacheFields[$fN])
-                ) {
-                    if (
-                        isset($pObject->autoCacheFields[$fN]['range']) &&
-                        is_array($pObject->autoCacheFields[$fN]['range']) &&
-                        intval($inArray[$fN]) >= intval($pObject->autoCacheFields[$fN]['range'][0]) &&
-                        intval($inArray[$fN]) <= intval($pObject->autoCacheFields[$fN]['range'][1])) {
-                        $bIsCachable = true;
-                    }
-
-                    if (
-                        isset($pObject->autoCacheFields[$fN]['list']) &&
-                        is_array($pObject->autoCacheFields[$fN]['list']) &&
-                        in_array($inArray[$fN], $pObject->autoCacheFields[$fN]['list'])
-                    ) {
-                        $bIsCachable = true;
-                    }
-                }
-
-                if (!$bIsCachable) {
-                    $bUseCache = false;
-                    break;
-                }
-            }
-        }
-
-        return $bUseCache;
-    }
 
     /**
      * Link a string to the current page while keeping currently set values in piVars.
@@ -526,7 +465,7 @@ class BrowserUtility
      * @param   string      prefix id
      * @param   string      The content string to wrap in <a> tags
      * @param   array       Array of values to override in the current piVars. Contrary to static::linkTP the keys in this array must correspond to the real piVars array and therefore NOT be prefixed with the $this->prefixId string. Further, if a value is a blank string it means the piVar key will not be a part of the link (unset)
-     * @param   bool     If $cache is set, the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
+     * @param   bool     $cache ... unused
      * @param   bool     If set, then the current values of piVars will NOT be preserved anyways... Practical if you want an easy way to set piVars without having to worry about the prefix, "tx_xxxxx[]"
      * @param   int     Alternative page ID for the link. (By default this function links to the SAME page!)
      *
@@ -540,7 +479,7 @@ class BrowserUtility
         $prefixId,
         $str,
         $overruleCtrlVars = [],
-        $cache = 0,
+        $cache = 0, // unused
         $clearAnyway = 0,
         $altPageId = 0
     ) {
@@ -564,10 +503,6 @@ class BrowserUtility
                     $overruledCtrlVars,
                     $overruleCtrlVars
                 );
-
-            if ($pObject->getAutoCacheEnable()) {
-                $cache = static::autoCache($pObject, $overruledCtrlVars);
-            }
         }
 
         $result =
@@ -578,7 +513,7 @@ class BrowserUtility
                 [
                     $prefixId => $overruledCtrlVars,
                 ],
-                $cache,
+                $cache,  // unused
                 $altPageId
             );
 
@@ -593,7 +528,7 @@ class BrowserUtility
      * @param   object      cObject
      * @param   string      The content string to wrap in <a> tags
      * @param   array       Array with URL parameters as key/value pairs. They will be "imploded" and added to the list of parameters defined in the $pObject TypoScript property "parent.addParams" plus $pObject->moreParams.
-     * @param   bool     If $cache is set (0/1), the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
+     * @param   bool     $cache .. unused
      * @param   int     Alternative page ID for the link. (By default this function links to the SAME page!)
      *
      * @return  string      The input string wrapped in <a> tags
@@ -605,11 +540,11 @@ class BrowserUtility
         $cObj,
         $str,
         $urlParameters = [],
-        $cache = 0,
+        $cache = 0, // unused
         $altPageId = 0
     ) {
         $conf = [];
-        $conf['parameter'] = $altPageId ?: ($pObject->tmpPageId ?: $GLOBALS['TSFE']->id);
+        $conf['parameter'] = $altPageId ?? ($pObject->tmpPageId ?? FrontendUtility::getPageIdCompatible($pObject->getRequest());
         $conf['additionalParams'] =
             ($pObject->conf['parent.']['addParams'] ?? '') .
             GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) .
