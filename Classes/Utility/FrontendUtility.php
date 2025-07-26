@@ -24,6 +24,9 @@ namespace JambageCom\Div2007\Utility;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+
+use Psr\Http\Message\ServerRequestInterface;
+
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
@@ -34,6 +37,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
 
@@ -41,6 +45,8 @@ use JambageCom\Div2007\Api\Frontend;
 use JambageCom\Div2007\Api\FrontendApi;
 use JambageCom\Div2007\Base\BrowserBase;
 use JambageCom\Div2007\Base\TranslationBase;
+
+
 
 /**
  * front end functions.
@@ -81,7 +87,8 @@ class FrontendUtility
 
     /**
      * This method is needed only for Ajax calls.
-     * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId instead of this method.
+     * You can use $id = $request->getAttribute('frontend.page.information')->getId() or
+     * $GLOBALS['TSFE']->determineId($request) or $GLOBALS['TSFE']->id instead of this method.
      *
      * @return int
      */
@@ -92,6 +99,39 @@ class FrontendUtility
 
         return $result;
     }
+
+    /* Get page Id in front end depending on the TYPO3 version
+     *
+     * The first parameter can be the request object
+     */
+    public static function getPageIdCompatible(...$params)
+    {
+        $id = 0;
+
+        $typo3VersionArray =
+            VersionNumberUtility::convertVersionStringToArray(
+                VersionNumberUtility::getCurrentTypo3Version()
+            );
+        $typo3VersionMain = $typo3VersionArray['version_main'];
+
+        if ($typo3VersionMain >= 13) {
+            if (
+                isset($params[0]) &&
+                $params[0] instanceof ServerRequestInterface
+            ) {
+                $request = $params[0];
+            } else {
+                $request = FrontendApi::getGlobalRequestObject();
+            }
+
+            $id = $request->getAttribute('frontend.page.information')->getId();
+        } else {
+            $id = $GLOBALS['TSFE']->id;
+        }
+
+        return $id;
+    }
+
 
     /**
      * Get the logged in front end user.
@@ -443,11 +483,6 @@ class FrontendUtility
                 $pObject->internal['maxPages'],
                 1,
                 100
-            );
-        $bUseCache =
-            static::autoCache(
-                $pObject,
-                $pObject->ctrlVars
             );
 
         // $showResultCount determines how the results of the pagerowser will be shown.
@@ -802,60 +837,6 @@ class FrontendUtility
     }
 
     /**
-     * deprecated:
-     * use BrowserUtility::autoCache instead
-     *
-     * Returns true if the array $inArray contains only values allowed to be cached based on the configuration in $this->pi_autoCacheFields
-     * Used by static::linkTPKeepCtrlVars
-     * This is an advanced form of evaluation of whether a URL should be cached or not.
-     *
-     * @param   object      parent object of type tx_div2007_alpha_browse_base
-     *
-     * @return  bool     returns true (1) if conditions are met
-     *
-     * @see linkTPKeepCtrlVars()
-     */
-    public static function autoCache($pObject, $inArray)
-    {
-        $bUseCache = true;
-
-        if (is_array($inArray)) {
-            foreach ($inArray as $fN => $fV) {
-                $bIsCachable = false;
-                if (!strcmp($fV, '')) {
-                    $bIsCachable = true;
-                } elseif (
-                    isset($pObject->autoCacheFields[$fN]) &&
-                    is_array($pObject->autoCacheFields[$fN])
-                ) {
-                    if (
-                        isset($pObject->autoCacheFields[$fN]['range']) &&
-                        is_array($pObject->autoCacheFields[$fN]['range']) &&
-                        intval($fV) >= intval($pObject->autoCacheFields[$fN]['range'][0]) &&
-                        intval($fV) <= intval($pObject->autoCacheFields[$fN]['range'][1])) {
-                        $bIsCachable = true;
-                    }
-
-                    if (
-                        isset($pObject->autoCacheFields[$fN]['list']) &&
-                        is_array($pObject->autoCacheFields[$fN]['list']) &&
-                        in_array($fV, $pObject->autoCacheFields[$fN]['list'])
-                    ) {
-                        $bIsCachable = true;
-                    }
-                }
-
-                if (!$bIsCachable) {
-                    $bUseCache = false;
-                    break;
-                }
-            }
-        }
-
-        return $bUseCache;
-    }
-
-    /**
      * Returns the class-attribute with the correctly prefixed classname
      * Using getClassName().
      *
@@ -952,9 +933,6 @@ class FrontendUtility
                     $overruledCtrlVars,
                     $overruleCtrlVars
                 );
-            if ($pObject->getAutoCacheEnable()) {
-                $cache = static::autoCache($pObject, $overruledCtrlVars);
-            }
         }
 
         $result =
@@ -983,7 +961,7 @@ class FrontendUtility
      * @param   object      cObject
      * @param   string      The content string to wrap in <a> tags
      * @param   array       Array with URL parameters as key/value pairs. They will be "imploded" and added to the list of parameters defined in the plugins TypoScript property "parent.addParams" plus $this->pi_moreParams.
-     * @param   bool     If $cache is set (0/1), the page is asked to be cached by a &cHash value (unless the current plugin using this class is a USER_INT). Otherwise the no_cache-parameter will be a part of the link.
+     * @param   bool    ... unused
      * @param   int     Alternative page ID for the link. (By default this function links to the SAME page!)
      *
      * @return  string      The input string wrapped in <a> tags
@@ -995,12 +973,15 @@ class FrontendUtility
         $cObj,
         $str,
         $urlParameters = [],
-        $cache = 0,
+        $cache = 0, // unused
         $altPageId = 0
     ) {
         $conf = [];
-        $conf['no_cache'] = $pObject->getIsUserIntObject() ? 0 : !$cache;
-        $conf['parameter'] = $altPageId ?: ($pObject->tmpPageId ?: $GLOBALS['TSFE']->id);
+        $conf['parameter'] =
+            $altPageId ?? (
+                $pObject->tmpPageId ??
+                static::getPageIdCompatible($pObject->getRequest())
+            );
         $conf['additionalParams'] = $pObject->conf['parent.']['addParams'] . GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) . $pObject->moreParams;
         $result = $cObj->typoLink($str, $conf);
 

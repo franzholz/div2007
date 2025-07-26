@@ -1,4 +1,8 @@
 
+2025-07-25 Franz Holzinger <franz@ttproducts.de>
+    * TYPO3 10 Deprecation #88406: Remove useCacheHash parameter support.
+    * BrowserUtility: remove methods autoCache and support for cache
+    * add method: FrontendUtility::getPageIdCompatible to get the page id in TYPO3 12 and 13
 
 2025-04-09 Franz Holzinger <franz@ttproducts.de>
     * TYPO3 12 Deprecation #97787: use StatusProviderBase for TYPO3 13 and TYPO3 12
