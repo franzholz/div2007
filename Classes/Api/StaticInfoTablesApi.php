@@ -22,6 +22,7 @@ namespace JambageCom\Div2007\Api;
  */
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
 use TYPO3\CMS\Core\Information\Typo3Version;
