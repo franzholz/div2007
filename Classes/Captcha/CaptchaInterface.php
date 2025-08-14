@@ -45,12 +45,20 @@ interface CaptchaInterface extends SingletonInterface
     /**
      * Sets the value of captcha markers.
      */
-    public function addGlobalMarkers(array &$markerArray, $enable = true);
+    public function addGlobalMarkers(
+        array &$markerArray,
+        ServerRequestInterface $request,
+        $enable = true
+    );
 
     /**
      * Evaluates the captcha word.
      *
      * @return bool true if the evaluation is successful, false in error case or when the captcha word is empty
      */
-    public function evalValues($captchaWord, $evalRule);
+    public function evalValues(
+        ServerRequestInterface $request,
+        $captchaWord,
+        $name
+    );
 }

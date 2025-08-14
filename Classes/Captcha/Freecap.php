@@ -23,6 +23,8 @@ namespace JambageCom\Div2007\Captcha;
  *  This copyright notice MUST APPEAR in all copies of the script!
  */
 
+use Psr\Http\Message\ServerRequestInterface;
+
 use SJBR\SrFreecap\Domain\Session\SessionStorage;
 use SJBR\SrFreecap\PiBaseApi;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -64,14 +66,18 @@ class Freecap extends CaptchaBase
      * Sets the value of captcha markers
      * return boolean.
      */
-    public function addGlobalMarkers(array &$markerArray, $enable = true)
+    public function addGlobalMarkers(
+        array &$markerArray,
+        ServerRequestInterface $request,
+        $enable = true
+    )
     {
         $result = false;
         $markerPrefix = $this->getMarkerPrefix();
         $defaultMarkerPrefix = $this->getDefaultMarkerPrefix();
         if (
             $enable &&
-            $this->initialize() == true
+            $this->initialize($request) == true
         ) {
             $freecapMarkerArray = $this->getApi()->makeCaptcha();
             $captchaMarkerArray = [];
@@ -102,12 +108,16 @@ class Freecap extends CaptchaBase
      *
      * @return bool true if the evaluation is successful, false in error case
      */
-    public function evalValues($captchaWord, $name)
+    public function evalValues(
+        ServerRequestInterface $request,
+        $captchaWord,
+        $name
+    )
     {
         $result = true;
         if (
             $name == $this->getName() &&
-            ($result = $this->initialize())
+            ($result = $this->initialize($request))
         ) {
             if ($captchaWord == '') {
                 $result = false;
@@ -119,7 +129,9 @@ class Freecap extends CaptchaBase
                 if ($this->getApi()->checkWord($captchaWord)) {
                     // Restore sr_freecap word_hash
                     $this->getSession()->writeToSession($sessionData);
-                    $this->getFrontendUser()->storeSessionData();
+                    $this->getFrontendUser(
+                            $this->getSession()->getRequest()
+                        )->storeSessionData();
                 } else {
                     $result = false;
                 }
@@ -130,9 +142,10 @@ class Freecap extends CaptchaBase
     }
 
     /**
+     * @var ServerRequestInterface
      * Initializes de SrFreecap object.
      */
-    protected function initialize()
+    protected function initialize(ServerRequestInterface $request)
     {
         $result = false;
 
@@ -159,13 +172,14 @@ class Freecap extends CaptchaBase
     /**
      * Gets a frontend user from TSFE->fe_user.
      *
+     * @var ServerRequestInterface
      * @return	\TYPO3\CMS\Frontend\Authentication\FrontendUserAuthtenication	The current frontend user object
      *
      * @throws	SessionNotFoundException
      */
-    protected function getFrontendUser()
+    protected function getFrontendUser(ServerRequestInterface $request)
     {
-        $frontendUser = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user');
+        $frontendUser = $request->getAttribute('frontend.user');
         if ($frontendUser) {
             return $frontendUser;
         }
