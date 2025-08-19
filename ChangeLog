@@ -1,4 +1,11 @@
 
+
+2025-08-13 Franz Holzinger <franz@ttproducts.de>
+    * remove support for outdated thinkopenat/captcha from Bernhard Kraft
+
+2025-08-12 Franz Holzinger <franz@ttproducts.de>
+    * enhanced API for Freecap with request parameter
+
 2025-07-25 Franz Holzinger <franz@ttproducts.de>
     * TYPO3 10 Deprecation #88406: Remove useCacheHash parameter support.
     * BrowserUtility: remove methods autoCache and support for cache

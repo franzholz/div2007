@@ -426,6 +426,7 @@ class BrowserUtility
                 $markerArray['###CURRENT_PAGE###'] = $cObj->wrap($pointer + 1, $wrapper['showResultsNumbersWrap']);
                 $markerArray['###TOTAL_PAGES###'] = $cObj->wrap($totalPages, $wrapper['showResultsNumbersWrap']);
                 $list_browseresults_displays = $languageObj->getLabel('list_browseresults_displays_marker', $usedLang, 'Displaying results ###FROM### to ###TO### out of ###OUT_OF###');
+
                 // substitute markers
                 $resultCountMsg =
                     $parser->substituteMarkerArray(
@@ -483,8 +484,6 @@ class BrowserUtility
         $clearAnyway = 0,
         $altPageId = 0
     ) {
-        $overruledCtrlVars = '';
-
         if (
             is_array($overruleCtrlVars) &&
             !$clearAnyway
@@ -516,7 +515,6 @@ class BrowserUtility
                 $cache,  // unused
                 $altPageId
             );
-
         return $result;
     }
 
@@ -544,7 +542,7 @@ class BrowserUtility
         $altPageId = 0
     ) {
         $conf = [];
-        $conf['parameter'] = $altPageId ?? ($pObject->tmpPageId ?? FrontendUtility::getPageIdCompatible($pObject->getRequest());
+        $conf['parameter'] = $altPageId > 0 ? $altPageId : ($pObject->tmpPageId > 0 ? $pObject->tmpPageId : FrontendUtility::getPageIdCompatible($pObject->getRequest()));
         $conf['additionalParams'] =
             ($pObject->conf['parent.']['addParams'] ?? '') .
             GeneralUtility::implodeArrayForUrl('', $urlParameters, '', true) .
