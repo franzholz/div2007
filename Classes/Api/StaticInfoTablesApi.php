@@ -301,9 +301,8 @@ class StaticInfoTablesApi implements SingletonInterface
                 $queryBuilder->andWhere($addWhere);
             }
         }
-        $statement = $queryBuilder->execute();
-        $version12 = version_compare($this->version, '12.0.0', '>=');
-        while ($row = ($version12 ? $statement->fetchAssociative() : $statement->fetch())) {
+        $statement = $queryBuilder->executeQuery();
+        while ($row = $statement->fetchAssociative()) {
             foreach ($titleFields as $titleField => $titleFieldProperty) {
                 if ($row[$titleField]) {
                     $nameArray[$row['cn_iso_3']] = $row[$titleField];
@@ -372,9 +371,8 @@ class StaticInfoTablesApi implements SingletonInterface
                 $queryBuilder->andWhere($addWhere);
             }
         }
-        $statement = $queryBuilder->execute();
-        $version12 = version_compare($this->version, '12.0.0', '>=');
-        while ($row = ($version12 ? $statement->fetchAssociative() : $statement->fetch())) {
+        $statement = $queryBuilder->executeQuery();
+        while ($row = $statement->fetchAssociative()) {
             foreach ($titleFields as $titleField => $titleFieldProperty) {
                 if ($row[$titleField]) {
                     $nameArray[$row['zn_code']] = $row[$titleField];
@@ -425,9 +423,8 @@ class StaticInfoTablesApi implements SingletonInterface
             $addWhere = QueryHelper::stripLogicalOperatorPrefix($addWhere);
             $queryBuilder->where($addWhere);
         }
-        $statement = $queryBuilder->execute();
-        $version12 = version_compare($this->version, '12.0.0', '>=');
-        while ($row = ($version12 ? $statement->fetchAssociative() : $statement->fetch())) {
+        $statement = $queryBuilder->executeQuery();
+        while ($row = $statement->fetchAssociative()) {
             foreach ($titleFields as $titleField => $titleFieldProperty) {
                 if ($row[$titleField]) {
                     $nameArray[$row['cu_iso_3']] = $row[$titleField];
