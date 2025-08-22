@@ -26,6 +26,9 @@ use TYPO3\CMS\Core\SingletonInterface;
 /**
  * Inferface for captcha hooks.
  */
+
+use Psr\Http\Message\ServerRequestInterface;
+
 interface CaptchaInterface extends SingletonInterface
 {
     /**

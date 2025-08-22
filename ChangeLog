@@ -1,4 +1,6 @@
 
+2025-08-22 Franz Holzinger <franz@ttproducts.de>
+    * fix Captcha errors
 
 2025-08-13 Franz Holzinger <franz@ttproducts.de>
     * remove support for outdated thinkopenat/captcha from Bernhard Kraft
