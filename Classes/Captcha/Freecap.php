@@ -130,7 +130,7 @@ class Freecap extends CaptchaBase
                     // Restore sr_freecap word_hash
                     $this->getSession()->writeToSession($sessionData);
                     $this->getFrontendUser(
-                            $this->getSession()->getRequest()
+                            $request
                         )->storeSessionData();
                 } else {
                     $result = false;
