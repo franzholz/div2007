@@ -277,6 +277,7 @@ class StaticInfoTablesApi implements SingletonInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable($table)
         ;
+        $expressionBuilder = $queryBuilder->expr();
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
         $queryBuilder
             ->select($prefixedTitleFields[0])
@@ -288,9 +289,9 @@ class StaticInfoTablesApi implements SingletonInterface
         }
 
         if ($param === 'UN') {
-            $queryBuilder->where($queryBuilder->expr()->eq('cn_uno_member', $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT)));
+            $queryBuilder->where($expressionBuilder->eq('cn_uno_member', $queryBuilder->createNamedParameter(1, Connection::PARAM_INT)));
         } elseif ($param === 'EU') {
-            $queryBuilder->where($queryBuilder->expr()->eq('cn_eu_member', $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT)));
+            $queryBuilder->where($expressionBuilder->eq('cn_eu_member', $queryBuilder->createNamedParameter(1, Connection::PARAM_INT)));
         }
 
         if ($addWhere) {
@@ -352,6 +353,7 @@ class StaticInfoTablesApi implements SingletonInterface
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable($table)
         ;
+        $expressionBuilder = $queryBuilder->expr();
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
         $queryBuilder
             ->select($table . '.zn_code')
@@ -361,7 +363,7 @@ class StaticInfoTablesApi implements SingletonInterface
             $queryBuilder->addSelect($titleField);
         }
         if (strlen($param) == 3) {
-            $queryBuilder->where($queryBuilder->expr()->eq('zn_country_iso_3', $queryBuilder->createNamedParameter($param, \PDO::PARAM_STR)));
+            $queryBuilder->where($expressionBuilder->eq('zn_country_iso_3', $queryBuilder->createNamedParameter($param, Connection::PARAM_STR)));
         }
         if ($addWhere) {
             $addWhere = QueryHelper::stripLogicalOperatorPrefix($addWhere);

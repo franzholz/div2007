@@ -1,4 +1,7 @@
 
+2025-08-27 Franz Holzinger <franz@ttproducts.de>
+    * TYPO3 13 breaking no. 102875: replace \PDO::PARAM_ by Connection::PARAM_*
+
 2025-08-22 Franz Holzinger <franz@ttproducts.de>
     * fix Captcha errors
 
