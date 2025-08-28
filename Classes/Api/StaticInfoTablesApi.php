@@ -1,7 +1,7 @@
 <?php
 
 namespace JambageCom\Div2007\Api;
-
+    
 /*
  * This file is part of the TYPO3 CMS project.
  *
@@ -21,11 +21,13 @@ namespace JambageCom\Div2007\Api;
  * https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Country/Index.html
  */
 use TYPO3\CMS\Core\SingletonInterface;
+
 use JambageCom\Div2007\Utility\ExtensionUtility;
 use JambageCom\Div2007\Utility\TableUtility;
 use SJBR\StaticInfoTables\Domain\Repository\CurrencyRepository;
 use SJBR\StaticInfoTables\Utility\HtmlElementUtility;
 use SJBR\StaticInfoTables\Utility\LocalizationUtility;
+use TYPO3\CMS\Core\Database\Connection as Typo3Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
@@ -74,7 +76,7 @@ class StaticInfoTablesApi implements SingletonInterface
             $result = false;
         } elseif (!$this->hasBeenInitialized) {
             $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-            $this->version = $typo3Version->getVersion();
+            $this->version = $typo3Version->gPetVersion();
 
             if (empty($conf) && isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE']) && isset($GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'])) {
                 $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'];
@@ -290,9 +292,17 @@ class StaticInfoTablesApi implements SingletonInterface
         }
 
         if ($param === 'UN') {
-            $queryBuilder->where($queryBuilder->expr()->eq('cn_uno_member', $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT)));
+            if (version_compare($this->version, '13.0.0', '>=')) {
+                $queryBuilder->where($queryBuilder->expr()->eq('cn_uno_member', $queryBuilder->createNamedParameter(1, Typo3Connection::PARAM_INT)));
+            } else {
+                $queryBuilder->where($queryBuilder->expr()->eq('cn_uno_member', $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT)));
+            }
         } elseif ($param === 'EU') {
-            $queryBuilder->where($queryBuilder->expr()->eq('cn_eu_member', $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT)));
+            if (version_compare($this->version, '13.0.0', '>=')) {
+                $queryBuilder->where($queryBuilder->expr()->eq('cn_eu_member', $queryBuilder->createNamedParameter(1, Typo3Connection::PARAM_INT)));
+            } else {
+                $queryBuilder->where($queryBuilder->expr()->eq('cn_eu_member', $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT)));
+            }
         }
 
         if ($addWhere) {
@@ -379,7 +389,12 @@ class StaticInfoTablesApi implements SingletonInterface
             $queryBuilder->addSelect($titleField);
         }
         if (strlen($param) == 3) {
-            $queryBuilder->where($queryBuilder->expr()->eq('zn_country_iso_3', $queryBuilder->createNamedParameter($param, \PDO::PARAM_STR)));
+            $version13 = version_compare($this->version, '13.0.0', '>=');
+            if ($version13) {
+                $queryBuilder->where($queryBuilder->expr()->eq('zn_country_iso_3', $queryBuilder->createNamedParameter($param, Typo3Connection::PARAM_STR)));
+            } else {
+                $queryBuilder->where($queryBuilder->expr()->eq('zn_country_iso_3', $queryBuilder->createNamedParameter($param, \PDO::PARAM_STR)));                
+            }
         }
         if ($addWhere) {
             $addWhere = QueryHelper::stripLogicalOperatorPrefix($addWhere);
