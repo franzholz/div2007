@@ -21,6 +21,7 @@ namespace JambageCom\Div2007\Api;
  * https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Country/Index.html
  */
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Database\Connection as Typo3Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
@@ -289,7 +290,7 @@ class StaticInfoTablesApi implements SingletonInterface
         }
 
         if ($param === 'UN') {
-            $queryBuilder->where($expressionBuilder->eq('cn_uno_member', $queryBuilder->createNamedParameter(1, Connection::PARAM_INT)));
+            $queryBuilder->where($expressionBuilder->eq('cn_uno_member', $queryBuilder->createNamedParameter(1, Typo3Connection::PARAM_INT)));
         } elseif ($param === 'EU') {
             $queryBuilder->where($expressionBuilder->eq('cn_eu_member', $queryBuilder->createNamedParameter(1, Connection::PARAM_INT)));
         }
@@ -363,7 +364,7 @@ class StaticInfoTablesApi implements SingletonInterface
             $queryBuilder->addSelect($titleField);
         }
         if (strlen($param) == 3) {
-            $queryBuilder->where($expressionBuilder->eq('zn_country_iso_3', $queryBuilder->createNamedParameter($param, Connection::PARAM_STR)));
+            $queryBuilder->where($expressionBuilder->eq('zn_country_iso_3', $queryBuilder->createNamedParameter($param, Typo3Connection::PARAM_STR)));
         }
         if ($addWhere) {
             $addWhere = QueryHelper::stripLogicalOperatorPrefix($addWhere);
