@@ -15,8 +15,12 @@ namespace JambageCom\Div2007\Database;
  * The TYPO3 project - inspiring people to share!
  */
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+
 
 class QueryBuilderApi
 {
@@ -36,9 +40,7 @@ class QueryBuilderApi
             return null;
         }
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable($searchTable)
-        ;
+        $queryBuilder = static::getQueryBuilderForTable($searchTable);
 
         $prefixTableName = $searchTable ? $searchTable . '.' : '';
 
@@ -68,5 +70,15 @@ class QueryBuilderApi
         }
 
         return $where;
+    }
+
+    public static function getConnection(string $table): Connection
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($table);
+    }
+
+    public static function getQueryBuilder(string $table): QueryBuilder
+    {
+        return static::getConnection($table)->createQueryBuilder();
     }
 }
