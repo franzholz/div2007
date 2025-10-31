@@ -370,7 +370,6 @@ class TableUtility
         if (
             $tablename != '' &&
             $fieldname != '' &&
-            isset($GLOBALS['TCA'][$tablename]['columns'][$fieldname]) &&
             isset($GLOBALS['TCA'][$tablename]['columns'][$fieldname]['config'])
         ) {
             $tableConf = $GLOBALS['TCA'][$tablename]['columns'][$fieldname]['config'];
