@@ -14,16 +14,36 @@ namespace JambageCom\Div2007\Database;
  *
  * The TYPO3 project - inspiring people to share!
  */
+
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Core\Domain\Access\RecordAccessVoter;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-
 
 
 class QueryBuilderApi
 {
+    public static $comparator2FunctionArray = [
+        '='    => 'eq',
+        '<>'   => 'neq',
+        '<='   => 'lte',
+        '<'    => 'lt',
+        '>='   => 'gte',
+        '>'    => 'gt',
+        'IN'   => 'iIn',
+        'LIKE' => 'like',
+        'NOT LIKE' => 'notLike',
+        'NOT IN' => 'notIn',
+    ];
+
+    public static function convertComparator2Function($comparator)
+    {
+        return static::$comparator2FunctionArray[$comparator] ?? '';
+    }
+
     /**
      * Generates a search where clause based on the input search words (AND operation - all search words must be found in record.)
      * Example: The $sw is "content management, system" (from an input form) and the $searchFieldList is "bodytext,header" then the output will be ' AND (bodytext LIKE "%content%" OR header LIKE "%content%") AND (bodytext LIKE "%management%" OR header LIKE "%management%") AND (bodytext LIKE "%system%" OR header LIKE "%system%")'.
@@ -70,6 +90,34 @@ class QueryBuilderApi
         }
 
         return $where;
+    }
+
+    public static function accessGranted(
+        Context $context,
+        string $table,
+        array $record,
+        array $feUserRecord,
+        bool $selfEdit = false
+    ): bool
+    {
+        if (empty($feUserRecord)) {
+            return false;
+        }
+
+        // If $selfEdit is set, fe_users may always edit themselves...
+        if (
+            $selfEdit &&
+            $table == 'fe_users' &&
+            (int) $feUserRecord['uid'] == (int) $record['uid']
+        ) {
+            $result = true;
+        } else {
+            $result =
+                GeneralUtility::makeInstance(RecordAccessVoter::class)
+                    ->groupAccessGranted($table, $record, $context);
+        }
+
+        return $result;
     }
 
     public static function getConnection(string $table): Connection
