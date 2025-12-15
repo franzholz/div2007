@@ -1,4 +1,9 @@
 
+2025-11-20 Franz Holzinger <franz@ttproducts.de>
+    * new class ArrayUtility: method arrayDifference from https://gist.github.com/cjthompson
+
+2025-11-19 Franz Holzinger <franz@ttproducts.de>
+    * Breaking no. 75711: ignore TCA fields fe_cruser_id, fe_crgroup_id, fe_admin_lock
 
 2025-10-31 Franz Holzinger <franz@ttproducts.de>
     * enhance QueryBuilderApi: methods getConnection and getQueryBuilder

@@ -61,9 +61,7 @@ class QueryBuilderApi
         }
 
         $queryBuilder = static::getQueryBuilderForTable($searchTable);
-
         $prefixTableName = $searchTable ? $searchTable . '.' : '';
-
         $where = $queryBuilder->expr()->andX();
         $searchFields = explode(',', $searchFieldList);
         $searchWords = preg_split('/[ ,]/', $searchWords);
