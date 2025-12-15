@@ -60,7 +60,7 @@ class CoreQuery
         if ($GLOBALS['TCA'][$table]['ctrl']['delete']) {
             $updateFields = [];
             $updateFields[$GLOBALS['TCA'][$table]['ctrl']['delete']] = 1;
-            if ($GLOBALS['TCA'][$table]['ctrl']['tstamp']) {
+            if (isset($GLOBALS['TCA'][$table]['ctrl']['tstamp'])) {
                 $updateFields[$GLOBALS['TCA'][$table]['ctrl']['tstamp']] = $GLOBALS['EXEC_TIME'];
             }
             if ($doExec) {
@@ -76,7 +76,7 @@ class CoreQuery
     }
 
     /**
-     * Returns an UPDATE sql query.
+     * Returns an UPDATE sql query or executes it.
      * If a "tstamp" field is configured for the $table tablename in $GLOBALS['TCA'] then that field is automatically updated to the current time.
      * Notice: It is YOUR responsibility to make sure the data being updated is valid according the tablefield types etc. Also no logging is performed of the update. It's just a nice general usage API function for creating a quick query.
      * NOTICE: From TYPO3 3.6.0 this function ALWAYS adds slashes to values inserted in the query.
@@ -104,7 +104,7 @@ class CoreQuery
                     $updateFields[$f] = $v;
                 }
             }
-            if ($GLOBALS['TCA'][$table]['ctrl']['tstamp']) {
+            if (isset($GLOBALS['TCA'][$table]['ctrl']['tstamp'])) {
                 $updateFields[$GLOBALS['TCA'][$table]['ctrl']['tstamp']] = $GLOBALS['EXEC_TIME'];
             }
             if (!empty($updateFields)) {
@@ -121,7 +121,7 @@ class CoreQuery
 
     /**
      * Returns an INSERT sql query which automatically added "system-fields" according to $GLOBALS['TCA']
-     * Automatically fields for "tstamp", "crdate", "cruser_id", "fe_cruser_id" and "fe_crgroup_id" is updated if they are configured in the "ctrl" part of $GLOBALS['TCA'].
+     * Automatically fields for "tstamp", "crdate" and "cruser_id" is updated if they are configured in the "ctrl" part of $GLOBALS['TCA'].
      * The "pid" field is overridden by the input $pid value if >= 0 (zero). "uid" can never be set as a field
      * NOTICE: From TYPO3 3.6.0 this function ALWAYS adds slashes to values inserted in the query.
      *
@@ -151,17 +151,6 @@ class CoreQuery
         if (isset($GLOBALS['TCA'][$table]['ctrl']['cruser_id'])) {
             $field = $GLOBALS['TCA'][$table]['ctrl']['cruser_id'];
             $dataArray[$field] = 0;
-            $extraList .= ',' . $field;
-        }
-        if (isset($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'])) {
-            $field = $GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'];
-            $dataArray[$field] = (int)static::getTypoScriptFrontendController()->fe_user->user['uid'];
-            $extraList .= ',' . $field;
-        }
-        if (isset($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'])) {
-            $field = $GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'];
-            [$dataArray[$field]] = explode(',', static::getTypoScriptFrontendController()->fe_user->user['usergroup']);
-            $dataArray[$field] = (int)$dataArray[$field];
             $extraList .= ',' . $field;
         }
         // Uid can never be set
@@ -218,6 +207,11 @@ class CoreQuery
         } else {
             $groupList = $feUserRow['usergroup'];
         }
+
+        if (!empty($groupList)) {
+            $result = true;
+        }
+
         // Points to the field that allows further editing from frontend if not set. If set the record is locked.
 
         // If $feEditSelf is set, fe_users may always edit themselves...
@@ -258,19 +252,7 @@ class CoreQuery
             $groupList = $feUserRow['usergroup'];
         }
         $OR_arr = [];
-        // Points to the field (int) that holds the fe_users-id of the creator fe_user
-        if (isset($GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'])) {
-            $OR_arr[] = $GLOBALS['TCA'][$table]['ctrl']['fe_cruser_id'] . '=' . $feUserRow['uid'];
-        }
         // Points to the field (int) that holds the fe_group-id of the creator fe_user's first group
-        if (isset($GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'])) {
-            $values = GeneralUtility::intExplode(',', $groupList);
-            foreach ($values as $theGroupUid) {
-                if ($theGroupUid) {
-                    $OR_arr[] = $GLOBALS['TCA'][$table]['ctrl']['fe_crgroup_id'] . '=' . $theGroupUid;
-                }
-            }
-        }
         // If $feEditSelf is set, fe_users may always edit them selves...
         if ($feEditSelf && $table === 'fe_users') {
             $OR_arr[] = 'uid=' . (int)$feUserRow['uid'];
@@ -278,9 +260,6 @@ class CoreQuery
         $whereDef = ' AND 1=0';
         if (!empty($OR_arr)) {
             $whereDef = ' AND (' . implode(' OR ', $OR_arr) . ')';
-            if ($GLOBALS['TCA'][$table]['ctrl']['fe_admin_lock']) {
-                $whereDef .= ' AND ' . $GLOBALS['TCA'][$table]['ctrl']['fe_admin_lock'] . '=0';
-            }
         }
 
         return $whereDef;

@@ -1,4 +1,13 @@
 
+2025-11-20 Franz Holzinger <franz@ttproducts.de>
+    * new class ArrayUtility: method arrayDifference from https://gist.github.com/cjthompson
+
+2025-11-19 Franz Holzinger <franz@ttproducts.de>
+    * Breaking no. 75711: ignore TCA fields fe_cruser_id, fe_crgroup_id, fe_admin_lock
+
+2025-10-31 Franz Holzinger <franz@ttproducts.de>
+    * enhance QueryBuilderApi: methods getConnection and getQueryBuilder
+
 2025-08-27 Franz Holzinger <franz@ttproducts.de>
     * TYPO3 13 breaking no. 102875: replace \PDO::PARAM_ by Connection::PARAM_*
 
@@ -16,6 +25,9 @@
     * BrowserUtility: remove methods autoCache and support for cache
     * add method: FrontendUtility::getPageIdCompatible to get the page id in TYPO3 12 and 13
 
+2025-07-04 Franz Holzinger <franz@ttproducts.de>
+    * Add TYPO3 core function sL into TranslationBase
+
 2025-04-09 Franz Holzinger <franz@ttproducts.de>
     * TYPO3 12 Deprecation #97787: use StatusProviderBase for TYPO3 13 and TYPO3 12
 
@@ -31,11 +43,6 @@
 2025-01-27 Franz Holzinger <franz@ttproducts.de>
     * TranslationBase: Use Dependency Injection parameter LanguageServiceFactory for the case where no $LANG global object is available.
     * new method getTypo3LanguageKey
-
-
-
-2025-07-04 Franz Holzinger <franz@ttproducts.de>
-    * Add TYPO3 core function sL into TranslationBase
 
 2025-01-16 Franz Holzinger <franz@ttproducts.de>
     * TYPO3 13: TranslationBase with new parameter $request
