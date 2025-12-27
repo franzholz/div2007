@@ -20,13 +20,12 @@ class ArrayUtility
      * @return array[] array with keys 'insertions' and 'deletions'
     */
     public static function arrayDifference(array $array1, array $array2, array $keysToCompare = null) {
-
         $serialize = function (&$item, $idx, $keysToCompare) {
-            if (is_array($item) && $keysToCompare) {
-                $a = array();
-                foreach ($keysToCompare as $k) {
-                    if (array_key_exists($k, $item)) {
-                        $a[$k] = $item[$k];
+             if (is_array($item) && is_array($keysToCompare)) {
+                $a = [];
+                foreach ($item as $k => $v) {
+                    if (in_array($k, $keysToCompare)) {
+                        $a[$k] = $v;
                     }
                 }
                 $item = $a;
@@ -42,13 +41,12 @@ class ArrayUtility
         array_walk($array2, $serialize, $keysToCompare);
 
         // Items that are in the original array but not the new one
-        $deletions = array_diff($array1, $array2);
-        $insertions = array_diff($array2, $array1);
+        $deletions =  array_diff_assoc($array1, $array2);
+        $insertions = array_diff_assoc($array2, $array1);
 
         array_walk($insertions, $deserialize);
         array_walk($deletions, $deserialize);
 
-        return array('insertions' => $insertions, 'deletions' => $deletions);
+        return ['insertions' => $insertions, 'deletions' => $deletions];
     }
-
 }

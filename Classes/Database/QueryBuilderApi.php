@@ -106,6 +106,8 @@ class QueryBuilderApi
         if (
             $selfEdit &&
             $table == 'fe_users' &&
+            isset($feUserRecord['uid']) &&
+            isset($record['uid']) &&
             (int) $feUserRecord['uid'] == (int) $record['uid']
         ) {
             $result = true;
