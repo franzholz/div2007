@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:div2007/Resources/Private/Language/locallang_tca.xlf" date="2017-11-21T15:45:00Z" product-name="div2007" target-language="sv-SE">
+    <header/>
+    <body>
+      <trans-unit id="tstamp" resname="tstamp">
+        <source>Timestamp</source>
+        <target state="needs-translation">Timestamp</target>
+      </trans-unit>
+      <trans-unit id="crdate" resname="crdate">
+        <source>Creation Date</source>
+        <target state="needs-translation">Creation Date</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
