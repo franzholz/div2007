@@ -1482,8 +1482,7 @@ class FrontendUtility {
             if (
                 version_compare(TYPO3_version, '9.4.0', '>=')
             ) {
-                $sanitizer = GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Resource\FilePathSanitizer::class);
-                $incFile = $sanitizer->sanitize($fName);
+                $incFile = GeneralUtility::getFileAbsFileName($fName);
             } else {
                 $incFile = $GLOBALS['TSFE']->tmpl->getFileName($fName);
             }
