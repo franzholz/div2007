@@ -30,6 +30,7 @@ use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 
 
 
@@ -269,7 +270,7 @@ class FrontendUtility {
     /**
      * This method is needed only for Ajax calls.
      * You can use $GLOBALS['TSFE']->id or $GLOBALS['TSFE']->determineId instead of this method.
-     * 
+     *
      * @return int
      */
     static public function getPageId (...$params)
@@ -285,7 +286,7 @@ class FrontendUtility {
         $request = null;
         $site = null;
         $result = 0;
-        
+
         if (
             isset($params['0']) &&
             $params['0'] instanceof \Psr\Http\Message\ServerRequestInterface
@@ -299,7 +300,7 @@ class FrontendUtility {
         ) {
             $request = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['TYPO3_REQUEST'];
         }
-        
+
         if ($request instanceof \Psr\Http\Message\ServerRequestInterface) {
             $matcher = GeneralUtility::makeInstance(
                 \TYPO3\CMS\Core\Routing\SiteMatcher::class,
@@ -1036,7 +1037,7 @@ class FrontendUtility {
                         $bIsCachable = true;
                     }
 
-                    if (    
+                    if (
                         is_array($this->autoCacheFields[$fN]['list']) &&
                         in_array($inArray[$fN], $pObject->autoCacheFields[$fN]['list'])
                     ){
@@ -1343,7 +1344,7 @@ class FrontendUtility {
 
     static public function translate ($extensionKey, $filename, $key)
     {
-        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key); 
+        $result = $GLOBALS['TSFE']->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
         return $result;
     }
 
@@ -1438,7 +1439,7 @@ class FrontendUtility {
         }
 
         if (
-            $domain != '' && 
+            $domain != '' &&
             !$bSetAbsRefPrefix
         ) {
             $parse = [];
@@ -1463,7 +1464,7 @@ class FrontendUtility {
         $rc = $apostrophe . addcslashes($name, '<>()@;:\\".[]' . chr('\n')) . $apostrophe;
         return $rc;
     }
-    
+
     /**
      * Returns content of a file. If it's an image the content of the file is not returned but rather an image tag is.
      *
@@ -1501,7 +1502,7 @@ class FrontendUtility {
                 $xhtmlFix = \JambageCom\Div2007\Utility\HtmlUtility::generateXhtmlFix();
                 $imgFile = $incFile;
                 $imgInfo = @getimagesize($imgFile);
-                $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . $imgFile) . '" width="' . (int) $imgInfo[0] . '" height="' . (int) $imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
+                $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . PathUtility::stripPathSitePrefix($imgFile)) . '" width="' . (int) $imgInfo[0] . '" height="' . (int) $imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
             } else if (filesize($incFile) < 1024 * 1024) {
                 $result = file_get_contents($incFile);
             }
