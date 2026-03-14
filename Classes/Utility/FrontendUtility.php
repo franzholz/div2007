@@ -24,21 +24,24 @@ namespace JambageCom\Div2007\Utility;
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-use JambageCom\Div2007\Api\FrontendApi;
-use JambageCom\Div2007\Api\OldFrontendApi;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use JambageCom\Div2007\Base\BrowserBase;
-use JambageCom\Div2007\Base\TranslationBase;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
-use JambageCom\Div2007\Api\Frontend;
 use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
+
+use JambageCom\Div2007\Api\FrontendApi;
+use JambageCom\Div2007\Api\OldFrontendApi;
+use JambageCom\Div2007\Base\BrowserBase;
+use JambageCom\Div2007\Base\TranslationBase;
+use JambageCom\Div2007\Api\Frontend;
+
 
 /**
  * front end functions.
@@ -1327,7 +1330,7 @@ class FrontendUtility
                 $xhtmlFix = HtmlUtility::generateXhtmlFix();
                 $imgFile = $incFile;
                 $imgInfo = @getimagesize($imgFile);
-                $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . $imgFile) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
+                $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . PathUtility::stripPathSitePrefix($imgFile)) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
             } elseif (filesize($incFile) < 1024 * 1024) {
                 $result = file_get_contents($incFile);
             }
