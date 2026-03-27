@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="EXT:div2007/Resources/Private/Language/locallang_common.xlf" date="2023-01-31T16:25:18Z" product-name="div2007" target-language="vi">
+    <header/>
+    <body>
+      <trans-unit id="about" resname="about">
+        <source>About</source>
+        <target state="needs-translation">About</target>
+      </trans-unit>
+      <trans-unit id="and" resname="and">
+        <source>and</source>
+        <target state="needs-translation">and</target>
+      </trans-unit>
+      <trans-unit id="ascending" resname="ascending">
+        <source>Ascending</source>
+        <target state="needs-translation">Ascending</target>
+      </trans-unit>
+      <trans-unit id="back" resname="back">
+        <source>Back</source>
+        <target state="needs-translation">Back</target>
+      </trans-unit>
+      <trans-unit id="byteSizeUnits" resname="byteSizeUnits">
+        <source> B| KB| MB| GB</source>
+        <target state="needs-translation"> B| KB| MB| GB</target>
+      </trans-unit>
+      <trans-unit id="cancel" resname="cancel">
+        <source>Cancel</source>
+        <target state="needs-translation">Cancel</target>
+      </trans-unit>
+      <trans-unit id="category" resname="category">
+        <source>Category</source>
+        <target state="needs-translation">Category</target>
+      </trans-unit>
+      <trans-unit id="close" resname="close">
+        <source>Close</source>
+        <target state="needs-translation">Close</target>
+      </trans-unit>
+      <trans-unit id="delete" resname="delete">
+        <source>Delete</source>
+        <target state="needs-translation">Delete</target>
+      </trans-unit>
+      <trans-unit id="descending" resname="descending">
+        <source>Descending</source>
+        <target state="needs-translation">Descending</target>
+      </trans-unit>
+      <trans-unit id="details" resname="details">
+        <source>Details</source>
+        <target state="needs-translation">Details</target>
+      </trans-unit>
+      <trans-unit id="disable" resname="disable">
+        <source>Disable</source>
+        <target state="needs-translation">Disable</target>
+      </trans-unit>
+      <trans-unit id="down" resname="down">
+        <source>Down</source>
+        <target state="needs-translation">Down</target>
+      </trans-unit>
+      <trans-unit id="download" resname="download">
+        <source>Download</source>
+        <target state="needs-translation">Download</target>
+      </trans-unit>
+      <trans-unit id="edit" resname="edit">
+        <source>Edit</source>
+        <target state="needs-translation">Edit</target>
+      </trans-unit>
+      <trans-unit id="editField" resname="editField">
+        <source>Edit field</source>
+        <target state="needs-translation">Edit field</target>
+      </trans-unit>
+      <trans-unit id="editFile" resname="editFile">
+        <source>Edit file</source>
+        <target state="needs-translation">Edit file</target>
+      </trans-unit>
+      <trans-unit id="enable" resname="enable">
+        <source>Enable</source>
+        <target state="needs-translation">Enable</target>
+      </trans-unit>
+      <trans-unit id="file" resname="file">
+        <source>File</source>
+        <target state="needs-translation">File</target>
+      </trans-unit>
+      <trans-unit id="files" resname="files">
+        <source>Files</source>
+        <target state="needs-translation">Files</target>
+      </trans-unit>
+      <trans-unit id="first" resname="first">
+        <source>First</source>
+        <target state="needs-translation">First</target>
+      </trans-unit>
+      <trans-unit id="go" resname="go">
+        <source>Go</source>
+        <target state="needs-translation">Go</target>
+      </trans-unit>
+      <trans-unit id="goTo" resname="goTo">
+        <source>Go to</source>
+        <target state="needs-translation">Go to</target>
+      </trans-unit>
+      <trans-unit id="help" resname="help">
+        <source>Help</source>
+        <target state="needs-translation">Help</target>
+      </trans-unit>
+      <trans-unit id="item" resname="item">
+        <source>Item</source>
+        <target state="needs-translation">Item</target>
+      </trans-unit>
+      <trans-unit id="items" resname="items">
+        <source>Items</source>
+        <target state="needs-translation">Items</target>
+      </trans-unit>
+      <trans-unit id="last" resname="last">
+        <source>Last</source>
+        <target state="needs-translation">Last</target>
+      </trans-unit>
+      <trans-unit id="left" resname="left">
+        <source>Left</source>
+        <target state="needs-translation">Left</target>
+      </trans-unit>
+      <trans-unit id="login" resname="login">
+        <source>Login</source>
+        <target state="needs-translation">Login</target>
+      </trans-unit>
+      <trans-unit id="logout" resname="logout">
+        <source>Logout</source>
+        <target state="needs-translation">Logout</target>
+      </trans-unit>
+      <trans-unit id="more" resname="more">
+        <source>More</source>
+        <target state="needs-translation">More</target>
+      </trans-unit>
+      <trans-unit id="move" resname="move">
+        <source>Move</source>
+        <target state="needs-translation">Move</target>
+      </trans-unit>
+      <trans-unit id="new" resname="new">
+        <source>New</source>
+        <target state="needs-translation">New</target>
+      </trans-unit>
+      <trans-unit id="next" resname="next">
+        <source>Next</source>
+        <target state="needs-translation">Next</target>
+      </trans-unit>
+      <trans-unit id="no" resname="no">
+        <source>No</source>
+        <target state="needs-translation">No</target>
+      </trans-unit>
+      <trans-unit id="ok" resname="ok">
+        <source>OK</source>
+        <target state="needs-translation">OK</target>
+      </trans-unit>
+      <trans-unit id="open" resname="open">
+        <source>Open</source>
+        <target state="needs-translation">Open</target>
+      </trans-unit>
+      <trans-unit id="page" resname="page">
+        <source>Page</source>
+        <target state="needs-translation">Page</target>
+      </trans-unit>
+      <trans-unit id="pages" resname="pages">
+        <source>Pages</source>
+        <target state="needs-translation">Pages</target>
+      </trans-unit>
+      <trans-unit id="previous" resname="previous">
+        <source>Previous</source>
+        <target state="needs-translation">Previous</target>
+      </trans-unit>
+      <trans-unit id="print" resname="print">
+        <source>Print</source>
+        <target state="needs-translation">Print</target>
+      </trans-unit>
+      <trans-unit id="reload" resname="reload">
+        <source>Reload</source>
+        <target state="needs-translation">Reload</target>
+      </trans-unit>
+      <trans-unit id="right" resname="right">
+        <source>Right</source>
+        <target state="needs-translation">Right</target>
+      </trans-unit>
+      <trans-unit id="save" resname="save">
+        <source>Save</source>
+        <target state="needs-translation">Save</target>
+      </trans-unit>
+      <trans-unit id="saveAndClose" resname="saveAndClose">
+        <source>Save and close</source>
+        <target state="needs-translation">Save and close</target>
+      </trans-unit>
+      <trans-unit id="saveAndCloseDoc" resname="saveAndCloseDoc">
+        <source>Save and close document</source>
+        <target state="needs-translation">Save and close document</target>
+      </trans-unit>
+      <trans-unit id="saveAndCreateNewDoc" resname="saveAndCreateNewDoc">
+        <source>Save and create new document</source>
+        <target state="needs-translation">Save and create new document</target>
+      </trans-unit>
+      <trans-unit id="saveAndViewPage" resname="saveAndViewPage">
+        <source>Save and view page</source>
+        <target state="needs-translation">Save and view page</target>
+      </trans-unit>
+      <trans-unit id="search" resname="search">
+        <source>Search</source>
+        <target state="needs-translation">Search</target>
+      </trans-unit>
+      <trans-unit id="send" resname="send">
+        <source>Send</source>
+        <target state="needs-translation">Send</target>
+      </trans-unit>
+      <trans-unit id="start" resname="start">
+        <source>Start</source>
+        <target state="needs-translation">Start</target>
+      </trans-unit>
+      <trans-unit id="stop" resname="stop">
+        <source>Stop</source>
+        <target state="needs-translation">Stop</target>
+      </trans-unit>
+      <trans-unit id="submit" resname="submit">
+        <source>Submit</source>
+        <target state="needs-translation">Submit</target>
+      </trans-unit>
+      <trans-unit id="tsRef" resname="tsRef">
+        <source>TSref reference</source>
+        <target state="needs-translation">TSref reference</target>
+      </trans-unit>
+      <trans-unit id="up" resname="up">
+        <source>Up</source>
+        <target state="needs-translation">Up</target>
+      </trans-unit>
+      <trans-unit id="upload" resname="upload">
+        <source>Upload</source>
+        <target state="needs-translation">Upload</target>
+      </trans-unit>
+      <trans-unit id="user" resname="user">
+        <source>User</source>
+        <target state="needs-translation">User</target>
+      </trans-unit>
+      <trans-unit id="users" resname="users">
+        <source>Users</source>
+        <target state="needs-translation">Users</target>
+      </trans-unit>
+      <trans-unit id="view" resname="view">
+        <source>View</source>
+        <target state="needs-translation">View</target>
+      </trans-unit>
+      <trans-unit id="yes" resname="yes">
+        <source>Yes</source>
+        <target state="needs-translation">Yes</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
