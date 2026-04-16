@@ -933,6 +933,7 @@ class FrontendUtility
                     $overruledCtrlVars,
                     $overruleCtrlVars
                 );
+            $overruledCtrlVars = array_filter($overruledCtrlVars);
         }
 
         $result =
@@ -1098,7 +1099,6 @@ class FrontendUtility
             }
         } else {
             $out = 'error in call of \JambageCom\Div2007\Utility\FrontendUtility::getTypoLink_URL: parameter $cObj is not an object';
-            debug($out, '$out'); // keep this
         }
 
         return $result;

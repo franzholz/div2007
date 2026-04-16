@@ -1,3 +1,5 @@
+2026-04-15 Franz Holzinger <franz@ttproducts.de>
+    * improve page browser: No parameter 0 in links to avoid duplicate content warnings in SEO.
 
 2025-12-27 Franz Holzinger <franz@ttproducts.de>
     * fixes for arrayDifference
