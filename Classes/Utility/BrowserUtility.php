@@ -502,6 +502,7 @@ class BrowserUtility
                     $overruledCtrlVars,
                     $overruleCtrlVars
                 );
+            $overruledCtrlVars = array_filter($overruledCtrlVars);
         }
 
         $result =
@@ -515,6 +516,7 @@ class BrowserUtility
                 $cache,  // unused
                 $altPageId
             );
+
         return $result;
     }
 
