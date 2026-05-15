@@ -42,7 +42,11 @@
   },
   "extra": {
     "typo3/cms": {
-      "extension-key": "div2007"
+      "extension-key": "div2007",
+      "version": "2.4.0",
+      "Package": {
+          "providesPackages": {}
+      }
     }
   },
   "config": {
