@@ -32,17 +32,11 @@ use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\TypoScript\TemplateService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 use JambageCom\Div2007\Api\FrontendApi;
 
 class Frontend implements SingletonInterface
 {
-    /**
-     * @var TypoScriptFrontendController
-     */
-    protected $typoScriptFrontendController;
-
     /**
      * An "fe_user" object instance. Required for session access.
      *
@@ -53,14 +47,8 @@ class Frontend implements SingletonInterface
     /**
      * Constructor for session handling class.
      */
-    public function __construct(?TypoScriptFrontendController $typoScriptFrontendController = null)
+    public function __construct()
     {
-        if (!empty($typoScriptFrontendController)) {
-            $this->typoScriptFrontendController = $typoScriptFrontendController;
-        } elseif (isset($GLOBALS['TSFE'])) {
-            $this->typoScriptFrontendController = $GLOBALS['TSFE'];
-        }
-
         $request = FrontendApi::getGlobalRequestObject();
         $this->frontendUser = $request->getAttribute('frontend.user');
     }
@@ -117,42 +105,5 @@ class Frontend implements SingletonInterface
                 $this->frontendUser->setKey('ses', 'recs', $recs_array);
             }
         }
-    }
-
-    /**
-     * @return TypoScriptFrontendController
-     */
-    public function getTypoScriptFrontendController()
-    {
-        if ($this->typoScriptFrontendController instanceof TypoScriptFrontendController) {
-            return $this->typoScriptFrontendController;
-        }
-
-        $id = (int) FrontendApi::getParameterMerged('id');
-        $type = (int) FrontendApi::getParameterMerged('type');
-
-        // This usually happens when typolink is created by the TYPO3 Backend, where no TSFE object
-        // is there. This functionality is currently completely internal, as these links cannot be
-        // created properly from the Backend.
-        // However, this is added to avoid any exceptions when trying to create a link
-        $this->typoScriptFrontendController = GeneralUtility::makeInstance(
-            TypoScriptFrontendController::class,
-            null,
-            $id,
-            $type
-        );
-        $this->typoScriptFrontendController->sys_page = GeneralUtility::makeInstance(PageRepository::class);
-        $this->typoScriptFrontendController->tmpl = GeneralUtility::makeInstance(TemplateService::class);
-
-        return $this->typoScriptFrontendController;
-    }
-
-    public function getLanguageId()
-    {
-        $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
-        // (previously known as TSFE->sys_language_uid)
-        $result = $languageAspect->getId();
-
-        return $result;
     }
 }

@@ -16,6 +16,9 @@
 namespace JambageCom\Div2007\Compatibility;
 
 use Doctrine\DBAL\Result;
+
+use Psr\Http\Message\ServerRequestInterface;
+
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
@@ -33,7 +36,6 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * Old school base class of frontend plugins.
@@ -206,30 +208,18 @@ class AbstractPlugin
      */
     public $pi_tmpPageId = 0;
 
-    /**
-     * Property for accessing TypoScriptFrontendController centrally
-     *
-     * @var TypoScriptFrontendController
-     */
-    protected $frontendController;
-
-    /**
-     * @var MarkerBasedTemplateService
-     */
-    protected $templateService;
 
     /**
      * Class Constructor (true constructor)
      * Initializes $this->piVars if $this->prefixId is set to any value
      * Will also set $this->LLkey based on the config.language setting.
      *
-     * @param null $_ unused,
      */
-    public function __construct($_ = null, ?TypoScriptFrontendController $frontendController = null)
-    {
-        $request = $GLOBALS['TYPO3_REQUEST'];
-        $this->frontendController = $frontendController ?: $GLOBALS['TSFE'];
-        $this->templateService = GeneralUtility::makeInstance(MarkerBasedTemplateService::class);
+
+    public function __construct(
+        private readonly ServerRequestInterface $request,
+        private readonly MarkerBasedTemplateService $templateService,
+    ) {
         // Setting piVars:
         if ($this->prefixId) {
             $this->piVars = self::getRequestPostOverGetParameterWithPrefix($this->prefixId);
@@ -252,13 +242,24 @@ class AbstractPlugin
         }
     }
 
-    /**
-     * This setter is called when the plugin is called from UserContentObject (USER)
-     * via ContentObjectRenderer->callUserFunction().
-     */
     public function setContentObjectRenderer(ContentObjectRenderer $cObj): void
     {
         $this->cObj = $cObj;
+        // Provide the ContentObjectRenderer to the request as well, for code
+        // that only passes the request to more underlying layers, like Extbase does.
+        // Also makes sure the request in a Fluid RenderingContext also has the current
+        // content object available.
+        $this->request = $this->request->withAttribute('currentContentObject', $cObj);
+    }
+
+    public function getContentObjectRenderer(): ContentObjectRenderer
+    {
+        return $this->cObj;
+    }
+
+    protected function getPageRepository(): PageRepository
+    {
+        return GeneralUtility::makeInstance(PageRepository::class);
     }
 
     /**
@@ -522,15 +523,15 @@ class AbstractPlugin
 
         $this->addDefaultFrontendJavaScript();
         return sprintf(
-            '%s<a href="#" %s>%s',
-            $matches[1],
-            GeneralUtility::implodeAttributes([
-                'data-window-url' => $this->frontendController->baseUrlWrap($href, true),
-                                              'data-window-target' => $winName ?: md5($href),
-                                              'data-window-features' => $winParams,
-            ], true),
-            $matches[3]
-        );
+                '%s<a href="#" %s>%s',
+                $matches[1],
+                GeneralUtility::implodeAttributes([
+                    'data-window-url' => $href,
+                    'data-window-target' => $winName ?: md5($href),
+                    'data-window-features' => $winParams,
+                ], true),
+                $matches[3]
+            );
     }
 
     /***************************
@@ -875,7 +876,8 @@ class AbstractPlugin
         ' . $str . '
         </div>
         ';
-        if (!($this->frontendController->config['config']['disablePrefixComment'] ?? false)) {
+
+        if (!($this->request->getAttribute('frontend.typoscript')->getConfigArray()['disablePrefixComment'] ?? false)) {
             $content = '
 
 
@@ -1119,17 +1121,18 @@ class AbstractPlugin
     }
 
     /**
-     * Returns the row $uid from $table
-     * (Simply calling $this->frontendEngine->sys_page->checkRecord())
+     * Checks if a record exists and is accessible.
+     * The row is returned if everything's OK.
      *
-     * @param string $table The table name
-     * @param int $uid The uid of the record from the table
-     * @param bool $checkPage If $checkPage is set, it's required that the page on which the record resides is accessible
-     * @return array If record is found, an array. Otherwise FALSE.
+     * @param string $table The table name to search
+     * @param int $uid The uid to look up in $table
+     * @param bool $checkPage If set, it's also required that the page on which the record resides is accessible
+     * @return array|null Returns array (the record) if OK, otherwise null
      */
-    public function pi_getRecord($table, $uid, $checkPage = false)
+    public function pi_getRecord(string $table, int $uid, bool $checkPage = false)): ?array
     {
-        return $this->frontendController->sys_page->checkRecord($table, $uid, $checkPage);
+        $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
+        return $pageRepository->checkRecord($table, $uid, $checkPage);
     }
 
     /**
@@ -1139,10 +1142,13 @@ class AbstractPlugin
      * @param int $recursive An integer >=0 telling how deep to dig for pids under each entry in $pid_list
      * @return string List of PID values (comma separated)
      */
-    public function pi_getPidList($pid_list, $recursive = 0)
+    public function pi_getPidList(string $pid_list, int $recursive = 0)
     {
-        if (!strcmp($pid_list, '')) {
-            $pid_list = (string)$this->frontendController->id;
+        if (!strcmp($recursive, '')) {
+            $request = $GLOBALS['TYPO3_REQUEST'];
+            /** @var \TYPO3\CMS\Frontend\Page\PageInformation $pageInformation */
+            $pageInformation = $request->getAttribute('frontend.page.information');
+            $pid_list = (string) $pageInformation->getId();
         }
         $recursive = MathUtility::forceIntegerInRange($recursive, 0);
         $pid_list_arr = array_unique(GeneralUtility::intExplode(',', $pid_list, true));

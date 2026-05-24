@@ -1,6 +1,9 @@
-2026-05-10 Franz Holzinger <franz@ttproducts.de>
+
+
+2026-05-24 Franz Holzinger <franz@ttproducts.de>
     * support TYPO3 14
     * fix pluginDrawItem for TYPO3 14
+    * remove usages of typoScriptFrontendController
 
 2026-04-15 Franz Holzinger <franz@ttproducts.de>
     * improve page browser: No parameter 0 in links to avoid duplicate content warnings in SEO.
