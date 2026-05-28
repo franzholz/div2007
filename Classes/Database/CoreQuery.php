@@ -16,27 +16,10 @@ namespace JambageCom\Div2007\Database;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+
 
 class CoreQuery
 {
-    /**
-     * @var TypoScriptFrontendController
-     */
-    protected static $typoScriptFrontendController;
-
-    public function __construct(?TypoScriptFrontendController $typoScriptFrontendController = null)
-    {
-        if (is_object($typoScriptFrontendController)) {
-            static::setTypoScriptFrontendController($typoScriptFrontendController);
-        }
-    }
-
-    public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController): void
-    {
-        static::$typoScriptFrontendController = $typoScriptFrontendController;
-    }
-
     // Database functions, making of queries
     /**
      * Returns an UPDATE/DELETE sql query which will "delete" the record.
@@ -273,13 +256,5 @@ class CoreQuery
     protected static function getDatabaseConnection()
     {
         return $GLOBALS['TYPO3_DB'];
-    }
-
-    /**
-     * @return TypoScriptFrontendController
-     */
-    protected static function getTypoScriptFrontendController()
-    {
-        return static::$typoScriptFrontendController ?: $GLOBALS['TSFE'];
     }
 }

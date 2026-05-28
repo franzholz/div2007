@@ -1129,7 +1129,7 @@ class AbstractPlugin
      * @param bool $checkPage If set, it's also required that the page on which the record resides is accessible
      * @return array|null Returns array (the record) if OK, otherwise null
      */
-    public function pi_getRecord(string $table, int $uid, bool $checkPage = false)): ?array
+    public function pi_getRecord(string $table, int $uid, bool $checkPage = false): ?array
     {
         $pageRepository = GeneralUtility::makeInstance(PageRepository::class);
         return $pageRepository->checkRecord($table, $uid, $checkPage);

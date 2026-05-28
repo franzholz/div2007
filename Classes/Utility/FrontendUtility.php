@@ -1358,7 +1358,7 @@ class FrontendUtility
             $id = abs($id);
         }
         if ($begin === 0) {
-            $theList = (string)$id;
+            $theList = (string) $id;
         } else {
             $theList = '';
         }
@@ -1381,7 +1381,7 @@ class FrontendUtility
                     $theList .= ',' . $row['uid'];
                 }
                 if ($depth > 1) {
-                    $theSubList = $this->getTreeList($row['uid'], $depth - 1, $begin - 1, $permsClause);
+                    $theSubList = static::getTreeList($row['uid'], $depth - 1, $begin - 1, $permsClause);
                     if (!empty($theList) && !empty($theSubList) && ($theSubList[0] !== ',')) {
                         $theList .= ',';
                     }
