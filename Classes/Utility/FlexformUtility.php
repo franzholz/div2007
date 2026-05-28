@@ -152,6 +152,7 @@ class FlexformUtility
             $_flexForm = static::$flexForm;
             $index = 0;
         }
+
         $number = func_num_args();
         $fieldName = func_get_arg($index);
         ($number > $index + 1) ? $sheet = func_get_arg($index + 1) : $sheet = 'sDEF';
@@ -160,10 +161,15 @@ class FlexformUtility
 
         $sheetArray = '';
         if (
-            is_array($_flexForm) &&
-            !empty($_flexForm['data'][$sheet][$lang])
+            is_array($_flexForm)
         ) {
-            $sheetArray = $_flexForm['data'][$sheet][$lang];
+            if (!empty($_flexForm['data'][$sheet][$lang])) {
+                $sheetArray = $_flexForm['data'][$sheet][$lang];
+            }
+        } else if ($_flexForm instanceof \TYPO3\CMS\Core\Domain\FlexFormFieldValues) {
+            $flexPart = $_flexForm->toArray();
+            $sheetArray = $flexPart[$sheet];
+            $value = '';
         }
         $result = '';
         if (is_array($sheetArray)) {
@@ -194,6 +200,7 @@ class FlexformUtility
     ) {
         $result = '';
         $tempArr = $sheetArray;
+
         foreach ($fieldNameArr as $k => $v) {
             if (
                 MathUtility::canBeInterpretedAsInteger($v)
@@ -217,10 +224,16 @@ class FlexformUtility
         }
 
         if (
-            is_array($tempArr) &&
-            isset($tempArr[$value])
+            is_array($tempArr)
         ) {
-            $result = $tempArr[$value];
+            if (
+                $value != '' &&
+                isset($tempArr[$value])
+            ) {
+                $result = $tempArr[$value];
+            } else if (!$value) {
+                $result = implode(',', $tempArr);
+            }
         }
 
         return $result;

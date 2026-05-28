@@ -181,12 +181,12 @@ class BrowserUtility
         } else {
             $wrapper['showResultsWrap'] = '<p>|</p>';
             $wrapper['browseBoxWrap'] = '
-            <!--
-                List browsing box:
-            -->
-            <div ' . FrontendUtility::classParam('browsebox', '', $prefixId) . '>
-                |
-            </div>';
+                <!--
+                    List browsing box:
+                -->
+                <div ' . FrontendUtility::classParam('browsebox', '', $prefixId) . '>
+                    |
+                </div>';
         }
 
         // now overwrite all entries in $wrapper which are also in $wrapArr
@@ -232,7 +232,7 @@ class BrowserUtility
                                 ),
                                 $linkArray
                             ),
-                            $wrapper['inactiveLinkWrap']
+                            $wrapper['inactiveLinkWrap'] ?? ''
                         );
                 } else {
                     $links[] =
@@ -257,7 +257,7 @@ class BrowserUtility
                         $hscText
                     );
                 if ($pointer > 0) {
-                    $linkArray[$pointerName] = ($pointer - 1 ?: '');
+                    $linkArray[$pointerName] = ($pointer - 1) ?: '';
                     $links[] =
                         $cObj->wrap(
                             static::linkTPKeepCtrlVars(
@@ -359,7 +359,7 @@ class BrowserUtility
                 if ($pointer == $totalPages - 1) { // Link to next page
                     $links[] = $cObj->wrap($nextText, $wrapper['disabledLinkWrap'] ?? '');
                 } else {
-                    $linkArray[$pointerName] = $pointer + 1;
+                    $linkArray[$pointerName] = ($pointer + 1);
                     $links[] =
                         $cObj->wrap(
                             static::linkTPKeepCtrlVars(
@@ -376,7 +376,7 @@ class BrowserUtility
 
             if ($bShowFirstLast) { // Link to last page
                 if ($pointer < $totalPages - 1) {
-                    $linkArray[$pointerName] = $totalPages - 1;
+                    $linkArray[$pointerName] = ($totalPages - 1) ?: '';
                     $links[] =
                         $cObj->wrap(
                             static::linkTPKeepCtrlVars(

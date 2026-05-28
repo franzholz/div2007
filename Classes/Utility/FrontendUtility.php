@@ -29,6 +29,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
@@ -40,6 +42,7 @@ use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Resource\FilePathSanitizer;
+
 
 use JambageCom\Div2007\Api\Frontend;
 use JambageCom\Div2007\Api\FrontendApi;
@@ -60,11 +63,6 @@ use JambageCom\Div2007\Base\TranslationBase;
  */
 class FrontendUtility
 {
-    /**
-     * @var TypoScriptFrontendController
-     */
-    protected static $typoScriptFrontendController;
-
     public static function test(): bool
     {
         return true;
@@ -106,28 +104,17 @@ class FrontendUtility
      */
     public static function getPageIdCompatible(...$params)
     {
-        $id = 0;
-
-        $typo3VersionArray =
-            VersionNumberUtility::convertVersionStringToArray(
-                VersionNumberUtility::getCurrentTypo3Version()
-            );
-        $typo3VersionMain = $typo3VersionArray['version_main'];
-
-        if ($typo3VersionMain >= 13) {
-            if (
-                isset($params[0]) &&
-                $params[0] instanceof ServerRequestInterface
-            ) {
-                $request = $params[0];
-            } else {
-                $request = FrontendApi::getGlobalRequestObject();
-            }
-
-            $id = $request->getAttribute('frontend.page.information')->getId();
+        if (
+            isset($params[0]) &&
+            $params[0] instanceof ServerRequestInterface
+        ) {
+            $request = $params[0];
         } else {
-            $id = $GLOBALS['TSFE']->id;
+            $request = FrontendApi::getGlobalRequestObject();
         }
+
+        $id = $request->getAttribute('frontend.page.information')->getId();
+
 
         return $id;
     }
@@ -146,24 +133,22 @@ class FrontendUtility
     {
         $result = false;
         $context = GeneralUtility::makeInstance(Context::class);
-        $tsfe = static::getTypoScriptFrontendController();
+        $userRecord = $this->request->getAttribute('frontend.user')->user;
 
         if (
-            isset($tsfe->fe_user) &&
-            is_object($tsfe->fe_user) &&
             $context->getPropertyFromAspect('frontend.user', 'isLoggedIn') &&
-            isset($tsfe->fe_user->user) &&
-            is_array($tsfe->fe_user->user) &&
-            isset($tsfe->fe_user->user['username']) &&
-            $tsfe->fe_user->user['username'] != ''
+            isset($userRecord) &&
+            is_array($userRecord) &&
+            isset($userRecord['username']) &&
+            $userRecord['username'] != ''
         ) {
-            $result = $tsfe->fe_user;
+            $result = $userRecord;
 
             if (
                 $field != '' &&
-                isset($tsfe->fe_user->user[$field])
+                isset($userRecord[$field])
             ) {
-                $result = $tsfe->fe_user->user[$field];
+                $result = $userRecord[$field];
             }
         }
 
@@ -229,20 +214,32 @@ class FrontendUtility
 
     public static function addJavascriptFile($filename, $key): void
     {
+        $typoScriptConfigArray =
+            $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
+        $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
         $script =
             '<script type="text/javascript" src="' .
-                $GLOBALS['TSFE']->absRefPrefix .
+                $absRefPrefix .
                 GeneralUtility::createVersionNumberedFilename($filename) .
             '"></script>';
-        $GLOBALS['TSFE']->additionalHeaderData[$key] = $script;
+
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+        $pageRenderer->addHeaderData($script);
     }
 
     public static function addCssFile($filename, $key): void
     {
-        $GLOBALS['TSFE']->additionalHeaderData[$key] =
+        $typoScriptConfigArray =
+            $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
+        $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
+
+        $script =
             '<link rel="stylesheet" href="' .
-            $GLOBALS['TSFE']->absRefPrefix .
+            $absRefPrefix .
             GeneralUtility::createVersionNumberedFilename($filename) . '" type="text/css" />';
+
+        $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
+        $pageRenderer->addHeaderData($script);
     }
 
     public static function determineJavascriptFilename(
@@ -1304,11 +1301,13 @@ class FrontendUtility
                 $extension === 'gif' ||
                 $extension === 'png'
             ) {
-                $tsfe = static::getTypoScriptFrontendController();
                 $xhtmlFix = HtmlUtility::generateXhtmlFix();
                 $imgFile = $incFile;
                 $imgInfo = @getimagesize($imgFile);
-                $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . PathUtility::stripPathSitePrefix($imgFile)) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
+                $typoScriptConfigArray =
+                    $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
+                $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
+                $result = '<img src="' . htmlspecialchars($absRefPrefix . PathUtility::stripPathSitePrefix($imgFile)) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
             } elseif (filesize($incFile) < 1024 * 1024) {
                 $result = file_get_contents($incFile);
             }
@@ -1327,18 +1326,18 @@ class FrontendUtility
      */
     public static function getBorderAttribute($borderAttr)
     {
-        $tsfe = static::getTypoScriptFrontendController();
-
         $docType = GeneralUtility::makeInstance(PageRenderer::class)->getDocType();
+        $typoScriptConfigArray = $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
+
         if (
             $docType !== 'xhtml_strict' &&
             $docType !== 'xhtml_11' &&
             (
-                !isset($tsfe->config['config']['doctype']) ||
-                $tsfe->config['config']['doctype'] !== 'html5'
+                !isset($typoScriptConfigArray['doctype']) ||
+                $typoScriptConfigArray['doctype'] !== 'html5'
             ) &&
             (
-                empty($tsfe->config['config']['disableImgBorderAttr'])
+                empty($typoScriptConfigArray['disableImgBorderAttr'])
             )
         ) {
             return $borderAttr;
@@ -1347,71 +1346,51 @@ class FrontendUtility
         return '';
     }
 
-    /***********************************************
-     *
-     * Database functions, making of queries
-     *
-     ***********************************************/
+
     /**
-     * Generates a list of Page-uid's from $id. List does not include $id itself
-     * (unless the id specified is negative in which case it does!)
-     * The only pages WHICH PREVENTS DECENDING in a branch are
-     * - deleted pages,
-     * - pages in a recycler (doktype = 255) or of the Backend User Section (doktpe = 6) type
-     * - pages that has the extendToSubpages set, WHERE start/endtime, hidden
-     * and fe_users would hide the records.
-     * Apart from that, pages with enable-fields excluding them, will also be
-     * removed. HOWEVER $dontCheckEnableFields set will allow
-     * enableFields-excluded pages to be included anyway - including
-     * extendToSubpages sections!
-     * Mount Pages are also descended but notice that these ID numbers are not
-     * useful for links unless the correct MPvar is set.
+     * Recursively fetch all descendants of a given page
      *
-     * @param int $id The id of the start page from which point in the page tree to descend. IF NEGATIVE the id itself is included in the end of the list (only if $begin is 0) AND the output does NOT contain a last comma. Recommended since it will resolve the input ID for mount pages correctly and also check if the start ID actually exists!
-     * @param int $depth The number of levels to descend. If you want to descend infinitely, just set this to 100 or so. Should be at least "1" since zero will just make the function return (no descend...)
-     * @param int $begin Is an optional integer that determines at which level in the tree to start collecting uid's. Zero means 'start right away', 1 = 'next level and out'
-     * @param bool $dontCheckEnableFields See function description
-     * @param string $addSelectFields Additional fields to select. Syntax: ",[fieldname],[fieldname],...
-     * @param string $moreWhereClauses Additional where clauses. Syntax: " AND [fieldname]=[value] AND ...
-     * @param array $prevId_array array of IDs from previous recursions. In order to prevent infinite loops with mount pages.
-     * @param int $recursionLevel Internal: Zero for the first recursion, incremented for each recursive call.
-     * @return string Returns the list of ids as a comma separated string
+     * @return string comma separated list of descendant pages
      */
-    public static function getTreeList($id, $depth, $begin = 0, $dontCheckEnableFields = false, $addSelectFields = '', $moreWhereClauses = '', array $prevId_array = [], $recursionLevel = 0)
+    public static function getTreeList(int $id, int $depth, int $begin = 0, string $permsClause = ''): string
     {
-        $addCurrentPageId = false;
-        $id = (int)$id;
         if ($id < 0) {
             $id = abs($id);
-            $addCurrentPageId = true;
         }
-        $cObj = static::getContentObjectRenderer();
+        if ($begin === 0) {
+            $theList = (string) $id;
+        } else {
+            $theList = '';
+        }
+        if ($id && $depth > 0) {
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('pages');
+            $queryBuilder->getRestrictions()->removeAll()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+            $queryBuilder->select('uid')
+                ->from('pages')
+                ->where(
+                    $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($id, Connection::PARAM_INT)),
+                    $queryBuilder->expr()->eq('sys_language_uid', 0)
+                )
+                ->orderBy('uid');
+            if ($permsClause !== '') {
+                $queryBuilder->andWhere(QueryHelper::stripLogicalOperatorPrefix($permsClause));
+            }
+            $statement = $queryBuilder->executeQuery();
+            while ($row = $statement->fetchAssociative()) {
+                if ($begin <= 0) {
+                    $theList .= ',' . $row['uid'];
+                }
+                if ($depth > 1) {
+                    $theSubList = static::getTreeList($row['uid'], $depth - 1, $begin - 1, $permsClause);
+                    if (!empty($theList) && !empty($theSubList) && ($theSubList[0] !== ',')) {
+                        $theList .= ',';
+                    }
+                    $theList .= $theSubList;
+                }
+            }
+        }
 
-        $pageRepository = static::getTypoScriptFrontendController()->sys_page;
-        if ($dontCheckEnableFields) {
-            $backupEnableFields = $pageRepository->where_hid_del;
-            $pageRepository->where_hid_del = '';
-        }
-        $result = $pageRepository->getDescendantPageIdsRecursive($id, (int)$depth, (int)$begin, [], (bool)$dontCheckEnableFields);
-        if ($dontCheckEnableFields) {
-            $pageRepository->where_hid_del = $backupEnableFields;
-        }
-        if ($addCurrentPageId) {
-            $result = array_merge([$id], $result);
-        }
-        return implode(',', $result);
+        return $theList;
     }
 
-    public static function setTypoScriptFrontendController(TypoScriptFrontendController $typoScriptFrontendController): void
-    {
-        static::$typoScriptFrontendController = $typoScriptFrontendController;
-    }
-
-    /**
-     * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
-     */
-    protected static function getTypoScriptFrontendController()
-    {
-        return static::$typoScriptFrontendController ?: $GLOBALS['TSFE'];
-    }
 }

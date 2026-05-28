@@ -35,6 +35,8 @@ use TYPO3\CMS\Core\Site\SiteFinder;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Frontend\Controller\ErrorController;
+
 
 class FrontendApi
 {
@@ -45,7 +47,7 @@ class FrontendApi
      *
      * The first parameter can be the request object
      *
-     * @return int
+     * @return int | ErrorController
      */
     public static function getPageId(...$params)
     {

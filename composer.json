@@ -25,9 +25,9 @@
     "GPL-2.0-or-later"
   ],
   "require": {
-    "php": "^8.0",
-    "typo3/cms-core": "^12.4 || ^13.2",
-    "typo3/cms-reports": "^12.4 || ^13.2"
+    "php": "^8.2",
+    "typo3/cms-core": "^13.4 || ^14.3",
+    "typo3/cms-reports": "^13.4 || ^14.3"
   },
   "suggest": {
     "friendsoftypo3/typo3db-legacy": "^1"
@@ -42,7 +42,11 @@
   },
   "extra": {
     "typo3/cms": {
-      "extension-key": "div2007"
+      "extension-key": "div2007",
+      "version": "2.4.0",
+      "Package": {
+          "providesPackages": {}
+      }
     }
   },
   "config": {

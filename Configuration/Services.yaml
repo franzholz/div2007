@@ -6,7 +6,7 @@ services:
 
   JambageCom\Div2007\:
     resource: '../Classes/'
-    exclude: ['../Classes/{Api,Captcha,Compatibility,Constants,Database,Middleware,Security,SessionHandler,Utility}/']
+    exclude: ['../Classes/{Api,Captcha,Constants,Database,Middleware,Security,SessionHandler,Utility}/']
 
   JambageCom\Div2007\Base\TranslationBase:
     public: true

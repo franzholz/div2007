@@ -26,9 +26,10 @@ use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\Entity\SiteInterface;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
+use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
+
 
 
 class TranslationBase
@@ -44,11 +45,6 @@ class TranslationBase
     protected $extensionKey = '';	// extension key must be overridden
     protected $lookupFilename = ''; // filename used for the lookup method
     protected $request = null;
-
-    /**
-     * @var TypoScriptFrontendController|null
-     */
-    protected $typoScriptFrontendController;
 
     /**
      * Should normally be set in the main function with the TypoScript content passed to the method.
@@ -81,13 +77,7 @@ class TranslationBase
 
         $isFrontend = (ApplicationType::fromRequest($request)->isFrontend());
         if ($isFrontend) {
-            $conf = [];
-            $tsfe = $request->getAttribute('frontend.typoscript');
-            if (
-                $tsfe instanceof TypoScriptFrontendController
-            ) {
-                $conf = $tsfe->getSetupArray()['plugin.']['div2007.'] ?? [];
-            }
+            $conf = $this->getTypoScriptSetup($request)['plugin.']['div2007.'] ?? [];
         }
 
         if ($extensionKey != '') {
@@ -124,6 +114,23 @@ class TranslationBase
                 'EXT:' . DIV2007_EXT . DIV2007_LANGUAGE_SUBPATH . 'locallang.xlf'
             );
         }
+    }
+
+
+    /**
+     * Returns full Frontend TypoScript setup array calculated by FE middlewares.
+     */
+    public function getTypoScriptSetup(ServerRequestInterface $request): array
+    {
+        $frontendTypoScript = $request->getAttribute('frontend.typoscript');
+        if (!($frontendTypoScript instanceof FrontendTypoScript)) {
+            throw new \RuntimeException(
+                'Setup array has not been initialized. This happens in cached Frontend scope where full TypoScript' .
+                ' is not needed by the system.',
+                1779811045
+            );
+        }
+        return $frontendTypoScript->getSetupArray();
     }
 
     public function setLocalLang(array $locallang): void
@@ -517,7 +524,6 @@ class TranslationBase
         if ($extensionKey == '') {
             $extensionKey = $this->getExtensionKey();
         }
-        $tsfe = $this->getTypoScriptFrontendController();
         $result = $this->sL('LLL:EXT:' . $extensionKey . $filename . ':' . $key);
 
         return $result;
@@ -570,23 +576,11 @@ class TranslationBase
     }
 
     /**
-     * @return TypoScriptFrontendController|null
-     * @internal for reducing usage of global TSFE objects and to avoid conflicts when different frontend environments are used
-     */
-    public function getTypoScriptFrontendController()
-    {
-        return $this->typoScriptFrontendController ?: $GLOBALS['TSFE'] ?? throw new RuntimeException('No TypoScriptFontendController found in div2007 TranslationBase.', 1710013027);
-    }
-
-    /**
      * Check if we have a site object in the current request. if null, this usually means that
      * this class was called from CLI context.
      */
     protected function getCurrentSite(): ?SiteInterface
     {
-        if ($this->typoScriptFrontendController instanceof TypoScriptFrontendController) {
-            return $this->typoScriptFrontendController->getSite();
-        }
         if (isset($this->request) && $this->request instanceof ServerRequestInterface) {
             return $this->request->getAttribute('site', null);
         }
@@ -602,9 +596,6 @@ class TranslationBase
     {
         if (!isset($request)) {
             $request = $this->request;
-        }
-        if ($this->typoScriptFrontendController instanceof TypoScriptFrontendController) {
-            return $this->typoScriptFrontendController->getLanguage();
         }
         if (isset($request) && $request instanceof ServerRequestInterface) {
             return $request->getAttribute('language', null);
