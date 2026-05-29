@@ -28,6 +28,7 @@ use TYPO3\CMS\Core\Localization\Locales;
 use TYPO3\CMS\Core\Localization\LocalizationFactory;
 use TYPO3\CMS\Core\Page\DefaultJavaScriptAssetTrait;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -36,6 +37,8 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
+
 
 /**
  * Old school base class of frontend plugins.
@@ -50,11 +53,12 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
  * @internal This class is not maintained anymore and may be removed in future versions.
  * @deprecated since TYPO3 v12.4. Will be removed in 2030
  */
-class AbstractPlugin
+class AbstractPlugin implements SingletonInterface
 {
     use DefaultJavaScriptAssetTrait;
 
     protected ?ContentObjectRenderer $cObj = null;
+    private ServerRequestInterface $request;
 
     /**
      * Should be same as classname of the plugin, used for CSS classes, variables
@@ -217,15 +221,16 @@ class AbstractPlugin
      */
 
     public function __construct(
-        private readonly ServerRequestInterface $request,
         private readonly MarkerBasedTemplateService $templateService,
     ) {
+        $this->request = $this->getRequest();
+
         // Setting piVars:
         if ($this->prefixId) {
             $this->piVars = self::getRequestPostOverGetParameterWithPrefix($this->prefixId);
         }
 
-        $language = $request->getAttribute('language') ?? $request->getAttribute('site')->getDefaultLanguage();
+        $language = $this->request->getAttribute('language') ?? $this->request->getAttribute('site')->getDefaultLanguage();
         if ($language->getTypo3Language() !== '') {
             $locale = GeneralUtility::makeInstance(Locales::class)->createLocale($language->getTypo3Language());
         } else {
@@ -240,6 +245,11 @@ class AbstractPlugin
             $alternativeLanguageKeys = array_reverse($alternativeLanguageKeys);
             $this->altLLkey = implode(',', $alternativeLanguageKeys);
         }
+    }
+
+    public function setRequest(ServerRequestInterface $request): void
+    {
+        $this->request = $request;
     }
 
     public function setContentObjectRenderer(ContentObjectRenderer $cObj): void
@@ -1145,9 +1155,8 @@ class AbstractPlugin
     public function pi_getPidList(string $pid_list, int $recursive = 0)
     {
         if (!strcmp($recursive, '')) {
-            $request = $GLOBALS['TYPO3_REQUEST'];
             /** @var \TYPO3\CMS\Frontend\Page\PageInformation $pageInformation */
-            $pageInformation = $request->getAttribute('frontend.page.information');
+            $pageInformation = $this->request->getAttribute('frontend.page.information');
             $pid_list = (string) $pageInformation->getId();
         }
         $recursive = MathUtility::forceIntegerInRange($recursive, 0);
@@ -1384,7 +1393,7 @@ class AbstractPlugin
      */
     private static function getRequestPostOverGetParameterWithPrefix($parameter)
     {
-        $request = $GLOBALS['TYPO3_REQUEST'];
+        $request = static::getRequest();
         $postParameter = $request->getParsedBody()[$parameter] ?? [];
         $postParameter = is_array($postParameter) ? $postParameter : [];
         $getParameter = $request->getQueryParams()[$parameter] ?? [];
@@ -1392,5 +1401,11 @@ class AbstractPlugin
         $mergedParameters = $getParameter;
         ArrayUtility::mergeRecursiveWithOverrule($mergedParameters, $postParameter);
         return $mergedParameters;
+    }
+
+    // use Psr\Http\Message\ServerRequestInterface;
+    private static function getRequest(): ServerRequestInterface
+    {
+        return $GLOBALS['TYPO3_REQUEST'];
     }
 }
