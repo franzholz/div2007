@@ -29,7 +29,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Page\PageRenderer;
@@ -48,7 +50,6 @@ use JambageCom\Div2007\Api\Frontend;
 use JambageCom\Div2007\Api\FrontendApi;
 use JambageCom\Div2007\Base\BrowserBase;
 use JambageCom\Div2007\Base\TranslationBase;
-
 
 
 /**
@@ -133,7 +134,7 @@ class FrontendUtility
     {
         $result = false;
         $context = GeneralUtility::makeInstance(Context::class);
-        $userRecord = $this->request->getAttribute('frontend.user')->user;
+        $userRecord = $GLOBALS['REQUEST']->getAttribute('frontend.user')->user;
 
         if (
             $context->getPropertyFromAspect('frontend.user', 'isLoggedIn') &&
@@ -1034,7 +1035,9 @@ class FrontendUtility
             if (!isset($conf['language'])) {
                 $api =
                     GeneralUtility::makeInstance(Frontend::class);
-                $sys_language_uid = $api->getLanguageId();
+                $context = GeneralUtility::makeInstance(Context::class);
+
+                $sys_language_uid = $context->getPropertyFromAspect('language', 'id');
                 if ($sys_language_uid) {
                     $conf['language'] = $sys_language_uid;
                 }
