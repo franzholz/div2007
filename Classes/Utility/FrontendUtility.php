@@ -134,7 +134,7 @@ class FrontendUtility
     {
         $result = false;
         $context = GeneralUtility::makeInstance(Context::class);
-        $userRecord = $GLOBALS['REQUEST']->getAttribute('frontend.user')->user;
+        $userRecord = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user')->user;
 
         if (
             $context->getPropertyFromAspect('frontend.user', 'isLoggedIn') &&
@@ -216,7 +216,7 @@ class FrontendUtility
     public static function addJavascriptFile($filename, $key): void
     {
         $typoScriptConfigArray =
-            $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
+            $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
         $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
         $script =
             '<script type="text/javascript" src="' .
@@ -231,7 +231,7 @@ class FrontendUtility
     public static function addCssFile($filename, $key): void
     {
         $typoScriptConfigArray =
-            $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
+            $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
         $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
 
         $script =
@@ -1308,7 +1308,7 @@ class FrontendUtility
                 $imgFile = $incFile;
                 $imgInfo = @getimagesize($imgFile);
                 $typoScriptConfigArray =
-                    $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
+                    $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
                 $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
                 $result = '<img src="' . htmlspecialchars($absRefPrefix . PathUtility::stripPathSitePrefix($imgFile)) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
             } elseif (filesize($incFile) < 1024 * 1024) {
@@ -1330,7 +1330,7 @@ class FrontendUtility
     public static function getBorderAttribute($borderAttr)
     {
         $docType = GeneralUtility::makeInstance(PageRenderer::class)->getDocType();
-        $typoScriptConfigArray = $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
+        $typoScriptConfigArray = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
 
         if (
             $docType !== 'xhtml_strict' &&
