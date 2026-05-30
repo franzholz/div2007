@@ -29,7 +29,9 @@ use Psr\Http\Message\ServerRequestInterface;
 
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Page\PageRenderer;
@@ -48,7 +50,6 @@ use JambageCom\Div2007\Api\Frontend;
 use JambageCom\Div2007\Api\FrontendApi;
 use JambageCom\Div2007\Base\BrowserBase;
 use JambageCom\Div2007\Base\TranslationBase;
-
 
 
 /**
@@ -133,7 +134,7 @@ class FrontendUtility
     {
         $result = false;
         $context = GeneralUtility::makeInstance(Context::class);
-        $userRecord = $this->request->getAttribute('frontend.user')->user;
+        $userRecord = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user')->user;
 
         if (
             $context->getPropertyFromAspect('frontend.user', 'isLoggedIn') &&
@@ -215,7 +216,7 @@ class FrontendUtility
     public static function addJavascriptFile($filename, $key): void
     {
         $typoScriptConfigArray =
-            $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
+            $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
         $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
         $script =
             '<script type="text/javascript" src="' .
@@ -230,7 +231,7 @@ class FrontendUtility
     public static function addCssFile($filename, $key): void
     {
         $typoScriptConfigArray =
-            $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
+            $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
         $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
 
         $script =
@@ -1034,7 +1035,9 @@ class FrontendUtility
             if (!isset($conf['language'])) {
                 $api =
                     GeneralUtility::makeInstance(Frontend::class);
-                $sys_language_uid = $api->getLanguageId();
+                $context = GeneralUtility::makeInstance(Context::class);
+
+                $sys_language_uid = $context->getPropertyFromAspect('language', 'id');
                 if ($sys_language_uid) {
                     $conf['language'] = $sys_language_uid;
                 }
@@ -1305,7 +1308,7 @@ class FrontendUtility
                 $imgFile = $incFile;
                 $imgInfo = @getimagesize($imgFile);
                 $typoScriptConfigArray =
-                    $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
+                    $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
                 $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
                 $result = '<img src="' . htmlspecialchars($absRefPrefix . PathUtility::stripPathSitePrefix($imgFile)) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
             } elseif (filesize($incFile) < 1024 * 1024) {
@@ -1327,7 +1330,7 @@ class FrontendUtility
     public static function getBorderAttribute($borderAttr)
     {
         $docType = GeneralUtility::makeInstance(PageRenderer::class)->getDocType();
-        $typoScriptConfigArray = $GLOBALS['REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
+        $typoScriptConfigArray = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
 
         if (
             $docType !== 'xhtml_strict' &&

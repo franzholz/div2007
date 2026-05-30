@@ -106,4 +106,13 @@ class Frontend implements SingletonInterface
             }
         }
     }
+
+    public function getLanguageId()
+    {
+        $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
+        // (previously known as TSFE->sys_language_uid)
+        $result = $languageAspect->getId();
+
+        return $result;
+    }
 }
