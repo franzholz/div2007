@@ -1,4 +1,5 @@
-
+2026-06-02 Franz Holzinger <franz@ttproducts.de>
+    * use the back end user language in back end context
 
 2026-05-24 Franz Holzinger <franz@ttproducts.de>
     * support TYPO3 14
