@@ -41,26 +41,15 @@ class StoreRequest implements MiddlewareInterface
         if ($request->getMethod() === 'POST') {
             $request = $request->withAttribute('_originalPostParameters', $_POST);
         }
-        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-        $version = $typo3Version->getVersion();
 
-        if (
-            version_compare($version, '12.4.0', '>=')
-        ) {
-            $container = GeneralUtility::getContainer();
-            $contextFactory = $container->get(RequestContextFactory::class);
-            $matcher = GeneralUtility::makeInstance(
-                SiteMatcher::class,
-                GeneralUtility::makeInstance(Features::class),
-                GeneralUtility::makeInstance(SiteFinder::class),
-                $contextFactory
-            );
-        } else {
-            $matcher = GeneralUtility::makeInstance(
-                SiteMatcher::class,
-                GeneralUtility::makeInstance(SiteFinder::class)
-            );
-        }
+        $container = GeneralUtility::getContainer();
+        $contextFactory = $container->get(RequestContextFactory::class);
+        $matcher = GeneralUtility::makeInstance(
+            SiteMatcher::class,
+            GeneralUtility::makeInstance(Features::class),
+            GeneralUtility::makeInstance(SiteFinder::class),
+            $contextFactory
+        );
 
         /** @var SiteRouteResult $routeResult */
         $routeResult = $matcher->matchRequest($request);
