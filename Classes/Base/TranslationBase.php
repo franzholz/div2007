@@ -17,6 +17,7 @@ namespace JambageCom\Div2007\Base;
 
 use Psr\Http\Message\ServerRequestInterface;
 
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Charset\CharsetConverter;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Localization\LanguageService;
@@ -29,6 +30,7 @@ use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\TypoScript\FrontendTypoScript;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 
 
 
@@ -120,13 +122,13 @@ class TranslationBase
     /**
      * Returns full Frontend TypoScript setup array calculated by FE middlewares.
      */
-    public function getTypoScriptSetup(ServerRequestInterface $request): array
+    public function getTypoScriptSetup(?ServerRequestInterface $request): array
     {
         $frontendTypoScript = $request->getAttribute('frontend.typoscript');
         if (!($frontendTypoScript instanceof FrontendTypoScript)) {
             throw new \RuntimeException(
-                'Setup array has not been initialized. This happens in cached Frontend scope where full TypoScript' .
-                ' is not needed by the system.',
+                'Setup array has not been initialized. This happens in middleware which is executed too early before' .
+                ' the system reads in the full TypoScript.',
                 1779811045
             );
         }
@@ -221,9 +223,15 @@ class TranslationBase
             }
             $typo3Language = $locale->getLanguageCode();
         } else {
-            $currentSite = $this->getCurrentSite();
-            $currentSiteLanguage = $this->getCurrentSiteLanguage($request) ?? $currentSite?->getDefaultLanguage();
-            $typo3Language = $currentSiteLanguage?->getTypo3Language();
+            if (
+                ($GLOBALS['BE_USER'] ?? null) instanceof BackendUserAuthentication
+            ) {
+                $typo3Language = $GLOBALS['BE_USER']->uc['lang'] ?? 'en';
+            } else {
+                $currentSite = $this->getCurrentSite();
+                $currentSiteLanguage = $this->getCurrentSiteLanguage($request) ?? $currentSite?->getDefaultLanguage();
+                $typo3Language = $currentSiteLanguage?->getTypo3Language();
+            }
         }
 
         return $typo3Language;
@@ -581,7 +589,9 @@ class TranslationBase
      */
     protected function getCurrentSite(): ?SiteInterface
     {
-        if (isset($this->request) && $this->request instanceof ServerRequestInterface) {
+        if (
+            ($this->request ?? null) instanceof ServerRequestInterface
+        ) {
             return $this->request->getAttribute('site', null);
         }
         return null;
@@ -594,12 +604,14 @@ class TranslationBase
     protected function getCurrentSiteLanguage(?ServerRequestInterface $request = null
 ): ?SiteLanguage
     {
-        if (!isset($request)) {
+        if (($request ?? null) instanceof ServerRequestInterface) {
             $request = $this->request;
         }
-        if (isset($request) && $request instanceof ServerRequestInterface) {
+
+        if (($request ?? null) instanceof ServerRequestInterface) {
             return $request->getAttribute('language', null);
         }
+
         return null;
     }
 
@@ -607,5 +619,4 @@ class TranslationBase
     {
         return $GLOBALS['LANG'] ?? $this->languageServiceFactory->create('default');
     }
-
 }
