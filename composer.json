@@ -26,8 +26,8 @@
   ],
   "require": {
     "php": "^8.0",
-    "typo3/cms-core": "^12.4 || ^13.2",
-    "typo3/cms-reports": "^12.4 || ^13.2"
+    "typo3/cms-core": "^12.4 || ^13.4",
+    "typo3/cms-reports": "^12.4 || ^13.4"
   },
   "suggest": {
     "friendsoftypo3/typo3db-legacy": "^1"
@@ -42,7 +42,11 @@
   },
   "extra": {
     "typo3/cms": {
-      "extension-key": "div2007"
+      "extension-key": "div2007",
+      "version": "2.3.14",
+      "Package": {
+          "providesPackages": {}
+      }
     }
   },
   "config": {

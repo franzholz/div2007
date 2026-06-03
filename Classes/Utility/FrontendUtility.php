@@ -149,6 +149,7 @@ class FrontendUtility
         $tsfe = static::getTypoScriptFrontendController();
 
         if (
+            ($tsfe ?? null) instanceof TypoScriptFrontendController &&
             isset($tsfe->fe_user) &&
             is_object($tsfe->fe_user) &&
             $context->getPropertyFromAspect('frontend.user', 'isLoggedIn') &&
@@ -1308,7 +1309,9 @@ class FrontendUtility
                 $xhtmlFix = HtmlUtility::generateXhtmlFix();
                 $imgFile = $incFile;
                 $imgInfo = @getimagesize($imgFile);
-                $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . PathUtility::stripPathSitePrefix($imgFile)) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
+                if (($tsfe ?? null) instanceof TypoScriptFrontendController) {
+                    $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . PathUtility::stripPathSitePrefix($imgFile)) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
+                }
             } elseif (filesize($incFile) < 1024 * 1024) {
                 $result = file_get_contents($incFile);
             }
@@ -1328,9 +1331,10 @@ class FrontendUtility
     public static function getBorderAttribute($borderAttr)
     {
         $tsfe = static::getTypoScriptFrontendController();
-
         $docType = GeneralUtility::makeInstance(PageRenderer::class)->getDocType();
+
         if (
+            !(($tsfe ?? null) instanceof TypoScriptFrontendController) ||
             $docType !== 'xhtml_strict' &&
             $docType !== 'xhtml_11' &&
             (
