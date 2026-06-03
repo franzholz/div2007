@@ -134,7 +134,10 @@ class FrontendUtility
     {
         $result = false;
         $context = GeneralUtility::makeInstance(Context::class);
-        $userRecord = $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user')->user;
+        $userRecord =
+            (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface) ?
+                $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user')->user :
+                null;
 
         if (
             $context->getPropertyFromAspect('frontend.user', 'isLoggedIn') &&
