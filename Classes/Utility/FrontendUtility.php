@@ -1310,8 +1310,12 @@ class FrontendUtility
                 $xhtmlFix = HtmlUtility::generateXhtmlFix();
                 $imgFile = $incFile;
                 $imgInfo = @getimagesize($imgFile);
+
+                if (!$sanitize) {
+                    $imgFile = PathUtility::stripPathSitePrefix($imgFile));
+                }
                 if (($tsfe ?? null) instanceof TypoScriptFrontendController) {
-                    $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . PathUtility::stripPathSitePrefix($imgFile)) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
+                    $result = '<img src="' . htmlspecialchars($tsfe->absRefPrefix . $imgFile . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
                 }
             } elseif (filesize($incFile) < 1024 * 1024) {
                 $result = file_get_contents($incFile);
