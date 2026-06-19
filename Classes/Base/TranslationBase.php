@@ -342,8 +342,9 @@ class TranslationBase
             $word = (isset($this->localLangTestPrefixAlt)) ? $this->localLangTestPrefixAlt . $alternativeLabel : $alternativeLabel;
         }
 
-        if (isset($word)) {
-            $output = (isset($this->localLangTestPrefix)) ? $this->localLangTestPrefix . $word : $word;
+        if (isset($word[0]['target'])) {
+            $text = $word[0]['target'];
+            $output = (isset($this->localLangTestPrefix) ? $this->localLangTestPrefix . $text : $text);
             if ($hsc) {
                 $output = htmlspecialchars($output);
             }
