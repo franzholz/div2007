@@ -27,6 +27,7 @@ namespace JambageCom\Div2007\Utility;
 
 use Psr\Http\Message\ServerRequestInterface;
 
+
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
@@ -86,8 +87,8 @@ class FrontendUtility
 
     /**
      * This method is needed only for Ajax calls.
-     * You can use $id = $request->getAttribute('frontend.page.information')->getId() or
-     * $GLOBALS['TSFE']->determineId($request) or $GLOBALS['TSFE']->id instead of this method.
+     * You can use $id = $request->getAttribute('frontend.page.information')->getId()
+     * instead of this method.
      *
      * @return int
      */
@@ -160,7 +161,7 @@ class FrontendUtility
     }
 
     /**
-     * Returns a JavaScript <script> section with some function calls to JavaScript functions from "typo3/js/jsfunc.updateform.js" (which is also included by setting a reference in $GLOBALS['TSFE']->additionalHeaderData['JSincludeFormupdate'])
+     * Returns a JavaScript <script> section with some function calls to JavaScript functions from "typo3/js/jsfunc.updateform.js"
      * The JavaScript codes simply transfers content into form fields of a form which is probably used for editing information by frontend users. Used by fe_adminLib.inc.
      *
      * @param array $dataArray Data array which values to load into the form fields from $formName (only field names found in $fieldList)
@@ -1195,12 +1196,17 @@ class FrontendUtility
         $prefixId,
         $extKey
     ) {
+        $typoScriptConfigArray =
+            (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface) ?
+                $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getConfigArray() :
+                [];
+
         $content = '<div class="' . str_replace('_', '-', $prefixId) . '">
         ' . $str . '
     </div>
     ';
 
-        if (empty($GLOBALS['TSFE']->config['config']['disablePrefixComment'])) {
+        if (empty($typoScriptConfigArray['disablePrefixComment'])) {
             $content = '
 
     <!--
@@ -1225,6 +1231,7 @@ class FrontendUtility
         $absRefPrefixDomain = '';
         $bSetAbsRefPrefix = false;
         if (
+            isset($GLOBALS['TSFE']) &&
             $GLOBALS['TSFE']->absRefPrefix != '' &&
             $GLOBALS['TSFE']->absRefPrefix != '/'
         ) {
@@ -1310,10 +1317,15 @@ class FrontendUtility
                 $xhtmlFix = HtmlUtility::generateXhtmlFix();
                 $imgFile = $incFile;
                 $imgInfo = @getimagesize($imgFile);
+                if (!$sanitize) {
+                    $imgFile = PathUtility::stripPathSitePrefix($imgFile);
+                }
+
                 $typoScriptConfigArray =
                     $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')?->getConfigArray();
+
                 $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
-                $result = '<img src="' . htmlspecialchars($absRefPrefix . PathUtility::stripPathSitePrefix($imgFile)) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
+                $result = '<img src="' . htmlspecialchars($absRefPrefix . $imgFile) . '" width="' . (int)$imgInfo[0] . '" height="' . (int)$imgInfo[1] . '"' . static::getBorderAttribute(' border="0"') . ' ' . $addParams . ' ' . $xhtmlFix . '>';
             } elseif (filesize($incFile) < 1024 * 1024) {
                 $result = file_get_contents($incFile);
             }

@@ -197,7 +197,7 @@ class TableUtility
      */
     public static function enableFields($table, $show_hidden = -1, $ignore_array = [], $noVersionPreview = true)
     {
-        if ($show_hidden == -1 && is_object($GLOBALS['TSFE'])) { // If show_hidden was not set from outside and if TSFE is an object, set it based on showHiddenPage and showHiddenRecords from TSFE
+        if ($show_hidden == -1) { // If show_hidden was not set from outside, set it based on showHiddenPage and showHiddenRecords
             $show_hidden = $table == 'pages' ? CompatibilityUtility::includeHiddenPages() : CompatibilityUtility::includeHiddenContent();
         }
         if ($show_hidden == -1) {

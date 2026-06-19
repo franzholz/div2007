@@ -26,6 +26,9 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
+
+use Psr\Http\Message\ServerRequestInterface;
+
 use TYPO3\CMS\Core\Html\HtmlParser;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -46,24 +49,23 @@ class HtmlUtility
 
     public static function useXHTML()
     {
+        $typoScriptConfigArray =
+            (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface) ?
+            $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getConfigArray() :
+            [];
+
         $result = false;
         if (
-            is_object($GLOBALS['TSFE']) &&
-            isset($GLOBALS['TSFE']->config['config'])
-        ) {
-            $config = $GLOBALS['TSFE']->config['config'];
-            if (
+            (
+                isset($typoScriptConfigArray['xhtmlDoctype']) &&
+                stripos($typoScriptConfigArray['xhtmlDoctype'], 'xthml') !== false
+            ) ||
                 (
-                    isset($config['xhtmlDoctype']) &&
-                    stripos($config['xhtmlDoctype'], 'xthml') !== false
-                ) ||
-                    (
-                        isset($config['doctype']) &&
-                        stripos($config['doctype'], 'xthml') !== false
-                    )
-            ) {
-                $result = true;
-            }
+                    isset($typoScriptConfigArray['doctype']) &&
+                    stripos($typoScriptConfigArray['doctype'], 'xthml') !== false
+                )
+        ) {
+            $result = true;
         }
 
         return $result;
