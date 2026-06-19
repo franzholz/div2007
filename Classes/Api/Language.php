@@ -26,6 +26,7 @@ namespace JambageCom\Div2007\Api;
  * @package TYPO3
  * @subpackage div2007
  */
+
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Site\SiteFinder;
