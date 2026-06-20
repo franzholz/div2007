@@ -109,10 +109,10 @@ class TranslationBase
             is_array($confLocalLang)
         ) {
             $confLocalLang =
-                array_merge_recursive(
-                    $confLocalLang,
-                    $internalConfLocalLang
-                );
+            array_merge_recursive(
+                $confLocalLang,
+                $internalConfLocalLang
+            );
         }
 
         $this->setConfLocalLang($confLocalLang);
@@ -294,12 +294,18 @@ class TranslationBase
             $word = (!empty($this->localLangTestPrefixAlt)) ? $this->localLangTestPrefixAlt . $alternativeLabel : $alternativeLabel;
         }
 
-        if (isset($word[0]['target'])) {
+        if (is_string($word)) {
+            $output = $word;
+        } else if (isset($word[0]['target'])) {
             $text = $word[0]['target'];
             $output = (isset($this->localLangTestPrefix) ? $this->localLangTestPrefix . $text : $text);
-            if ($hsc) {
-                $output = htmlspecialchars($output);
-            }
+        }
+
+        if (
+            is_string($output) &&
+            $hsc
+        ) {
+            $output = htmlspecialchars($output);
         }
 
         return $output;
@@ -352,7 +358,7 @@ class TranslationBase
         $tempLOCAL_LANG = $languageFactory->getParsedData(
             $basePath,
             $this->getLocalLangKey(),
-            'UTF-8'
+                                                          'UTF-8'
         );
 
         if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
@@ -365,10 +371,10 @@ class TranslationBase
                         $this->LOCAL_LANG[$langKey] = array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
                     } else {
                         $this->LOCAL_LANG[$langKey] =
-                            array_merge(
-                                $tempLOCAL_LANG[$langKey],
-                                $this->LOCAL_LANG[$langKey]
-                            );
+                        array_merge(
+                            $tempLOCAL_LANG[$langKey],
+                            $this->LOCAL_LANG[$langKey]
+                        );
                     }
                 }
             }
@@ -391,10 +397,10 @@ class TranslationBase
                     ) {
                         if ($overwrite) {
                             $this->LOCAL_LANG[$langKey] =
-                                array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
+                            array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
                         } else {
                             $this->LOCAL_LANG[$langKey] =
-                                array_merge($tempLOCAL_LANG[$langKey], $this->LOCAL_LANG[$langKey]);
+                            array_merge($tempLOCAL_LANG[$langKey], $this->LOCAL_LANG[$langKey]);
                         }
                     }
                 }
@@ -481,7 +487,7 @@ class TranslationBase
     public function sL($input): string
     {
         $output = GeneralUtility::makeInstance(LanguageServiceFactory::class)
-            ->createFromSiteLanguage($this->request->getAttribute('language'))->sL($input);
+        ->createFromSiteLanguage($this->request->getAttribute('language'))->sL($input);
         return $output;
     }
 
@@ -532,7 +538,7 @@ class TranslationBase
      * page with a site configuration and a selected language, so let's choose that one.
      */
     protected function getCurrentSiteLanguage(?ServerRequestInterface $request = null
-): ?SiteLanguage
+    ): ?SiteLanguage
     {
         if (($request ?? null) instanceof ServerRequestInterface) {
             $request = $this->request;
