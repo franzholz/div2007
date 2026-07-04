@@ -79,8 +79,8 @@ class StaticInfoTablesApi implements SingletonInterface
             $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
             $this->version = $typo3Version->getVersion();
 
-            if (empty($conf) && isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE']) && isset($GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'])) {
-                $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'];
+            if (empty($conf) && isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE']) && isset($GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_staticinfotables.'])) {
+                $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_staticinfotables.'];
             }
             $extensionInfo = ExtensionUtility::getExtensionInfo('static_info_tables');
             $this->versionNumber = $extensionInfo['version'];
