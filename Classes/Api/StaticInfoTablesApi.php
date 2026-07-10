@@ -33,6 +33,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
+use SJBR\StaticInfoTables\Domain\Model\Currency;
+use SJBR\StaticInfoTables\Domain\Repository\CountryRepository;
 use SJBR\StaticInfoTables\Domain\Repository\CurrencyRepository;
 use SJBR\StaticInfoTables\Utility\HtmlElementUtility;
 use SJBR\StaticInfoTables\Utility\LocalizationUtility;
@@ -58,14 +60,19 @@ class StaticInfoTablesApi implements SingletonInterface
     public $defaultCountry;
     public $defaultCountryZone;
     public $defaultLanguage;
-    public $versionNumber; // extension static_info_tables version number
     public $version; // TYPO3 version number
     public $countriesAllowed;
+
+    /**
+     * @var CountryRepository
+     */
+    protected $countryRepository;
 
     /**
      * @var CurrencyRepository
      */
     protected $currencyRepository;
+
 
     /**
      * Initialization of the extension static_info_tables.
@@ -73,17 +80,24 @@ class StaticInfoTablesApi implements SingletonInterface
     public function init($conf = [])
     {
         $result = true;
+        $this->countryRepository = GeneralUtility::makeInstance(CountryRepository::class);
+        $this->currencyRepository = GeneralUtility::makeInstance(CurrencyRepository::class);
+
         if (!ExtensionManagementUtility::isLoaded('static_info_tables')) {
             $result = false;
         } elseif (!$this->hasBeenInitialized) {
             $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
-            $this->version = $typo3Version->getVersion();
-
-            if (empty($conf) && isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE']) && isset($GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'])) {
-                $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['static_info_tables.'];
+            $this->version = $typo3Version->getMajorVersion();
+            if (empty($conf)) {
+                if (isset($GLOBALS['TSFE']) && is_object($GLOBALS['TSFE']) && isset($GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_staticinfotables_pi1.'])) {
+                    $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_staticinfotables_pi1.'];
+                } else if ($this->version >= 13) {
+                    $fullTypoScript =
+                        $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getSetupArray();
+                    $conf = $fullTypoScript['plugin.']['tx_staticinfotables_pi1.'] ?? [];
+                }
             }
-            $extensionInfo = ExtensionUtility::getExtensionInfo('static_info_tables');
-            $this->versionNumber = $extensionInfo['version'];
+
             $this->initCountries('ALL');
 
             // Get the default currency and make sure it does exist in table static_currencies
@@ -441,6 +455,59 @@ class StaticInfoTablesApi implements SingletonInterface
     }
 
     /**
+     * Getting all languages into an array
+     * 	where the key is the ISO alpha-2 code of the language
+     * 	and where the value are the name of the language in the current language
+     * 	Note: we exclude sacred and constructed languages
+     *
+     * @param string $addWhere: additional WHERE clause
+     *
+     * @return array An array of names of languages
+     */
+    public function initLanguages($addWhere = '')
+    {
+        $nameArray = [];
+        $table = $this->tables['LANGUAGES'];
+        $lang = LocalizationUtility::getCurrentLanguage();
+        $lang = LocalizationUtility::getIsoLanguageKey($lang);
+        $titleFields = LocalizationUtility::getLabelFields($table, $lang);
+        $prefixedTitleFields = [];
+        foreach ($titleFields as $titleField => $map) {
+            $prefixedTitleFields[] = $table . '.' . $titleField;
+        }
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable($table);
+        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+        $queryBuilder
+            ->select($table . '.lg_iso_2')
+            ->addSelect($table . '.lg_country_iso_2')
+            ->from($table);
+        foreach ($prefixedTitleFields as $titleField) {
+            $queryBuilder->addSelect($titleField);
+        }
+        $queryBuilder->where(
+            $queryBuilder->expr()->eq('lg_sacred', $queryBuilder->createNamedParameter(0, Typo3Connection::PARAM_INT)),
+            $queryBuilder->expr()->eq('lg_constructed', $queryBuilder->createNamedParameter(0, Typo3Connection::PARAM_INT))
+        );
+        if ($addWhere) {
+            $addWhere = QueryHelper::stripLogicalOperatorPrefix($addWhere);
+            $queryBuilder->andWhere($addWhere);
+        }
+        $query = $queryBuilder->executeQuery();
+        while ($row = $query->fetchAssociative()) {
+            $code = $row['lg_iso_2'] . ($row['lg_country_iso_2'] ? '_' . $row['lg_country_iso_2'] : '');
+            foreach ($titleFields as $titleField => $map) {
+                if ($row[$titleField] ?? false) {
+                    $nameArray[$code] = $row[$titleField];
+                    break;
+                }
+            }
+        }
+        uasort($nameArray, 'strcoll');
+        return $nameArray;
+    }
+
+    /**
      * Returns the current language as iso-2-alpha code.
      *
      * @return	string		'DE', 'EN', 'DK', ...
@@ -491,38 +558,35 @@ class StaticInfoTablesApi implements SingletonInterface
     }
 
     /**
-     * Loading currency display parameters from Static Info Tables.
+     * Loading currency display parameters from Static Info Tables
+     *
+     * @param string $currencyCode: An ISO alpha-3 currency code
      *
      * @return array An array of information regarding the currrency
      */
     public function loadCurrencyInfo($currencyCode)
     {
-        if (!$this->isActive()) {
-            return false;
-        }
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->currencyRepository = $objectManager->get(CurrencyRepository::class);
-
         // Fetching the currency record
         $this->currencyInfo['cu_iso_3'] = trim($currencyCode);
-        $this->currencyInfo['cu_iso_3'] = $this->currencyInfo['cu_iso_3'] ?: $this->currency;
-        $currency = $this->currencyRepository->findOneByIsoCodeA3($this->currencyInfo['cu_iso_3']);
+        $this->currencyInfo['cu_iso_3'] = $this->currencyInfo['cu_iso_3'] ?? $this->currency;
+
+        $currency = $this->currencyRepository->findOneBy(['isoCodeA3' => $this->currencyInfo['cu_iso_3']]);
         // If not found we fetch the default currency!
         if (!($currency instanceof Currency)) {
             $this->currencyInfo['cu_iso_3'] = $this->currency;
-            $currency = $this->currencyRepository->findOneByIsoCodeA3($this->currencyInfo['cu_iso_3']);
+            $currency = $this->currencyRepository->findOneBy(['isoCodeA3' => $this->currencyInfo['cu_iso_3']]);
         }
         if ($currency instanceof Currency) {
-            $this->currencyInfo['cu_name'] = $this->getStaticInfoName($this->currencyInfo['cu_iso_3'], 'CURRENCIES');
+            $this->currencyInfo['cu_name'] = $this->getStaticInfoName('CURRENCIES', $this->currencyInfo['cu_iso_3']);
             $this->currencyInfo['cu_symbol_left'] = $currency->getSymbolLeft();
             $this->currencyInfo['cu_symbol_right'] = $currency->getSymbolRight();
             $this->currencyInfo['cu_decimal_digits'] = $currency->getDecimalDigits();
             $this->currencyInfo['cu_decimal_point'] = $currency->getDecimalPoint();
             $this->currencyInfo['cu_thousands_point'] = $currency->getThousandsPoint();
         }
-
         return $this->currencyInfo;
     }
+
 
     /**
      * Formatting an amount in the currency loaded by loadCurrencyInfo($currencyCode).
