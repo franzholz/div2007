@@ -27,13 +27,14 @@ namespace JambageCom\Div2007\Utility;
 
 use Psr\Http\Message\ServerRequestInterface;
 
-
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\Http\ApplicationType;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
@@ -136,8 +137,8 @@ class FrontendUtility
         $result = false;
         $context = GeneralUtility::makeInstance(Context::class);
         $userRecord =
-            (($GLOBALS['TYPO3_REQUEST'] ?? null) instanceof ServerRequestInterface) ?
-                $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.user')->user :
+            ((static::getRequest() ?? null) instanceof ServerRequestInterface) ?
+                static::getRequest()->getAttribute('frontend.user')->user :
                 null;
 
         if (
@@ -219,15 +220,37 @@ class FrontendUtility
 
     public static function addJavascriptFile($filename, $key): void
     {
-        $typoScriptConfigArray =
-            $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getConfigArray();
-        $absRefPrefix = trim($typoScriptConfigArray['absRefPrefix'] ?? '');
+        $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
+        $typo3VersionMain = $typo3Version->getMajorVersion();
+        $request = static::getRequest();
+
+        if ($request == null) {
+            return;
+        }
+
+        if ($typo3VersionMain == 13) {
+            $tsfe = $request->getAttribute('frontend.controller');
+
+            if ($tsfe instanceof \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController) {
+                // Sicherstellen, dass das Prefix korrekt initialisiert wurde
+                $tsfe->preparePageContentGeneration($request);
+
+                // Den Wert einlesen
+                $absRefPrefix = $tsfe->absRefPrefix;
+            }
+        } else { // TYPO3 14 and later
+            if (ApplicationType::fromRequest($request)->isFrontend()) {
+                $site = $request->getAttribute('site');
+                $baseUri = $site->getBase();
+                $absRefPrefix = $baseUri->getPath();
+            }
+        }
+
         $script =
             '<script type="text/javascript" src="' .
                 $absRefPrefix .
                 GeneralUtility::createVersionNumberedFilename($filename) .
             '"></script>';
-
         $pageRenderer = GeneralUtility::makeInstance(PageRenderer::class);
         $pageRenderer->addHeaderData($script);
     }
@@ -1411,4 +1434,8 @@ class FrontendUtility
         return $theList;
     }
 
+    private static function getRequest(): ?ServerRequestInterface
+    {
+        return $GLOBALS['TYPO3_REQUEST'] ?? null;
+    }
 }
