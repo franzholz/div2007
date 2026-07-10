@@ -1,7 +1,7 @@
 {
   "name": "jambagecom/div2007",
   "type": "typo3-cms-extension",
-  "description": "Extension library since 2007. Many API functions for Front End extensions. Can replace TYPO3\\CMS\\Frontend\\Plugin\\AbstractPlugin methods.",
+  "description": "Extension library since 2007 - Many API functions for Front End extensions. It can replace TYPO3\\CMS\\Frontend\\Plugin\\AbstractPlugin methods.",
   "keywords": [
     "TYPO3",
     "extension",
