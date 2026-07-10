@@ -153,7 +153,6 @@ class TranslationBase
         $this->LOCAL_LANG = $locallang;
     }
 
-    // former getLocallang
     public function getLocalLang()
     {
         return $this->LOCAL_LANG;
@@ -311,6 +310,7 @@ class TranslationBase
         return $output;
     }
 
+
     /**
      * used since TYPO3 4.6 as loadLL
      * Loads local-language values by looking for a "locallang.xlf" file in the plugin class directory ($langObj->scriptRelPath) and if found includes it.
@@ -358,28 +358,28 @@ class TranslationBase
         $tempLOCAL_LANG = $languageFactory->getParsedData(
             $basePath,
             $this->getLocalLangKey(),
-                                                          'UTF-8'
+            'UTF-8'
         );
 
         if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
-            foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
+            $originalLanguages = $this->LOCAL_LANG;
+            foreach ($originalLanguages as $langKey => $tempArray) {
                 if (
-                    isset($tempLOCAL_LANG) && is_array($tempLOCAL_LANG) &&
-                    isset($tempLOCAL_LANG[$langKey]) && is_array($tempLOCAL_LANG[$langKey])
+                    isset($tempLOCAL_LANG) && is_array($tempLOCAL_LANG)
                 ) {
                     if ($overwrite) {
-                        $this->LOCAL_LANG[$langKey] = array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
+                        $this->LOCAL_LANG[$langKey] = array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG);
                     } else {
                         $this->LOCAL_LANG[$langKey] =
-                        array_merge(
-                            $tempLOCAL_LANG[$langKey],
-                            $this->LOCAL_LANG[$langKey]
-                        );
+                            array_merge(
+                                $tempLOCAL_LANG,
+                                $tempArray
+                            );
                     }
                 }
             }
         } else if (is_array($tempLOCAL_LANG)) {
-            $this->LOCAL_LANG = $tempLOCAL_LANG;
+            $this->LOCAL_LANG[$this->getLocalLangKey()] = $tempLOCAL_LANG;
         }
 
         if ($this->altLocalLangKey) {
@@ -390,22 +390,22 @@ class TranslationBase
             );
 
             if (count($this->LOCAL_LANG) && is_array($tempLOCAL_LANG)) {
-                foreach ($this->LOCAL_LANG as $langKey => $tempArray) {
+                $originalLanguages = $this->LOCAL_LANG;
+                foreach ($originalLanguages as $langKey => $tempArray) {
                     if (
-                        isset($tempLOCAL_LANG) && is_array($tempLOCAL_LANG) &&
-                        isset($tempLOCAL_LANG[$langKey]) && is_array($tempLOCAL_LANG[$langKey])
+                        isset($tempLOCAL_LANG) && is_array($tempLOCAL_LANG)
                     ) {
                         if ($overwrite) {
                             $this->LOCAL_LANG[$langKey] =
-                            array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG[$langKey]);
+                                array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG);
                         } else {
                             $this->LOCAL_LANG[$langKey] =
-                            array_merge($tempLOCAL_LANG[$langKey], $this->LOCAL_LANG[$langKey]);
+                                array_merge($tempLOCAL_LANG, $this->LOCAL_LANG[$langKey]);
                         }
                     }
                 }
             } else {
-                $this->LOCAL_LANG[$this->getLocalLangKey()] = $tempLOCAL_LANG[$this->altLocalLangKey];
+                $this->LOCAL_LANG[$this->getLocalLangKey()] = $tempLOCAL_LANG;
             }
         }
 
@@ -458,6 +458,7 @@ class TranslationBase
 
         return $result;
     }
+
 
     // notice: this method will not consider the _LOCAL_LANG setup overwritings
     public function translate($key, $extensionKey = '', $filename = '')
