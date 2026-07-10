@@ -27,14 +27,19 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
-use TYPO3\CMS\Core\Mail\MailMessage;
-use Symfony\Component\Mime\Email;
+
+use Symfony\Component\Mailer\Exception\TransportException;
+use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Crypto\DkimSigner;
-use Symfony\Component\Mailer\SentMessage;
-use Symfony\Component\Mailer\Exception\TransportException;
+use Symfony\Component\Mime\Email;
+
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Mail\Mailer;
+use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+use JambageCom\Div2007\Constants\Extension;
 
 class MailUtility
 {
@@ -60,8 +65,15 @@ class MailUtility
         $defaultSubject = ''
     ) {
         $result = true;
+        $configuration =
+            ConfigurationUtility::getExtensionConfiguration(Extension::KEY);
+
         $debug =
-            $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['debug']['mail'];
+            ConfigurationUtility::getExtensionConfiguration(
+                Extension::KEY,
+                'debug/mail'
+            );
+
         if (
             $debug == 'DEBUG_AND_SEND' ||
             $debug == 'DEBUG'
@@ -92,6 +104,7 @@ class MailUtility
         }
 
         if (is_array($toEMail) && count($toEMail)) {
+        debug ($toEMail, '$toEMail');
             $emailArray = $toEMail;
             $errorEmailArray = [];
             foreach ($toEMail as $k => $v) {
@@ -178,6 +191,7 @@ class MailUtility
                 ->from(new Address($fromEMail, $fromName))
                 ->subject($subject)
             ;
+
             if ($HTMLContent != '') {
                 $mail->html($HTMLContent);
             }
@@ -185,7 +199,7 @@ class MailUtility
                 $mail->text($PLAINContent);
             }
         } else {
-            throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: unsupported mailer class ' . $mail::class . '. ', 1612276260
+            throw new \RuntimeException('Extension ' . Extension::KEY . ' MailUtility: unsupported mailer class ' . $mail::class . '. ', 1612276260
             );
         }
 
@@ -220,8 +234,6 @@ class MailUtility
             is_object($mail) &&
             $extensionKey &&
             $hookVar &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]) &&
-            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey]) &&
             isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey][$hookVar]) &&
             is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extensionKey][$hookVar])
         ) {
@@ -264,15 +276,18 @@ class MailUtility
             is_object($mail)
         ) {
             $signerRow = null;
+            $dkimFile =
+                ConfigurationUtility::getExtensionConfiguration(
+                    Extension::KEY,
+                    'dkimFile'
+                );
 
             if (
-                isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]) &&
-                isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['dkimFile']) &&
-                $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['dkimFile'] != ''
+                $dkimFile != ''
             ) {
                 $signerXmlFilename =
                     GeneralUtility::resolveBackPath(
-                        Environment::getLegacyConfigPath() . '../' . $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['dkimFile']
+                        Environment::getLegacyConfigPath() . '../' . $dkimFile
                     );
                 // determine the file type
                 $basename = basename($signerXmlFilename);
@@ -281,7 +296,7 @@ class MailUtility
                 $absFilename = GeneralUtility::getFileAbsFileName($signerXmlFilename);
                 $handle = fopen($absFilename, 'rt');
                 if ($handle === false) {
-                    throw new \Exception(DIV2007_EXT . ': DKIM Signer XML file not found ("' . $absFilename . '")');
+                    throw new \Exception(Extension::KEY . ': DKIM Signer XML file not found ("' . $absFilename . '")');
                 }
 
                 if ($fileExtension == 'xml') {
@@ -344,7 +359,7 @@ class MailUtility
                 $absFilename = GeneralUtility::getFileAbsFileName($signerFilename);
                 $handle = fopen($absFilename, 'rt');
                 if ($handle === false) {
-                    throw new \Exception(DIV2007_EXT . ': Signer file not found ("' . $absFilename . '")');
+                    throw new \Exception(Extension::KEY . ': Signer file not found ("' . $absFilename . '")');
                 }
 
                 if (class_exists(DkimSigner::class)) {
@@ -356,18 +371,18 @@ class MailUtility
                     );
                     $mail = $signer->sign($mail);
                 } else {
-                    throw new \RuntimeException('Extension ' . DIV2007_EXT . ' MailUtility: no mail signer class found.', 1612340604
+                    throw new \RuntimeException('Extension ' . Extension::KEY . ' MailUtility: no mail signer class found.', 1612340604
                     );
                 }
             }
 
+            $mailer = GeneralUtility::makeInstance(Mailer::class);
+
             if (
-                method_exists($mail, 'send') &&
-                method_exists($mail, 'isSent') &&
-                !$mail->isSent()
+                method_exists($mailer, 'send')
             ) {
                 try {
-                    $resultSend = $mail->send(); // TODO: debug and test mode to not send an email
+                    $resultSend = $mailer->send($mail); // TODO: debug and test mode to not send an email
                     if (
                         (
                             $debug == 'DEBUG_AND_SEND' ||
@@ -379,22 +394,17 @@ class MailUtility
                         debug($resultSend->getOriginalMessage(), 'MailUtility::send original message'); // keep this
                         debug($resultSend->getDebug(), 'MailUtility::send debug'); // keep this
                     }
-                    $result = $mail->isSent();
-                    if (!$result) {
-                        debug('MailUtility::send exited with error 6'); // keep this
-                        $undelivered = $mail->getFailedRecipients();
-                        if (is_array($undelivered)) {
-                            debug('MailUtility::send undelivered: ' . implode(',', $undelivered)); // keep this
-                        }
-                    }
                 } catch (Exception $e) {
-                    if ($e instanceof TransportException) {
+                    if ($e instanceof TransportExceptionInterface) {
                         debug($e->getDebug(), 'MailUtility::send Exception debug'); // keep this
                     }
+                    $result = false;
                 }
             } else {
                 // This must never be reached:
                 $result = false;
+                debug('MailUtility::send exited with error 7'); // keep this
+
             }
         }
 
