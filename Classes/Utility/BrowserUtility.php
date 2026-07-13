@@ -451,7 +451,6 @@ class BrowserUtility
             $resultCountMsg = '';
         }
         $rc = $cObj->wrap($resultCountMsg . $theLinks, $wrapper['browseBoxWrap'] ?? '');
-
         return $rc;
     }
 
