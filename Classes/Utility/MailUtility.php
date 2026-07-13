@@ -104,7 +104,6 @@ class MailUtility
         }
 
         if (is_array($toEMail) && count($toEMail)) {
-        debug ($toEMail, '$toEMail');
             $emailArray = $toEMail;
             $errorEmailArray = [];
             foreach ($toEMail as $k => $v) {
