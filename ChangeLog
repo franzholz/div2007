@@ -1,3 +1,6 @@
+2026-07-17 Franz Holzinger <franz@ttproducts.de>
+    * support 2 variants of language LOCALLAng arrays
+
 2026-06-02 Franz Holzinger <franz@ttproducts.de>
     * use the back end user language in back end context
 

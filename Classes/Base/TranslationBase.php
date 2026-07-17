@@ -35,13 +35,13 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TranslationBase
 {
-    public $LOCAL_LANG = [];   // Local Language content
-    public $LOCAL_LANG_loaded = 0;  // Flag that tells if the locallang file has been fetch (or tried to be fetched) already.
-    public $LocalLangKey = 'default';      // Pointer to the language to use.
+    protected $LOCAL_LANG = [];   // Local Language content
+    protected $LOCAL_LANG_loaded = 0;  // Flag that tells if the locallang file has been fetch (or tried to be fetched) already.
+    protected $LocalLangKey = 'default';      // Pointer to the language to use.
     public $altLocalLangKey = '';          // Pointer to alternative fall-back language to use.
     public $localLangTestPrefix = '';      // You can set this during development to some value that makes it easy for you to spot all labels that are delivered by the getLocalLang function.
     public $localLangTestPrefixAlt = '';   // Save as localLangTestPrefix, but additional prefix for the alternative value in getLocalLang() function calls
-    public $scriptRelPath = '/Resources/Private/Language/';          // relative path to the extension directory where the locallang XLF / XML files are stored. The leading and trailing slashes must be included. E.g. '/Resources/Private/Language/'
+    protected $scriptRelPath = '/Resources/Private/Language/';          // relative path to the extension directory where the locallang XLF / XML files are stored. The leading and trailing slashes must be included. E.g. '/Resources/Private/Language/'
     protected $extensionKey = '';	// extension key must be overridden
     protected $lookupFilename = ''; // filename used for the lookup method
     protected $request = null;
@@ -328,7 +328,7 @@ class TranslationBase
         $overwrite = true
     ) {
         $langFile = ($langFileParam ?? $this->getLookupFilename());
-        $extensionKey = $this->getExtensionKey();
+       $extensionKey = $this->getExtensionKey();
 
         if (
             str_starts_with($langFile, 'EXT:') ||
@@ -367,21 +367,24 @@ class TranslationBase
                 if (
                     isset($tempLOCAL_LANG) && is_array($tempLOCAL_LANG)
                 ) {
+                    $newLocalLang = $tempLOCAL_LANG[$langKey] ?? $tempLOCAL_LANG;
                     if ($overwrite) {
-                        $this->LOCAL_LANG[$langKey] = array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG);
+                        $this->LOCAL_LANG[$langKey] = array_merge($this->LOCAL_LANG[$langKey], $newLocalLang);
                     } else {
                         $this->LOCAL_LANG[$langKey] =
                             array_merge(
-                                $tempLOCAL_LANG,
+                                $newLocalLang,
                                 $tempArray
                             );
                     }
                 }
             }
         } else if (is_array($tempLOCAL_LANG)) {
-            $this->LOCAL_LANG[$this->getLocalLangKey()] = $tempLOCAL_LANG;
+            $newLocalLang = $tempLOCAL_LANG[$this->getLocalLangKey()] ?? $tempLOCAL_LANG;
+            $this->LOCAL_LANG[$this->getLocalLangKey()] = $newLocalLang;
         }
 
+        // TODO: wie oben ändern +++
         if ($this->altLocalLangKey) {
             $tempLOCAL_LANG = $languageFactory->getParsedData(
                 $basePath,
@@ -395,17 +398,19 @@ class TranslationBase
                     if (
                         isset($tempLOCAL_LANG) && is_array($tempLOCAL_LANG)
                     ) {
+                        $newLocalLang = $tempLOCAL_LANG[$langKey] ?? $tempLOCAL_LANG;
                         if ($overwrite) {
                             $this->LOCAL_LANG[$langKey] =
-                                array_merge($this->LOCAL_LANG[$langKey], $tempLOCAL_LANG);
+                                array_merge($this->LOCAL_LANG[$langKey], $newLocalLang);
                         } else {
                             $this->LOCAL_LANG[$langKey] =
-                                array_merge($tempLOCAL_LANG, $this->LOCAL_LANG[$langKey]);
+                                array_merge($newLocalLang, $this->LOCAL_LANG[$langKey]);
                         }
                     }
                 }
             } else {
-                $this->LOCAL_LANG[$this->getLocalLangKey()] = $tempLOCAL_LANG;
+                $newLocalLang = $tempLOCAL_LANG[$this->getLocalLangKey()] ?? $tempLOCAL_LANG;
+                $this->LOCAL_LANG[$this->getLocalLangKey()] = $newLocalLang;
             }
         }
 
