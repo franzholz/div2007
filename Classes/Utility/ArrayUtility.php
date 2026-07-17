@@ -19,17 +19,17 @@ class ArrayUtility
      * @param array $keysToCompare A list of array key names that should be used for comparison of arrays (ignore all other keys)
      * @return array[] array with keys 'insertions' and 'deletions'
     */
-    public static function arrayDifference(array $array1, array $array2, array $keysToCompare = null) {
+    public static function arrayDifference(array $array1, array $array2, ?array $keysToCompare = null) {
         $serialize = function (&$item, $idx, $keysToCompare) {
-             if (is_array($item) && is_array($keysToCompare)) {
-                $a = [];
+             if (is_array($item) && isset($keysToCompare) && is_array($keysToCompare)) {
+                 $a = [];
                 foreach ($item as $k => $v) {
                     if (in_array($k, $keysToCompare)) {
                         $a[$k] = $v;
                     }
                 }
                 $item = $a;
-            }
+             }
             $item = serialize($item);
         };
 
