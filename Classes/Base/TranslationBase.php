@@ -35,9 +35,10 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TranslationBase
 {
+    const DEFAULT_LANGUAGE = 'default';
     protected $LOCAL_LANG = [];   // Local Language content
     protected $LOCAL_LANG_loaded = 0;  // Flag that tells if the locallang file has been fetch (or tried to be fetched) already.
-    protected $LocalLangKey = 'default';      // Pointer to the language to use.
+    protected $LocalLangKey = self::DEFAULT_LANGUAGE;      // Pointer to the language to use.
     public $altLocalLangKey = '';          // Pointer to alternative fall-back language to use.
     public $localLangTestPrefix = '';      // You can set this during development to some value that makes it easy for you to spot all labels that are delivered by the getLocalLang function.
     public $localLangTestPrefixAlt = '';   // Save as localLangTestPrefix, but additional prefix for the alternative value in getLocalLang() function calls
@@ -67,7 +68,7 @@ class TranslationBase
 
     public function init(
         $extensionKey = '',
-        $confLocalLang = [], // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
+        array $confLocalLang = [], // you must pass only the $conf['_LOCAL_LANG.'] part of the setup of the caller
         ?ServerRequestInterface $request = null,
         $lookupFilename = '',
         $useDiv2007Language = true
@@ -77,11 +78,9 @@ class TranslationBase
             $request = $GLOBALS['TYPO3_REQUEST'];
         }
         $this->request = $request;
-
         $currentSite = $this->getCurrentSite();
         $currentSiteLanguage = $this->getCurrentSiteLanguage($request) ?? $currentSite?->getDefaultLanguage();
         $this->languageId = $currentSiteLanguage?->getLanguageId();
-
         $typo3Language = $this->getLanguage($request);
         $this->setLocalLangKey($typo3Language);
 
@@ -109,12 +108,11 @@ class TranslationBase
             is_array($confLocalLang)
         ) {
             $confLocalLang =
-            array_merge_recursive(
-                $confLocalLang,
-                $internalConfLocalLang
-            );
+                array_merge_recursive(
+                    $confLocalLang,
+                    $internalConfLocalLang
+                );
         }
-
         $this->setConfLocalLang($confLocalLang);
         $this->lookupFilename = $lookupFilename;
 
@@ -184,9 +182,15 @@ class TranslationBase
         return $this->extensionKey;
     }
 
-    public function setConfLocalLang($conf): void
+    public function setConfLocalLang(array $conf): void
     {
-        $this->confLocalLang = $conf;
+        $newConf = [];
+
+        foreach ($conf as $k => $subConf) {
+            $key = rtrim($k, '.');
+            $newConf[$key] = $subConf;
+        }
+        $this->confLocalLang = $newConf;
     }
 
     public function getConfLocalLang()
@@ -328,7 +332,7 @@ class TranslationBase
         $overwrite = true
     ) {
         $langFile = ($langFileParam ?? $this->getLookupFilename());
-       $extensionKey = $this->getExtensionKey();
+        $extensionKey = $this->getExtensionKey();
 
         if (
             str_starts_with($langFile, 'EXT:') ||
@@ -367,7 +371,8 @@ class TranslationBase
                 if (
                     isset($tempLOCAL_LANG) && is_array($tempLOCAL_LANG)
                 ) {
-                    $newLocalLang = $tempLOCAL_LANG[$langKey] ?? $tempLOCAL_LANG;
+                    $locallangHasIndex = isset($tempLOCAL_LANG[$langKey]);
+                    $newLocalLang = ($locallangHasIndex ? $tempLOCAL_LANG[$langKey] : $tempLOCAL_LANG);
                     if ($overwrite) {
                         $this->LOCAL_LANG[$langKey] = array_merge($this->LOCAL_LANG[$langKey], $newLocalLang);
                     } else {
@@ -377,14 +382,24 @@ class TranslationBase
                                 $tempArray
                             );
                     }
+
+                    if ($locallangHasIndex) {
+                        unset($tempLOCAL_LANG[$langKey]);
+                    }
                 }
+            }
+
+            if (
+                isset($tempLOCAL_LANG[self::DEFAULT_LANGUAGE]) &&
+                !isset($originalLanguages[self::DEFAULT_LANGUAGE])
+            ) {
+                $this->LOCAL_LANG[self::DEFAULT_LANGUAGE] = $tempLOCAL_LANG[self::DEFAULT_LANGUAGE];
             }
         } else if (is_array($tempLOCAL_LANG)) {
             $newLocalLang = $tempLOCAL_LANG[$this->getLocalLangKey()] ?? $tempLOCAL_LANG;
             $this->LOCAL_LANG[$this->getLocalLangKey()] = $newLocalLang;
         }
 
-        // TODO: wie oben ändern +++
         if ($this->altLocalLangKey) {
             $tempLOCAL_LANG = $languageFactory->getParsedData(
                 $basePath,
@@ -423,7 +438,6 @@ class TranslationBase
                     if (!isset($this->LOCAL_LANG[$languageKey])) {
                         $this->LOCAL_LANG[$languageKey] = [];
                     }
-                    $languageKey = substr($languageKey, 0, -1);
 
                     // Remove the dot after the language key
                     foreach ($languageArray as $labelKey => $labelValue) {

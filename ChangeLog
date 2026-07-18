@@ -1,5 +1,8 @@
+2026-07-18 Franz Holzinger <franz@ttproducts.de>
+    * fix bug: consider the default language in LOCAL_LANG
+
 2026-07-17 Franz Holzinger <franz@ttproducts.de>
-    * support 2 variants of language LOCALLAng arrays
+    * support 2 variants of language LOCALLANG arrays
 
 2026-06-02 Franz Holzinger <franz@ttproducts.de>
     * use the back end user language in back end context
