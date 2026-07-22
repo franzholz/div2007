@@ -1,3 +1,7 @@
+2026-07-22 Franz Holzinger <franz@ttproducts.de>
+    * fix bug: consider the default language in LOCAL_LANG
+    * support 2 variants of language LOCALLANG arrays
+
 2026-04-15 Franz Holzinger <franz@ttproducts.de>
     * improve page browser: No parameter 0 in links to avoid duplicate content warnings in SEO.
 
