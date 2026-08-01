@@ -70,6 +70,11 @@ class TableUtility
     ];
 
     /**
+     * @var string|int|null
+     */
+    public static $checkPid_badDoktypeList;
+    
+    /**
      * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
      * Usage: 3.
      *
@@ -281,7 +286,7 @@ class TableUtility
     }
 
     /**
-     * Removes Page UID numbers from the input array which are not available due to enableFields() or the list of bad doktype numbers ($this->checkPid_badDoktypeList).
+     * Removes Page UID numbers from the input array which are not available due to enableFields() or the list of bad doktype numbers (static::checkPid_badDoktypeList).
      *
      * @param array $listArr array of Page UID numbers for select and for which pages with enablefields and bad doktypes should be removed
      *
@@ -297,7 +302,7 @@ class TableUtility
     {
         $outArr = [];
         if (is_array($listArr) && count($listArr)) {
-            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . static::enableFields('pages') . ' AND doktype NOT IN (' . $this->checkPid_badDoktypeList . ')');
+            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . static::enableFields('pages') . ' AND doktype NOT IN (' . static::checkPid_badDoktypeList . ')');
             if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
                 GeneralUtility::makeInstance(TimeTracker::class)->setTSlogMessage($error . ': ' . $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery, 3);
             } else {
