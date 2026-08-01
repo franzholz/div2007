@@ -37,9 +37,13 @@ namespace JambageCom\Div2007\Utility;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\TimeTracker\TimeTracker;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryConstraintService;
+use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
+
 
 class TableUtility
 {
@@ -73,50 +77,58 @@ class TableUtility
      * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
      * Usage: 3.
      *
-     * @param	array		Configuration array for the field, taken from $TCA
-     * @param	string		Field name
-     * @param	array		TSconfig array from which to get further configuration settings for the field name
-     * @param	string		Prefix string for the key "*foreign_table_where" from $fieldValue array
+     * @param	array           $fieldValue Configuration array for the field, taken from $TCA
+     * @param	string $field   Field name
+     * @param	array $TSconfig TSconfig array from which to get further configuration
+     *                          settings for the field name
+     * @param	string $prefix	Prefix string for the key "*foreign_table_where" from $fieldValue array
      *
-     * @return	string		resulting where string with accomplished marker substitution
-     *
-     * @internal
+     * @return	string		resulting where string with accomplished marker substitution in WHERE clause
      *
      * @see t3lib_transferData::renderRecord(), t3lib_TCEforms::foreignTable()
      */
-    public static function foreign_table_where_query($fieldValue, $field = '', $TSconfig = [], $prefix = '')
+    public static function foreign_table_where_query(array $fieldValue, string $field = '', array $TSconfig = [], string $prefix = ''): string
     {
-        $foreign_table = $fieldValue['config'][$prefix . 'foreign_table'];
-        $rootLevel = $GLOBALS['TCA'][$foreign_table]['ctrl']['rootLevel'];
-
-        $fTWHERE = $fieldValue['config'][$prefix . 'foreign_table_where'];
-
-        if (strstr($fTWHERE, '###REC_FIELD_')) {
-            $fTWHERE_parts = explode('###REC_FIELD_', $fTWHERE);
-            foreach ($fTWHERE_parts as $kk => $vv) {
-                if ($kk) {
-                    $fTWHERE_subpart = explode('###', $vv, 2);
-                    $fTWHERE_parts[$kk] = $TSconfig['_THIS_ROW'][$fTWHERE_subpart[0]] . $fTWHERE_subpart[1];
-                }
-            }
-            $fTWHERE = implode('', $fTWHERE_parts);
+        $foreign_table = $fieldValue['config'][$prefix . 'foreign_table'] ?? '';
+        if ($foreign_table === '') {
+            return '';
         }
 
-        $currentPid = intval($TSconfig['_CURRENT_PID']);
-        $fTWHERE = str_replace('###CURRENT_PID###', $currentPid, $fTWHERE);
-        $fTWHERE = str_replace('###THIS_UID###', intval($TSconfig['_THIS_UID']), $fTWHERE);
-        $fTWHERE = str_replace('###THIS_CID###', intval($TSconfig['_THIS_CID']), $fTWHERE);
-        $fTWHERE = str_replace('###STORAGE_PID###', intval($TSconfig['_STORAGE_PID']), $fTWHERE);
-        $fTWHERE = str_replace('###SITEROOT###', intval($TSconfig['_SITEROOT']), $fTWHERE);
+        $fTWHERE = $fieldValue['config'][$prefix . 'foreign_table_where'] ?? '';
 
+        // 1. Use the native core service to replace standard markers
+        // This automatically handles: ###CURRENT_PID###, ###THIS_UID###, ###THIS_CID###, ###STORAGE_PID### and ###REC_FIELD_...###
+        $queryConstraintService = GeneralUtility::makeInstance(QueryConstraintService::class);
+
+        $currentRow = $TSconfig['_THIS_ROW'] ?? $TSconfig;
+        $currentPid = (int)($TSconfig['_CURRENT_PID'] ?? 0);
+
+        $fTWHERE = $queryConstraintService->processForeignTableWhereClause($fTWHERE, $foreign_table, $currentRow, $currentPid);
+
+        // 2. Custom logic for PAGE_TSCONFIG_ markers (not covered by the core service)
         if (isset($TSconfig[$field]) && is_array($TSconfig[$field])) {
-            $fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', intval($TSconfig[$field]['PAGE_TSCONFIG_ID']), $fTWHERE);
-            $fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', $GLOBALS['TYPO3_DB']->cleanIntList($TSconfig[$field]['PAGE_TSCONFIG_IDLIST']), $fTWHERE);
+            // ###PAGE_TSCONFIG_ID###
+            $fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', (string)(int)$TSconfig[$field]['PAGE_TSCONFIG_ID'], $fTWHERE);
 
-            $fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', $GLOBALS['TYPO3_DB']->quoteStr($TSconfig[$field]['PAGE_TSCONFIG_STR'], $foreign_table), $fTWHERE);
+            // ###PAGE_TSCONFIG_IDLIST###
+            $idList = GeneralUtility::intExplode(',', $TSconfig[$field]['PAGE_TSCONFIG_IDLIST'] ?? '', true);
+            $fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', implode(',', $idList), $fTWHERE);
+
+            $connection = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable($foreign_table);
+
+            // Explicitly cast to string to prevent errors with empty values
+            $rawStr = (string)($TSconfig[$field]['PAGE_TSCONFIG_STR'] ?? '');
+            $quotedStr = $connection->quote($rawStr);
+
+            // Since quote() wraps the string in single quotes ('my_value'),
+            // we trim them here so it matches the behavior of the legacy quoteStr().
+             $quotedStr = trim($quotedStr, "'");
+
+            $fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', $quotedStr, $fTWHERE);
         } else {
-            $fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', $currentPid, $fTWHERE);
-            $fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', $currentPid, $fTWHERE);
+            // Fallback replacements if no TSconfig context is available for the field
+            $fTWHERE = str_replace('###PAGE_TSCONFIG_ID###', (string)$currentPid, $fTWHERE);
+            $fTWHERE = str_replace('###PAGE_TSCONFIG_IDLIST###', (string)$currentPid, $fTWHERE);
             $fTWHERE = str_replace('###PAGE_TSCONFIG_STR###', '', $fTWHERE);
         }
 
@@ -158,27 +170,46 @@ class TableUtility
     }
 
     /**
-     * Creating where-clause for checking group access to elements in enableFields function.
-     *
-     * @param	string		Field with group list
-     * @param	string		Table name
-     *
-     * @return	string		AND sql-clause
-     *
-     * @see enableFields()
-     */
-    public static function getMultipleGroupsWhereClause($field, $table)
+    * Generates a raw SQL WHERE clause snippet to match comma-separated frontend groups.
+    *
+    * Fully compatible with TYPO3 v13!
+    *
+    * @param string $field The database table field containing the comma-separated group list (e.g., 'usergroup')
+    * @param string $table The database table name (e.g., 'tt_content')
+    * @return string The SQL WHERE clause snippet starting with ' AND (...)'
+    */
+    public static function getMultipleGroupsWhereClause(string $field, string $table): string
     {
-        $memberGroups = GeneralUtility::intExplode(',', implode(',', GeneralUtility::makeInstance(Context::class)->getPropertyFromAspect('frontend.user', 'groupIds')));
-        $orChecks = [];
-        $orChecks[] = $field . '=\'\''; // If the field is empty, then OK
-        $orChecks[] = $field . ' IS NULL'; // If the field is NULL, then OK
-        $orChecks[] = $field . '=\'0\''; // If the field contsains zero, then OK
+        // Retrieve group IDs safely from the UserAspect context (TYPO3 v13 standard)
+        $userAspect = GeneralUtility::makeInstance(Context::class)->getAspect('frontend.user');
+        $groupIds = method_exists($userAspect, 'getGroupIds') ? $userAspect->getGroupIds() : [];
 
+        // Ensure we have a clean array of integers
+        $memberGroups = GeneralUtility::intExplode(',', implode(',', $groupIds), true);
+
+        // Get the platform-specific database connection to securely quote literal values
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable($table);
+
+        $orChecks = [];
+
+        // Check if the field is empty, null, or zero
+        $orChecks[] = $connection->quoteIdentifier($field) . ' = ' . $connection->quote('');
+        $orChecks[] = $connection->quoteIdentifier($field) . ' IS NULL';
+        $orChecks[] = $connection->quoteIdentifier($field) . ' = 0';
+
+        // Generates standard SQL FIND_IN_SET or platform equivalent via literal strings.
         foreach ($memberGroups as $value) {
-            $orChecks[] = $GLOBALS['TYPO3_DB']->listQuery($field, $value, $table);
+            if ($value > 0) {
+                $orChecks[] = 'FIND_IN_SET('
+                    . $connection->quote((string)$value)
+                    . ', '
+                    . $connection->quoteIdentifier($field)
+                    . ')';
+            }
         }
 
+        // Returns the exact string structure expected by your legacy calling functions
         return ' AND (' . implode(' OR ', $orChecks) . ')';
     }
 
@@ -281,31 +312,57 @@ class TableUtility
     }
 
     /**
-     * Removes Page UID numbers from the input array which are not available due to enableFields() or the list of bad doktype numbers ($this->checkPid_badDoktypeList).
-     *
-     * @param array $listArr array of Page UID numbers for select and for which pages with enablefields and bad doktypes should be removed
-     *
-     * @return array Returns the array of remaining page UID numbers
-     *
-     * @access private
-     *
-     * @see getWhere(),checkPid()
-     *
-     * @todo Define visibility
-     */
-    public static function checkPidArray($listArr)
+    * Validates an array of page IDs against existing, active pages and excludes bad doktypes.
+    *
+    * @param array $listArr Array of page UIDs to check
+    * @return array Array of valid and accessible page UIDs
+    */
+    public static function checkPidArray($listArr): array
     {
         $outArr = [];
-        if (is_array($listArr) && count($listArr)) {
-            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'pages', 'uid IN (' . implode(',', $listArr) . ')' . static::enableFields('pages') . ' AND doktype NOT IN (' . $this->checkPid_badDoktypeList . ')');
-            if ($error = $GLOBALS['TYPO3_DB']->sql_error()) {
-                GeneralUtility::makeInstance(TimeTracker::class)->setTSlogMessage($error . ': ' . $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery, 3);
-            } else {
-                while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                    $outArr[] = $row['uid'];
-                }
+
+        if (is_array($listArr) && count($listArr) > 0) {
+            $table = 'pages';
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getQueryBuilderForTable($table);
+
+            // Ensure we only have a clean list of integers for the bad doktypes
+            // Changed from $this->checkPid_badDoktypeList to static::$checkPid_badDoktypeList
+            $badDoktypes = GeneralUtility::intExplode(',', static::$checkPid_badDoktypeList ?? '', true);
+
+            $queryBuilder
+                ->select('uid')
+                ->from($table)
+                ->where(
+                    $queryBuilder->expr()->in(
+                        'uid',
+                        $queryBuilder->createNamedParameter($listArr, Connection::PARAM_INT_ARRAY)
+                    )
+                );
+
+            // Append the doktype exclusion if bad doktypes are defined
+            if (count($badDoktypes) > 0) {
+                $queryBuilder->andWhere(
+                    $queryBuilder->expr()->notIn(
+                        'doktype',
+                        $queryBuilder->createNamedParameter($badDoktypes, Connection::PARAM_INT_ARRAY)
+                    )
+                );
             }
-            $GLOBALS['TYPO3_DB']->sql_free_result($res);
+
+            try {
+                $result = $queryBuilder->executeQuery();
+                while ($row = $result->fetchAssociative()) {
+                    $outArr[] = (int)$row['uid'];
+                }
+            } catch (\Exception $e) {
+                // Modern TYPO3 replacement for TimeTracker/sql_error logging
+                $logger = GeneralUtility::makeInstance(LogManager::class)->getLogger(static::class);
+                $logger->error($e->getMessage(), [
+                    'sql' => $queryBuilder->getSQL(),
+                    'parameters' => $queryBuilder->getParameters()
+                ]);
+            }
         }
 
         return $outArr;
