@@ -37,6 +37,13 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\Query\QueryHelper;
+
+
 class SystemCategoryUtility
 {
     public const type_local = 0;
@@ -73,66 +80,94 @@ class SystemCategoryUtility
     }
 
     /**
-     * Gets the uids by
-     * looking up the MM relations of this record to the
-     * table name defined in the local field 'table_name'.
-     *
-     * @return array
-     */
+    * Gets the uids by
+    * looking up the MM relations of this record to the
+    * table name defined in the local field 'table_name'.
+    *
+    * @param string $tableName Name der Datentabelle (z.B. tt_content, pages)
+    * @param string $fieldName Feldname der Relation
+    * @param string $type Entweder 'type_local' oder 'type_foreign' (Nutzen Sie am besten Strings/Konstanten)
+    * @param array $uidArray Liste von UIDs zur Einschränkung
+    * @param string $orderBy Optionale Sortierung
+    * @return array Liste von reinen UIDs (Integers)
+    */
     public static function getUids(
         $tableName,
         $fieldName,
-        $type = type_local,
+        $type = 'type_local',
         array $uidArray = [],
         $orderBy = ''
-    ) {
+    ): array {
         $relatedRecords = [];
-        // Assemble where clause
+        $storageTable = static::$storageTableName;
+        $inputTable = $tableName;
+        $outputTable = $storageTable;
 
-        // Add condition on tablenames fields
-        $where .= ' AND sys_category_record_mm.tablenames = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr(
-            $tableName,
-            'sys_category_record_mm'
-        );
-        // Add condition on fieldname field
-        $where .= ' AND sys_category_record_mm.fieldname = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr(
-            $fieldName,
-            'sys_category_record_mm'
-        );
-
-        if (!empty($uidArray)) {
-            $uidArray = $GLOBALS['TYPO3_DB']->cleanIntArray($uidArray);
-            $inputTable = $tableName;
-            if ($type == type_foreign) {
-                $inputTable = static::$storageTableName;
-            }
-
-            // Add condition on uid field
-            $where .= ' AND ' . $inputTable . '.uid IN (' .
-                implode(',', $uidArray) .
-                ')';
-        }
-
-        $outputTable = static::$storageTableName;
-        if ($type == type_foreign) {
+        if ($type === 'type_foreign') {
+            $inputTable = $storageTable;
             $outputTable = $tableName;
         }
 
-        $resource = $GLOBALS['TYPO3_DB']->exec_SELECT_mm_query(
-            'DISTINCT ' . $outputTable . '.uid',
-            static::$storageTableName,
-            'sys_category_record_mm',
-            $tableName,
-            $where,
-            '',
-            $orderBy
+        $mmTable = 'sys_category_record_mm';
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable($mmTable);
+
+        $queryBuilder
+            ->select($outputTable . '.uid')
+            ->distinct()
+            ->from($mmTable);
+
+        $queryBuilder->innerJoin(
+            $mmTable,
+            $storageTable,
+            $storageTable,
+            $queryBuilder->expr()->eq(
+                $mmTable . '.uid_local', $queryBuilder->quoteIdentifier($storageTable . '.uid')
+            )
         );
 
-        if ($resource) {
-            while ($record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resource)) {
-                $relatedRecords[] = $record['uid'];
+        $queryBuilder->innerJoin(
+            $mmTable,
+            $tableName,
+            $tableName,
+            $queryBuilder->expr()->eq(
+                $mmTable . '.uid_foreign', $queryBuilder->quoteIdentifier($tableName . '.uid')
+            )
+        );
+
+        $queryBuilder->where(
+            $queryBuilder->expr()->eq(
+                $mmTable . '.tablenames',
+                $queryBuilder->createNamedParameter($tableName)
+            ),
+            $queryBuilder->expr()->eq(
+                $mmTable . '.fieldname',
+                $queryBuilder->createNamedParameter($fieldName)
+            )
+        );
+
+        if (!empty($uidArray)) {
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->in(
+                    $inputTable . '.uid',
+                    $queryBuilder->createNamedParameter(
+                        $uidArray,
+                        Connection::PARAM_INT_ARRAY
+                    )
+                )
+            );
+        }
+
+        if ($orderBy !== '') {
+            foreach (QueryHelper::parseOrderBy($orderBy) as $orderPair) {
+                [$orderField, $direction] = $orderPair;
+                $queryBuilder->addOrderBy($orderField, $direction);
             }
-            $GLOBALS['TYPO3_DB']->sql_free_result($resource);
+        }
+
+        $result = $queryBuilder->executeQuery();
+        while ($record = $result->fetchAssociative()) {
+            $relatedRecords[] = (int)$record['uid'];
         }
 
         return $relatedRecords;
