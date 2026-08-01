@@ -74,6 +74,12 @@ class TableUtility
     ];
 
     /**
+     * @var string|int|null
+     */
+    public static $checkPid_badDoktypeList;
+
+
+    /**
      * Returns select statement for MM relations (as used by TCEFORMs etc) . Code borrowed from class.t3lib_befunc.php
      * Usage: 3.
      *
