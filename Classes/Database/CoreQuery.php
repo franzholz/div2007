@@ -18,6 +18,7 @@ namespace JambageCom\Div2007\Database;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+// deprecated since 1st August 2026. It will be removed in 3 years
 
 class CoreQuery
 {
