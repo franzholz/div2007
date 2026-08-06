@@ -47,11 +47,16 @@ class TcaUtility
      *
      * @return	string		Content stream
      */
-    public static function removeField(array &$tableTca, array $fieldArray): void
+    public static function removeField(array &$tableTca, ?array $fieldArray): void
     {
-        foreach ($fieldArray as $field) {
-            if (isset($tableTca['columns'][$field])) {
-                unset($tableTca['columns'][$field]);
+        if (
+            isset($fieldArray) &&
+            is_array($fieldArray)
+        ) {
+            foreach ($fieldArray as $field) {
+                if (isset($tableTca['columns'][$field])) {
+                    unset($tableTca['columns'][$field]);
+                }
             }
         }
 
