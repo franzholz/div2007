@@ -40,14 +40,9 @@ namespace JambageCom\Div2007\Base;
  * @subpackage div2007
  */
 use TYPO3\CMS\Core\SingletonInterface;
-use JambageCom\Div2007\Utility\FlexformUtility;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 class CmsHookBase implements SingletonInterface
 {
-    public $extensionKey = '';	// extension key must be overridden
-    public $extKey = '';	// DEPRECATED
-
     /**
      * Draw the item in the page module.
      *
@@ -58,38 +53,6 @@ class CmsHookBase implements SingletonInterface
      */
     public function pmDrawItem($params, $pObj)
     {
-        $codes = '';
-        $extensionKey = '';
-        if (
-            $this->extensionKey != ''
-        ) {
-            $extensionKey = $this->extensionKey;
-        } elseif (
-            $this->extKey != ''
-        ) {
-            $extensionKey = $this->extKey;
-        }
-
-        if (
-            $extensionKey != '' &&
-            ExtensionManagementUtility::isLoaded($extensionKey) &&
-            in_array(
-                intval($pObj->pageRecord['doktype']),
-                [1, 2, 5]
-            ) &&
-            $params['row']['pi_flexform'] != ''
-        ) {
-            FlexformUtility::load(
-                $params['row']['pi_flexform'],
-                $extensionKey
-            );
-            $codes =
-                'CODE: ' . FlexformUtility::get(
-                    $extensionKey,
-                    'display_mode'
-                );
-        }
-
-        return $codes;
+        return 'PageLayoutView is removed in TYPO3 12';
     }
 }
