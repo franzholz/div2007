@@ -5,243 +5,243 @@
     <body>
       <trans-unit id="about" resname="about">
         <source>About</source>
-        <target state="needs-translation">About</target>
+        <target state="translated">Névjegy</target>
       </trans-unit>
       <trans-unit id="and" resname="and">
         <source>and</source>
-        <target state="needs-translation">and</target>
+        <target state="translated">és</target>
       </trans-unit>
       <trans-unit id="ascending" resname="ascending">
         <source>Ascending</source>
-        <target state="needs-translation">Ascending</target>
+        <target state="translated">Növekvő</target>
       </trans-unit>
       <trans-unit id="back" resname="back">
         <source>Back</source>
-        <target state="needs-translation">Back</target>
+        <target state="translated">Vissza</target>
       </trans-unit>
       <trans-unit id="byteSizeUnits" resname="byteSizeUnits">
         <source> B| KB| MB| GB</source>
-        <target state="needs-translation"> B| KB| MB| GB</target>
+        <target state="translated"> B| KB| MB| GB</target>
       </trans-unit>
       <trans-unit id="cancel" resname="cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">Mégse</target>
       </trans-unit>
       <trans-unit id="category" resname="category">
         <source>Category</source>
-        <target state="needs-translation">Category</target>
+        <target state="translated">Kategória</target>
       </trans-unit>
       <trans-unit id="close" resname="close">
         <source>Close</source>
-        <target state="needs-translation">Close</target>
+        <target state="translated">Bezárás</target>
       </trans-unit>
       <trans-unit id="delete" resname="delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">Törlés</target>
       </trans-unit>
       <trans-unit id="descending" resname="descending">
         <source>Descending</source>
-        <target state="needs-translation">Descending</target>
+        <target state="translated">Csökkenő</target>
       </trans-unit>
       <trans-unit id="details" resname="details">
         <source>Details</source>
-        <target state="needs-translation">Details</target>
+        <target state="translated">Részletek</target>
       </trans-unit>
       <trans-unit id="disable" resname="disable">
         <source>Disable</source>
-        <target state="needs-translation">Disable</target>
+        <target state="translated">Letiltás</target>
       </trans-unit>
       <trans-unit id="down" resname="down">
         <source>Down</source>
-        <target state="needs-translation">Down</target>
+        <target state="translated">Le</target>
       </trans-unit>
       <trans-unit id="download" resname="download">
         <source>Download</source>
-        <target state="needs-translation">Download</target>
+        <target state="translated">Letöltés</target>
       </trans-unit>
       <trans-unit id="edit" resname="edit">
         <source>Edit</source>
-        <target state="needs-translation">Edit</target>
+        <target state="translated">Szerkesztés</target>
       </trans-unit>
       <trans-unit id="editField" resname="editField">
         <source>Edit field</source>
-        <target state="needs-translation">Edit field</target>
+        <target state="translated">Mező szerkesztése</target>
       </trans-unit>
       <trans-unit id="editFile" resname="editFile">
         <source>Edit file</source>
-        <target state="needs-translation">Edit file</target>
+        <target state="translated">Fájl szerkesztése</target>
       </trans-unit>
       <trans-unit id="enable" resname="enable">
         <source>Enable</source>
-        <target state="needs-translation">Enable</target>
+        <target state="translated">Engedélyezés</target>
       </trans-unit>
       <trans-unit id="file" resname="file">
         <source>File</source>
-        <target state="needs-translation">File</target>
+        <target state="translated">Fájl</target>
       </trans-unit>
       <trans-unit id="files" resname="files">
         <source>Files</source>
-        <target state="needs-translation">Files</target>
+        <target state="translated">Fájlok</target>
       </trans-unit>
       <trans-unit id="first" resname="first">
         <source>First</source>
-        <target state="needs-translation">First</target>
+        <target state="translated">Első</target>
       </trans-unit>
       <trans-unit id="go" resname="go">
         <source>Go</source>
-        <target state="needs-translation">Go</target>
+        <target state="translated">Ugrás</target>
       </trans-unit>
       <trans-unit id="goTo" resname="goTo">
         <source>Go to</source>
-        <target state="needs-translation">Go to</target>
+        <target state="translated">Ugrás ide</target>
       </trans-unit>
       <trans-unit id="help" resname="help">
         <source>Help</source>
-        <target state="needs-translation">Help</target>
+        <target state="translated">Súgó</target>
       </trans-unit>
       <trans-unit id="item" resname="item">
         <source>Item</source>
-        <target state="needs-translation">Item</target>
+        <target state="translated">Elem</target>
       </trans-unit>
       <trans-unit id="items" resname="items">
         <source>Items</source>
-        <target state="needs-translation">Items</target>
+        <target state="translated">Elemek</target>
       </trans-unit>
       <trans-unit id="last" resname="last">
         <source>Last</source>
-        <target state="needs-translation">Last</target>
+        <target state="translated">Utolsó</target>
       </trans-unit>
       <trans-unit id="left" resname="left">
         <source>Left</source>
-        <target state="needs-translation">Left</target>
+        <target state="translated">Balra</target>
       </trans-unit>
       <trans-unit id="login" resname="login">
         <source>Login</source>
-        <target state="needs-translation">Login</target>
+        <target state="translated">Bejelentkezés</target>
       </trans-unit>
       <trans-unit id="logout" resname="logout">
         <source>Logout</source>
-        <target state="needs-translation">Logout</target>
+        <target state="translated">Kijelentkezés</target>
       </trans-unit>
       <trans-unit id="more" resname="more">
         <source>More</source>
-        <target state="needs-translation">More</target>
+        <target state="translated">Több</target>
       </trans-unit>
       <trans-unit id="move" resname="move">
         <source>Move</source>
-        <target state="needs-translation">Move</target>
+        <target state="translated">Mozgatás</target>
       </trans-unit>
       <trans-unit id="new" resname="new">
         <source>New</source>
-        <target state="needs-translation">New</target>
+        <target state="translated">Új</target>
       </trans-unit>
       <trans-unit id="next" resname="next">
         <source>Next</source>
-        <target state="needs-translation">Next</target>
+        <target state="translated">Következő</target>
       </trans-unit>
       <trans-unit id="no" resname="no">
         <source>No</source>
-        <target state="needs-translation">No</target>
+        <target state="translated">Nem</target>
       </trans-unit>
       <trans-unit id="ok" resname="ok">
         <source>OK</source>
-        <target state="needs-translation">OK</target>
+        <target state="translated">OK</target>
       </trans-unit>
       <trans-unit id="open" resname="open">
         <source>Open</source>
-        <target state="needs-translation">Open</target>
+        <target state="translated">Megnyitás</target>
       </trans-unit>
       <trans-unit id="page" resname="page">
         <source>Page</source>
-        <target state="needs-translation">Page</target>
+        <target state="translated">Oldal</target>
       </trans-unit>
       <trans-unit id="pages" resname="pages">
         <source>Pages</source>
-        <target state="needs-translation">Pages</target>
+        <target state="translated">Oldalak</target>
       </trans-unit>
       <trans-unit id="previous" resname="previous">
         <source>Previous</source>
-        <target state="needs-translation">Previous</target>
+        <target state="translated">Előző</target>
       </trans-unit>
       <trans-unit id="print" resname="print">
         <source>Print</source>
-        <target state="needs-translation">Print</target>
+        <target state="translated">Nyomtatás</target>
       </trans-unit>
       <trans-unit id="reload" resname="reload">
         <source>Reload</source>
-        <target state="needs-translation">Reload</target>
+        <target state="translated">Újratöltés</target>
       </trans-unit>
       <trans-unit id="right" resname="right">
         <source>Right</source>
-        <target state="needs-translation">Right</target>
+        <target state="translated">Jobbra</target>
       </trans-unit>
       <trans-unit id="save" resname="save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">Mentés</target>
       </trans-unit>
       <trans-unit id="saveAndClose" resname="saveAndClose">
         <source>Save and close</source>
-        <target state="needs-translation">Save and close</target>
+        <target state="translated">Mentés és bezárás</target>
       </trans-unit>
       <trans-unit id="saveAndCloseDoc" resname="saveAndCloseDoc">
         <source>Save and close document</source>
-        <target state="needs-translation">Save and close document</target>
+        <target state="translated">Mentés és dokumentum bezárása</target>
       </trans-unit>
       <trans-unit id="saveAndCreateNewDoc" resname="saveAndCreateNewDoc">
         <source>Save and create new document</source>
-        <target state="needs-translation">Save and create new document</target>
+        <target state="translated">Mentés és új dokumentum létrehozása</target>
       </trans-unit>
       <trans-unit id="saveAndViewPage" resname="saveAndViewPage">
         <source>Save and view page</source>
-        <target state="needs-translation">Save and view page</target>
+        <target state="translated">Mentés és oldal megtekintése</target>
       </trans-unit>
       <trans-unit id="search" resname="search">
         <source>Search</source>
-        <target state="needs-translation">Search</target>
+        <target state="translated">Keresés</target>
       </trans-unit>
       <trans-unit id="send" resname="send">
         <source>Send</source>
-        <target state="needs-translation">Send</target>
+        <target state="translated">Küldés</target>
       </trans-unit>
       <trans-unit id="start" resname="start">
         <source>Start</source>
-        <target state="needs-translation">Start</target>
+        <target state="translated">Indítás</target>
       </trans-unit>
       <trans-unit id="stop" resname="stop">
         <source>Stop</source>
-        <target state="needs-translation">Stop</target>
+        <target state="translated">Leállítás</target>
       </trans-unit>
       <trans-unit id="submit" resname="submit">
         <source>Submit</source>
-        <target state="needs-translation">Submit</target>
+        <target state="translated">Elküldés</target>
       </trans-unit>
       <trans-unit id="tsRef" resname="tsRef">
         <source>TSref reference</source>
-        <target state="needs-translation">TSref reference</target>
+        <target state="translated">TSref hivatkozás</target>
       </trans-unit>
       <trans-unit id="up" resname="up">
         <source>Up</source>
-        <target state="needs-translation">Up</target>
+        <target state="translated">Fel</target>
       </trans-unit>
       <trans-unit id="upload" resname="upload">
         <source>Upload</source>
-        <target state="needs-translation">Upload</target>
+        <target state="translated">Feltöltés</target>
       </trans-unit>
       <trans-unit id="user" resname="user">
         <source>User</source>
-        <target state="needs-translation">User</target>
+        <target state="translated">Felhasználó</target>
       </trans-unit>
       <trans-unit id="users" resname="users">
         <source>Users</source>
-        <target state="needs-translation">Users</target>
+        <target state="translated">Felhasználók</target>
       </trans-unit>
       <trans-unit id="view" resname="view">
         <source>View</source>
-        <target state="needs-translation">View</target>
+        <target state="translated">Nézet</target>
       </trans-unit>
       <trans-unit id="yes" resname="yes">
         <source>Yes</source>
-        <target state="needs-translation">Yes</target>
+        <target state="translated">Igen</target>
       </trans-unit>
     </body>
   </file>
