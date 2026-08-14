@@ -20,9 +20,13 @@ namespace JambageCom\Div2007\Api;
  * Alternative: see TYPO3 12 TYPO3\CMS\Core\Country\CountryProvider class
  * https://docs.typo3.org/m/typo3/reference-coreapi/main/en-us/ApiOverview/Country/Index.html
  */
+
+use Psr\Http\Message\ServerRequestInterface;
+
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Database\Connection as Typo3Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
@@ -32,6 +36,7 @@ use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+
 
 use SJBR\StaticInfoTables\Domain\Model\Currency;
 use SJBR\StaticInfoTables\Domain\Repository\CountryRepository;
@@ -73,13 +78,22 @@ class StaticInfoTablesApi implements SingletonInterface
      */
     protected $currencyRepository;
 
+    /**
+     * @var ServerRequestInterface
+     */
+    protected $request;
+
 
     /**
      * Initialization of the extension static_info_tables.
      */
-    public function init($conf = [])
+    public function init(
+        ServerRequestInterface $request,
+        array $conf = [],
+    )
     {
         $result = true;
+        $this->$request = $request;
         $this->countryRepository = GeneralUtility::makeInstance(CountryRepository::class);
         $this->currencyRepository = GeneralUtility::makeInstance(CurrencyRepository::class);
 
@@ -93,7 +107,7 @@ class StaticInfoTablesApi implements SingletonInterface
                     $conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_staticinfotables_pi1.'];
                 } else if ($this->version >= 13) {
                     $fullTypoScript =
-                        $GLOBALS['TYPO3_REQUEST']->getAttribute('frontend.typoscript')->getSetupArray();
+                        $request->getAttribute('frontend.typoscript')->getSetupArray();
                     $conf = $fullTypoScript['plugin.']['tx_staticinfotables_pi1.'] ?? [];
                 }
             }
@@ -462,99 +476,123 @@ class StaticInfoTablesApi implements SingletonInterface
      *
      * @param string $addWhere: additional WHERE clause
      *
-     * @return array An array of names of languages
+     * @return string|bool Gibt den Sprachcode zurück (z.B. 'EN' oder 'de_DE') oder false
      */
-    public function initLanguages($addWhere = '')
+    public function getCurrentLanguage()
+    {
+        if (!$this->isActive()) {
+            return false;
+        }
+
+        $siteLanguage = null;
+        if (isset($this->request) && is_object($this->request) && method_exists($this->request, 'getAttribute')) {
+            $siteLanguage = $this->request->getAttribute('language');
+        }
+
+        if ($siteLanguage !== null) {
+            $langCodeT3 = $siteLanguage->getTypo3Language();
+        } else {
+            $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
+            $langCodeT3 = $languageAspect->getLegacyLanguageKey();
+        }
+
+        if (empty($langCodeT3) || $langCodeT3 === 'default') {
+            return 'EN';
+        }
+
+        // Cache-Abfrage vorab
+        if (isset($this->cache['getCurrentLanguage'][$langCodeT3])) {
+            return $this->cache['getCurrentLanguage'][$langCodeT3];
+        }
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('static_languages');
+
+        // Optimierung: Nur eine Zeile fetchen statt einer while-Schleife
+        $row = $queryBuilder
+            ->select('lg_iso_2', 'lg_country_iso_2')
+            ->from('static_languages')
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'lg_typo3',
+                    $queryBuilder->createNamedParameter($langCodeT3)
+                )
+            )
+            ->executeQuery()
+            ->fetchAssociative();
+
+        $lang = '';
+        if ($row) {
+            $lang = $row['lg_iso_2'] . ($row['lg_country_iso_2'] ? '_' . $row['lg_country_iso_2'] : '');
+        }
+
+        $lang = $lang ?: strtoupper($langCodeT3);
+
+        // Cache befüllen (Dank PHP-Array-Autovivification ist keine Vorab-Initialisierung nötig)
+        $this->cache['getCurrentLanguage'][$langCodeT3] = $lang;
+
+        return $lang;
+    }
+
+
+    /**
+    * Initialisiert die Sprachenliste.
+    *
+    * @param string $addWhere Optionaler zusätzlicher Query-String (wird sicher angehängt)
+    * @return array Sortiertes Array mit [Sprachcode => Name]
+    */
+    public function initLanguages($addWhere = ''): array
     {
         $nameArray = [];
         $table = $this->tables['LANGUAGES'];
+
         $lang = LocalizationUtility::getCurrentLanguage();
         $lang = LocalizationUtility::getIsoLanguageKey($lang);
         $titleFields = LocalizationUtility::getLabelFields($table, $lang);
-        $prefixedTitleFields = [];
-        foreach ($titleFields as $titleField => $map) {
-            $prefixedTitleFields[] = $table . '.' . $titleField;
-        }
+
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable($table);
+
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(FrontendRestrictionContainer::class));
+
+        // Basis-Auswahl mit Aliasen, um Treiber-Inkonsistenzen zu vermeiden
         $queryBuilder
-            ->select($table . '.lg_iso_2')
-            ->addSelect($table . '.lg_country_iso_2')
+            ->select($table . '.lg_iso_2 AS lg_iso_2')
+            ->addSelect($table . '.lg_country_iso_2 AS lg_country_iso_2')
             ->from($table);
-        foreach ($prefixedTitleFields as $titleField) {
-            $queryBuilder->addSelect($titleField);
+
+        // Dynamische Titelfelder mit klarem Alias hinzufügen
+        foreach ($titleFields as $titleField => $map) {
+            $queryBuilder->addSelect($table . '.' . $titleField . ' AS ' . $titleField);
         }
+
         $queryBuilder->where(
-            $queryBuilder->expr()->eq('lg_sacred', $queryBuilder->createNamedParameter(0, Typo3Connection::PARAM_INT)),
-            $queryBuilder->expr()->eq('lg_constructed', $queryBuilder->createNamedParameter(0, Typo3Connection::PARAM_INT))
+            $queryBuilder->expr()->eq('lg_sacred', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT))
+        )->andWhere(
+            $queryBuilder->expr()->eq('lg_constructed', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT))
         );
+
         if ($addWhere) {
-            $addWhere = QueryHelper::stripLogicalOperatorPrefix($addWhere);
-            $queryBuilder->andWhere($addWhere);
+            $strippedWhere = QueryHelper::stripLogicalOperatorPrefix($addWhere);
+            $queryBuilder->andWhere($strippedWhere);
         }
+
         $query = $queryBuilder->executeQuery();
         while ($row = $query->fetchAssociative()) {
             $code = $row['lg_iso_2'] . ($row['lg_country_iso_2'] ? '_' . $row['lg_country_iso_2'] : '');
+
             foreach ($titleFields as $titleField => $map) {
-                if ($row[$titleField] ?? false) {
+                // Prüfung optimiert für leere Strings oder null
+                if (isset($row[$titleField]) && $row[$titleField] !== '') {
                     $nameArray[$code] = $row[$titleField];
                     break;
                 }
             }
         }
-        uasort($nameArray, 'strcoll');
+
+        asort($nameArray);
+
         return $nameArray;
-    }
-
-    /**
-     * Returns the current language as iso-2-alpha code.
-     *
-     * @return	string		'DE', 'EN', 'DK', ...
-     */
-    public static function getCurrentLanguage()
-    {
-        if (!$this->isActive()) {
-            return false;
-        }
-        if (is_object($GLOBALS['TSFE'])) {
-            $langCodeT3 = $GLOBALS['TSFE']->lang;
-        } elseif (is_object($GLOBALS['LANG'])) {
-            $langCodeT3 = $GLOBALS['LANG']->lang;
-        } else {
-            return 'EN';
-        }
-        if ($langCodeT3 == 'default') {
-            return 'EN';
-        }
-        // Return cached value if any
-        if (isset($this->cache['getCurrentLanguage'][$langCodeT3])) {
-            return $this->cache['getCurrentLanguage'][$langCodeT3];
-        }
-
-        $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-            'lg_iso_2,lg_country_iso_2',
-            'static_languages',
-            'lg_typo3=' . $GLOBALS['TYPO3_DB']->fullQuoteStr($langCodeT3, 'static_languages')
-        );
-        while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-            $lang = $row['lg_iso_2'] . ($row['lg_country_iso_2'] ? '_' . $row['lg_country_iso_2'] : '');
-        }
-        $GLOBALS['TYPO3_DB']->sql_free_result($res);
-
-        $lang = $lang ?: strtoupper($langCodeT3);
-
-        // Initialize cache array
-        if (
-            !isset($this->cache['getCurrentLanguage']) ||
-            !is_array($this->cache['getCurrentLanguage'])
-        ) {
-            $this->cache['getCurrentLanguage'] = [];
-        }
-        // Cache retrieved value
-        $this->cache['getCurrentLanguage'][$langCodeT3] = $lang;
-
-        return $lang;
     }
 
     /**
@@ -619,36 +657,36 @@ class StaticInfoTablesApi implements SingletonInterface
     /**
      * Returns a label field for the current language.
      *
-     * @param	string		table name
-     * @param	bool		DEPRECATED
-     * @param	string		language to be used
-     * @param	bool		If set, we are looking for the "local" title field
-     *
-     * @return	string		field name
+     * @param string $table
+     * @param bool $bLoadTCA
+     * @param string $lang
+     * @param bool $local
+     * @return array
      */
-    public static function getTCAlabelField($table, $bLoadTCA = true, $lang = '', $local = false)
+
+    public function getTCAlabelField($table, $bLoadTCA = true, $lang = '', $local = false): array
     {
+        // Geändert: von !static::isActive() zu $this->isActive()
         if (!$this->isActive()) {
-            return false;
+            return [];
         }
+
         $labelFields = [];
-        if (
-            $table &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields']) &&
-            is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'])
-        ) {
+        $extConf = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'] ?? null;
+
+        if ($table && is_array($extConf)) {
             $locales = GeneralUtility::makeInstance(Locales::class);
             $isoArray = (array)$locales->getIsoMapping();
-
-            $lang = $lang ?: static::getCurrentLanguage();
+            $lang = $lang ?: $this->getCurrentLanguage();
             $lang = $isoArray[$lang] ?? $lang;
 
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['label_fields'] as $field) {
+            foreach ($extConf as $field) {
                 if ($local) {
                     $labelField = str_replace('##', 'local', $field);
                 } else {
                     $labelField = str_replace('##', strtolower($lang), $field);
                 }
+
                 if (
                     isset($GLOBALS['TCA'][$table]['columns'][$labelField]) &&
                     is_array($GLOBALS['TCA'][$table]['columns'][$labelField])
@@ -662,26 +700,34 @@ class StaticInfoTablesApi implements SingletonInterface
     }
 
     /**
-     * Returns the type of an iso code: nr, 2, 3.
-     *
-     * @param	string		iso code
-     *
-     * @return	string		iso code type
-     */
-    public static function isoCodeType($isoCode)
+    * Returns the type of an iso code: nr, 2, 3.
+    *
+    * @param mixed $isoCode
+    * @return string 'nr', '2', '3' oder leerer String
+    */
+    public function isoCodeType($isoCode): string
     {
-        $type = '';
-        $isoCodeAsInteger =
-            MathUtility::canBeInterpretedAsInteger($isoCode);
-        if ($isoCodeAsInteger) {
-            $type = 'nr';
-        } elseif (strlen($isoCode) == 2) {
-            $type = '2';
-        } elseif (strlen($isoCode) == 3) {
-            $type = '3';
+        if (is_array($isoCode)) {
+            $isoCode = reset($isoCode);
         }
 
-        return $type;
+        if ($isoCode === null || $isoCode === '') {
+            return '';
+        }
+
+        if (MathUtility::canBeInterpretedAsInteger($isoCode)) {
+            return 'nr';
+        }
+
+        $length = strlen((string)$isoCode);
+        if ($length === 2) {
+            return '2';
+        }
+        if ($length === 3) {
+            return '3';
+        }
+
+        return '';
     }
 
     /**
@@ -689,29 +735,28 @@ class StaticInfoTablesApi implements SingletonInterface
      *
      *  $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables']
      *
-     * @param	string		table name
-     * @param	string		iso code
-     * @param	bool		If set (default) the TCA definition of the table should be loaded with tx_div2007_core::loadTCA(). It will be needed to set it to false if you call this function from inside of tca.php
-     * @param	int		index in the table's isocode_field array in the global variable
      *
-     * @return	string		field name
+     * @param string $table
+     * @param string|array $isoCode
+     * @param bool $bLoadTCA (Optional, obsolete)
+     * @param int $index
+     * @return string|bool Returns the fieldname as string or false
      */
-    public static function getIsoCodeField($table, $isoCode, $bLoadTCA = false, $index = 0)
+    public function getIsoCodeField($table, $isoCode, $bLoadTCA = false, $index = 0)
     {
         if (!$this->isActive()) {
             return false;
         }
         $result = false;
 
-        if (
-            $isoCode &&
-            $table &&
-            isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['isocode_field'][$index])
-        ) {
-            $isoCodeField = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['isocode_field'][$index];
+        $extConf = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['static_info_tables']['tables'][$table]['isocode_field'][$index] ?? null;
 
-            if ($isoCodeField != '') {
-                $type = static::isoCodeType($isoCode);
+        if ($isoCode && $table && $extConf) {
+            $isoCodeField = $extConf;
+
+            if ($isoCodeField !== '') {
+                // GEÄNDERT: von static::isoCodeType() zu $this->isoCodeType()
+                $type = $this->isoCodeType($isoCode);
                 $isoCodeField = str_replace('##', $type, $isoCodeField);
 
                 if (
@@ -726,6 +771,7 @@ class StaticInfoTablesApi implements SingletonInterface
         return $result;
     }
 
+
     /**
      * Fetches short title from an iso code.
      *
@@ -736,55 +782,59 @@ class StaticInfoTablesApi implements SingletonInterface
      *
      * @return	string		short title
      */
-    public static function getTitleFromIsoCode($table, $isoCode, $lang = '', $local = false)
+    public function getTitleFromIsoCode($table, $isoCode, $lang = '', $local = false)
     {
         if (!$this->isActive()) {
             return false;
         }
-        $title = '';
-        $titleFields = static::getTCAlabelField($table, true, $lang, $local);
-        if (count($titleFields)) {
-            $prefixedTitleFields = [];
-            foreach ($titleFields as $titleField => $titleFieldProperty) {
-                $prefixedTitleFields[] = $table . '.' . $titleField;
-            }
 
-            $fields = implode(',', $prefixedTitleFields);
-            $whereClause = '1=1';
+        $title = '';
+        $titleFields = $this->getTCAlabelField($table, true, $lang, $local);
+
+        if (count($titleFields)) {
+            // Initialize the QueryBuilder for the dynamic table name
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getQueryBuilderForTable($table);
+
+            // Build fields array for the select statement
+            $selectFields = [];
+            foreach ($titleFields as $titleField => $titleFieldProperty) {
+                $selectFields[] = $table . '.' . $titleField . ' AS ' . $titleField;
+            }
+            $queryBuilder
+                ->select(...$selectFields)
+                ->from($table);
+
+            // Dynamically add conditions securely using Named Parameters
             if (!is_array($isoCode)) {
                 $isoCode = [$isoCode];
             }
-            $index = 0;
+
             foreach ($isoCode as $index => $code) {
-                if ($code != '') {
+                if ($code !== '') {
                     $tmpField = static::getIsoCodeField($table, $code, true, $index);
-                    $tmpValue = $GLOBALS['TYPO3_DB']->fullQuoteStr($code, $table);
-                    if ($tmpField && $tmpValue) {
-                        $whereClause .= ' AND ' . $table . '.' . $tmpField . ' = ' . $tmpValue;
+                    if ($tmpField) {
+                        $queryBuilder->andWhere(
+                            $queryBuilder->expr()->eq(
+                                $table . '.' . $tmpField,
+                                $queryBuilder->createNamedParameter($code)
+                            )
+                        );
                     }
                 }
             }
-            if (is_object($GLOBALS['TSFE'])) {
-                $enableFields = $GLOBALS['TSFE']->sys_page->enableFields($table);
-            } else {
-                $enableFields = TableUtility::deleteClause($table);
-            }
 
-            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-                $fields,
-                $table,
-                $whereClause . $enableFields
-            );
+            // Execute query and fetch the single matching row
+            $row = $queryBuilder->executeQuery()->fetchAssociative();
 
-            if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+            if ($row) {
                 foreach ($titleFields as $titleField => $titleFieldProperty) {
-                    if ($row[$titleField]) {
+                    if (!empty($row[$titleField])) {
                         $title = $row[$titleField];
                         break;
                     }
                 }
             }
-            $GLOBALS['TYPO3_DB']->sql_free_result($res);
         }
 
         return $title;
@@ -794,56 +844,86 @@ class StaticInfoTablesApi implements SingletonInterface
      * Get a list of countries by specific parameters or parts of names of countries
      * in different languages. Parameters might be left empty.
      *
-     * @param   string      a name of the country or a part of it in any language
-     * @param   string      ISO alpha-2 code of the country
-     * @param   string      ISO alpha-3 code of the country
+     * @param string $country  a name of the country or a part of it in any language
+     * @param string $iso2     ISO alpha-2 code of the country
+     * @param string $iso3     ISO alpha-3 code of the country
+     * @param string $isonr
      * @param   array       database row
      *
-     * @return  array       Array of rows of country records
+     * @return  array       Array of rows of found country records
      */
-    public function fetchCountries($country = 'Germany', $iso2 = '', $iso3 = '', $isonr = '')
+    public function fetchCountries($country = 'Germany', $iso2 = '', $iso3 = '', $isonr = ''): array
     {
         if (!$this->isActive()) {
-            return false;
+            return [];
         }
+
         $resultArray = [];
-        $where = '';
-
         $table = 'static_countries';
-        if ($country != '') {
-            $value = $GLOBALS['TYPO3_DB']->fullQuoteStr(trim('%' . $country . '%'), $table);
-            $where = 'cn_official_name_local LIKE ' . $value . ' OR cn_official_name_en LIKE ' . $value;
 
-            foreach ($GLOBALS['TCA'][$table]['columns'] as $fieldname => $fieldArray) {
-                if (str_starts_with($fieldname, 'cn_short_')) {
-                    $where .= ' OR ' . $fieldname . ' LIKE ' . $value;
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable($table);
+
+        $queryBuilder
+            ->select('*')
+            ->from($table);
+
+        // Flag, um zu prüfen, ob überhaupt eine Bedingung gesetzt wurde
+        $hasConstraints = false;
+
+        // Priorität 1: Spezifische ISO-Abfragen (wie im Original überschreiben diese die Namenssuche)
+        if ($isonr !== '') {
+            $queryBuilder->where(
+                $queryBuilder->expr()->eq('cn_iso_nr', $queryBuilder->createNamedParameter(trim($isonr)))
+            );
+            $hasConstraints = true;
+        } elseif ($iso2 !== '') {
+            $queryBuilder->where(
+                $queryBuilder->expr()->eq('cn_iso_2', $queryBuilder->createNamedParameter(trim($iso2)))
+            );
+            $hasConstraints = true;
+        } elseif ($iso3 !== '') {
+            $queryBuilder->where(
+                $queryBuilder->expr()->eq('cn_iso_3', $queryBuilder->createNamedParameter(trim($iso3)))
+            );
+            $hasConstraints = true;
+        }
+        // Priorität 2: Namenssuche via LIKE (nur wenn kein ISO-Code übergeben wurde)
+        elseif ($country !== '') {
+            $trimmedCountry = trim($country);
+            $likeValue = $queryBuilder->createNamedParameter('%' . $trimmedCountry . '%');
+
+            // Sammle alle OR-Bedingungen für die Namenssuche
+            $orConditions = [
+                $queryBuilder->expr()->like('cn_official_name_local', $likeValue),
+                $queryBuilder->expr()->like('cn_official_name_en', $likeValue)
+            ];
+
+            // Dynamische Spalten aus der TCA auslesen (z.B. cn_short_en, cn_short_de)
+            if (isset($GLOBALS['TCA'][$table]['columns']) && is_array($GLOBALS['TCA'][$table]['columns'])) {
+                foreach ($GLOBALS['TCA'][$table]['columns'] as $fieldname => $fieldArray) {
+                    if (str_starts_with($fieldname, 'cn_short_')) {
+                        $orConditions[] = $queryBuilder->expr()->like($fieldname, $likeValue);
+                    }
                 }
             }
+
+            // Alle gesammelten Bedingungen mit OR verknüpfen und in das WHERE setzen
+            $queryBuilder->where(
+                $queryBuilder->expr()->or(...$orConditions)
+            );
+            $hasConstraints = true;
         }
 
-        if ($isonr != '') {
-            $where = 'cn_iso_nr=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(trim($isonr), $table);
-        }
-
-        if ($iso2 != '') {
-            $where = 'cn_iso_2=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(trim($iso2), $table);
-        }
-
-        if ($iso3 != '') {
-            $where = 'cn_iso_3=' . $GLOBALS['TYPO3_DB']->fullQuoteStr(trim($iso3), $table);
-        }
-
-        if ($where != '') {
-            $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $table, $where);
-
-            if ($res) {
-                while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-                    $resultArray[] = $row;
-                }
+        // Nur ausführen, wenn mindestens ein Suchkriterium zutraf
+        if ($hasConstraints) {
+            $result = $queryBuilder->executeQuery();
+            while ($row = $result->fetchAssociative()) {
+                $resultArray[] = $row;
             }
-            $GLOBALS['TYPO3_DB']->sql_free_result($res);
         }
 
         return $resultArray;
     }
+
 }

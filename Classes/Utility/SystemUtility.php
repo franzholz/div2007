@@ -30,6 +30,8 @@ namespace JambageCom\Div2007\Utility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Connection;
 
 use JambageCom\Div2007\Utility\FrontendUtility;
 
@@ -114,13 +116,19 @@ class SystemUtility
         $feGroups = static::fetchFeGroups();
 
         if (!empty($feGroups)) {
-            $feGroupList = implode(',', $feGroups);
-            $where_clause = 'uid IN (' . $feGroupList . ')';
-            $result = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                '*',
-                'fe_groups',
-                $where_clause
-            );
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getQueryBuilderForTable('fe_groups');
+            $result = $queryBuilder
+                ->select('*')
+                ->from('fe_groups')
+                ->where(
+                    $queryBuilder->expr()->in(
+                        'uid',
+                        $queryBuilder->createNamedParameter($feGroups, Connection::PARAM_INT_ARRAY)
+                    )
+                )
+                ->executeQuery()
+                ->fetchAllAssociative();
         }
 
         return $result;
@@ -251,7 +259,7 @@ class SystemUtility
             }
             if ($errorOffset >= 0) {
                 if ($errorCheck) {
-                    trigger_error('unserialize_fh002(): Error at offset ' . $errorOffset . ' of ' . $len . ' bytes \'' . substr($str, $errorOffset, 12) . '\'', E_USER_NOTICE);
+                    trigger_error('unserialize(): Error at offset ' . $errorOffset . ' of ' . $len . ' bytes \'' . substr($str, $errorOffset, 12) . '\'', E_USER_NOTICE);
                     $result = false;
                 }
                 break;
@@ -281,6 +289,7 @@ class SystemUtility
      *
      * @see TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::parseFunc()
      */
+    #[AsAllowedCallable]
     public static function phpFunc(
         $content,
         $conf

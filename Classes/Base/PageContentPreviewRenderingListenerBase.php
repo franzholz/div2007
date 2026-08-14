@@ -39,10 +39,13 @@ namespace JambageCom\Div2007\Base;
  * @package TYPO3
  * @subpackage div2007
  */
-use TYPO3\CMS\Core\SingletonInterface;
-use JambageCom\Div2007\Utility\FlexformUtility;
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
+use TYPO3\CMS\Core\Domain\Exception\RecordPropertyNotFoundException;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+use JambageCom\Div2007\Utility\FlexformUtility;
+
 
 class PageContentPreviewRenderingListenerBase implements SingletonInterface
 {
@@ -91,18 +94,25 @@ class PageContentPreviewRenderingListenerBase implements SingletonInterface
             in_array(
                 intval($pageRecord['doktype']),
                 [1, 2, 5]
-            ) &&
-            $record->get('pi_flexform') != ''
+            )
         ) {
-            FlexformUtility::load(
-                $record->get('pi_flexform'),
-                $extensionKey
-            );
-            $codes =
-                'CODE: ' . FlexformUtility::get(
-                    $extensionKey,
-                    'display_mode'
+            $flexForm = '';
+            try {
+                $flexForm = $record->get('pi_flexform');
+            } catch (RecordPropertyNotFoundException $e) {
+            }
+
+            if ($flexForm != '') {
+                FlexformUtility::load(
+                    $flexForm,
+                    $extensionKey
                 );
+                $codes =
+                    'CODE: ' . FlexformUtility::get(
+                        $extensionKey,
+                        'display_mode'
+                    );
+            }
         }
 
         return $codes;

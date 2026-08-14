@@ -28,8 +28,13 @@ namespace JambageCom\Div2007\Utility;
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+
 
 /**
  * functions for the TYPO3 File Abstraction Layer (FAL).
@@ -44,33 +49,59 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class FileAbstractionUtility
 {
     /**
-     * Gets the file records
+     * Gets the referenced file records (sys_file_reference)
      * looking up the MM relations of this record to the
      * table name defined in the local field 'table_name'.
      *
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $uidArray
+     * @param string $orderBy
      * @return array
      */
-    public static function getFileRecords(
-        $tableName,
-        $fieldName,
+    public function getFileRecords(
+        string $tableName,
+        string $fieldName,
         array $uidArray = [],
-        $orderBy = 'sorting_foreign'
-    ) {
+        string $orderBy = 'sorting_foreign'
+    ): array {
         $result = [];
 
-        if (count($uidArray)) {
-            $where_clause = 'uid_foreign IN (' . implode(',', $uidArray) . ') AND tablenames="' . $tableName . '" AND fieldname="' . $fieldName . '"';
-            $where_clause .= TableUtility::enableFields('sys_file_reference');
-            $result =
-                $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-                    '*',
-                    'sys_file_reference',
-                    $where_clause,
-                    '',
-                    $orderBy,
-                    '',
-                    'uid_local'
-                );
+        if (count($uidArray) > 0) {
+            $table = 'sys_file_reference';
+            $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+                ->getQueryBuilderForTable($table);
+
+            $queryBuilder
+            ->select('*')
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->in(
+                    'uid_foreign',
+                    $queryBuilder->createNamedParameter($uidArray, Connection::PARAM_INT_ARRAY)
+                ),
+                $queryBuilder->expr()->eq(
+                    'tablenames',
+                    $queryBuilder->createNamedParameter($tableName)
+                ),
+                $queryBuilder->expr()->eq(
+                    'fieldname',
+                    $queryBuilder->createNamedParameter($fieldName)
+                )
+            );
+
+            if ($orderBy !== '') {
+                foreach (QueryHelper::parseOrderBy($orderBy) as $orderPair) {
+                    [$fieldName, $direction] = $orderPair;
+                    $queryBuilder->addOrderBy($fieldName, $direction);
+                }
+            }
+
+            $statement = $queryBuilder->executeQuery();
+            while ($row = $statement->fetchAssociative()) {
+                $key = $row['uid_local'] ?? count($result);
+                $result[$key] = $row;
+            }
         }
 
         return $result;

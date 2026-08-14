@@ -29,9 +29,6 @@
     "typo3/cms-core": "^13.4 || ^14.3",
     "typo3/cms-reports": "^13.4 || ^14.3"
   },
-  "suggest": {
-    "friendsoftypo3/typo3db-legacy": "^1"
-  },
   "autoload": {
     "psr-4": {
       "JambageCom\\Div2007\\": "Classes"
@@ -43,7 +40,7 @@
   "extra": {
     "typo3/cms": {
       "extension-key": "div2007",
-      "version": "2.4.7",
+      "version": "2.4.8",
       "Package": {
           "providesPackages": {}
       }

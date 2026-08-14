@@ -1,3 +1,11 @@
+
+2026-08-14 Franz Holzinger <franz@ttproducts.de>
+    * compatibility improvement: replace ConfigUtility::getSetupOrFFvalue by the better ConfigUtility::getCodeFromFFvalue
+
+2026-08-01 Franz Holzinger <franz@ttproducts.de>
+    * mark class CoreQuery as deprecated
+    * remove class StaticInfoTablesUtility; use StaticInfoTablesApi instead.
+
 2026-07-18 Franz Holzinger <franz@ttproducts.de>
     * fix bug: consider the default language in LOCAL_LANG
 
