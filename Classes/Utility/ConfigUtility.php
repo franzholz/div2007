@@ -26,6 +26,10 @@ namespace JambageCom\Div2007\Utility;
  * @package TYPO3
  * @subpackage div2007
  */
+
+use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
+
 class ConfigUtility
 {
     /**
@@ -132,6 +136,61 @@ class ConfigUtility
         } else {
             $result = 'error in call of \\JambageCom\\Div2007\\Utility\\ConfigUtility::getSetupOrFFvalue: parameter $cObj is not an object';
             debug($result, '$result'); // keep this
+        }
+
+        return $result;
+    }
+
+
+    /**
+     * Returns the values from the setup field or the field of the flexform converted into the value
+     * The default value will be used if no return value would be available.
+     * This can be used fine to get the CODE values or the display mode dependant if flexforms are used or not.
+     * And all others fields of the flexforms can be read.
+     *
+     * example:
+     *  $config['code'] = \JambageCom\Div2007\Utility\ConfigUtility::getCodeFromFFvalue(
+     *                  $cObj,
+     *                  $this->conf['code'],
+     *                  $this->conf['code.'],
+     *                  $this->conf['defaultCode'],
+     *                  $this->cObj->data['pi_flexform'],
+     *                  'display_mode');
+     *
+     * You have to call the FlexFormTools method convertFlexFormContentToArray before you call this method!
+     *
+     * @param   object      tx_div2007_alpha_language_base object
+     * @param   string      TypoScript configuration
+     * @param   string      extended TypoScript configuration
+     * @param   string      default value to use if the result would be empty
+     * @param   bool     if flexforms are used or not
+     * @param   string      name of the flexform which has been used in ext_tables.php
+     *                      $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['5']='pi_flexform';
+     *
+     * @return  string      name of the field to look for in the flexform
+     *
+     * @access  public
+     */
+    public static function getCodeFromFFvalue(
+        ContentObjectRenderer $cObj,
+        array $T3FlexForm_array,
+        string $code = '',
+        array $codeExt = [],
+        string $defaultCode = '',
+        $fieldName = 'display_mode'
+    ) {
+        $result = '';
+        if (!empty($T3FlexForm_array)) {
+            // read value from flexform array:
+            $result = $T3FlexForm_array[$fieldName] ?? '';
+        }
+
+        if (empty($result)) {
+            $result = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
+        }
+
+        if (empty($result)) {
+            $result = strtoupper($defaultCode);
         }
 
         return $result;
