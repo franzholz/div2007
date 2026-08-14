@@ -39,10 +39,13 @@ namespace JambageCom\Div2007\Base;
  * @package TYPO3
  * @subpackage div2007
  */
-use TYPO3\CMS\Core\SingletonInterface;
-use JambageCom\Div2007\Utility\FlexformUtility;
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
+use TYPO3\CMS\Core\Domain\Exception\RecordPropertyNotFoundException;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+use JambageCom\Div2007\Utility\FlexformUtility;
+
 
 class PageContentPreviewRenderingListenerBase implements SingletonInterface
 {
@@ -54,11 +57,67 @@ class PageContentPreviewRenderingListenerBase implements SingletonInterface
         $record = $event->getRecord();
         $pageContext = $event->getPageLayoutContext();
         $pageRecord = $pageContext->getPageRecord();
-        $codes = $this->pmDrawItem($record, $pageRecord);
+        if (is_array($record)) {
+            $codes = $this->pmDrawItem($record, $pageRecord);
+        } else if ($record instanceof \TYPO3\CMS\Core\Domain\RecordInterface)
+  {
+            $codes = $this->pluginDrawItem($record, $pageRecord);
+        }
         if (strlen($content . $codes)) {
             $event->setPreviewContent($content . $codes);
         }
     }
+
+    /**
+     * Draw the item in the page module.
+     *
+     * @param	RecordInterface		record
+     * @param	array		the parent object
+     */
+    public function pluginDrawItem(
+        \TYPO3\CMS\Core\Domain\RecordInterface $record,
+        array $pageRecord
+    ): ?string
+    {
+        $codes = null;
+        $extensionKey = '';
+
+        if (
+            $this->extensionKey != ''
+        ) {
+            $extensionKey = $this->extensionKey;
+        }
+
+        if (
+            $extensionKey != '' &&
+            ExtensionManagementUtility::isLoaded($extensionKey) &&
+            in_array(
+                intval($pageRecord['doktype']),
+                [1, 2, 5]
+            )
+        ) {
+            $flexForm = '';
+            try {
+                $flexForm = $record->get('pi_flexform');
+            } catch (RecordPropertyNotFoundException $e) {
+            }
+
+            if ($flexForm != '') {
+                FlexformUtility::load(
+                    $flexForm,
+                    $extensionKey
+                );
+                $codes =
+                    'CODE: ' . FlexformUtility::get(
+                        $extensionKey,
+                        'display_mode'
+                    );
+            }
+        }
+
+        return $codes;
+    }
+
 
     /**
      * Draw the item in the page module.
