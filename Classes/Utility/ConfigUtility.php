@@ -125,7 +125,7 @@ class ConfigUtility
                         $value
                     );
                 } else {
-                    $result = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
+                    $result = strtoupper(trim($cObj->stdWrap($code, $codeExt) ?? ''));
                 }
                 if (empty($result)) {
                     $result = strtoupper($defaultCode);
@@ -186,7 +186,7 @@ class ConfigUtility
         }
 
         if (empty($result)) {
-            $result = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
+            $result = strtoupper(trim($cObj->stdWrap($code, $codeExt) ?? ''));
         }
 
         if (empty($result)) {
