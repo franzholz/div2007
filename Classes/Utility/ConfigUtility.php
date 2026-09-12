@@ -27,7 +27,10 @@ namespace JambageCom\Div2007\Utility;
  * @subpackage div2007
  */
 
+use Psr\Http\Message\ServerRequestInterface;
+
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
+
 
 
 class ConfigUtility
@@ -71,6 +74,10 @@ class ConfigUtility
     }
 
     /**
+     * deprecated
+     *
+     * use getCodeFromFFvalue instead
+     *
      * Returns the values from the setup field or the field of the flexform converted into the value
      * The default value will be used if no return value would be available.
      * This can be used fine to get the CODE values or the display mode dependant if flexforms are used or not.
@@ -125,7 +132,7 @@ class ConfigUtility
                         $value
                     );
                 } else {
-                    $result = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
+                    $result = strtoupper(trim($cObj->stdWrap($code, $codeExt) ?? ''));
                 }
                 if (empty($result)) {
                     $result = strtoupper($defaultCode);
@@ -172,7 +179,7 @@ class ConfigUtility
      * @access  public
      */
     public static function getCodeFromFFvalue(
-        ContentObjectRenderer $cObj,
+        ServerRequestInterface $request,
         array $T3FlexForm_array,
         string $code = '',
         array $codeExt = [],
@@ -186,7 +193,9 @@ class ConfigUtility
         }
 
         if (empty($result)) {
-            $result = strtoupper(trim($cObj->stdWrap($code, $codeExt)));
+                /** @var ContentObjectRenderer|null $cObj */
+            $cObj = $request->getAttribute('currentContentObject');
+            $result = strtoupper(trim($cObj->stdWrap($code, $codeExt) ?? ''));
         }
 
         if (empty($result)) {
