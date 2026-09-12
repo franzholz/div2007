@@ -32,11 +32,11 @@ use TYPO3\CMS\Core\Database\Query\QueryHelper;
 use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\Locales;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-
 
 use SJBR\StaticInfoTables\Domain\Model\Currency;
 use SJBR\StaticInfoTables\Domain\Repository\CountryRepository;
@@ -46,6 +46,7 @@ use SJBR\StaticInfoTables\Utility\LocalizationUtility;
 
 use JambageCom\Div2007\Utility\ExtensionUtility;
 use JambageCom\Div2007\Utility\TableUtility;
+
 
 class StaticInfoTablesApi implements SingletonInterface
 {
@@ -69,20 +70,19 @@ class StaticInfoTablesApi implements SingletonInterface
     public $countriesAllowed;
 
     /**
+     * @var SiteLanguage
+     */
+    protected $siteLanguage = null;
+
+    /**
      * @var CountryRepository
      */
-    protected $countryRepository;
+    protected $countryRepository = null;
 
     /**
      * @var CurrencyRepository
      */
-    protected $currencyRepository;
-
-    /**
-     * @var ServerRequestInterface
-     */
-    protected $request;
-
+    protected $currencyRepository = null;
 
     /**
      * Initialization of the extension static_info_tables.
@@ -93,13 +93,13 @@ class StaticInfoTablesApi implements SingletonInterface
     )
     {
         $result = true;
-        $this->$request = $request;
-        $this->countryRepository = GeneralUtility::makeInstance(CountryRepository::class);
-        $this->currencyRepository = GeneralUtility::makeInstance(CurrencyRepository::class);
 
         if (!ExtensionManagementUtility::isLoaded('static_info_tables')) {
             $result = false;
         } elseif (!$this->hasBeenInitialized) {
+            $this->countryRepository = GeneralUtility::makeInstance(CountryRepository::class);
+            $this->currencyRepository = GeneralUtility::makeInstance(CurrencyRepository::class);
+
             $typo3Version = GeneralUtility::makeInstance(Typo3Version::class);
             $this->version = $typo3Version->getMajorVersion();
             if (empty($conf)) {
@@ -112,6 +112,7 @@ class StaticInfoTablesApi implements SingletonInterface
                 }
             }
 
+            $this->siteLanguage = $request->getAttribute('language');
             $this->initCountries('ALL');
 
             // Get the default currency and make sure it does exist in table static_currencies
@@ -484,13 +485,8 @@ class StaticInfoTablesApi implements SingletonInterface
             return false;
         }
 
-        $siteLanguage = null;
-        if (isset($this->request) && is_object($this->request) && method_exists($this->request, 'getAttribute')) {
-            $siteLanguage = $this->request->getAttribute('language');
-        }
-
-        if ($siteLanguage !== null) {
-            $langCodeT3 = $siteLanguage->getTypo3Language();
+        if ($this->siteLanguage !== null) {
+            $langCodeT3 = $this->siteLanguage->getTypo3Language();
         } else {
             $languageAspect = GeneralUtility::makeInstance(Context::class)->getAspect('language');
             $langCodeT3 = $languageAspect->getLegacyLanguageKey();
