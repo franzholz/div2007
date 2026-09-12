@@ -41,6 +41,8 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 
 /**
+ * Deprecated
+ *
  * Old school base class of frontend plugins.
  *
  * Various legacy frontend plugins extend this "abstract".
