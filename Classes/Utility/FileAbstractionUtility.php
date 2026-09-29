@@ -59,7 +59,7 @@ class FileAbstractionUtility
      * @param string $orderBy
      * @return array
      */
-    public function getFileRecords(
+    public static function getFileRecords(
         string $tableName,
         string $fieldName,
         array $uidArray = [],
@@ -73,22 +73,22 @@ class FileAbstractionUtility
                 ->getQueryBuilderForTable($table);
 
             $queryBuilder
-            ->select('*')
-            ->from($table)
-            ->where(
-                $queryBuilder->expr()->in(
-                    'uid_foreign',
-                    $queryBuilder->createNamedParameter($uidArray, Connection::PARAM_INT_ARRAY)
-                ),
-                $queryBuilder->expr()->eq(
-                    'tablenames',
-                    $queryBuilder->createNamedParameter($tableName)
-                ),
-                $queryBuilder->expr()->eq(
-                    'fieldname',
-                    $queryBuilder->createNamedParameter($fieldName)
-                )
-            );
+                ->select('*')
+                ->from($table)
+                ->where(
+                    $queryBuilder->expr()->in(
+                        'uid_foreign',
+                        $queryBuilder->createNamedParameter($uidArray, Connection::PARAM_INT_ARRAY)
+                    ),
+                    $queryBuilder->expr()->eq(
+                        'tablenames',
+                        $queryBuilder->createNamedParameter($tableName)
+                    ),
+                    $queryBuilder->expr()->eq(
+                        'fieldname',
+                        $queryBuilder->createNamedParameter($fieldName)
+                    )
+                );
 
             if ($orderBy !== '') {
                 foreach (QueryHelper::parseOrderBy($orderBy) as $orderPair) {

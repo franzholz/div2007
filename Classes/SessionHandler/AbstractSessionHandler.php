@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Div2007\SessionHandler;
 
 /*
@@ -8,32 +10,24 @@ namespace JambageCom\Div2007\SessionHandler;
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
  * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
  */
+
+use JambageCom\Div2007\Constants\Extension;
 
 /**
  * Abstract session handling base class.
- *
- * @author Bernhard Kraft <kraftb@think-open.at>
- * @copyright 2016
+ * Optimized for PHP 8.2+ and TYPO3 v13/v14.
  */
 abstract class AbstractSessionHandler
 {
     /**
-     * The session variable key. Overwrite this with your own session key which should be the tx_(extensionkey) where the extension key is without underline characters.
-     *
-     * @var string
+     * The session variable key.
+     * Overwrite this with your own session key (e.g., tx_myextension).
      */
-    protected $sessionKey = DIV2007_EXT;
+    protected string $sessionKey = Extension::KEY;
 
     /**
      * Get session key.
-     *
-     * @return data The session data
      */
     public function getSessionKey(): string
     {
@@ -41,11 +35,9 @@ abstract class AbstractSessionHandler
     }
 
     /**
-     * Get session key.
-     *
-     * @return data The session data for the captcha extension
+     * Set session key.
      */
-    public function setSessionKey($key): void
+    public function setSessionKey(string $key): void
     {
         $this->sessionKey = $key;
     }
@@ -53,9 +45,10 @@ abstract class AbstractSessionHandler
     /**
      * Get session data.
      *
-     * @return data The session data
+     * @param string $subKey
+     * @return mixed The session data (array or string)
      */
-    abstract public function getSessionData($subKey = '');
+    abstract public function getSessionData(string $subKey = ''): mixed;
 
     /**
      * Set session data.

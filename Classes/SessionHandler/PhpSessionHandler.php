@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Div2007\SessionHandler;
 
 /*
@@ -8,18 +10,11 @@ namespace JambageCom\Div2007\SessionHandler;
  * It is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License, either version 2
  * of the License, or any later version.
- *
- * For the full copyright and license information, please read the
- * LICENSE.txt file that was distributed with this source code.
- *
- * The TYPO3 project - inspiring people to share!
  */
 
 /**
  * PHP session handling utility.
- *
- * @author Bernhard Kraft <kraftb@think-open.at>
- * @copyright 2018
+ * Optimized for PHP 8.2+ and TYPO3 v13/v14.
  */
 class PhpSessionHandler extends AbstractSessionHandler implements SessionHandlerInterface
 {
@@ -28,7 +23,8 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
      */
     public function __construct()
     {
-        if (basename($_SERVER['PHP_SELF']) !== 'phpunit') {
+        // Sicherer Check, ob eine native PHP-Session bereits gestartet wurde (verhindert PHPUnit-Konflikte)
+        if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
     }
@@ -38,9 +34,6 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
      */
     public function setSessionData(array $data): void
     {
-        if (!is_array($data)) {
-            $data = [];
-        }
         $sessionKey = $this->getSessionKey();
         $_SESSION[$sessionKey] = $data;
     }
@@ -48,34 +41,22 @@ class PhpSessionHandler extends AbstractSessionHandler implements SessionHandler
     /**
      * Get session data.
      *
-     * @return data The session data
+     * @param string $subKey
+     * @return mixed The session data (array or string)
      */
-    public function getSessionData($subKey = '')
+    public function getSessionData(string $subKey = ''): mixed
     {
-        $data = [];
-        $result = '';
-
         $sessionKey = $this->getSessionKey();
-        if (
-            isset($_SESSION[$sessionKey]) &&
-            is_array($_SESSION[$sessionKey])
-        ) {
+
+        $data = [];
+        if (isset($_SESSION[$sessionKey]) && is_array($_SESSION[$sessionKey])) {
             $data = $_SESSION[$sessionKey];
         }
 
-        if (
-            $subKey != '' &&
-            is_array($data) &&
-            isset($data[$subKey])
-        ) {
-            $result = $data[$subKey];
-        } elseif (
-            $subKey == '' &&
-            is_array($data)
-        ) {
-            $result = $data;
+        if ($subKey !== '') {
+            return $data[$subKey] ?? '';
         }
 
-        return $result;
+        return $data;
     }
 }

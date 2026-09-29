@@ -35,12 +35,11 @@ namespace JambageCom\Div2007\Utility;
  * @subpackage div2007
  */
 use TYPO3\CMS\Core\Context\Context;
-use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Domain\Repository\PageRepository;
-use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryConstraintService;
+use TYPO3\CMS\Core\Domain\Repository\PageRepository;
+use TYPO3\CMS\Core\TimeTracker\TimeTracker;
 use TYPO3\CMS\Core\Log\LogManager;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
@@ -233,7 +232,7 @@ class TableUtility
         $constraints = $pageRepository->getDefaultConstraints($table);
         $plainWhereString = (string)$queryBuilder->expr()->and(...array_values($constraints));
 
-        return $plainWhereString;
+        return ' AND (' . $plainWhereString . ')';
     }
 
     /**

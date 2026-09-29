@@ -1,3 +1,5 @@
+2026-09-29 Franz Holzinger <franz@ttproducts.de>
+    * compatibility improvement: rework all Session classes for TYPO3 13 and 14
 
 2026-08-14 Franz Holzinger <franz@ttproducts.de>
     * compatibility improvement: replace ConfigUtility::getSetupOrFFvalue by the better ConfigUtility::getCodeFromFFvalue

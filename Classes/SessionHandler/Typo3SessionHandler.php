@@ -1,94 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace JambageCom\Div2007\SessionHandler;
 
-/*
-* This file is part of the TYPO3 CMS project.
-*
-* It is free software; you can redistribute it and/or modify it under
-* the terms of the GNU General Public License, either version 2
-* of the License, or any later version.
-*
-* For the full copyright and license information, please read the
-* LICENSE.txt file that was distributed with this source code.
-*
-* The TYPO3 project - inspiring people to share!
-*/
-
-/**
- * TYPO3 session handling utility.
- * No Dependency Injection for derived class (MySessionHandler) is possible!
- * Use a MiddleWare to create a singleton derived class once with the needed parameters.
- *
- *      $frontendUser = $request->getAttribute('frontend.user');
- *      $sessionHandler = GeneralUtility::makeInstance(MySessionHandler::class, $frontendUser);
- *
- * RequestMiddlewares.php:
- *
- *      'mydomain/my-extensionkey/session-start' => [
- *      'target' => SessionStart::class,
- *      'description' => 'Initialisation of the session',
- *      'after' => [
- *             'typo3/cms-frontend/prepare-tsfe-rendering'
- *          ],
- *          'before' => [
- *              'typo3/cms-frontend/content-length-headers',
- *          ],
- *       ]
- *
- * @author Bernhard Kraft <kraftb@think-open.at>
- * @copyright 2018
- */
-
 use TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication;
-
+use TYPO3\CMS\Core\Session\UserSession;
 
 class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandlerInterface
 {
-    /**
-     * The session variable key. You must overwrite this class or use the setSessionKey method to make it working.
-     *
-     * @var string
-     */
-    protected $sessionKey = self::class;
+    protected string $sessionKey = self::class;
+    protected ?FrontendUserAuthentication $frontendUser = null;
+    protected ?UserSession $userSession = null;
 
     /**
-     * An "fe_user" object instance. Required for session access.
-     *
-     * @var \TYPO3\CMS\Frontend\Authentication\FrontendUserAuthentication
-     */
-    protected $frontendUser;
-
-    /**
-     * Constructor for session handling class.
-     *
-     * Usage requirement:
-     *
-     * An object of this class must be generated once in the MiddleWare of the extension
-     * to which your derived class belongs to.
+     * Constructor for TYPO3 13 and v14.
+     * Allows an empty user object to prevent exceptions during early bootstrapping.
      */
     public function __construct(
         ?FrontendUserAuthentication $frontendUser = null,
-        $setCookie = true, // Unused
-    )
-    {
-        if (basename($_SERVER['PHP_SELF']) !== 'phpunit') {
-            if (isset($frontendUser)) {
-                $this->frontendUser = $frontendUser;
-            }
+        bool $setCookie = true
+    ) {
+        if ($frontendUser !== null) {
+            $this->frontendUser = $frontendUser;
 
-            if (empty($this->frontendUser)) {
-                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: Empty attribute frontend.user' . ' ', 1612216764);
-            }
-            $session = null;
-            try {
-                $session = $this->frontendUser->getSession();
-            } catch (TypeError $e) {
-             // continue
-            }
-            if (empty($session)) {
-                throw new \RuntimeException('Extension ' . DIV2007_EXT . ' Typo3SessionHandler: The frontend.user session must not be empty. A MiddleWare must be used which has created once its derived class.' . ' ', 1738760876);
-            }
+            // TYPO3 13/14 API: Access the UserSession object safely via property or method
+            $this->userSession = method_exists($frontendUser, 'getSession')
+                ? $frontendUser->getSession()
+                : ($frontendUser->user ?? null);
         }
     }
 
@@ -97,44 +36,40 @@ class Typo3SessionHandler extends AbstractSessionHandler implements SessionHandl
      */
     public function setSessionData(array $data): void
     {
-        if (
-            true ||
-            // TODO: Check if cookies are allowed
-            empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][DIV2007_EXT]['checkCookieSet'])
-        ) {
-            $sessionKey = $this->getSessionKey();
-            $this->frontendUser->setAndSaveSessionData($sessionKey, $data);
+        // If no user or session is initialized, we cannot store anything
+        if ($this->userSession === null || $this->frontendUser === null) {
+            return;
         }
 
+        $sessionKey = $this->getSessionKey();
+
+        // Modernized call for UserSession state updates
+        $this->userSession->set($sessionKey, $data);
+        $this->frontendUser->storeSessionData();
     }
 
     /**
      * Get session data.
-     *
-     * @return data ... The session data
      */
-    public function getSessionData($subKey = '')
+    public function getSessionData(string $subKey = ''): mixed
     {
-        $result = '';
-        $sessionKey = $this->getSessionKey();
-        $data = $this->frontendUser->getSessionData($sessionKey);
-
-        if (is_array($data)) {
-            if (
-                $subKey != '' &&
-                isset($data[$subKey])
-            ) {
-                $result = $data[$subKey];
-            } elseif (
-                $subKey == '' &&
-                is_array($data)
-            ) {
-                $result = $data;
-            }
-        } else if ($subKey == '') {
-            $result = [];
+        // If no session exists (yet), return an empty fallback structure
+        if ($this->userSession === null) {
+            return $subKey === '' ? [] : '';
         }
 
-        return $result;
+        $sessionKey = $this->getSessionKey();
+        $data = $this->userSession->get($sessionKey);
+
+        if (is_array($data)) {
+            if ($subKey !== '' && isset($data[$subKey])) {
+                return $data[$subKey];
+            }
+            if ($subKey === '') {
+                return $data;
+            }
+        }
+
+        return $subKey === '' ? [] : '';
     }
 }

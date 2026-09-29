@@ -87,9 +87,10 @@ class ViewUtility
         $helpTemplate = (
             $helpTemplate_lang ?: $parser->getSubpart($helpTemplate, '###TEMPLATE_DEFAULT###')
         );
+
         // Markers and substitution:
         $extensionPath = ExtensionManagementUtility::extPath($extensionKey);
-        $markerArray['###PATH###'] = PathUtility::stripPathSitePrefix($extensionPath);
+        $markerArray['###PATH###'] = '/' . PathUtility::stripPathSitePrefix($extensionPath);
         $markerArray['###ERROR_MESSAGE###'] = ($errorMessage ? '<strong>' . $errorMessage . '</strong><br' . HtmlUtility::generateXhtmlFix() . '>' : '');
         $markerArray['###CODE###'] = $theCode;
         $result = $parser->substituteMarkerArray($helpTemplate, $markerArray);
