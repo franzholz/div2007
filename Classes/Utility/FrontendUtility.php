@@ -418,6 +418,7 @@ class FrontendUtility
         return $result;
     }
 
+    // deprecated
     public static function getContentObjectRendererClassname()
     {
         $useClassName = false;
@@ -427,6 +428,8 @@ class FrontendUtility
     }
 
     /**
+     * Deprecated
+     *
      * Class constructor.
      * Well, it has to be called manually since it is not a real constructor function.
      * Call this function which is making an instance of the class, and pass to it a database record and the tablename from where the record is from. That will then become the "current" record loaded into memory and accessed by the .fields property found in eg. stdWrap.
