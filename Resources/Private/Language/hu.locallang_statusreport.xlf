@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf" date="2018-03-06T12:15:00Z" product-name="div2007" target-language="hu">
+    <header/>
+    <body>
+      <trans-unit id="Conflicting_extensions_installed" resname="Conflicting_extensions_installed">
+        <source>Conflicting extensions installed</source>
+        <target state="translated">Ütköző bővítmények vannak telepítve</target>
+      </trans-unit>
+      <trans-unit id="none" resname="none">
+        <source>None</source>
+        <target state="translated">Egyik sem</target>
+      </trans-unit>
+      <trans-unit id="keys" resname="keys">
+        <source>Extension keys:</source>
+        <target state="translated">Bővítménykulcsok:</target>
+      </trans-unit>
+      <trans-unit id="uninstall" resname="uninstall">
+        <source>Conflicting extensions should be uninstalled for %s to function correctly.</source>
+        <target state="translated">Az ütköző bővítményeket el kell távolítani ahhoz, hogy a %s megfelelően működjön.</target>
+      </trans-unit>
+      <trans-unit id="Required_extensions_not_installed" resname="Required_extensions_not_installed">
+        <source>Required extensions not installed</source>
+        <target state="translated">A szükséges bővítmények nincsenek telepítve</target>
+      </trans-unit>
+      <trans-unit id="install" resname="install">
+        <source>Required extensions should be installed for %s to function correctly.</source>
+        <target state="translated">A szükséges bővítményeket telepíteni kell ahhoz, hogy a %s megfelelően működjön.</target>
+      </trans-unit>
+      <trans-unit id="Front_end_login_security_level" resname="Front_end_login_security_level">
+        <source>Front end login security level</source>
+        <target state="translated">Frontend bejelentkezési biztonsági szint</target>
+      </trans-unit>
+      <trans-unit id="must_be_normal" resname="must_be_normal">
+        <source>Use the Install tool to set the front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) to "" or "normal".</source>
+        <target state="translated">A frontend bejelentkezési biztonsági szintet ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) a Telepítő eszközzel állítsa "" vagy "normal" értékre.</target>
+      </trans-unit>
+      <trans-unit id="must_be_normal_or_rsa" resname="must_be_normal_or_rsa">
+        <source>Use the Install tool to set the front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) to "", "normal" or "rsa".</source>
+        <target state="translated">A frontend bejelentkezési biztonsági szintet ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) a Telepítő eszközzel állítsa "", "normal" vagy "rsa" értékre.</target>
+      </trans-unit>
+      <trans-unit id="Salted_passwords_in_front_end" resname="Salted_passwords_in_front_end">
+        <source>Salted passwords in front end</source>
+        <target state="translated">Sózott jelszavak a frontendben</target>
+      </trans-unit>
+      <trans-unit id="Global_variables_in_front_end" resname="Global_variables_in_front_end">
+        <source>Global variables in front end</source>
+        <target state="translated">Globális változók a frontendben</target>
+      </trans-unit>
+      <trans-unit id="enabled" resname="enabled">
+        <source>Enabled</source>
+        <target state="translated">Engedélyezve</target>
+      </trans-unit>
+      <trans-unit id="disabled" resname="disabled">
+        <source>Disabled</source>
+        <target state="translated">Letiltva</target>
+      </trans-unit>
+      <trans-unit id="global_variable_must_be_set" resname="global_variable_must_be_set">
+        <source>For %s to function correctly, the global variable %s must have the value "%s".</source>
+        <target state="translated">A %s megfelelő működéséhez a %s globális változónak "%s" értékkel kell rendelkeznie.</target>
+      </trans-unit>
+      <trans-unit id="salted_passwords_must_be_enabled" resname="salted_passwords_must_be_enabled">
+        <source>For %s to function correctly, extension "saltedpasswords" must be installed and must be configured so that salted passwords are enabled in front end. Note that if front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) is not set to "", "normal" or "rsa", then salted passwords cannot be enabled in front end.</source>
+        <target state="translated">A %s megfelelő működéséhez a "saltedpasswords" bővítményt telepíteni kell, és úgy kell konfigurálni, hogy a sózott jelszavak engedélyezve legyenek a frontendben. Vegye figyelembe, hogy ha a frontend bejelentkezési biztonsági szint ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) nincs "", "normal" vagy "rsa" értékre állítva, akkor a sózott jelszavak nem engedélyezhetők a frontendben.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
