@@ -36,6 +36,7 @@ use TYPO3\CMS\Core\Domain\Repository\PageRepository;
 use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
+use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Service\MarkerBasedTemplateService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
@@ -333,6 +334,18 @@ class FrontendUtility
         return $result;
     }
 
+    /**
+     * Adds tab JavaScript and CSS to the page and returns the modified template placeholders.
+     *
+     * @param string $templateCode
+     * @param array $markerArray
+     * @param array $subpartArray
+     * @param array $wrappedSubpartArray
+     * @param string $keyPrefix
+     * @param string $javascriptFilename
+     * @param string $cssFilename
+     * @return bool
+     */
     public static function addTab(
         $templateCode,
         &$markerArray,
@@ -342,6 +355,14 @@ class FrontendUtility
         $javascriptFilename = '',
         $cssFilename = ''
     ) {
+        // TYPO3 v14 SAFE-GUARD: Veraltete Pfade SOFORT beim Funktionsaufruf konvertieren
+        if (!empty($javascriptFilename) && str_starts_with($javascriptFilename, 'typo3conf/ext/')) {
+            $javascriptFilename = 'EXT:' . substr($javascriptFilename, 14);
+        }
+        if (!empty($cssFilename) && str_starts_with($cssFilename, 'typo3conf/ext/')) {
+            $cssFilename = 'EXT:' . substr($cssFilename, 14);
+        }
+
         $result = false;
         preg_match_all('/###(TAB_.*)###/', $templateCode, $treffer);
         $internalMarkerArray = [];
@@ -371,7 +392,16 @@ class FrontendUtility
                 'jsfunc.tab.js'
             )
         ) {
-            static::addJavascriptFile($javascriptFilename, $keyPrefix . 'JSincludeTab');
+            // Falls determineJavascriptFilename intern doch noch einen Standardpfad setzt:
+            if (str_starts_with($javascriptFilename, 'typo3conf/ext/')) {
+                $javascriptFilename = 'EXT:' . substr($javascriptFilename, 14);
+            }
+
+            \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\AssetCollector::class)->addJavaScript(
+                $keyPrefix . 'JSincludeTab',
+                $javascriptFilename
+            );
+
             $markerArray['###TAB_OPEN_JS###'] =
 '<script type="text/javascript">
         openTab(1); // open Tab 1
@@ -383,7 +413,16 @@ class FrontendUtility
                     'tab.css'
                 )
             ) {
-                static::addCssFile($cssFilename, $keyPrefix . 'CSSincludeTab');
+                // Falls determineCssFilename intern doch noch einen Standardpfad setzt:
+                if (str_starts_with($cssFilename, 'typo3conf/ext/')) {
+                    $cssFilename = 'EXT:' . substr($cssFilename, 14);
+                }
+
+                \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Page\AssetCollector::class)->addStyleSheet(
+                    $keyPrefix . 'CSSincludeTab',
+                    $cssFilename
+                );
+
                 $result = true;
                 $wrappedSubpartArray['###TAB_MENU###'] =
                     [
