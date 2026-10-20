@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:div2007/Resources/Private/Language/locallang_statusreport.xlf" date="2018-03-06T12:15:00Z" product-name="div2007" target-language="t3">
+    <header/>
+    <body>
+      <trans-unit id="Conflicting_extensions_installed" resname="Conflicting_extensions_installed">
+        <source>Conflicting extensions installed</source>
+        <target>crwdns209562:0crwdne209562:0</target>
+      </trans-unit>
+      <trans-unit id="none" resname="none">
+        <source>None</source>
+        <target>crwdns209564:0crwdne209564:0</target>
+      </trans-unit>
+      <trans-unit id="keys" resname="keys">
+        <source>Extension keys:</source>
+        <target>crwdns209566:0crwdne209566:0</target>
+      </trans-unit>
+      <trans-unit id="uninstall" resname="uninstall">
+        <source>Conflicting extensions should be uninstalled for %s to function correctly.</source>
+        <target>crwdns209568:0%scrwdne209568:0</target>
+      </trans-unit>
+      <trans-unit id="Required_extensions_not_installed" resname="Required_extensions_not_installed">
+        <source>Required extensions not installed</source>
+        <target>crwdns209570:0crwdne209570:0</target>
+      </trans-unit>
+      <trans-unit id="install" resname="install">
+        <source>Required extensions should be installed for %s to function correctly.</source>
+        <target>crwdns209572:0%scrwdne209572:0</target>
+      </trans-unit>
+      <trans-unit id="Front_end_login_security_level" resname="Front_end_login_security_level">
+        <source>Front end login security level</source>
+        <target>crwdns209574:0crwdne209574:0</target>
+      </trans-unit>
+      <trans-unit id="must_be_normal" resname="must_be_normal">
+        <source>Use the Install tool to set the front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) to "" or "normal".</source>
+        <target>crwdns334902:0$TYPO3_CONF_VARS['FE']['loginSecurityLevel']crwdne334902:0</target>
+      </trans-unit>
+      <trans-unit id="must_be_normal_or_rsa" resname="must_be_normal_or_rsa">
+        <source>Use the Install tool to set the front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) to "", "normal" or "rsa".</source>
+        <target>crwdns209576:0$TYPO3_CONF_VARS['FE']['loginSecurityLevel']crwdne209576:0</target>
+      </trans-unit>
+      <trans-unit id="Salted_passwords_in_front_end" resname="Salted_passwords_in_front_end">
+        <source>Salted passwords in front end</source>
+        <target>crwdns209578:0crwdne209578:0</target>
+      </trans-unit>
+      <trans-unit id="Global_variables_in_front_end" resname="Global_variables_in_front_end">
+        <source>Global variables in front end</source>
+        <target>crwdns209580:0crwdne209580:0</target>
+      </trans-unit>
+      <trans-unit id="enabled" resname="enabled">
+        <source>Enabled</source>
+        <target>crwdns209582:0crwdne209582:0</target>
+      </trans-unit>
+      <trans-unit id="disabled" resname="disabled">
+        <source>Disabled</source>
+        <target>crwdns209584:0crwdne209584:0</target>
+      </trans-unit>
+      <trans-unit id="global_variable_must_be_set" resname="global_variable_must_be_set">
+        <source>For %s to function correctly, the global variable %s must have the value "%s".</source>
+        <target>crwdns209586:0%scrwdnd209586:0%scrwdnd209586:0%scrwdne209586:0</target>
+      </trans-unit>
+      <trans-unit id="salted_passwords_must_be_enabled" resname="salted_passwords_must_be_enabled">
+        <source>For %s to function correctly, extension "saltedpasswords" must be installed and must be configured so that salted passwords are enabled in front end. Note that if front end login security level ($TYPO3_CONF_VARS['FE']['loginSecurityLevel']) is not set to "", "normal" or "rsa", then salted passwords cannot be enabled in front end.</source>
+        <target>crwdns209588:0%scrwdnd209588:0$TYPO3_CONF_VARS['FE']['loginSecurityLevel']crwdne209588:0</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
