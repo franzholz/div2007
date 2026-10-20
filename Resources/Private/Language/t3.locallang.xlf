@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+  <file source-language="en" datatype="plaintext" original="EXT:div2007/Resources/Private/Language/locallang.xlf" date="2018-03-30T12:00:00Z" product-name="div2007" target-language="t3">
+    <header/>
+    <body>
+      <trans-unit id="example_text" resname="example_text">
+        <source>Overwrite this example text in your div2007 setup.</source>
+        <target>crwdns209518:0crwdne209518:0</target>
+      </trans-unit>
+      <trans-unit id="security.internal_hashed_password_error" resname="security.internal_hashed_password_error">
+        <source>Failed to fetch a hashed password</source>
+        <target>crwdns209520:0crwdne209520:0</target>
+      </trans-unit>
+      <trans-unit id="security.internal_decrypt_auto_login_failed" resname="security.internal_decrypt_auto_login_failed">
+        <source>Failed to decrypt the auto login password</source>
+        <target>crwdns209522:0crwdne209522:0</target>
+      </trans-unit>
+      <trans-unit id="security.internal_rsaauth_process_incoming_field_failed" resname="security.internal_rsaauth_process_incoming_field_failed">
+        <source>RSA auth service failed to process incoming field "%s"</source>
+        <target>crwdns209524:0%scrwdne209524:0</target>
+      </trans-unit>
+      <trans-unit id="security.internal_rsaauth_retrieve_private_key_failed" resname="security.internal_rsaauth_retrieve_private_key_failed">
+        <source>RSA auth service failed to retrieve private key</source>
+        <target>crwdns209526:0crwdne209526:0</target>
+      </trans-unit>
+      <trans-unit id="security.internal_rsaauth_backend_not_available" resname="security.internal_rsaauth_backend_not_available">
+        <source>Required RSA auth backend not available</source>
+        <target>crwdns209528:0crwdne209528:0</target>
+      </trans-unit>
+      <trans-unit id="error.internal_required_extension_missing" resname="error.internal_required_extension_missing">
+        <source>The extension "%1$s" is required and must be installed</source>
+        <target>crwdns209530:0%1$scrwdne209530:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy.title" resname="privacy_policy.title">
+        <source>Privacy Policy</source>
+        <target>crwdns209532:0crwdne209532:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy.acknowledgement" resname="privacy_policy.acknowledgement">
+        <source>Privacy Policy Acknowledgement</source>
+        <target>crwdns209534:0crwdne209534:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy.approval_required" resname="privacy_policy.approval_required">
+        <source>Before you can continue, your approval to this website's privacy policy is required</source>
+        <target>crwdns209536:0crwdne209536:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy.acknowledged" resname="privacy_policy.acknowledged">
+        <source>I acknowledge and agree to the privacy policy.</source>
+        <target>crwdns209538:0crwdne209538:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy.acknowledged_2" resname="privacy_policy.acknowledged_2">
+        <source>I agree for any data I transmit through this site, that you can use them in accordance with its Privacy Policy.</source>
+        <target>crwdns209540:0crwdne209540:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy.hint" resname="privacy_policy.hint">
+        <source>Hint</source>
+        <target>crwdns209542:0crwdne209542:0</target>
+      </trans-unit>
+      <trans-unit id="privacy_policy.hint_1" resname="privacy_policy.hint_1">
+        <source>You have the right to renounce the agreement to the usage of your personal data at any time via email.</source>
+        <target>crwdns209544:0crwdne209544:0</target>
+      </trans-unit>
+      <trans-unit id="list_browseresults_first" resname="list_browseresults_first">
+        <source>&lt;&lt; First</source>
+        <target>crwdns209546:0crwdne209546:0</target>
+      </trans-unit>
+      <trans-unit id="list_browseresults_prev" resname="list_browseresults_prev">
+        <source>&lt; Previous</source>
+        <target>crwdns209548:0crwdne209548:0</target>
+      </trans-unit>
+      <trans-unit id="list_browseresults_page" resname="list_browseresults_page">
+        <source>Page</source>
+        <target>crwdns209550:0crwdne209550:0</target>
+      </trans-unit>
+      <trans-unit id="list_browseresults_next" resname="list_browseresults_next">
+        <source>Next &gt;</source>
+        <target>crwdns209552:0crwdne209552:0</target>
+      </trans-unit>
+      <trans-unit id="list_browseresults_last" resname="list_browseresults_last">
+        <source>Last &gt;&gt;</source>
+        <target>crwdns209554:0crwdne209554:0</target>
+      </trans-unit>
+      <trans-unit id="list_browseresults_to" resname="list_browseresults_to">
+        <source>to</source>
+        <target>crwdns209556:0crwdne209556:0</target>
+      </trans-unit>
+      <trans-unit id="list_browseresults_displays_marker" resname="list_browseresults_displays_marker">
+        <source>Displaying results ###FROM### to ###TO### out of ###OUT_OF###</source>
+        <target>crwdns209558:0crwdne209558:0</target>
+      </trans-unit>
+      <trans-unit id="list_browseresults_displays" resname="list_browseresults_displays">
+        <source>Displaying results ###SPAN_BEGIN###%s to %s&lt;/span&gt; out of ###SPAN_BEGIN###%s&lt;/span&gt;</source>
+        <target>crwdns209560:0%scrwdnd209560:0%scrwdnd209560:0%scrwdne209560:0</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
